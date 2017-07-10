@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<language>
+  <definitions>
+    <definition>
+      <key>shipping_zones_title</key>
+      <value><![CDATA[Versandkosten nach Zonen]]></value>
+      <group>modules-shipping</group>
+    </definition>
+    <definition>
+      <key>shipping_zones_description</key>
+      <value><![CDATA[Versandkosten Zonenbasierend]]></value>
+      <group>modules-shipping</group>
+    </definition>
+    <definition>
+      <key>shipping_zones_method</key>
+      <value><![CDATA[Versand nach:]]></value>
+      <group>modules-shipping</group>
+    </definition>
+    <definition>
+      <key>shipping_zones_invalid_zone</key>
+      <value><![CDATA[Es ist kein Versand in dieses Land möglich!]]></value>
+      <group>modules-shipping</group>
+    </definition>
+    <definition>
+      <key>shipping_zones_undefined_rate</key>
+      <value><![CDATA[Die Versandkosten können im Moment nicht berechnet werden.]]></value>
+      <group>modules-shipping</group>
+    </definition>
+  </definitions>
+</language>

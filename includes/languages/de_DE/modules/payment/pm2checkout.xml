@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<language>
+  <definitions>
+    <definition>
+      <key>payment_2checkout_title</key>
+      <value><![CDATA[2CheckOut]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_2checkout_description</key>
+      <value><![CDATA[Kreditkarte Test-info:<br /><br />CC#: 4111111111111111<br />Ablauf: beliebig]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_2checkout_credit_cart_type</key>
+      <value><![CDATA[Typ:]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_2checkout_credit_card_owner</key>
+      <value><![CDATA[Kreditkarte Inhaber:]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_2checkout_credit_card_owner_first_name</key>
+      <value><![CDATA[Vorname des Kreditkartebesitzer:]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_2checkout_credit_card_owner_last_name</key>
+      <value><![CDATA[Nachname des Kreditkartebesitzer:]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_2checkout_credit_card_number</key>
+      <value><![CDATA[Kreditkarte Nummer:]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_2checkout_credit_card_expiry_date</key>
+      <value><![CDATA[Verfallsdatum:]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_2checkout_credit_card_checknumber</key>
+      <value><![CDATA[Kreditkarte-Prüfnummer:]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_2checkout_credit_card_checknumber_location</key>
+      <value><![CDATA[(befindet sich auf der Rückseite der Kreditkarte)]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_2checkout_js_credit_card_number</key>
+      <value><![CDATA[* Die Kreditkartennummer muss mindestens in %s Zeichen sein.]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_2checkout_error_message</key>
+      <value><![CDATA[Es gabe ein Fehler bei der Bearbeitung Ihrer Kreditkarte. Bitte versuchen Sie es erneut.]]></value>
+      <group>modules-payment</group>
+    </definition>
+  </definitions>
+</language>

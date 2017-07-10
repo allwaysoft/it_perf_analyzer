@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<language>
+  <definitions>
+    <definition>
+      <key>payment_psigate_title</key>
+      <value><![CDATA[PSiGate]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_psigate_description</key>
+      <value><![CDATA[Information de test de carte de crédit:<br /><br />CC#: 4111111111111111<br />Expiration: Au hasard]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_psigate_credit_card_owner</key>
+      <value><![CDATA[Propriétaire]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_psigate_credit_card_number</key>
+      <value><![CDATA[Numéro Carte de Crédit:]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_psigate_credit_card_expiry_date</key>
+      <value><![CDATA[Expiration Carte de Crédit:]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_psigate_credit_card_type</key>
+      <value><![CDATA[Type:]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_psigate_js_credit_card_number</key>
+      <value><![CDATA[*Le Numéro de la Carte de Crédit doit être '.CC_NUMBER_MIN_LENGTH.'caractères.n]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_psigate_error_message</key>
+      <value><![CDATA[Il y a eu une erreur de traitement de votre carte de crédit.Réesayer.]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_psigate_error</key>
+      <value><![CDATA[Anomalie dans la carte de crédit.]]></value>
+      <group>modules-payment</group>
+    </definition>
+  </definitions>
+</language>

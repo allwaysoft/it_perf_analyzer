@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<language>
+  <definitions>
+    <definition>
+      <key>payment_authorizenet_echeck_title</key>
+      <value><![CDATA[Authorize.net eCheck]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_authorizenet_echeck_description</key>
+      <value><![CDATA[Authorize.net eCheck Transactions]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_authorizenet_echeck_method_title</key>
+      <value><![CDATA[Compte bancaire/Chèque]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_authorizenet_echeck_owner</key>
+      <value><![CDATA[Titulaire du compte:]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_authorizenet_echeck_account_type</key>
+      <value><![CDATA[Type de compte:]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_authorizenet_echeck_account_type_checking</key>
+      <value><![CDATA[Chèque]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_authorizenet_echeck_account_type_business_checking</key>
+      <value><![CDATA[Chèque (commercial)]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_authorizenet_echeck_account_type_savings</key>
+      <value><![CDATA[Épargne]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_authorizenet_echeck_account_number</key>
+      <value><![CDATA[Numéro de compte:]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_authorizenet_echeck_bank_name</key>
+      <value><![CDATA[Nom de l'institution bancaire:]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_authorizenet_echeck_routing_code</key>
+      <value><![CDATA[Numéro du compte:]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_authorizenet_echeck_tax_id</key>
+      <value><![CDATA[Numéro de taxes ou d'assurance-social:]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_authorizenet_echeck_org_type</key>
+      <value><![CDATA[Type de transaction:]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_authorizenet_echeck_org_type_individual</key>
+      <value><![CDATA[Personnelle]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_authorizenet_echeck_org_type_business</key>
+      <value><![CDATA[Commerciale]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_authorizenet_echeck_js_owner</key>
+      <value><![CDATA[* Veuillez entrer le nom du titulaire du compte bancaire.]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_authorizenet_echeck_js_account_number</key>
+      <value><![CDATA[* Veuillez entrer le numéro du compte.]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_authorizenet_echeck_js_bank_name</key>
+      <value><![CDATA[* Veuillez entrer le nom de l'institution bancaire.]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_authorizenet_echeck_js_routing_code</key>
+      <value><![CDATA[* Le numéro du compte doit contenir au moins %s numéros.]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_authorizenet_echeck_js_tax_id</key>
+      <value><![CDATA[* Le numéro de taxes ou d'assurance-social doit contenir au moins %s numéros.]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_authorizenet_echeck_error_general</key>
+      <value><![CDATA[Il y a eu un problème lors du traitement de ce compte bancaire. Veuillez vérifier les informations du compte et essayer de nouveau.]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_authorizenet_echeck_error_routing_code</key>
+      <value><![CDATA[Le numéro de compte doit contenir au moins %s numéros. Veuillez vérifier les informations du compte et essayer de nouveau.]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_authorizenet_echeck_error_invalid_routing_code</key>
+      <value><![CDATA[Il y a eu un problème lors du traitement de votre numéro de compte bancaire. Veuillez vérifier les informations du compte essayer de nouveau.]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_authorizenet_echeck_error_invalid_account</key>
+      <value><![CDATA[Il y a eu un problème lors du traitement de votre numéro de compte bancaire. Veuillez vérifier de les informations du compte est essayer de nouveau.]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_authorizenet_echeck_error_tax_id</key>
+      <value><![CDATA[Le numéro de taxes ou d'assurance-social doit contenir au moins %s numéros. Veuillez vérifier les informations et essayer de nouveau.]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_authorizenet_echeck_error_invalid_tax_id</key>
+      <value><![CDATA[Il y a eu un problème lors du traitement de votre numéro de taxes ou d'assurance-social. Veuillez vérifier les informations du compte et essayer de nouveau.]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_authorizenet_echeck_confirmation_message</key>
+      <value><![CDATA[En confirmant cette commande, j'autorise %s à charger mon compte %s account de la %s pour le montant de %s pour les articles dans cette commande.]]></value>
+      <group>modules-payment</group>
+    </definition>
+  </definitions>
+</language>

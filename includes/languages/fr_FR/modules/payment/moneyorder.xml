@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<language>
+  <definitions>
+    <definition>
+      <key>payment_moneyorder_title</key>
+      <value><![CDATA[Chèque/Mandat postal]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_moneyorder_description</key>
+      <value><![CDATA[Faire le paiement à l'ordre de:&nbsp;%s<br /><br />Envoyez à:<br />%s<br /><br />Votre commande sera expédié lorsque nous aurons reçu le paiement.]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_moneyorder_email_footer</key>
+      <value><![CDATA[Faire le paiement à l'ordre de: %s
+
+Envoyez à:
+%
+
+Votre commande sera expédié lorsque nous aurons reçu le paiement.]]></value>
+      <group>modules-payment</group>
+    </definition>
+  </definitions>
+</language>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<language>
+  <definitions>
+    <definition>
+      <key>payment_cc_title</key>
+      <value><![CDATA[Kreditkarte]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_cc_description</key>
+      <value><![CDATA[Kreditkarte Test Info:<br /><br />CC#: 4111111111111111<br />Ablauf: Jeder]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_cc_method_title</key>
+      <value><![CDATA[Kreditkarte]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_cc_credit_card_owner</key>
+      <value><![CDATA[Kreditkarteninhaber:]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_cc_credit_card_number</key>
+      <value><![CDATA[Kreditkarten-Nr.:]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_cc_credit_card_expiry_date</key>
+      <value><![CDATA[Gültig bis:]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_cc_js_credit_card_owner</key>
+      <value><![CDATA[* Der Name des Besitzers der Kreditkarte muss mindestens in %s Zeichen sein.]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_cc_js_credit_card_number</key>
+      <value><![CDATA[* Die Kreditkartennummer muss mindestens in %s Zeichen sein.]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_cc_js_credit_card_not_accepted</key>
+      <value><![CDATA[* Dieser Kartentyp ist nicht akzeptiert. Bitte versuchen Sie es erneut mit einer anderen Karte oder Zahlungsmethode.]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_cc_error_general</key>
+      <value><![CDATA[Es gab ein Problem bei der Verarbeitung dieser Kreditkarte. Bitte überprüfen Sie die Karte Informationen und versuchen Sie es erneut.]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_cc_error_not_accepted</key>
+      <value><![CDATA[Dieser Kartentyp ist nicht akzeptiert. Bitte versuchen Sie es erneut mit einer anderen Karte oder Zahlungsmethode.]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_cc_error_invalid_expiration_date</key>
+      <value><![CDATA[Die Kreditkarte Verfallsdatum ist ungültig. Bitte überprüfen Sie die Karte Informationen und versuchen Sie es erneut.]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_cc_error_expired</key>
+      <value><![CDATA[Die Kreditkarte ist abgelaufen. Bitte versuchen Sie es erneut mit einer anderen Karte oder Zahlungsmethode.]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_cc_error_unknown_card</key>
+      <value><![CDATA[Dies ist ein unbekannter Kreditkarte, die nicht verarbeitet werden kann. Bitte versuchen Sie es erneut mit einer anderen Karte oder Zahlungsmethode.]]></value>
+      <group>modules-payment</group>
+    </definition>
+  </definitions>
+</language>

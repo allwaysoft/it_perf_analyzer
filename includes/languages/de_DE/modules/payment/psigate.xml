@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<language>
+  <definitions>
+    <definition>
+      <key>payment_psigate_title</key>
+      <value><![CDATA[PSiGate]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_psigate_description</key>
+      <value><![CDATA[Kreditkarte Test-info:<br /><br />CC#: 4111111111111111<br />Ablauf: beliebig]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_psigate_credit_card_owner</key>
+      <value><![CDATA[Kreditkarteninhaber:]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_psigate_credit_card_number</key>
+      <value><![CDATA[Kreditkartennummer:]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_psigate_credit_card_expiry_date</key>
+      <value><![CDATA[Kreditkarte gültig bis:]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_psigate_credit_card_type</key>
+      <value><![CDATA[Art:]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_psigate_js_credit_card_number</key>
+      <value><![CDATA[* Die Kreditkarte muss mindestens ' . CC_NUMBER_MIN_LENGTH . ' characters.n Zeichen lang sein.]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_psigate_error_message</key>
+      <value><![CDATA[Es ist ein Fehler bei der Verarbeitung Ihrer Kreditkarte aufgetreten. Bitte versuchen Sie es erneut.]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_psigate_error</key>
+      <value><![CDATA[Kreditkarten-Fehler!]]></value>
+      <group>modules-payment</group>
+    </definition>
+  </definitions>
+</language>

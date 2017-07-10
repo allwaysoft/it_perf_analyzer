@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<language>
+  <definitions>
+    <definition>
+      <key>payment_payquake_cc_title</key>
+      <value><![CDATA[Kreditkarte (verarbeitet durch PayQuake)]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_payquake_cc_description</key>
+      <value><![CDATA[PayQuake Kreditkartentransaktionen]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_payquake_cc_method_title</key>
+      <value><![CDATA[Kreditkarte]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_payquake_cc_credit_card_owner</key>
+      <value><![CDATA[Kreditkarteninhaber:]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_payquake_cc_credit_card_number</key>
+      <value><![CDATA[Kreditkartennummer:]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_payquake_cc_credit_card_expiry_date</key>
+      <value><![CDATA[Kreditkarten Ablaufdatum:]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_payquake_cc_credit_card_cvc</key>
+      <value><![CDATA[Kreditkarte Prüfnummer(CVC):]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_payquake_cc_js_credit_card_owner</key>
+      <value><![CDATA[* Der Name des Besitzers der Kreditkarte muss mindestens% s Zeichen enthalten.]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_payquake_cc_js_credit_card_number</key>
+      <value><![CDATA[* Die Nummer der Kreditkarte muss mindestens% s Zeichen enthalten.]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_payquake_cc_js_credit_card_not_accepted</key>
+      <value><![CDATA[* Dieser Kartentyp wird nicht akzeptiert. Bitte versuchen Sie es erneut mit einer anderen Karte oder Zahlungsmethode.]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_payquake_cc_js_credit_card_cvc</key>
+      <value><![CDATA[* Die Kreditkarte Prüfnummer (CVC) muss mindestens 3 Zeichen lang sein.]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_payquake_cc_error_general</key>
+      <value><![CDATA[Es gab ein Problem bei der Verarbeitung dieser Kreditkarte. Bitte überprüfen Sie die Karteninformationen und versuchen Sie es erneut.]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_payquake_cc_error_not_accepted</key>
+      <value><![CDATA[Dieser Kartentyp wird nicht akzeptiert. Bitte versuchen Sie es erneut mit einer anderen Karte oder Zahlungsmethode.]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_payquake_cc_error_invalid_expiry_date</key>
+      <value><![CDATA[Das Verfallsdatum der Kreditkarte ist ungültig. Bitte überprüfen Sie die Karte Informationen und versuchen Sie es erneut.]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_payquake_cc_error_expired</key>
+      <value><![CDATA[Die Kreditkarte ist abgelaufen. Bitte versuchen Sie es erneut mit einer anderen Karte oder Zahlungsmethode.]]></value>
+      <group>modules-payment</group>
+    </definition>
+  </definitions>
+</language>

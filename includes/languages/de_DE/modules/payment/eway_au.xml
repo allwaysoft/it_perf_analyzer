@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<language>
+  <definitions>
+    <definition>
+      <key>payment_eway_au_title</key>
+      <value><![CDATA[eWAY Bezahlung]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_eway_au_description</key>
+      <value><![CDATA[eWAY Bezahlung]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_eway_au_method_title</key>
+      <value><![CDATA[eWAY Bezahlung]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_eway_au_credit_card_owner</key>
+      <value><![CDATA[Kreditkarteninhaber:]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_eway_au_credit_card_number</key>
+      <value><![CDATA[Kreditkartennummer:]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_eway_au_credit_card_expiry_date</key>
+      <value><![CDATA[Ablaufdatum:]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_eway_au_credit_card_cvv</key>
+      <value><![CDATA[CVV Nummer:]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_eway_eu_js_credit_card_owner</key>
+      <value><![CDATA[* Der Name des Karteninhabers muss mindestens %s Zeichen haben.]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_eway_eu_js_credit_card_number</key>
+      <value><![CDATA[* Die Kreditkartnnummer muss mindestens %s Zeichen haben.]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_eway_eu_cc_js_credit_card_cvc</key>
+      <value><![CDATA[* Der Kreditkartensicherheitscode (CVC) muss mindestens 3 Ziffern haben.]]></value>
+      <group>modules-payment</group>
+    </definition>
+  </definitions>
+</language>

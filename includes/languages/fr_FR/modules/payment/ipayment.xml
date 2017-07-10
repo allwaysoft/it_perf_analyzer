@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<language>
+  <definitions>
+    <definition>
+      <key>payment_ipayment_title</key>
+      <value><![CDATA[iPaiement]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_ipayment_description</key>
+      <value><![CDATA[Information de test de carte de crédit:<br /><br />CC#: 4111111111111111<br />Expiration: Au hasard]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_ipayment_error_heading</key>
+      <value><![CDATA[Impossible de traiter votre carte de crédit]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_ipayment_error_message</key>
+      <value><![CDATA[Merci de renseigner les détails de votre carte de crédit]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_ipayment_credit_card_owner</key>
+      <value><![CDATA[Propriétaire de la carte:]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_ipayment_credit_card_number</key>
+      <value><![CDATA[Numéro de la carte:]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_ipayment_credit_card_expiry_date</key>
+      <value><![CDATA[Date d'expiration de la carte:]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_ipayment_credit_card_checknumber</key>
+      <value><![CDATA[Numéro de sécurité de la carte:]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_ipayment_credit_card_checknumber_location</key>
+      <value><![CDATA[(situé au dos de la carte)]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_ipayment_js_credit_card_owner</key>
+      <value><![CDATA[Le nom du propriétaire doit comporter au moins %s caractères]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_ipayment_js_credit_card_number</key>
+      <value><![CDATA[Le numéro de la carte doit comporter au moins %s caractères]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_ipayment_credit_card_type</key>
+      <value><![CDATA[Type de carte:]]></value>
+      <group>modules-payment</group>
+    </definition>
+  </definitions>
+</language>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<language>
+  <definitions>
+    <definition>
+      <key>payment_authorizenet_cc_title</key>
+      <value><![CDATA[Authorize.net Credit Card]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_authorizenet_cc_description</key>
+      <value><![CDATA[Carte de crédit via Authorize.net]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_authorizenet_cc_method_title</key>
+      <value><![CDATA[Carte de crédit]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_authorizenet_cc_credit_card_owner</key>
+      <value><![CDATA[Nom sur la Carte de crédit :]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_authorizenet_cc_credit_card_number</key>
+      <value><![CDATA[Numéro de Carte de crédit :]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_authorizenet_cc_credit_card_expiry_date</key>
+      <value><![CDATA[Date d'expiration de la Carte de crédit :]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_authorizenet_cc_credit_card_cvc</key>
+      <value><![CDATA[Numéro de sécurité (CVC):]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_authorizenet_cc_js_credit_card_owner</key>
+      <value><![CDATA[* Le nom apparaissant sur la carte de crédit doit contenir au moins %s caractères.]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_authorizenet_cc_js_credit_card_number</key>
+      <value><![CDATA[* Le numéro de carte de crédit doit contenir au moins %s caractères.]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_authorizenet_cc_js_credit_card_not_accepted</key>
+      <value><![CDATA[* Ce type de carte de crédit n'est pas accepté. Veuillez essayer de nouveau avec une autre carte ou une autre méthode de paiement.]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_authorizenet_cc_js_credit_card_cvc</key>
+      <value><![CDATA[* Le numéro de sécurité (CVC) doit contenir au moins 3 caractères]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_authorizenet_cc_error_general</key>
+      <value><![CDATA[Il y a eu un problème lors du traitement de la carte de crédit. Veuillez vérifier les informations et essayez de nouveau.]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_authorizenet_cc_error_not_accepted</key>
+      <value><![CDATA[Ce type de carte de crédit n'est pas accepté. Veuillez essayer de nouveau avec une autre carte ou une autre méthode de paiement.]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_authorizenet_cc_error_invalid_expiration_date</key>
+      <value><![CDATA[La date d'expiration de la carte de crédit n'est pas valide. Veuillez vérifier les informations de la carte et essayer de nouveau.]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_authorizenet_cc_error_expired</key>
+      <value><![CDATA[La carte de crédit est expirée. Veuillez essayer de nouveau avec une autre carte ou une autre méthode de paiement.]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_authorizenet_cc_error_unknown_card</key>
+      <value><![CDATA[Votre carte de crédit n'est pas une carte reconnue et ne peut pas être traitée. Veuillez essayer de nouveau avec une autre carte ou une autre méthode de paiement.]]></value>
+      <group>modules-payment</group>
+    </definition>
+  </definitions>
+</language>

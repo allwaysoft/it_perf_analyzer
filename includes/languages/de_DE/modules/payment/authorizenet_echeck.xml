@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<language>
+  <definitions>
+    <definition>
+      <key>payment_authorizenet_echeck_title</key>
+      <value><![CDATA[Authorize.net eCheck]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_authorizenet_echeck_description</key>
+      <value><![CDATA[Authorize.net eCheck Transactions]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_authorizenet_echeck_method_title</key>
+      <value><![CDATA[Bank / Check-Konto]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_authorizenet_echeck_owner</key>
+      <value><![CDATA[Kontoinhaber:]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_authorizenet_echeck_account_type</key>
+      <value><![CDATA[Kontoart:]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_authorizenet_echeck_account_type_checking</key>
+      <value><![CDATA[Checking]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_authorizenet_echeck_account_type_business_checking</key>
+      <value><![CDATA[Business Checking]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_authorizenet_echeck_account_type_savings</key>
+      <value><![CDATA[Savings]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_authorizenet_echeck_account_number</key>
+      <value><![CDATA[Konto-Nummer:]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_authorizenet_echeck_bank_name</key>
+      <value><![CDATA[Name der Bank:]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_authorizenet_echeck_routing_code</key>
+      <value><![CDATA[Bankleitzahl:]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_authorizenet_echeck_tax_id</key>
+      <value><![CDATA[Steuer-ID oder SSN:]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_authorizenet_echeck_org_type</key>
+      <value><![CDATA[Art der Organisation:]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_authorizenet_echeck_org_type_individual</key>
+      <value><![CDATA[Individuell]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_authorizenet_echeck_org_type_business</key>
+      <value><![CDATA[Geschäft]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_authorizenet_echeck_js_owner</key>
+      <value><![CDATA[* Bitte geben Sie den Namen der Inhaber des Bankkontos ein.]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_authorizenet_echeck_js_account_number</key>
+      <value><![CDATA[* Bitte geben Sie die Kontonummer des Bankkontos ein.]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_authorizenet_echeck_js_bank_name</key>
+      <value><![CDATA[* Bitte geben Sie den Namen der Bank des Bankkontos.]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_authorizenet_echeck_js_routing_code</key>
+      <value><![CDATA[* Die Bankleitzahl muss in %s Ziffern bestehen.]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_authorizenet_echeck_js_tax_id</key>
+      <value><![CDATA[* Die Steuer-ID oder SSN muss in %s Ziffern bestehen.]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_authorizenet_echeck_error_general</key>
+      <value><![CDATA[Es gabe ein Problem bei der Verarbeitung dieser Bankkonto. Bitte überprüfen Sie die Kontoinformationen und versuchen Sie es erneut.]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_authorizenet_echeck_error_routing_code</key>
+      <value><![CDATA[Die Bankleitzahl muss in %s Ziffern bestehen. Bitte überprüfen Sie die Kontoinformationen und versuchen Sie es erneut.]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_authorizenet_echeck_error_invalid_routing_code</key>
+      <value><![CDATA[Es gabe ein Problem bei der Verarbeitung der Bankleitzahl. Bitte überprüfen Sie die Kontoinformationen und versuchen Sie es erneut.]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_authorizenet_echeck_error_invalid_account</key>
+      <value><![CDATA[Es gabe ein Problem bei der Verarbeitung der der Konto-Nr.. Bitte überprüfen Sie die Kontoinformationen und versuchen Sie es erneut.]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_authorizenet_echeck_error_tax_id</key>
+      <value><![CDATA[Die Steuer-ID oder SSN muss in %s Ziffern bestehen. Bitte überprüfen Sie die Kontoinformationen und versuchen Sie es erneut.]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_authorizenet_echeck_error_invalid_tax_id</key>
+      <value><![CDATA[Es gab ein Problem bei der Verarbeitung der Steuer-ID oder SSN. Bitte überprüfen Sie die Kontoinformationen und versuchen Sie es erneut.]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_authorizenet_echeck_confirmation_message</key>
+      <value><![CDATA[Bei der Bestätigung dieser Bestellung ermächtige ich %s, Gebühr von meinem Account auf %s für den Betrag von %s für die Positionen in dieser Bestelllung abzubuchen.]]></value>
+      <group>modules-payment</group>
+    </definition>
+  </definitions>
+</language>

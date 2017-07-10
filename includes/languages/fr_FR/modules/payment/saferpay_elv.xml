@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<language>
+  <definitions>
+    <definition>
+      <key>payment_saferpay_elv_title</key>
+      <value><![CDATA[Saferpay Bank Transfer]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_saferpay_elv_description</key>
+      <value><![CDATA[Saferpay Bank Transfer Transaction]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_saferpay_elv_method_title</key>
+      <value><![CDATA[Bank Transfer]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_saferpay_elv_bank_owner</key>
+      <value><![CDATA[Account Owner Name:]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_saferpay_elv_bank_account_number</key>
+      <value><![CDATA[Account Number:]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_saferpay_elv_bank_code</key>
+      <value><![CDATA[Bank Code:]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_saferpay_elv_js_error</key>
+      <value><![CDATA[*All fields required.]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_saferpay_elv_error_general</key>
+      <value><![CDATA[Un problème est survenu lors de la vérification des données. Veuillez vérifier les informations fournies.]]></value>
+      <group>modules-payment</group>
+    </definition>
+  </definitions>
+</language>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<language>
+  <definitions>
+    <definition>
+      <key>box_polls_heading</key>
+      <value><![CDATA[Umfragen]]></value>
+      <group>modules-boxes</group>
+    </definition>
+    <definition>
+      <key>box_polls_one_vote_per_ip_error</key>
+      <value><![CDATA[Fehler: Nur eine Abstimmung pro IP ist erlaubt bei dieser Frage.]]></value>
+      <group>modules-boxes</group>
+    </definition>
+    <definition>
+      <key>box_polls_votes</key>
+      <value><![CDATA[Abstimmungen]]></value>
+      <group>modules-boxes</group>
+    </definition>
+  </definitions>
+</language>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<language>
+  <definitions>
+    <definition>
+      <key>box_manufacturer_info_heading</key>
+      <value><![CDATA[Info Fabricant]]></value>
+      <group>modules-boxes</group>
+    </definition>
+    <definition>
+      <key>box_manufacturer_info_website</key>
+      <value><![CDATA[Visiter le site de %s]]></value>
+      <group>modules-boxes</group>
+    </definition>
+    <definition>
+      <key>box_manufacturer_info_products</key>
+      <value><![CDATA[Voir les autres produits]]></value>
+      <group>modules-boxes</group>
+    </definition>
+  </definitions>
+</language>

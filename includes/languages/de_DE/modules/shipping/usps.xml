@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<language>
+  <definitions>
+    <definition>
+      <key>shipping_usps_title</key>
+      <value><![CDATA[United States Postal Service (USPS)]]></value>
+      <group>modules-shipping</group>
+    </definition>
+    <definition>
+      <key>shipping_usps_description</key>
+      <value><![CDATA[United States Postal Service<br /><br />Sie benötigen einen Account bei USPS unter http://www.uspsprioritymail.com/et_regcert.html um dieses Modul nutzen zu können<br /><br />USPS erwartet, dass Sie <b>lbs</b> als Gewichtseinheit bei Ihren Produkten verwenden.]]></value>
+      <group>modules-shipping</group>
+    </definition>
+    <definition>
+      <key>shipping_usps_error</key>
+      <value><![CDATA[Es ist ein Fehler bei der Berechnung der USPS Versandkosten aufgetreten.<br />Wenn Sie USPS als Ihre gewünschte Versandart verwenden wollen, nehmen Sie bitte Kontakt mit uns auf.]]></value>
+      <group>modules-shipping</group>
+    </definition>
+  </definitions>
+</language>

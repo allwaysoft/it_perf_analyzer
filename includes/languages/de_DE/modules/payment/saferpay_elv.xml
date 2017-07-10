@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<language>
+  <definitions>
+    <definition>
+      <key>payment_saferpay_elv_title</key>
+      <value><![CDATA[Saferpay Bank Transfer]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_saferpay_elv_description</key>
+      <value><![CDATA[Saferpay Bank Transfer Transactions]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_saferpay_elv_method_title</key>
+      <value><![CDATA[Banküberweisung]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_saferpay_elv_bank_owner</key>
+      <value><![CDATA[Name des Kontoinhabers:]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_saferpay_elv_bank_account_number</key>
+      <value><![CDATA[Konto-Nummer:]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_saferpay_elv_bank_code</key>
+      <value><![CDATA[Bankleitzahl:]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_saferpay_elv_js_error</key>
+      <value><![CDATA[* Alle Felder müssen ausgefüllt werden.]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_saferpay_elv_error_general</key>
+      <value><![CDATA[Es gabe ein Problem bei der Verarbeitung dieser Bankkonto. Bitte überprüfen Sie die Kontoinformationen und versuchen Sie es erneut.]]></value>
+      <group>modules-payment</group>
+    </definition>
+  </definitions>
+</language>

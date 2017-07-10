@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<language>
+  <definitions>
+    <definition>
+      <key>payment_wirecard_cc_title</key>
+      <value><![CDATA[Wire Card Credit Card]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_wirecard_cc_description</key>
+      <value><![CDATA[Wire Card Credit Card Transactions]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_wirecard_cc_method_title</key>
+      <value><![CDATA[Carte de crédit]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_wirecard_cc_credit_card_owner</key>
+      <value><![CDATA[Propriétaire]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_wirecard_cc_credit_card_number</key>
+      <value><![CDATA[Numéro Carte de Crédit:]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_wirecard_cc_credit_card_expiry_date</key>
+      <value><![CDATA[Expiration Carte de Crédit:]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_wirecard_cc_credit_card_cvc</key>
+      <value><![CDATA[Numéro de vérification de la carte de crédit (CVC):]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_wirecard_cc_js_credit_card_owner</key>
+      <value><![CDATA[* Le nom du propriétaire de la carte de crédit doit comporter au moins %s caractères.]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_wirecard_cc_js_credit_card_number</key>
+      <value><![CDATA[* Le numéro de la carte de crédit doit comporter au moins %s caractères.]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_wirecard_cc_js_credit_card_not_accepted</key>
+      <value><![CDATA[* Ce type de carte de crédit n'est pas accepté. Veuillez réessayer avec une autre carte ou une autre méthode de paiement.]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_wirecard_cc_js_credit_card_cvc</key>
+      <value><![CDATA[* Le numéro de vérification de la carte de crédit doit contenir au moins 3 caractères.]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_wirecard_cc_error_general</key>
+      <value><![CDATA[Un problème est survenu lors de la vérification des données. Veuillez vérifier les informations fournies.]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_wirecard_cc_error_not_accepted</key>
+      <value><![CDATA[Ce type de carte de crédit n'est pas accepté. Veuillez réessayer avec une autre carte ou une autre méthode de paiement.]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_wirecard_cc_error_20071</key>
+      <value><![CDATA[La date d'expiration de la carte de crédit n'est pas valide. Veuillez vérifier les informations de la carte et essayer de nouveau.]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_wirecard_cc_error_33</key>
+      <value><![CDATA[La carte de crédit est expirée. Veuillez essayer de nouveau avec une autre carte ou une autre méthode de paiement.]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_wirecard_cc_error_unkown_card</key>
+      <value><![CDATA[Ce type de carte de crédit n'est pas accepté. Veuillez réessayer avec une autre carte ou une autre méthode de paiement.]]></value>
+      <group>modules-payment</group>
+    </definition>
+  </definitions>
+</language>

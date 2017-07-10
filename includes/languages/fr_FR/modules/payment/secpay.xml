@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<language>
+  <definitions>
+    <definition>
+      <key>payment_secpay_title</key>
+      <value><![CDATA[SECPay]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_secpay_description</key>
+      <value><![CDATA[Test Carte de crédit<br /><br />CC#:4444333322221111<br />Expiration:Tous]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_secpay_error</key>
+      <value><![CDATA[Credit Card Error!]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_secpay_error_message</key>
+      <value><![CDATA[Il y a eu une erreur de traitement de votre carte de crédit.Réesayer.]]></value>
+      <group>modules-payment</group>
+    </definition>
+  </definitions>
+</language>

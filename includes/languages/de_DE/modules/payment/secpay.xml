@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<language>
+  <definitions>
+    <definition>
+      <key>payment_secpay_title</key>
+      <value><![CDATA[SECPay]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_secpay_description</key>
+      <value><![CDATA[Kreditkarte Test-info:<br /><br />CC#: 4111111111111111<br />Ablauf: beliebig]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_secpay_error</key>
+      <value><![CDATA[Kreditkarte Fehler!]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_secpay_error_message</key>
+      <value><![CDATA[Es gabe ein Fehler bei der Bearbeitung Ihrer Kreditkarte. Bitte versuchen Sie es erneut.]]></value>
+      <group>modules-payment</group>
+    </definition>
+  </definitions>
+</language>

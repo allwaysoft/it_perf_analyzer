@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<language>
+  <definitions>
+    <definition>
+      <key>payment_moneyorder_title</key>
+      <value><![CDATA[Scheck / Zahlungsanweisung]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_moneyorder_description</key>
+      <value><![CDATA[Scheck zahlbar an:&nbsp;%s<br /><br />Senden an:<br />%s<br /><br />Ihre Bestellung wird nicht versandt, bis wir die Zahlung erhalten]]></value>
+      <group>modules-payment</group>
+    </definition>
+    <definition>
+      <key>payment_moneyorder_email_footer</key>
+      <value><![CDATA[Scheck zahlbar an:%s\\nSenden an:%s\\nIhre Bestellung wird nicht versandt, bis wir die Zahlung erhalten.]]></value>
+      <group>modules-payment</group>
+    </definition>
+  </definitions>
+</language>
