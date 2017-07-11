@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by JetBrains PhpStorm.
- * User: Administrator
- * Date: 10/2/11
- * Time: 11:15 AM
- * To change this template use File | Settings | File Templates.
- */
  
 class task extends content{
     private $start_date;

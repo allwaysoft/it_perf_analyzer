@@ -1,14 +1,6 @@
 <?php
 
- /**
- * Created by JetBrains PhpStorm.
- * User: Administrator
- * Date: 10/2/11
- * Time: 11:25 AM
- * To change this template use File | Settings | File Templates.
- */
-
-    if (!class_exists(osC_Roles_Admin)) {
+    if (!class_exists('osC_Roles_Admin')) {
         include('includes/classes/roles.php');
     }
 
