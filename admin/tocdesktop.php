@@ -24,9 +24,6 @@
   require_once('includes/classes/desktop_settings.php');
   $toC_Desktop_Settings = new toC_Desktop_Settings();
   
-  require_once('includes/classes/currencies.php');
-  $osC_Currencies = new osC_Currencies();
-  
   header('Cache-Control: no-cache, must-revalidate');
   header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
   header('Content-Type: application/x-javascript');  
