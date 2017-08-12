@@ -11,49 +11,51 @@
   as published by the Free Software Foundation.
 */
 
-  echo 'Ext.namespace("Toc.roles");';
+  echo 'Ext.namespace("Toc.users");';
 
-//  include('roles_permissions_grid_panel.php');
-  include('roles_dialog.php');
-  include('roles_grid.php');
-  include('roles_tree_panel.php');    
+  include('roles_tree_panel.php');
+  include('users_data_panel.php');
+  include('roles_panel.php');
+  include('users_main_panel.php');
+  include('users_dialog.php');
+  include('users_grid.php');
 ?>
 
-Ext.override(TocDesktop.RolesWindow, {
+Ext.override(TocDesktop.UsersWindow, {
 
-  createWindow : function() {
+  createWindow: function() {
     var desktop = this.app.getDesktop();
-    var win = desktop.getWindow('roles-win');
+    var win = desktop.getWindow('users-win');
      
     if (!win) {
-      grd = new Toc.roles.RolesGrid({owner: this});
+      pnl = new Toc.users.mainPanel({owner: this});
       
       win = desktop.createWindow({
-        id: 'roles-win',
-        title: "Gestionnaire des Groupes d'utilisateurs",
+        id: 'users-win',
+        title: 'Gestion des Comptes Utilisateurs',
         width: 800,
         height: 400,
-        iconCls: 'icon-roles-win',
+        iconCls: 'icon-users-win',
         layout: 'fit',
-        items: grd
+        items: pnl
       });
     }
     
     win.show();
   },
   
-  createRolesDialog: function() {
+  createUsersDialog: function() {
     var desktop = this.app.getDesktop();
-    var dlg = desktop.getWindow('roles-dialog-win');
+    var dlg = desktop.getWindow('users-dialog-win');
     
     if (!dlg) {
-      dlg = desktop.createWindow(null, Toc.roles.RolesDialog);
+      dlg = desktop.createWindow({}, Toc.users.UsersDialog);
       
       dlg.on('saveSuccess', function(feedback) {
         this.app.showNotification({title: TocLanguage.msgSuccessTitle, html: feedback});
       }, this);
     }
-    
+
     return dlg;
   }
 });

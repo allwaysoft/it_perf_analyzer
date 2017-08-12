@@ -1,15 +1,4 @@
 <?php
-/*
-  $Id: desktop.php $
-  Mefobe Cart Solutions
-  http://www.mefobemarket.com
-
-  Copyright (c) 2009 Wuxi Elootec Technology Co., Ltd
-
-  This program is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License v2 (1991)
-  as published by the Free Software Foundation.
-*/
   require('includes/ext_config.php');
   
   require('includes/classes/json.php');
@@ -23,7 +12,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html dir="<?php echo $osC_Language->getTextDirection();?>" xml:lang="<?php echo $osC_Language->getCode();?>" lang="<?php echo $osC_Language->getCode();?>">
 <head>
-<title>Plateforme SVP</title>
+<title>THIRD Perf Analyzer</title>
 
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -68,7 +57,7 @@
       <img class="x-loading-panel-logo" style="display:block;margin-bottom:15px;" src="images/tomatocart.jpg" />
       <img src="images/loading.gif" style="width:16px;height:16px;vertical-align:middle" />&#160;
       <span id="load-status"><?php echo $osC_Language->get('init_system'); ?></span>
-      <div style="font-size:10px; font-weight:normal; margin-top:15px;">Copyright &copy; 2009 Mefobe Consulting Douala Cameroun</div>
+      <div style="font-size:10px; font-weight:normal; margin-top:15px;">Copyright &copy; THIRD IT</div>
     </div>
   </div>
 

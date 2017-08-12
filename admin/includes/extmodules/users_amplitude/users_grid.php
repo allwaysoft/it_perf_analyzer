@@ -1,15 +1,4 @@
 <?php
-/*
-  $Id: users_grid.php $
-  Mefobe Cart Solutions
-  http://www.mefobemarket.com
-
-  Copyright (c) 2009 Wuxi Elootec Technology Co., Ltd
-
-  This program is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License v2 (1991)
-  as published by the Free Software Foundation.
-*/
 
 ?>
 
@@ -33,8 +22,8 @@ Toc.users.UsersGrid = function(config) {
       id: 'users_id'
     }, [
       'users_id',
-      'staff_id',
       'administrators_id',
+      'image_url',
       'description',
       'user_name',
       'email_address',
@@ -44,6 +33,18 @@ Toc.users.UsersGrid = function(config) {
     ]),
     autoLoad: true
   });
+
+   var tpl = new Ext.XTemplate(
+		'<tpl for="data">',
+            '<table><tbody><tr>',
+             '<td align="left" valign="top"><img src="{image_url}"/></td>',
+             '<td><table><tbody><tr>',
+             '<td>{user_name}</td>',
+             '</tr><tr>',
+             '<td>{description}</td>',
+             '</tr></tbody></table></td></tr></tbody></table>',
+        '</tpl>'
+	);
 
   config.rowActions = new Ext.ux.grid.RowActions({
     actions:[
@@ -69,8 +70,9 @@ Toc.users.UsersGrid = function(config) {
   config.sm = new Ext.grid.CheckboxSelectionModel();
   config.cm = new Ext.grid.ColumnModel([
     config.sm,
+    { id: 'image_url', header: '', dataIndex: 'image_url'},
     { id: 'account', header: 'Compte', dataIndex: 'account', sortable: false,align: 'left',renderer: renderAccount,css : "white-space: normal;"},
-    { header: 'Status', align: 'center', renderer: renderPublish, dataIndex: 'status'},
+    { header: 'Status', align: 'center', renderer: renderPublish, dataIndex: 'users_status'},
     config.rowActions
   ]);
   config.autoExpandColumn = 'account';
@@ -321,7 +323,7 @@ Ext.extend(Toc.users.UsersGrid, Ext.grid.GridPanel, {
 
         if (result.success == true) {
           var store = this.getStore();
-          store.getById(usersId).set('status', flag);
+          store.getById(usersId).set('users_status', flag);
           store.commitChanges();
 
           this.owner.app.showNotification({title: TocLanguage.msgSuccessTitle, html: result.feedback});

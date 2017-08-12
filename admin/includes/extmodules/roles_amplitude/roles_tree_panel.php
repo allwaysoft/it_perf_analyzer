@@ -13,7 +13,7 @@
 
 ?>
 
-Toc.users.RolesTreePanel = function(config) {
+Toc.roles.RolesTreePanel = function(config) {
   config = config || {};
   
   config.region = 'west';
@@ -32,7 +32,7 @@ Toc.users.RolesTreePanel = function(config) {
     id: '0',
     expanded: true
   });
-  config.currentCategoryId = -1;
+  config.currentCategoryId = '0';
     
   config.loader = new Ext.tree.TreeLoader({
     dataUrl: Toc.CONF.CONN_URL,
@@ -44,7 +44,7 @@ Toc.users.RolesTreePanel = function(config) {
     listeners: {
       load: function() {
         this.expandAll();
-        this.setCategoryId(this.currentCategoryId || -1);
+        this.setCategoryId(-1);
       },
       scope: this
     }
@@ -66,18 +66,17 @@ Toc.users.RolesTreePanel = function(config) {
   
   this.addEvents({'selectchange' : true});
   
-  Toc.users.RolesTreePanel.superclass.constructor.call(this, config);
+  Toc.roles.RolesTreePanel.superclass.constructor.call(this, config);
 };
 
-Ext.extend(Toc.users.RolesTreePanel, Ext.tree.TreePanel, {
+Ext.extend(Toc.roles.RolesTreePanel, Ext.tree.TreePanel, {
   
   setCategoryId: function(categoryId) {
     var currentNode = this.getNodeById(categoryId);
-    currentNode = currentNode || this.getRootNode();
     currentNode.select();
-    this.currentCategoryId = currentNode.id;
+    this.currentCategoryId = categoryId;
     
-    this.fireEvent('selectchange', this.currentCategoryId);
+    this.fireEvent('selectchange', categoryId);
   },
   
   onCategoryNodeClick: function (node) {

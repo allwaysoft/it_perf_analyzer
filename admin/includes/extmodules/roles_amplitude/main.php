@@ -30,7 +30,7 @@ Ext.override(TocDesktop.RolesWindow, {
       
       win = desktop.createWindow({
         id: 'roles-win',
-        title: "Gestionnaire des Groupes d'utilisateurs",
+        title: 'Gestionnaire des Profils',
         width: 800,
         height: 400,
         iconCls: 'icon-roles-win',

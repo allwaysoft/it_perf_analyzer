@@ -25,8 +25,6 @@ class osC_Roles_Admin
     {
         global $osC_Database;
 
-        $data = null;
-
         if ($src == 'local') {
             if ($id != -1) {
                 $Qadmin = $osC_Database->query('select r.*,a.* from :table_roles r INNER JOIN :table_administrators a ON (r.administrators_id = a.id) where r.roles_id = :id');
@@ -52,7 +50,7 @@ class osC_Roles_Admin
                 'administrators_id' => -1,
                 'roles_id' => -1,
                 'user_name' => 'everyone',
-                'email_address' => 'everyone@innovics.org',
+                'email_address' => 'everyone@everyone.com',
                 'roles_name' => 'Tout le monde',
                 'roles_description' => 'Tout le monde'
             );
@@ -60,27 +58,125 @@ class osC_Roles_Admin
             if ($id != -1) {
                 $Qadmin->freeResult();
             }
+        } else {
 
-            if (is_array($admin)) {
-                $data = array_merge($admin, $modules);
-            } else {
-                $data = $modules;
+            $db_user = empty($_REQUEST['db_user']) ? DB_USER : $_REQUEST['db_user'];
+            $db_pass = empty($_REQUEST['db_pass']) ? DB_PASS : $_REQUEST['db_pass'];
+            $db_host = empty($_REQUEST['db_host']) ? DB_HOST : $_REQUEST['db_host'];
+            $db_sid = empty($_REQUEST['db_sid']) ? DB_SID : $_REQUEST['db_sid'];
+
+            $c = oci_pconnect($db_user,$db_pass,$db_host . "/" . $db_sid);
+            if (!$c) {
+                $e = oci_error();
+                trigger_error('Could not connect to database: ' . $e['message'], E_USER_ERROR);
             }
 
-            unset($modules);
-            $Qaccess->freeResult();
+            $query = "SELECT TRIM (EVUTI.CUTI) CUTI,LTRIM (RTRIM (LIB)) LIB,(SELECT COUNT (*) FROM evuti) TOTAL,EMAIL,UNIX FROM EVUTI LEFT OUTER JOIN EVUTAUT ON (EVUTI.CUTI = EVUTAUT.CUTI) WHERE EVUTI.SUS = 'N' and trim(EVUTI.CUTI) = :CUTI";
+            $s = oci_parse($c, $query);
+            if (!$s) {
+                $e = oci_error($c);
+                trigger_error('Could not parse statement: ' . $e['message'], E_USER_ERROR);
+            }
+
+            oci_bind_by_name($s, ":CUTI", $id);
+
+            $r = oci_execute($s);
+            if (!$r) {
+                $e = oci_error($s);
+                trigger_error('Could not execute statement: ' . $e['message'], E_USER_ERROR);
+            }
+
+            while (($row = oci_fetch_array($s, OCI_ASSOC))) {
+                $admin = array(
+                    'administrators_id' => '-1',
+                    'roles_id' => $row['CUTI'],
+                    'user_name' => $row['UNIX'],
+                    'email_address' => $row['EMAIL'],
+                    'roles_name' => $row['LIB'] . " ( " . $row['CUTI'] . " )",
+                    'roles_description' => $row['LIB'] . " ( " . $row['CUTI'] . " )",
+                    'src' => 'extern'
+                );
+            }
+
+            oci_free_statement($r);
+            oci_close($c);
+
+            $modules = array('access_modules' => array());
+
+            $Qaccess = $osC_Database->query('select module from :table_administrators_access where administrators_id = :roles_id');
+            $Qaccess->bindTable(':table_administrators_access', TABLE_DELTA_ACCESS);
+            $Qaccess->bindValue(':roles_id', $id);
+            $Qaccess->execute();
+
+            while ($Qaccess->next()) {
+                $modules['access_modules'][] = $Qaccess->value('module');
+            }
         }
 
+        if (is_array($admin)) {
+            $data = array_merge($admin, $modules);
+        } else {
+            $data = $modules;
+        }
+
+        unset($modules);
+        $Qaccess->freeResult();
+
         return $data;
+    }
+
+    function getRoleDelta($id)
+    {
+        $db_user = empty($_REQUEST['db_user']) ? DB_USER : $_REQUEST['db_user'];
+        $db_pass = empty($_REQUEST['db_pass']) ? DB_PASS : $_REQUEST['db_pass'];
+        $db_host = empty($_REQUEST['db_host']) ? DB_HOST : $_REQUEST['db_host'];
+        $db_sid = empty($_REQUEST['db_sid']) ? DB_SID : $_REQUEST['db_sid'];
+
+        $c = oci_pconnect($db_user, $db_pass, $db_host . "/" . $db_sid);
+        if (!$c) {
+            $e = oci_error();
+            trigger_error('Could not connect to database: ' . $e['message'], E_USER_ERROR);
+        }
+
+        $s = oci_parse($c, "SELECT TRIM (EVUTI.CUTI) CUTI,LTRIM(RTRIM (LIB)) LIB,0 TOTAL,EMAIL,UNIX FROM EVUTI LEFT OUTER JOIN EVUTAUT ON (EVUTI.CUTI = EVUTAUT.CUTI) WHERE trim (evuti.cuti) = :cuti");
+        if (!$s) {
+            $e = oci_error($c);
+            trigger_error('Could not parse statement: ' . $e['message'], E_USER_ERROR);
+        }
+
+        oci_bind_by_name($s, ":cuti", $id);
+
+        $r = oci_execute($s);
+        if (!$r) {
+            $e = oci_error($s);
+            trigger_error('Could not execute statement: ' . $e['message'], E_USER_ERROR);
+        }
+
+        $count = 0;
+        $roles = array();
+
+        while (($row = oci_fetch_array($s, OCI_ASSOC))) {
+            $roles[] = array(
+                'roles_id' => $row['CUTI'],
+                'user_name' => $row['LIB'],
+                'email_address' => $row['EMAIL'],
+                'roles_name' => $row['LIB'] . ' ( ' . $row['CUTI'] . ' )',
+                'roles_description' => $row['LIB'],
+                'icon' => osc_icon('folder_account.png')
+            );
+
+            $count++;
+        }
+
+        oci_free_statement($r);
+        oci_close($c);
+
+        return $roles;
     }
 
     function getRole($id)
     {
         global $osC_Database;
-
-        $osC_Database->selectDatabase(DB_DATABASE);
-
-        $data = null;
 
         $Qadmin = $osC_Database->query('select r.*,a.* from :table_roles r INNER JOIN :table_administrators a ON (r.administrators_id = a.id) where r.roles_id = :id');
         $Qadmin->bindTable(':table_roles', TABLE_ROLES);
@@ -88,18 +184,12 @@ class osC_Roles_Admin
         $Qadmin->bindValue(':id', $id);
         $Qadmin->execute();
 
-        if (!$osC_Database->isError()) {
-            return $Qadmin->toArray();
-        }
-
-        return $data;
+        return $Qadmin->toArray();
     }
 
     function save($id = null, $data, $modules = null, $roles_id = null)
     {
         global $osC_Database;
-
-        $osC_Database->selectDatabase(DB_DATABASE);
 
         $error = false;
         if (osc_validate_email_address($data['email_address'])) {
@@ -114,11 +204,6 @@ class osC_Roles_Admin
 
             $QcheckEmail->execute();
 
-            if ($osC_Database->isError()) {
-                $_SESSION['errot'] = $osC_Database->getError();
-                var_dump($QcheckEmail);
-                return -5;
-            }
             if ($QcheckEmail->numberOfRows() > 0) {
                 return -4;
             }
@@ -137,12 +222,6 @@ class osC_Roles_Admin
         $Qcheck->bindTable(':table_administrators', TABLE_ADMINISTRATORS);
         $Qcheck->bindValue(':user_name', $data['username']);
         $Qcheck->execute();
-
-        if ($osC_Database->isError()) {
-            $_SESSION['errot'] = $osC_Database->getError();
-            var_dump($Qcheck);
-            return -5;
-        }
 
         if ($Qcheck->numberOfRows() < 1) {
             $osC_Database->startTransaction();
@@ -168,12 +247,6 @@ class osC_Roles_Admin
             $Qadmin->setLogging($_SESSION['module'], $id);
             $Qadmin->execute();
 
-            if ($osC_Database->isError()) {
-                $_SESSION['errot'] = $osC_Database->getError();
-                var_dump($Qadmin);
-                return -5;
-            }
-
             if (!$osC_Database->isError()) {
                 if (!is_numeric($id)) {
                     $id = $osC_Database->nextID();
@@ -195,12 +268,6 @@ class osC_Roles_Admin
                         $Qcheck->bindValue(':module', $module);
                         $Qcheck->execute();
 
-                        if ($osC_Database->isError()) {
-                            $_SESSION['errot'] = $osC_Database->getError();
-                            var_dump($Qcheck);
-                            return -5;
-                        }
-
                         if ($Qcheck->numberOfRows() < 1) {
                             $Qinsert = $osC_Database->query('insert into :table_administrators_access (administrators_id, module) values (:administrators_id, :module)');
                             $Qinsert->bindTable(':table_administrators_access', TABLE_ADMINISTRATORS_ACCESS);
@@ -210,9 +277,8 @@ class osC_Roles_Admin
                             $Qinsert->execute();
 
                             if ($osC_Database->isError()) {
-                                $_SESSION['errot'] = $osC_Database->getError();
-                                var_dump($Qinsert);
-                                return -5;
+                                $error = true;
+                                break;
                             }
                         }
                     }
@@ -233,32 +299,27 @@ class osC_Roles_Admin
                 $Qdel->execute();
 
                 if ($osC_Database->isError()) {
-                    $_SESSION['errot'] = $osC_Database->getError();
-                    var_dump($Qdel);
-                    return -5;
+                    $error = true;
                 }
             }
 
             if ($error === false) {
                 if (is_numeric($roles_id)) {
-                    $Qrole = $osC_Database->query('update :table_roles set roles_description = :roles_description, roles_name = :roles_name,administrators_id = :administrators_id,department_id = :department_id where roles_id = :roles_id');
+                    $Qrole = $osC_Database->query('update :table_roles set roles_description = :roles_description, roles_name = :roles_name,administrators_id = :administrators_id where roles_id = :roles_id');
                     $Qrole->bindInt(':roles_id', $roles_id);
                 } else {
-                    $Qrole = $osC_Database->query('insert into :table_roles (roles_description, roles_name, administrators_id,department_id) values (:roles_description, :roles_name, :administrators_id,:department_id)');
+                    $Qrole = $osC_Database->query('insert into :table_roles (roles_description, roles_name, administrators_id) values (:roles_description, :roles_name, :administrators_id)');
                 }
 
                 $Qrole->bindTable(':table_roles', TABLE_ROLES);
                 $Qrole->bindInt(':administrators_id', $id);
-                $Qrole->bindInt(':department_id', $data['department_id']);
                 $Qrole->bindValue(':roles_description', $data['roles_description']);
                 $Qrole->bindValue(':roles_name', $data['roles_name']);
                 $Qrole->setLogging($_SESSION['module'], $id);
                 $Qrole->execute();
 
                 if ($osC_Database->isError()) {
-                    $_SESSION['errot'] = $osC_Database->getError();
-                    var_dump($Qrole);
-                    return -5;
+                    $error = true;
                 }
             }
 
@@ -271,12 +332,6 @@ class osC_Roles_Admin
                     $Qadmin->bindTable(':tables_users', TABLE_USERS);
                     $Qadmin->bindTable(':table_users_roles', TABLE_USERS_ROLES);
                     $Qadmin->execute();
-
-                    if ($osC_Database->isError()) {
-                        $_SESSION['errot'] = $osC_Database->getError();
-                        var_dump($Qadmin);
-                        return -5;
-                    }
 
                     $users = array();
                     while ($Qadmin->next()) {
@@ -403,7 +458,7 @@ class osC_Roles_Admin
         }
     }
 
-    function delete($administrators_id,$roles_id)
+    function delete($id)
     {
         global $osC_Database;
 
@@ -411,20 +466,23 @@ class osC_Roles_Admin
 
         $Qdel = $osC_Database->query('delete from :table_administrators_access where administrators_id = :administrators_id');
         $Qdel->bindTable(':table_administrators_access', TABLE_ADMINISTRATORS_ACCESS);
-        $Qdel->bindInt(':administrators_id', $administrators_id);
+        $Qdel->bindInt(':administrators_id', $id);
+        $Qdel->setLogging($_SESSION['module'], $id);
         $Qdel->execute();
 
         if (!$osC_Database->isError()) {
             $Qdel = $osC_Database->query('delete from :table_administrators where id = :id');
             $Qdel->bindTable(':table_administrators', TABLE_ADMINISTRATORS);
-            $Qdel->bindInt(':id', $administrators_id);
+            $Qdel->bindInt(':id', $id);
+            $Qdel->setLogging($_SESSION['module'], $id);
             $Qdel->execute();
         }
 
         if (!$osC_Database->isError()) {
             $Qdel = $osC_Database->query('delete from :table_roles where roles_id = :id');
             $Qdel->bindTable(':table_roles', TABLE_ROLES);
-            $Qdel->bindInt(':id', $roles_id);
+            $Qdel->bindInt(':id', $id);
+            $Qdel->setLogging($_SESSION['module'], $id);
             $Qdel->execute();
         }
 

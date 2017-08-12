@@ -21,7 +21,7 @@ Toc.users.RolesTreePanel = function(config) {
   config.autoScroll = true;
   config.containerScroll = true;
   config.split = true;
-  config.width = 170;
+  config.width = 250;
   config.enableDD = true;
   config.rootVisible = true;
   

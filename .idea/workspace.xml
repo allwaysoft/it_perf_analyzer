@@ -22,7 +22,7 @@
     <file path="/databases_dialog.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1388751624222" ignored="false" />
     <file path="/databases_grid.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1388408936605" ignored="false" />
     <file path="/content_logs_dialog.js" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1388410457061" ignored="false" />
-    <file path="/default.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1488455265270" ignored="false" />
+    <file path="/default.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1502548131192" ignored="false" />
     <file path="/content_logs_panel.js" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1389013261592" ignored="false" />
     <file path="/logs_main_panel.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1388420318221" ignored="false" />
     <file path="/database_log_panel.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1388758487947" ignored="false" />
@@ -187,6 +187,7 @@
     <file path="$PROJECT_DIR$/admin/includes/classes/content.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1502542516285" ignored="false" />
     <file path="$PROJECT_DIR$/admin/includes/classes/inbound_mail.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1502542516285" ignored="false" />
     <file path="$PROJECT_DIR$/admin/includes/classes/email_account.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1502542516286" ignored="false" />
+    <file path="$PROJECT_DIR$/admin/includes/jsons/users.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1502551789686" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -215,14 +216,23 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="oracle_perf.js" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="oracle_perf.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/admin/templates/default/extensions/content/oracle_perf.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="57" column="36" selection-start="1635" selection-end="1635" vertical-scroll-proportion="0.45945945">
+            <state line="57" column="36" selection-start="1635" selection-end="1635" vertical-scroll-proportion="0.0">
               <folding>
                 <marker date="1502469801409" expanded="false" signature="3623:3643" placeholder="..." />
                 <marker date="1502469801409" expanded="false" signature="25487:25507" placeholder="..." />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="default.php" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/admin/templates/default.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="14" column="34" selection-start="509" selection-end="509" vertical-scroll-proportion="0.569378">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -291,7 +301,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/admin/includes/languages/fr_FR/modules/access/databases_perf.php" />
         <option value="$PROJECT_DIR$/admin/includes/extmodules/server_explorer/main.php" />
         <option value="$PROJECT_DIR$/admin/includes/extmodules/server_explorer/xxxx.js" />
         <option value="$PROJECT_DIR$/admin/includes/extmodules/database_explorer/LayoutTreePanel.php" />
@@ -307,6 +316,7 @@
         <option value="$PROJECT_DIR$/admin/templates/default/extensions/content/server.js" />
         <option value="$PROJECT_DIR$/admin/templates/default/extensions/content/oracle.js" />
         <option value="$PROJECT_DIR$/admin/templates/default/extensions/content/oracle_perf.js" />
+        <option value="$PROJECT_DIR$/admin/templates/default.php" />
       </list>
     </option>
   </component>
@@ -400,84 +410,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="templates" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dev" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="cloud_perf_analyzer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="admin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="templates" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="default" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dev" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="cloud_perf_analyzer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="admin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="templates" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="default" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="extensions" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dev" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="cloud_perf_analyzer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="admin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="templates" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="default" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="extensions" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="content" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -733,7 +665,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/admin/includes/jsons/users.php</url>
-          <line>751</line>
+          <line>133</line>
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/admin/includes/jsons/servers.php</url>
@@ -807,12 +739,12 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/admin/includes/jsons/users.php</url>
-          <line>691</line>
+          <line>113</line>
           <option name="timeStamp" value="66" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/admin/includes/jsons/users.php</url>
-          <line>1414</line>
+          <line>257</line>
           <option name="timeStamp" value="68" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
@@ -950,13 +882,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/admin/includes/jsons/databases.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="4042" column="5" selection-start="175836" selection-end="178899" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/admin/includes/classes/databases.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="113" column="6" selection-start="3597" selection-end="3597" vertical-scroll-proportion="0.0">
@@ -1053,11 +978,18 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/admin/templates/default/extensions/content/oracle_perf.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="57" column="36" selection-start="1635" selection-end="1635" vertical-scroll-proportion="0.45945945">
+        <state line="57" column="36" selection-start="1635" selection-end="1635" vertical-scroll-proportion="0.0">
           <folding>
             <marker date="1502469801409" expanded="false" signature="3623:3643" placeholder="..." />
             <marker date="1502469801409" expanded="false" signature="25487:25507" placeholder="..." />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/templates/default.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="14" column="34" selection-start="509" selection-end="509" vertical-scroll-proportion="0.569378">
+          <folding />
         </state>
       </provider>
     </entry>

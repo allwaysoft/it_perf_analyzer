@@ -1,8 +1,16 @@
 <?php
 
-define('OSC_ADMINISTRATORS_ACCESS_MODE_ADD', 'add');
-define('OSC_ADMINISTRATORS_ACCESS_MODE_SET', 'set');
-define('OSC_ADMINISTRATORS_ACCESS_MODE_REMOVE', 'remove');
+if (!defined('OSC_ADMINISTRATORS_ACCESS_MODE_ADD')) {
+    define('OSC_ADMINISTRATORS_ACCESS_MODE_ADD', 'add');
+}
+
+if (!defined('OSC_ADMINISTRATORS_ACCESS_MODE_SET')) {
+    define('OSC_ADMINISTRATORS_ACCESS_MODE_SET', 'add');
+}
+
+if (!defined('OSC_ADMINISTRATORS_ACCESS_MODE_REMOVE')) {
+    define('OSC_ADMINISTRATORS_ACCESS_MODE_REMOVE', 'add');
+}
 
 class osC_Administrators_Admin
 {
