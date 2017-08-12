@@ -19,10 +19,10 @@ Ext.override(TocDesktop.ServersDashboardWindow, {
 
             win = desktop.createWindow({
                 id: 'servers_dash-win',
-                title: 'Tableau de Bord',
+                title: 'Performance Servers',
                 width: 800,
                 height: 400,
-                iconCls: 'icon-databases-win',
+                iconCls: 'icon-server-win',
                 layout: 'fit',
                 items: dashboard
             });

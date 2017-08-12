@@ -858,6 +858,14 @@ td.ux-taskButtons-edge {
     color: #000;
 }
 
+.blue .x-panel-header {
+    background: lightsteelblue;
+}
+
+.gray .x-panel-header {
+    background: lightblue;
+}
+
 #setting-wallpaper-view .x-panel-body, #setting-theme-view .x-panel-body {
     background: white;
     font: 11px Arial, Helvetica, sans-serif;

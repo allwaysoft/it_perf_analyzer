@@ -1,16 +1,6 @@
 <?php
-/*
-  $Id: roles.php $
-  Mefobe Cart Solutions
-  http://www.mefobemarket.com
 
-  Copyright (c) 2009 Wuxi Elootec Technology Co., Ltd
-
-  This program is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License v2 (1991)
-  as published by the Free Software Foundation.
-*/
-if (!class_exists(osC_Roles_Admin)) {
+if (!class_exists('osC_Roles_Admin')) {
     include('includes/classes/roles.php');
 }
 
@@ -18,7 +8,7 @@ class toC_Json_Roles
 {
     function listRoles()
     {
-        global $toC_Json, $osC_Database;
+        global $toC_Json;
 
         $start = empty($_REQUEST['start']) ? 0 : $_REQUEST['start'];
         $limit = empty($_REQUEST['limit']) ? MAX_DISPLAY_SEARCH_RESULTS : $_REQUEST['limit'];

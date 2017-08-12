@@ -9,7 +9,7 @@
 
     function osC_Access_Servers_dashboard() {
             
-      $this->_title = 'Tableau de Bord';
+      $this->_title = 'Dashboard Servers';
     }
   }
 ?>

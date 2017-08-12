@@ -1,3 +1,38 @@
+Toc.content.ContentManager.getServersCategoryCombo = function () {
+
+    var dsDatabasesCategoryCombo = new Ext.data.Store({
+        url: Toc.CONF.CONN_URL,
+        baseParams: {
+            module: 'servers',
+            action: 'list_serverGroups'
+        },
+        reader: new Ext.data.JsonReader({
+            root: Toc.CONF.JSON_READER_ROOT,
+            totalProperty: Toc.CONF.JSON_READER_TOTAL_PROPERTY,
+            id: 'group_id'
+        }, [
+            'group_id',
+            'group_name'
+        ]),
+        autoLoad: false
+    });
+
+    return new Ext.form.ComboBox({
+        fieldLabel: 'Groupe',
+        store: dsDatabasesCategoryCombo,
+        displayField: 'group_name',
+        valueField: 'group_id',
+        hiddenName: 'group_id',
+        name: 'group_id',
+        mode: 'local',
+        width: 410,
+        readOnly: true,
+        triggerAction: 'all',
+        forceSelection: true,
+        allowBlank: false
+    });
+};
+
 Toc.content.ContentManager.MoveDataPanel = function (params, type, src, dest, pBar, index, form) {
     var watchMove = function (pbar, action) {
         params.action = action;
@@ -1066,7 +1101,9 @@ Toc.TopFsPanel = function (config) {
     config.region = 'center';
     //config.width = this.params.width ||'50%';
     config.title = 'FS';
+    config.height  = 110;
     config.hideHeaders = true;
+    config.border = true;
     config.viewConfig = {emptyText: 'Aucune donnee recue ...', forceFit: true};
 
     config.listeners = {
@@ -1240,162 +1277,6 @@ Ext.extend(Toc.TopFsPanel, Ext.grid.GridPanel, {
     stop: function () {
         this.started = false;
         this.refreshData(this);
-    }
-});
-
-Toc.OsPerfPanel = function (config) {
-    var that = this;
-    this.params = config;
-    config = config || {};
-    config.loadMask = false;
-    config.region = 'center';
-    config.width = this.params.width || '50%';
-    config.title = 'OS Perf';
-    config.hideHeaders = true;
-    config.viewConfig = {emptyText: 'Aucune donnee recue ...', forceFit: true};
-
-    config.listeners = {
-        'rowclick': this.onRowClick
-    };
-
-    config.ds = new Ext.data.Store({
-        url: Toc.CONF.CONN_URL,
-        baseParams: {
-            module: 'servers',
-            action: 'list_perf',
-            user: config.server_user,
-            pass: config.server_pass,
-            port: config.server_port,
-            host: config.host,
-            typ: config.typ
-        },
-        reader: new Ext.data.JsonReader({
-            root: Toc.CONF.JSON_READER_ROOT,
-            totalProperty: Toc.CONF.JSON_READER_TOTAL_PROPERTY,
-            id: 'metric'
-        }, [
-            'metric',
-            'qtip',
-            'raw',
-            {name: 'pct_used', type: 'int'}
-        ]),
-        autoLoad: false
-    });
-
-    config.rowActions = new Ext.ux.grid.RowActions({
-        actions: [
-            {iconCls: 'icon-xxx-record', qtipIndex: 'qtip'}
-        ],
-        widthIntercept: Ext.isSafari ? 4 : 2
-    });
-    config.rowActions.on('action', this.onRowAction, this);
-    config.plugins = config.rowActions;
-
-    config.cm = new Ext.grid.ColumnModel([
-        { id: 'metric', header: '', dataIndex: 'metric', sortable: true, width: 70},
-        { header: '%', align: 'center', dataIndex: 'pct_used', renderer: Toc.content.ContentManager.renderOsProgress, sortable: true, width: 30},
-        config.rowActions
-    ]);
-    config.autoExpandColumn = 'metric';
-    config.stripeRows = true;
-
-    var thisObj = this;
-
-    config.tools = [];
-
-    config.task = {
-        run: function () {
-            thisObj.getStore().load();
-        },
-        interval: config.freq || 15000
-    };
-
-    config.runner = new Ext.util.TaskRunner();
-
-    config.tools = [
-        {
-            id: 'refresh',
-            qtip: 'Refresh',
-            handler: function (event, toolEl, panel) {
-                thisObj.getStore().load();
-                /*panel.started = !panel.started;
-
-                 if(panel.started)
-                 {
-                 panel.runner.start(panel.task);
-                 }
-                 else
-                 {
-                 panel.runner.stop(panel.task);
-                 }*/
-            }
-        }
-    ];
-
-    this.addEvents({'selectchange': true});
-    Toc.OsPerfPanel.superclass.constructor.call(this, config);
-    this.getView().scrollOffset = 0;
-};
-
-Ext.extend(Toc.OsPerfPanel, Ext.grid.GridPanel, {
-    onEdit: function (record) {
-        var config = {
-            server_user: this.server_user,
-            server_pass: this.server_pass,
-            server_port: this.server_port,
-            host: this.host,
-            caller: null,
-            show_files: true,
-            close_dlg: false,
-            file_name: null,
-            dlg: this,
-            typ: this.typ,
-            mount: record.get("metric")
-        };
-
-        /*var dlg = new Toc.Dirbrowser(config);
-         dlg.setTitle('FS ' + record.get("mount") + ' sur le serveur ' + this.host);
-
-         dlg.on('saveSuccess', function() {
-         this.onRefresh();
-         }, this);
-
-         dlg.show(config,this.owner);*/
-    },
-
-    onRefresh: function () {
-        this.getStore().reload();
-    },
-
-    refreshGrid: function (categoriesId) {
-        var permissions = this.mainPanel.getCategoryPermissions();
-        var store = this.getStore();
-
-        store.baseParams['permissions'] = permissions.can_read + ',' + permissions.can_write + ',' + permissions.can_modify + ',' + permissions.can_publish;
-        store.baseParams['categories_id'] = categoriesId;
-        this.categoriesId = categoriesId;
-        store.reload();
-    },
-
-    onRowAction: function (grid, record, action, row, col) {
-        switch (action) {
-            case 'icon-xxx-record':
-                this.onEdit(record);
-                break;
-        }
-    },
-
-    onRowClick: function (grid, index, obj) {
-        var item = grid.getStore().getAt(index);
-        this.fireEvent('selectchange', item);
-    },
-
-    start: function () {
-        this.runner.start(this.task);
-    },
-
-    stop: function () {
-        this.runner.stop(this.task);
     }
 });
 
@@ -2657,10 +2538,16 @@ Toc.ServersGrid = function (config) {
 Ext.extend(Toc.ServersGrid, Ext.grid.GridPanel, {
 
     onAdd: function () {
-        var dlg = new Toc.ServersDialog();
-        //var path = this.mainPanel.getCategoryPath();
+        var dlg = new Toc.ServerEditDialog();
         dlg.on('saveSuccess', function () {
-            this.onRefresh();
+            if(this.mainPanel)
+            {
+                this.mainPanel.refreshTree();
+            }
+            else
+            {
+                Ext.MessageBox.alert(TocLanguage.msgErrTitle,"No mainPanel defined !!!");
+            }
         }, this);
 
         dlg.show(null, null);
@@ -2684,13 +2571,27 @@ Ext.extend(Toc.ServersGrid, Ext.grid.GridPanel, {
         }
     },
 
+    onView: function (record) {
+        var dlg = new Toc.ServerDialog();
+        dlg.setTitle(record.get("content_name"));
+
+        dlg.showDetails(record.json, null, this.owner);
+    },
+
     onEdit: function (record) {
-        var dlg = new Toc.ServersDialog();
+        var dlg = new Toc.ServerEditDialog();
         //var path = this.mainPanel.getCategoryPath();
         dlg.setTitle(record.get("content_name"));
 
         dlg.on('saveSuccess', function () {
-            this.onRefresh();
+            if(this.mainPanel)
+            {
+                this.mainPanel.refreshTree();
+            }
+            else
+            {
+                Ext.MessageBox.alert(TocLanguage.msgErrTitle,"No mainPanel defined !!!");
+            }
         }, this);
 
         dlg.show(record.json, null);
@@ -2773,10 +2674,10 @@ Ext.extend(Toc.ServersGrid, Ext.grid.GridPanel, {
     },
 
     refreshGrid: function (categoriesId) {
-        var permissions = this.mainPanel.getCategoryPermissions();
+        //var permissions = this.mainPanel.getCategoryPermissions();
         var store = this.getStore();
 
-        store.baseParams['permissions'] = permissions.can_read + ',' + permissions.can_write + ',' + permissions.can_modify + ',' + permissions.can_publish;
+        //store.baseParams['permissions'] = permissions.can_read + ',' + permissions.can_write + ',' + permissions.can_modify + ',' + permissions.can_publish;
         store.baseParams['categories_id'] = categoriesId;
         this.categoriesId = categoriesId;
         store.reload();
@@ -2793,7 +2694,12 @@ Ext.extend(Toc.ServersGrid, Ext.grid.GridPanel, {
     },
 
     onRowAction: function (grid, record, action, row, col) {
+        //console.debug(action);
         switch (action) {
+            case 'icon-detail-record':
+                this.onView(record);
+                break;
+
             case 'icon-delete-record':
                 this.onDelete(record);
                 break;
@@ -2860,7 +2766,130 @@ Ext.extend(Toc.ServersGrid, Ext.grid.GridPanel, {
     }
 });
 
-Toc.ServersDialog = function (config) {
+Toc.ServerDialog = function (config) {
+
+    config = config || {};
+
+    config.id = 'servers-dialog-win';
+    config.title = 'Infos Serveur';
+    config.layout = 'fit';
+    config.maximizable = true;
+    config.minimizable = true;
+    config.resizable = true;
+    config.width = 465;
+    config.height = 310;
+    config.modal = true;
+    config.iconCls = 'icon-servers-win';
+    config.items = this.buildForm();
+
+    this.addEvents({'saveSuccess': true});
+
+    Toc.ServerDialog.superclass.constructor.call(this, config);
+};
+
+Ext.extend(Toc.ServerDialog, Ext.Window, {
+
+    show: function (json, id, cId) {
+
+        if (json) {
+            this.serversId = json.servers_id || null;
+            this.servers_id = json.servers_id || null;
+            this.server_user = json.user || null;
+            this.server_pass = json.pass || null;
+            this.server_port = json.port || null;
+            this.host = json.host || null;
+            this.typ = json.typ || null;
+        }
+
+        //this.serversId = id || null;
+        var categoriesId = cId || -1;
+
+        this.frmServer.form.reset();
+        this.frmServer.form.baseParams['servers_id'] = this.serversId;
+        this.frmServer.form.baseParams['current_category_id'] = categoriesId;
+
+        Toc.ServerDialog.superclass.show.call(this);
+        this.loadServer(this.pnlData);
+    },
+
+    loadServer: function (panel) {
+        if (this.serversId && this.serversId >= 0) {
+            if (panel) {
+                panel.getEl().mask('Chargement infos Serveur....');
+            }
+
+            this.frmServer.load({
+                url: Toc.CONF.CONN_URL,
+                params: {
+                    module: 'servers',
+                    action: 'load_server'
+                },
+                success: function (form, action) {
+                    if (panel) {
+                        panel.getEl().unmask();
+                    }
+
+                    this.pnlFS = new Toc.fsGrid({host: this.host, server_port: this.server_port, server_pass: this.server_pass, server_user: this.server_user, servers_id: this.servers_id, owner: this.owner, typ: this.typ});
+                    this.pnlLogs = new Toc.logPanel({host: this.host, server_port: this.server_port, server_pass: this.server_pass, server_user: this.server_user, servers_id: this.servers_id, content_id: this.servers_id, content_type: 'servers', owner: Toc.content.ContentManager});
+                    this.pnlDocuments = new Toc.content.DocumentsPanel({content_id: this.serversId, content_type: 'servers', owner: Toc.content.ContentManager});
+                    this.pnlLinks = new Toc.content.LinksPanel({content_id: this.serversId, content_type: 'servers', owner: Toc.content.ContentManager});
+                    this.pnlComments = new Toc.content.CommentsPanel({content_id: this.serversId, content_type: 'servers', owner: Toc.content.ContentManager});
+
+                    this.tabServer.add(this.pnlFS);
+                    this.tabServer.add(this.pnlLogs);
+                    this.tabServer.add(this.pnlDocuments);
+                    this.tabServer.add(this.pnlLinks);
+                    this.tabServer.add(this.pnlComments);
+
+                    //this.setWidth(850);
+                    //this.setHeight(570);
+                    this.maximize();
+                },
+                failure: function (form, action) {
+                    Ext.Msg.alert(TocLanguage.msgErrTitle, TocLanguage.msgErrLoadData);
+                    if (panel) {
+                        panel.getEl().unmask();
+                    }
+
+                    this.close();
+                },
+                scope: this
+            });
+        }
+    },
+
+    getContentPanel: function () {
+        this.tabServer = new Ext.TabPanel({
+            activeTab: 0,
+            hideParent: true,
+            region: 'center',
+            defaults: {
+                hideMode: 'offsets'
+            },
+            deferredRender: false,
+            items: []
+        });
+
+        return this.tabServer;
+    },
+
+    buildForm: function () {
+        this.frmServer = new Ext.form.FormPanel({
+            layout: 'border',
+            url: Toc.CONF.CONN_URL,
+            baseParams: {
+                module: 'servers',
+                action: 'save_server'
+            },
+            deferredRender: false,
+            items: [this.getContentPanel()]
+        });
+
+        return this.frmServer;
+    }
+});
+
+Toc.ServerEditDialog = function (config) {
 
     config = config || {};
 
@@ -2895,10 +2924,10 @@ Toc.ServersDialog = function (config) {
 
     this.addEvents({'saveSuccess': true});
 
-    Toc.ServersDialog.superclass.constructor.call(this, config);
+    Toc.ServerEditDialog.superclass.constructor.call(this, config);
 };
 
-Ext.extend(Toc.ServersDialog, Ext.Window, {
+Ext.extend(Toc.ServerEditDialog, Ext.Window, {
 
     show: function (json, id, cId) {
 
@@ -2919,21 +2948,21 @@ Ext.extend(Toc.ServersDialog, Ext.Window, {
         this.frmServer.form.baseParams['servers_id'] = this.serversId;
         this.frmServer.form.baseParams['current_category_id'] = categoriesId;
 
-        Toc.ServersDialog.superclass.show.call(this);
+        Toc.ServerEditDialog.superclass.show.call(this);
         this.loadServer(this.pnlData);
     },
 
     loadServer: function (panel) {
         if (this.serversId && this.serversId >= 0) {
             if (panel) {
-                panel.getEl().mask('Chargement infos serveur....');
+                panel.getEl().mask('Chargement infos Serveur....');
             }
 
             this.frmServer.load({
                 url: Toc.CONF.CONN_URL,
                 params: {
-                    action: 'load_server',
-                    servers_id: this.serversId
+                    module: 'servers',
+                    action: 'load_server'
                 },
                 success: function (form, action) {
                     if (panel) {
@@ -2941,19 +2970,9 @@ Ext.extend(Toc.ServersDialog, Ext.Window, {
                     }
 
                     this.pnlData.setTyp(action.result.data.typ);
-                    this.pnlLogs = new Toc.logPanel({host: this.host, server_port: this.server_port, server_pass: this.server_pass, server_user: this.server_user, server_user: this.server_user, servers_id: this.servers_id, content_id: this.servers_id, content_type: 'servers', owner: Toc.content.ContentManager});
-                    this.pnlDocuments = new Toc.content.DocumentsPanel({content_id: this.serversId, content_type: 'servers', owner: Toc.content.ContentManager});
-                    this.pnlLinks = new Toc.content.LinksPanel({content_id: this.serversId, content_type: 'servers', owner: Toc.content.ContentManager});
-                    this.pnlComments = new Toc.content.CommentsPanel({content_id: this.serversId, content_type: 'servers', owner: Toc.content.ContentManager});
+                    this.pnlGroupes.setRoles(action.result.data.group_id);
 
-                    this.tabservers.add(this.pnlLogs);
-                    this.tabservers.add(this.pnlDocuments);
-                    this.tabservers.add(this.pnlLinks);
-                    this.tabservers.add(this.pnlComments);
-
-                    //this.setWidth(850);
-                    //this.setHeight(570);
-                    this.maximize();
+                    //this.maximize();
                 },
                 failure: function (form, action) {
                     Ext.Msg.alert(TocLanguage.msgErrTitle, TocLanguage.msgErrLoadData);
@@ -2971,9 +2990,11 @@ Ext.extend(Toc.ServersDialog, Ext.Window, {
     getContentPanel: function () {
         var defaultLanguageCode = '<?php list($defaultLanguageCode) = split("_", $osC_Language->getCode()); echo $defaultLanguageCode ?>';
         this.pnlData = new Toc.ServerDataPanel({parent: this});
+        this.pnlGroupes = new Toc.servers.GroupsPanel();
         this.pnlData.setTitle('Connexion');
+        this.pnlGroupes.setTitle('Groupes');
 
-        this.tabservers = new Ext.TabPanel({
+        this.tabServers = new Ext.TabPanel({
             activeTab: 0,
             hideParent: true,
             region: 'center',
@@ -2982,11 +3003,11 @@ Ext.extend(Toc.ServersDialog, Ext.Window, {
             },
             deferredRender: false,
             items: [
-                this.pnlData
+                this.pnlData,this.pnlGroupes
             ]
         });
 
-        return this.tabservers;
+        return this.tabServers;
     },
 
     buildForm: function () {
@@ -3006,23 +3027,32 @@ Ext.extend(Toc.ServersDialog, Ext.Window, {
 
     submitForm: function () {
         var params = {
+            group_id: this.pnlGroupes.getRoles()
         };
 
-        this.frmServer.form.submit({
-            waitMsg: TocLanguage.formSubmitWaitMsg,
-            params: params,
-            timeout: 60,
-            success: function (form, action) {
-                this.fireEvent('saveSuccess', action.result.feedback);
-                this.close();
-            },
-            failure: function (form, action) {
-                if (action.failureType != 'client') {
-                    Ext.MessageBox.alert(TocLanguage.msgErrTitle, action.result.feedback);
-                }
-            },
-            scope: this
-        });
+        if(params.group_id.toString() == '')
+        {
+            Ext.MessageBox.alert(TocLanguage.msgErrTitle,'Vous devez selectionner au moins un Groupe pour ce Serveur !!!');
+            this.tabServers.activate(this.pnlGroupes);
+        }
+        else
+        {
+            this.frmServer.form.submit({
+                waitMsg: TocLanguage.formSubmitWaitMsg,
+                params: params,
+                timeout: 60,
+                success: function (form, action) {
+                    this.fireEvent('saveSuccess', action.result.feedback);
+                    this.close();
+                },
+                failure: function (form, action) {
+                    if (action.failureType != 'client') {
+                        Ext.MessageBox.alert(TocLanguage.msgErrTitle, action.result.feedback);
+                    }
+                },
+                scope: this
+            });
+        }
     }
 });
 
@@ -3173,7 +3203,7 @@ Toc.ServerDashboard = function (config) {
 
         if (!config.isProduction) {
             config.combo_freq = Toc.content.ContentManager.getFrequenceCombo();
-            config.categoryCombo = Toc.content.ContentManager.getDatabasesCategoryCombo();
+            config.categoryCombo = Toc.content.ContentManager.getServersCategoryCombo();
 
             config.tbar = [
                 {
@@ -3209,7 +3239,7 @@ Toc.ServerDashboard = function (config) {
             config.categoryCombo.on('select', function (combo, record, index) {
                 thisObj.onStop();
                 thisObj.combo_freq.enable();
-                var category = record.data.key;
+                var category = record.data.group_id;
                 var freq = thisObj.combo_freq.getValue();
                 thisObj.buildItems(category, freq);
             });
@@ -3274,9 +3304,9 @@ Ext.extend(Toc.ServerDashboard, Ext.Panel, {
         Ext.Ajax.request({
             url: Toc.CONF.CONN_URL,
             params: {
-                module: 'databases',
-                action: 'list_databasesperf',
-                category: category || 'all',
+                module: 'servers',
+                action: 'list_serverperf',
+                category: category || '0',
                 where: this.isProduction ? "a.databases_id in (45,44,23,22,10,54)" : ''
             },
             callback: function (options, success, response) {
@@ -3291,6 +3321,7 @@ Ext.extend(Toc.ServerDashboard, Ext.Panel, {
                         db.owner = this.owner;
                         db.freq = frequence;
                         db.width = '33%';
+                        db.classs = (i % 2 == 0) ? 'blue' : 'gray';
 
                         var panel = new Toc.ServerDashboardPanel(db);
                         //var panel = new Toc.TopWaitClassPanel(db);
@@ -3511,10 +3542,10 @@ Toc.CpuCharts = function (config) {
                 var chart;
                 chart = new AmCharts.AmSerialChart();
                 chart.width = '100%';
-                chart.marginBottom = 2;
-                chart.marginLeft = 2;
-                chart.marginRight = 2;
-                chart.marginTop = 2;
+                chart.marginBottom = 1;
+                chart.marginLeft = 1;
+                chart.marginRight = 1;
+                chart.marginTop = 1;
                 //chart.autoResize = true;
 
                 var type = "line";
@@ -3724,10 +3755,6 @@ Ext.extend(Toc.CpuCharts, Ext.Panel, {
         {
             clearInterval(this.interval);
         }
-        else
-        {
-            Ext.MessageBox.alert(TocLanguage.msgErrTitle,"No job defined !!!");
-        }
     }
 });
 
@@ -3752,9 +3779,9 @@ Toc.NetCharts = function (config) {
                 chart = new AmCharts.AmSerialChart();
                 chart.width = '100%';
                 chart.marginBottom = 1;
-                chart.marginLeft = 0;
-                chart.marginRight = 0;
-                chart.marginTop = 5;
+                chart.marginLeft = 1;
+                chart.marginRight = 1;
+                chart.marginTop = 1;
                 //chart.autoResize = true;
 
                 var type = "line";
@@ -3780,7 +3807,7 @@ Toc.NetCharts = function (config) {
                 chart.addValueAxis(valueAxis);
 
                 // GRAPHS
-                graph = new AmCharts.AmGraph();
+                var graph = new AmCharts.AmGraph();
                 graph.type = type; // it's simple line graph
                 graph.title = "Receive";
                 graph.valueField = "rec";
@@ -3851,6 +3878,7 @@ Ext.extend(Toc.NetCharts, Ext.Panel, {
                     },
                     callback: function (options, success, response) {
 
+                        scope.reqs--;
                         var chart = this.chart;
                         var valueAxis = chart.valueAxes[0];
 
@@ -3938,10 +3966,6 @@ Ext.extend(Toc.NetCharts, Ext.Panel, {
         if(this.interval)
         {
             clearInterval(this.interval);
-        }
-        else
-        {
-            Ext.MessageBox.alert(TocLanguage.msgErrTitle,"No job defined !!!");
         }
     }
 });
@@ -4169,10 +4193,6 @@ Ext.extend(Toc.MemCharts, Ext.Panel, {
         {
             clearInterval(this.interval);
         }
-        else
-        {
-            Ext.MessageBox.alert(TocLanguage.msgErrTitle,"No job defined !!!");
-        }
     }
 });
 
@@ -4202,10 +4222,10 @@ Toc.DiskCharts = function (config) {
 
                 var type = "line";
                 chart.dataProvider = thisObj.data;
-                chart.marginBottom = 2;
-                chart.marginLeft = 2;
-                chart.marginRight = 2;
-                chart.marginTop = 2;
+                chart.marginBottom = 1;
+                chart.marginLeft = 1;
+                chart.marginRight = 1;
+                chart.marginTop = 1;
                 chart.categoryField = "name";
 
                 // AXES
@@ -4368,9 +4388,203 @@ Ext.extend(Toc.DiskCharts, Ext.Panel, {
         {
             clearInterval(this.interval);
         }
+    }
+});
+
+Toc.exploreServer = function (node, panel) {
+    panel.removeAll();
+
+    if(node.id == 0)
+    {
+        panel.removeAll();
+    }
+    else
+    {
+        if (node) {
+
+            if (node) {
+                panel.node = node;
+            }
+            else {
+                Ext.Msg.alert(TocLanguage.msgErrTitle, "Aucun element selectionne !!!");
+                return false;
+            }
+
+            panel.getEl().mask("Chargement ...");
+
+            var pnlLogs = new Toc.logPanel({host: node.attributes.host, server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, content_id: node.attributes.servers_id, content_type: 'servers', owner: node.attributes.owner});
+            var pnlFS = new Toc.fsGrid({host: node.attributes.host, server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, owner: this.owner, typ: node.attributes.typ});
+            var pnlDocuments = new Toc.content.DocumentsPanel({content_id: this.serversId, content_type: 'servers', owner: Toc.content.ContentManager});
+            var pnlLinks = new Toc.content.LinksPanel({content_id: this.serversId, content_type: 'servers', owner: Toc.content.ContentManager});
+            var pnlComments = new Toc.content.CommentsPanel({content_id: this.serversId, content_type: 'servers', owner: Toc.content.ContentManager});
+
+            var tab = new Ext.TabPanel({
+                activeTab: 0,
+                defaults: {
+                    hideMode: 'offsets'
+                },
+                deferredRender: false,
+                items: [pnlFS,pnlLogs,pnlDocuments,pnlLinks,pnlComments]
+            });
+
+            panel.add(tab);
+            panel.doLayout();
+
+            panel.getEl().unmask();
+        }
         else
         {
-            Ext.MessageBox.alert(TocLanguage.msgErrTitle,"No job defined !!!");
+            Ext.Msg.alert(TocLanguage.msgErrTitle, "Aucun Server selectionne !!!");
         }
+    }
+
+    panel.mainPanel.doLayout();
+
+    return true;
+};
+
+Toc.PSGrid = function (config) {
+    var that = this;
+    config = config || {};
+    config.loadMask = true;
+    config.header = false;
+    config.title = 'Processes';
+    config.border = true;
+    config.viewConfig = {emptyText: TocLanguage.gridNoRecords};
+
+    config.listeners = {
+        'rowclick': this.onRowClick
+    };
+
+    config.ds = new Ext.data.Store({
+        url: Toc.CONF.CONN_URL,
+        baseParams: {
+            module: 'servers',
+            action: 'list_ps',
+            user: config.server_user,
+            pass: config.server_pass,
+            port: config.server_port,
+            host: config.host,
+            typ: config.typ,
+            show_files: config.show_files || true
+        },
+        reader: new Ext.data.JsonReader({
+            root: Toc.CONF.JSON_READER_ROOT,
+            totalProperty: Toc.CONF.JSON_READER_TOTAL_PROPERTY,
+            id: 'pid'
+        }, [
+            'pid',
+            'cpu',
+            'mem',
+            'vsz',
+            'rss',
+            'stat',
+            'start',
+            'time',
+            'command'
+        ]),
+        autoLoad: false
+    });
+
+    config.rowActions = new Ext.ux.grid.RowActions({
+        actions: [
+            {iconCls: 'icon-edit-record', qtip: TocLanguage.tipEdit}
+        ],
+        widthIntercept: Ext.isSafari ? 4 : 2
+    });
+    config.rowActions.on('action', this.onRowAction, this);
+    config.plugins = config.rowActions;
+
+    config.sm = new Ext.grid.CheckboxSelectionModel();
+    config.cm = new Ext.grid.ColumnModel([
+        config.sm,
+        { id: 'mount', header: 'Nom', dataIndex: 'mount', sortable: true},
+        { header: '%', align: 'center', dataIndex: 'pct_used', renderer: Toc.content.ContentManager.renderProgress, sortable: true},
+        { header: 'Taille (MB)', align: 'center', dataIndex: 'size', sortable: true, renderer: Toc.content.ContentManager.FormatNumber},
+        { header: 'Libre (MB)', align: 'center', dataIndex: 'dispo', sortable: true, renderer: Toc.content.ContentManager.FormatNumber},
+        { header: 'Utilise (MB)', align: 'center', dataIndex: 'used', sortable: true, renderer: Toc.content.ContentManager.FormatNumber},
+        { id: 'typ', header: 'Type', dataIndex: 'typ', align: 'center', sortable: true},
+        { id: 'fs', header: 'Filesystem', dataIndex: 'fs', sortable: true},
+        config.rowActions
+    ]);
+    config.autoExpandColumn = 'fs';
+    config.stripeRows = true;
+
+    config.txtSearch = new Ext.form.TextField({
+        width: 100,
+        hideLabel: true
+    });
+
+    config.tbar = [
+        {
+            text: '',
+            iconCls: 'refresh',
+            handler: this.onRefresh,
+            scope: this
+        }
+    ];
+
+    var thisObj = this;
+
+    this.addEvents({'selectchange': true});
+    Toc.fsGrid.superclass.constructor.call(this, config);
+};
+
+Ext.extend(Toc.fsGrid, Ext.grid.GridPanel, {
+    onEdit: function (record) {
+        var config = {
+            server_user: this.server_user,
+            server_pass: this.server_pass,
+            server_port: this.server_port,
+            host: this.host,
+            caller: this.caller,
+            show_files: this.show_files,
+            close_dlg: this.close_dlg,
+            file_name: this.file_name,
+            dlg: this.dlg,
+            mount: record.get("mount")
+        };
+
+        var dlg = new Toc.Dirbrowser(config);
+        dlg.setTitle(record.get("mount"));
+
+        dlg.on('saveSuccess', function () {
+            this.onRefresh();
+        }, this);
+
+        if (this.close_dlg && this.dlg) {
+            dlg.on('close', function () {
+                this.dlg.close();
+            }, this);
+        }
+
+        dlg.show(config, this.owner);
+    },
+
+    onRefresh: function () {
+        this.getStore().reload();
+    },
+
+    refreshGrid: function (categoriesId) {
+        var permissions = this.mainPanel.getCategoryPermissions();
+        var store = this.getStore();
+
+        store.baseParams['permissions'] = permissions.can_read + ',' + permissions.can_write + ',' + permissions.can_modify + ',' + permissions.can_publish;
+        store.baseParams['categories_id'] = categoriesId;
+        this.categoriesId = categoriesId;
+        store.reload();
+    },
+
+    onRowAction: function (grid, record, action, row, col) {
+        switch (action) {
+            case 'icon-edit-record':
+                this.onEdit(record);
+                break;
+        }
+    },
+
+    onRowClick: function (grid, index, obj) {
+        var item = grid.getStore().getAt(index);
+        this.fireEvent('selectchange', item);
     }
 });

@@ -1,15 +1,5 @@
 <?php
-/*
-  $Id: Databases.php $
-  Mefobe Cart Solutions
-  http://www.mefobemarket.com
 
-  Copyright (c) 2009 Wuxi Elootec Technology Co., Ltd
-
-  This program is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License v2 (1991)
-  as published by the Free Software Foundation.
-*/
 require('includes/classes/databases.php');
 require('includes/classes/servers.php');
 require('includes/classes/email_account.php');
@@ -835,6 +825,135 @@ WHERE delta_ogg_config.id = delta_ogg_capture_state.config_id and config_id= " .
         echo $toC_Json->encode($response);
     }
 
+    function loadGroupsTree()
+    {
+        global $osC_Database, $toC_Json;
+
+        $Qtree = $osC_Database->query('SELECT COUNT(ur.databases_id) AS count, ur.databases_id,r.group_id, r.group_name FROM delta_database_groups r LEFT OUTER JOIN delta_database_to_groups ur ON (r.group_id = ur.group_id) GROUP BY r.group_name, r.group_id ORDER BY r.group_name,r.group_id ASC');
+        $Qtree->execute();
+
+        $records = array();
+
+        while ($Qtree->next()) {
+            $records [] = array('group_id' => $Qtree->value('group_id'), 'id' => $Qtree->value('group_id'), 'text' => $Qtree->value('group_name') . ' (' . $Qtree->value('count') . ' )', 'icon' => 'templates/default/images/icons/16x16/database_icon.jpg', 'leaf' => true);
+        }
+
+        $Qtree->freeResult();
+
+        echo $toC_Json->encode($records);
+    }
+
+    function loadLayoutTree()
+    {
+        global $toC_Json,$osC_Database;
+
+        $query = "SELECT a.*,s.label,s.HOST,s.servers_id,s.typ,s.USER AS server_user,s.pass AS server_pass,s.PORT AS server_port FROM delta_databases a INNER JOIN delta_servers s ON a.servers_id = s.servers_id";
+        $Qdatabases = $osC_Database->query($query);
+        $Qdatabases->appendQuery('order by a.label ');
+        $Qdatabases->execute();
+
+        $records = array();
+        while ($Qdatabases->next()) {
+            $records [] = array(
+                'host' => $Qdatabases->Value('HOST'),
+                'server_user' => $Qdatabases->Value('server_user'),
+                'servers_id' => $Qdatabases->Value('servers_id'),
+                'server_pass' => $Qdatabases->Value('server_pass'),
+                'server_port' => $Qdatabases->Value('server_port'),
+                'label' => $Qdatabases->Value('label'),
+                'sid' => $Qdatabases->Value('sid'),
+                'port' => $Qdatabases->Value('port'),
+                'db_port' => $Qdatabases->Value('port'),
+                'db_user' => $Qdatabases->Value('user'),
+                'typ' => $Qdatabases->Value('typ'),
+                'db_pass' => $Qdatabases->Value('pass'),
+                'databases_id' => $Qdatabases->ValueInt('databases_id'),
+                'id' => $Qdatabases->ValueInt('databases_id'),
+                'text' => $Qdatabases->value('label'),
+                'icon' => 'templates/default/images/icons/16x16/database_icon.jpg',
+                'leaf' => true
+            );
+        }
+
+        $Qdatabases->freeResult();
+
+        echo $toC_Json->encode($records);
+    }
+
+    function listDatabaseGroups()
+    {
+        global $toC_Json, $osC_Database;
+
+        $query = "select * from delta_database_groups order by group_name";
+        $Qgroups = $osC_Database->query($query);
+        $Qgroups->execute();
+
+        $records = array();
+
+        $count = 0;
+
+        while ($Qgroups->next()) {
+            $records[] = array(
+                'group_id' => $Qgroups->valueInt('group_id'),
+                'group_name' => $Qgroups->value('group_name')
+            );
+
+            $count++;
+        }
+
+        $Qgroups->freeResult();
+
+        $response = array(EXT_JSON_READER_TOTAL => $count,
+            EXT_JSON_READER_ROOT => $records);
+
+        echo $toC_Json->encode($response);
+    }
+
+    function loadGroup()
+    {
+        global $toC_Json;
+
+        $data = toC_Databases_Admin::getGroup($_REQUEST['group_id']);
+
+        $response = array('success' => true, 'data' => $data);
+
+        echo $toC_Json->encode($response);
+    }
+
+    function deleteGroup()
+    {
+        if (isset($_REQUEST['group_id']) && !empty($_REQUEST['group_id'])) {
+            global $toC_Json, $osC_Language;
+
+            if (toC_Databases_Admin::deleteGroup($_REQUEST['group_id'])) {
+                $response = array('success' => true, 'feedback' => $osC_Language->get('ms_success_action_performed'));
+            } else {
+                $response = array('success' => false, 'feedback' => $_SESSION['last_error']);
+            }
+        } else {
+            $response = array('success' => false, 'feedback' => 'Veuillez selectionner !!');
+        }
+
+        echo $toC_Json->encode($response);
+    }
+
+    function saveGroup()
+    {
+        global $toC_Json, $osC_Language;
+
+        if (toC_Databases_Admin::saveGroup((isset($_REQUEST['group_id']) && is_numeric($_REQUEST['group_id'])
+            ? $_REQUEST['group_id']
+            : null), $_REQUEST)) {
+            $response = array('success' => true, 'feedback' => $osC_Language->get('ms_success_action_performed'));
+        }
+        else
+        {
+            $response = array('success' => false, 'feedback' => $_SESSION['LAST_ERROR']);
+        }
+
+        echo $toC_Json->encode($response);
+    }
+
     function startDatapump()
     {
         global $toC_Json;
@@ -1073,23 +1192,6 @@ WHERE delta_ogg_config.id = delta_ogg_capture_state.config_id and config_id= " .
 
             $ssh->disconnect();
         }
-
-        echo $toC_Json->encode($response);
-    }
-
-    function listCategories()
-    {
-        global $toC_Json;
-
-        $records = array();
-
-        $records[] = array('key' => 'all', 'value' => 'Toutes les Bases');
-        $records[] = array('key' => 'prod', 'value' => 'Production');
-        $records[] = array('key' => 'dev', 'value' => 'Developpement');
-        $records[] = array('key' => 'test', 'value' => 'Tests');
-
-        $response = array(EXT_JSON_READER_TOTAL => 4,
-            EXT_JSON_READER_ROOT => $records);
 
         echo $toC_Json->encode($response);
     }
@@ -3682,53 +3784,60 @@ GROUP BY component, oper_type, status";
     {
         global $toC_Json, $osC_Database;
 
+        $group_id = empty($_REQUEST['categories_id']) ? 0 : $_REQUEST['categories_id'];
+
         //$QServers = $osC_Database->query('select a.*, cd.*,c.*, atoc.*,s.label,s.host,s.servers_id,s.typ,s.user as server_user,s.pass as server_pass,s.port as server_port,st.* from :table_databases a left join :table_content c on a.databases_id = c.content_id left join  :table_content_description cd on a.databases_id = cd.content_id left join  :table_servers s on a.servers_id = s.servers_id left join :table_content_to_categories atoc on atoc.content_id = a.databases_id LEFT JOIN delta_database_state st ON st.databases_id = a.databases_id where cd.language_id = :language_id and atoc.content_type = "databases" and c.content_type = "databases" and cd.content_type = "databases" AND st.start_date = (SELECT MAX(start_date) FROM delta_database_state WHERE databases_id = a.databases_id) ');
-        $query = "SELECT a.*,s.label,s.HOST,s.servers_id,s.typ,s.USER AS server_user,s.pass AS server_pass,s.PORT AS server_port FROM delta_databases a LEFT JOIN delta_servers s ON a.servers_id = s.servers_id";
-        $QServers = $osC_Database->query($query);
+        $query = "SELECT a.*,s.label,s.HOST,s.servers_id,s.typ,s.USER AS server_user,s.pass AS server_pass,s.PORT AS server_port FROM delta_databases a INNER JOIN delta_servers s ON a.servers_id = s.servers_id";
+        $Qdatabases = $osC_Database->query($query);
 
         if (!empty($_REQUEST['search'])) {
-            $QServers->appendQuery('and a.label like :content_name');
-            $QServers->bindValue(':content_name', '%' . $_REQUEST['search'] . '%');
+            $Qdatabases->appendQuery('and a.label like :content_name');
+            $Qdatabases->bindValue(':content_name', '%' . $_REQUEST['search'] . '%');
         }
 
         if (!empty($_REQUEST['category']) && $_REQUEST['category'] != 'all') {
-            $QServers->appendQuery('and a.category = :category');
-            $QServers->bindValue(':category', $_REQUEST['category']);
+            $Qdatabases->appendQuery('and a.category = :category');
+            $Qdatabases->bindValue(':category', $_REQUEST['category']);
         }
 
-        $QServers->appendQuery('order by a.label ');
-        $QServers->execute();
+        if ($group_id != 0 && $group_id != -1) {
+            $Qdatabases->appendQuery('and a.databases_id IN (SELECT databases_id FROM delta_database_to_groups WHERE group_id = :group_id)');
+            $Qdatabases->bindInt(':group_id', $group_id);
+        }
+
+        $Qdatabases->appendQuery('order by a.label ');
+        $Qdatabases->execute();
 
         $records = array();
-        while ($QServers->next()) {
+        while ($Qdatabases->next()) {
             if (isset($_REQUEST['permissions'])) {
                 $permissions = explode(',', $_REQUEST['permissions']);
-                $records[] = array('databases_id' => $QServers->ValueInt('databases_id'),
-                    'host' => $QServers->Value('HOST'),
-                    'server_user' => $QServers->Value('server_user'),
-                    'servers_id' => $QServers->Value('servers_id'),
-                    'server_pass' => $QServers->Value('server_pass'),
-                    'server_port' => $QServers->Value('server_port'),
-                    'label' => $QServers->Value('label'),
-                    'sid' => $QServers->Value('sid'),
-                    'port' => $QServers->Value('port'),
-                    'db_user' => $QServers->Value('user'),
-                    'typ' => $QServers->Value('typ'),
-                    'db_pass' => $QServers->Value('pass')
+                $records[] = array('databases_id' => $Qdatabases->ValueInt('databases_id'),
+                    'host' => $Qdatabases->Value('HOST'),
+                    'server_user' => $Qdatabases->Value('server_user'),
+                    'servers_id' => $Qdatabases->Value('servers_id'),
+                    'server_pass' => $Qdatabases->Value('server_pass'),
+                    'server_port' => $Qdatabases->Value('server_port'),
+                    'label' => $Qdatabases->Value('label'),
+                    'sid' => $Qdatabases->Value('sid'),
+                    'port' => $Qdatabases->Value('port'),
+                    'db_user' => $Qdatabases->Value('user'),
+                    'typ' => $Qdatabases->Value('typ'),
+                    'db_pass' => $Qdatabases->Value('pass')
                 );
             } else {
-                $records[] = array('databases_id' => $QServers->ValueInt('databases_id'),
-                    'host' => $QServers->Value('HOST'),
-                    'server_user' => $QServers->Value('server_user'),
-                    'servers_id' => $QServers->Value('servers_id'),
-                    'server_pass' => $QServers->Value('server_pass'),
-                    'server_port' => $QServers->Value('server_port'),
-                    'label' => $QServers->Value('label'),
-                    'sid' => $QServers->Value('sid'),
-                    'port' => $QServers->Value('port'),
-                    'db_user' => $QServers->Value('user'),
-                    'typ' => $QServers->Value('typ'),
-                    'db_pass' => $QServers->Value('pass')
+                $records[] = array('databases_id' => $Qdatabases->ValueInt('databases_id'),
+                    'host' => $Qdatabases->Value('HOST'),
+                    'server_user' => $Qdatabases->Value('server_user'),
+                    'servers_id' => $Qdatabases->Value('servers_id'),
+                    'server_pass' => $Qdatabases->Value('server_pass'),
+                    'server_port' => $Qdatabases->Value('server_port'),
+                    'label' => $Qdatabases->Value('label'),
+                    'sid' => $Qdatabases->Value('sid'),
+                    'port' => $Qdatabases->Value('port'),
+                    'db_user' => $Qdatabases->Value('user'),
+                    'typ' => $Qdatabases->Value('typ'),
+                    'db_pass' => $Qdatabases->Value('pass')
                 );
             }
         }
@@ -3743,6 +3852,8 @@ GROUP BY component, oper_type, status";
     {
         global $toC_Json, $osC_Database;
 
+        $group_id = empty($_REQUEST['categories_id']) ? 0 : $_REQUEST['categories_id'];
+
         //$QServers = $osC_Database->query('select a.*, cd.*,c.*, atoc.*,s.label,s.host,s.servers_id,s.typ,s.user as server_user,s.pass as server_pass,s.port as server_port,st.* from :table_databases a left join :table_content c on a.databases_id = c.content_id left join  :table_content_description cd on a.databases_id = cd.content_id left join  :table_servers s on a.servers_id = s.servers_id left join :table_content_to_categories atoc on atoc.content_id = a.databases_id LEFT JOIN delta_database_state st ON st.databases_id = a.databases_id where cd.language_id = :language_id and atoc.content_type = "databases" and c.content_type = "databases" and cd.content_type = "databases" AND st.start_date = (SELECT MAX(start_date) FROM delta_database_state WHERE databases_id = a.databases_id) ');
         $query = "SELECT a.*,s.label,s.HOST,s.servers_id,s.typ,s.USER AS server_user,s.pass AS server_pass,s.PORT AS server_port,st.* FROM delta_databases a LEFT JOIN delta_servers s ON a.servers_id = s.servers_id LEFT JOIN delta_database_state st ON st.databases_id = a.databases_id WHERE st.start_date = (SELECT MAX(start_date) FROM delta_database_state WHERE databases_id = a.databases_id)";
         $QServers = $osC_Database->query($query);
@@ -3755,6 +3866,12 @@ GROUP BY component, oper_type, status";
         if (!empty($_REQUEST['category']) && $_REQUEST['category'] != 'all') {
             $QServers->appendQuery('and a.category = :category');
             $QServers->bindValue(':category', $_REQUEST['category']);
+        }
+
+        if ($group_id != 0 && $group_id != -1) {
+            $QServers->appendQuery('and a.databases_id IN (SELECT databases_id FROM delta_database_to_groups WHERE group_id = :group_id)');
+            $QServers->bindTable(':table_users_roles', TABLE_USERS_ROLES);
+            $QServers->bindInt(':group_id', $group_id);
         }
 
         $QServers->appendQuery('order by a.label ');
@@ -3863,9 +3980,9 @@ GROUP BY component, oper_type, status";
     {
         global $toC_Json, $osC_Database;
 
-        //$QServers = $osC_Database->query('select a.*, cd.*,c.*, atoc.*,s.label,s.host,s.servers_id,s.typ,s.user as server_user,s.pass as server_pass,s.port as server_port,st.* from :table_databases a left join :table_content c on a.databases_id = c.content_id left join  :table_content_description cd on a.databases_id = cd.content_id left join  :table_servers s on a.servers_id = s.servers_id left join :table_content_to_categories atoc on atoc.content_id = a.databases_id LEFT JOIN delta_database_state st ON st.databases_id = a.databases_id where cd.language_id = :language_id and atoc.content_type = "databases" and c.content_type = "databases" and cd.content_type = "databases" AND st.start_date = (SELECT MAX(start_date) FROM delta_database_state WHERE databases_id = a.databases_id) ');
-        //$query = "SELECT a.*,s.label,s.HOST,s.servers_id,s.typ,s.USER AS server_user,s.pass AS server_pass,s.PORT AS server_port,st.* FROM delta_databases a LEFT JOIN delta_servers s ON a.servers_id = s.servers_id LEFT JOIN delta_database_state st ON st.databases_id = a.databases_id WHERE st.start_date = (SELECT MAX(start_date) FROM delta_database_state WHERE databases_id = a.databases_id)";
-        $query = "SELECT a.*,s.label,s.HOST,s.servers_id,s.typ,s.USER AS server_user,s.pass AS server_pass,s.PORT AS server_port FROM delta_databases a RIGHT OUTER JOIN delta_servers s ON a.servers_id = s.servers_id WHERE 1 = 1 ";
+        $group_id = empty($_REQUEST['category']) ? 0 : $_REQUEST['category'];
+
+        $query = "SELECT a.*,s.label,s.HOST,s.servers_id,s.typ,s.USER AS server_user,s.pass AS server_pass,s.PORT AS server_port FROM delta_databases a LEFT OUTER JOIN delta_servers s ON a.servers_id = s.servers_id WHERE 1 = 1 ";
         $QServers = $osC_Database->query($query);
 
         if (!empty($_REQUEST['search'])) {
@@ -3873,13 +3990,13 @@ GROUP BY component, oper_type, status";
             $QServers->bindValue(':content_name', '%' . $_REQUEST['search'] . '%');
         }
 
-        if (!empty($_REQUEST['category']) && $_REQUEST['category'] != 'all') {
-            $QServers->appendQuery('and a.category = :category');
-            $QServers->bindValue(':category', $_REQUEST['category']);
-        }
-
         if (!empty($_REQUEST['where'])) {
             $QServers->appendQuery('and ' . $_REQUEST['where']);
+        }
+
+        if ($group_id != 0 && $group_id != -1) {
+            $QServers->appendQuery('and a.databases_id IN (SELECT databases_id FROM delta_database_to_groups WHERE group_id = :group_id)');
+            $QServers->bindInt(':group_id', $group_id);
         }
 
         $QServers->appendQuery('order by a.label ');
@@ -4534,7 +4651,7 @@ GROUP BY component, oper_type, status";
         if (!$c) {
             $e = oci_error();
 
-            $records [] = array('tbs' => $e['message'], 'pct_used' => 100, 'rest' => 100 . ';' . 0 . ';' . 0, 'qtip' => $e['message']);
+            $records [] = array('tbs' => substr($e['message'], 15), 'pct_used' => 100, 'rest' => 100 . ';' . 0 . ';' . 0, 'qtip' => $e['message']);
 
             $total = $total + 1;
 
@@ -4544,7 +4661,7 @@ GROUP BY component, oper_type, status";
             $s = oci_parse($c, $query);
             if (!$s) {
                 $e = oci_error($c);
-                $records [] = array('tbs' => $e['message'], 'pct_used' => 100, 'rest' => 100 . ';' . 0 . ';' . 0, 'qtip' => $e['message']);
+                $records [] = array('tbs' => substr($e['message'], 15), 'pct_used' => 100, 'rest' => 100 . ';' . 0 . ';' . 0, 'qtip' => $e['message']);
 
                 $total = $total + 1;
 
@@ -4554,27 +4671,28 @@ GROUP BY component, oper_type, status";
                 $r = oci_execute($s, OCI_COMMIT_ON_SUCCESS);
                 if (!$r) {
                     $e = oci_error($s);
-                    $records [] = array('tbs' => $e['message'], 'pct_used' => 100, 'rest' => 100 . ';' . 0 . ';' . 0, 'qtip' => $e['message']);
+                    $records [] = array('tbs' => substr($e['message'], 15), 'pct_used' => 100, 'rest' => 100 . ';' . 0 . ';' . 0, 'qtip' => $e['message']);
 
                     $total = $total + 1;
 
                     $response = array('success' => false, 'feedback' => $total . ' espaces logiques', EXT_JSON_READER_TOTAL => $total,
                         EXT_JSON_READER_ROOT => $records);
                 } else {
-                    while (($row = oci_fetch_array($s, OCI_ASSOC)) && $total < 4) {
+                    $total = 0;
+                    while (($row = oci_fetch_array($s, OCI_ASSOC)) && $total < 3) {
                         $total++;
                         $max = (int)($row['MAX']);
                         $used = (int)($row['MEGS_USED']);
                         $total_percent_used = (int)($used * 100 / $max);
                         $free = $row['FREE'];
                         $tip = toC_Servers_Admin::formatSizeUnits(($free * 1024 * 1024)) . " libre sur " . toC_Servers_Admin::formatSizeUnits(($max * 1024 * 1024));
-                        $records [] = array('tbs' => $row['TABLESPACE_NAME'], 'status' => $row['STATUS'], 'contents' => $row['CONTENTS'], 'extent_management' => $row['EXTENT_MANAGEMENT'], 'bigfile' => $row['BIGFILE'], 'megs_alloc' => $row['MEGS_ALLOC'], 'megs_free' => $row['MEGS_FREE'], 'megs_used' => $row['MEGS_USED'], 'pct_used' => $total_percent_used, 'max' => $row['MAX'], 'free' => $row['FREE'], 'rest' => $total_percent_used . ';' . $row['MEGS_FREE'] . ';' . $row['MAX'], 'qtip' => $tip);
+                        $records [] = array('tbs' => strtolower($row['TABLESPACE_NAME']), 'status' => $row['STATUS'], 'contents' => $row['CONTENTS'], 'extent_management' => $row['EXTENT_MANAGEMENT'], 'bigfile' => $row['BIGFILE'], 'megs_alloc' => $row['MEGS_ALLOC'], 'megs_free' => $row['MEGS_FREE'], 'megs_used' => $row['MEGS_USED'], 'pct_used' => $total_percent_used, 'max' => $row['MAX'], 'free' => $row['FREE'], 'rest' => $total_percent_used . ';' . $row['MEGS_FREE'] . ';' . $row['MAX'], 'qtip' => $tip);
                     }
 
                     oci_free_statement($s);
                     oci_close($c);
 
-                    $response = array('success' => false, 'feedback' => $total . ' espaces logiques', EXT_JSON_READER_TOTAL => $total,
+                    $response = array('success' => true, 'feedback' => $total . ' espaces logiques', EXT_JSON_READER_TOTAL => $total,
                         EXT_JSON_READER_ROOT => $records);
                 }
             }
@@ -4846,24 +4964,66 @@ FROM
         }
 
         $status = strtoupper($status);
-        //$query = "SELECT s.sid,s.username,se.event,se.state,se.wait_time FROM v\$session s,v\$session_wait se WHERE s.sid = se.sid AND se.event NOT LIKE 'SQL*Net%' AND se.event NOT LIKE '%rdbms%' AND s.username IS NOT NULL ORDER BY se.wait_time";
-        $query = "SELECT * FROM (SELECT s.sid, USERENV ('sessionid') AS sessionid,s.serial# as serial, s.saddr,lower(s.username) as username,s.status,s.type,
-        s.command,sw.state, sw.event, sw.wait_time, sw.seconds_in_wait,s.logon_time,s.schemaname, s.osuser, s.machine, s.terminal,
-        s.program, s.module, s.action, s.client_info,100*nvl(slo.sofar,0)/nvl(slo.totalwork,1) pct,round(100 * p.PGA_USED_MEM / p.pga_max_mem) pct_pga FROM v\$session s, v\$px_session px, v\$session_wait sw, v\$process p, (SELECT * FROM v\$session_longops
-           WHERE time_remaining <> 0) slo WHERE
-           s.sid = sw.sid(+) AND s.paddr = p.addr AND (s.sid = slo.sid(+) AND s.serial# = slo.serial#(+))
-           AND (s.sid = px.sid(+) AND s.serial# = px.serial#(+))) WHERE STATUS = '" . $status . "' AND TYPE != 'BACKGROUND' order by seconds_in_wait desc";
+
+        $query = "SELECT *
+FROM
+  (SELECT s.sid,
+    s.serial#             AS serial,
+    s.saddr,
+    lower(s.username) AS username,
+    s.status,
+    s.type,
+    s.command,
+    sw.state,
+    sw.event,
+    sw.wait_time,
+    sw.seconds_in_wait,
+    s.logon_time,
+    s.schemaname,
+    s.osuser,
+    s.machine,
+    s.terminal,
+    s.action,
+    sql_text,
+    case
+    when s.module != s.program then s.module || ' ' || s.program || ' ' || s.client_info
+    else s.module || ' ' || s.client_info
+    end info,
+    100       *NVL(slo.sofar,0)/NVL(slo.totalwork,1) pct,
+    ROUND(100 * p.PGA_USED_MEM / p.pga_max_mem) pct_pga
+  FROM v\$session s,
+    v\$px_session px,
+    v\$session_wait sw,
+    v\$process p,
+    v\$sqlarea sqlarea,
+    (SELECT * FROM v\$session_longops WHERE time_remaining <> 0
+    ) slo
+  WHERE s.sql_hash_value = sqlarea.hash_value
+  AND s.sql_address      = sqlarea.address
+  AND s.sid              = sw.sid(+)
+  and s.sid != USERENV ('SID')
+  AND s.paddr            = p.addr
+  AND (s.sid             = slo.sid(+)
+  AND s.serial#          = slo.serial#(+))
+  AND (s.sid             = px.sid(+)
+  AND s.serial#          = px.serial#(+))
+  )
+WHERE STATUS = '" . $status . "'
+AND TYPE    != 'BACKGROUND'
+ORDER BY seconds_in_wait DESC";
 
         $s = oci_parse($c, $query);
         if (!$s) {
             $e = oci_error($c);
             trigger_error('Could not parse statement: ' . $e['message'], E_USER_ERROR);
+            var_dump($s);
         }
 
         $r = oci_execute($s);
         if (!$r) {
             $e = oci_error($s);
             trigger_error('Could not execute statement: ' . $e['message'], E_USER_ERROR);
+            var_dump($r);
         }
 
         $records = array();
@@ -4872,12 +5032,12 @@ FROM
 
         while (($row = oci_fetch_array($s, OCI_ASSOC))) {
             $records [] = array('sid' => $row['SID'],
-                'sessionid' => $row['SESSIONID'],
+                'sql_text' => $row['SQL_TEXT'],
                 'serial' => $row['SERIAL'],
                 'username' => $row['USERNAME'],
                 'command' => $row['COMMAND'],
                 'state' => $row['STATE'],
-                'client_info' => $row['CLIENT_INFO'],
+                'client_info' => $row['INFO'],
                 'event' => $row['EVENT'],
                 'wait_time' => $row['WAIT_TIME'],
                 'seconds_in_wait' => $row['SECONDS_IN_WAIT'],
@@ -4886,8 +5046,6 @@ FROM
                 'osuser' => $row['OSUSER'],
                 'machine' => $row['MACHINE'],
                 'terminal' => $row['TERMINAL'],
-                'program' => $row['PROGRAM'],
-                'module' => $row['MODULE'],
                 'action' => $row['ACTION'],
                 'pct' => $row['PCT'],
                 'pct_pga' => $row['PCT_PGA']
@@ -6434,8 +6592,8 @@ ORDER BY SESSION_KEY desc";
 
         $data = array('content_name' => $_REQUEST['label'],
             'content_url' => '',
-            'created_by' => $_SESSION[admin][username],
-            'modified_by' => $_SESSION[admin][username],
+            'created_by' => $_SESSION['admin']['username'],
+            'modified_by' => $_SESSION['admin']['username'],
             'content_description' => $_REQUEST['label'],
             'content_order' => 0,
             'content_status' => $_REQUEST['content_status'],
@@ -6450,18 +6608,21 @@ ORDER BY SESSION_KEY desc";
             'pass' => $_REQUEST['pass'],
             'meta_descriptions' => $_REQUEST['label']);
 
-        if (isset($_REQUEST['content_categories_id'])) {
-            $data['categories'] = explode(',', $_REQUEST['content_categories_id']);
-        } else {
-            $data['categories'] = $_REQUEST['current_category_id'];
-        }
+        if (isset($_REQUEST['group_id'])) {
+            $data['group_id'] = explode(',', $_REQUEST['group_id']);
 
-        if (toC_Databases_Admin::save((isset($_REQUEST['databases_id']) && ($_REQUEST['databases_id'] != -1)
-            ? $_REQUEST['databases_id'] : null), $data)
-        ) {
-            $response = array('success' => true, 'feedback' => 'Configuration enregistrée ...');
+            if (is_array($data['group_id'])) {
+
+                if (toC_Databases_Admin::save((isset($_REQUEST['databases_id']) && ($_REQUEST['databases_id'] != -1)
+                    ? $_REQUEST['databases_id'] : null), $data)
+                ) {
+                    $response = array('success' => true, 'feedback' => 'Configuration enregistrée ...');
+                } else {
+                    $response = array('success' => false, 'feedback' => "Erreur survenue lors de l'enregistrement de la configuration : " . $_SESSION['LAST_ERROR']);
+                }
+            }
         } else {
-            $response = array('success' => false, 'feedback' => "Erreur survenue lors de l'enregistrement de la configuration : " . $_SESSION['LAST_ERROR']);
+            $response = array('success' => false, 'feedback' => 'Vous devez selectionner au moins un groupe pour cette base');
         }
 
         header('Content-type: application/json');

@@ -1,15 +1,4 @@
 <?php
-/*
-  $Id: Servers.php $
-  Mefobe Cart Solutions
-  http://www.mefobemarket.com
-
-  Copyright (c) 2009 Wuxi Elootec Technology Co., Ltd
-
-  This program is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License v2 (1991)
-  as published by the Free Software Foundation.
-*/
 
     include('includes/modules/Net/SSH2.php');
     if (!class_exists('content')) {
@@ -31,11 +20,36 @@ class toC_Servers_Admin
 
         $QServers->freeResult();
 
-//        $description = content::getContentDescription($id, 'servers');
-//        $data = array_merge($data, $description);
-//
-//        $product_categories_array = content::getContentCategories($id, 'servers');
-//        $data['categories_id'] = implode(',', $product_categories_array);
+        $groupes = array('group_id' => array());
+
+        $Qgroupes = $osC_Database->query('select group_id from delta_server_to_groups where servers_id = :servers_id');
+        $Qgroupes->bindInt(':servers_id', $id);
+        $Qgroupes->execute();
+
+        while ($Qgroupes->next()) {
+            $groupes['group_id'][] = $Qgroupes->value('group_id');
+        }
+
+        $data = array_merge($data, $groupes);
+
+        unset($groupes);
+
+        $Qgroupes->freeResult();
+
+        return $data;
+    }
+
+    function getGroup($id)
+    {
+        global $osC_Database;
+
+        $Qgroup = $osC_Database->query('select a.* from delta_server_groups a where group_id = :group_id');
+        $Qgroup->bindInt(':group_id', $id);
+        $Qgroup->execute();
+
+        $data = $Qgroup->toArray();
+
+        $Qgroup->freeResult();
 
         return $data;
     }
@@ -275,87 +289,38 @@ class toC_Servers_Admin
         }
     }
 
-    function saveDb($id = null, $data)
+    function saveGroup($id = null, $data)
     {
         global $osC_Database;
 
         $error = false;
 
-        //we check the connection first
-        $db_user = $data['user'];
-        $db_pass = $data['pass'];
-        $db_host = $data['host'];
-        $db_port = $data['port'];
-        $db_sid = $data['sid'];
+        $osC_Database->startTransaction();
 
-        $c = oci_pconnect($db_user, $db_pass, $db_host . ":" . $db_port . "/" . $db_sid);
-        if (!$c) {
-            $e = oci_error();
-            $_SESSION['LAST_ERROR'] = 'Could not connect to database: ' . $e['message'];
-            return false;
+        if (is_numeric($id)) {
+            $Qgroup = $osC_Database->query('update delta_server_groups set group_name = :group_name where group_id = :group_id');
+            $Qgroup->bindInt(':group_id', $id);
         } else {
-            $osC_Database->startTransaction();
-
-            if (is_numeric($id)) {
-                $Qserver = $osC_Database->query('update :table_databases set servers_id = :servers_id,label=:label,port = :port,sid = :sid,user = :user,pass = :pass,category = :category where databases_id = :databases_id');
-                $Qserver->bindInt(':databases_id', $id);
-            } else {
-                $Qserver = $osC_Database->query('insert into :table_databases (servers_id,label,port,sid,user,pass,category) values (:servers_id,:label,:port,:sid,:user,:pass,:category)');
-            }
-
-            $Qserver->bindTable(':table_databases', TABLE_DATABASES);
-            $Qserver->bindValue(':servers_id', $data['servers_id']);
-            $Qserver->bindValue(':label', $data['label']);
-            $Qserver->bindInt(':port', $data['port']);
-            $Qserver->bindValue(':sid', $data['sid']);
-            $Qserver->bindValue(':user', $data['user']);
-            $Qserver->bindValue(':category', $data['category']);
-            $Qserver->bindValue(':pass', $data['pass']);
-            $Qserver->setLogging($_SESSION['module'], $id);
-            $Qserver->execute();
-
-            if ($osC_Database->isError()) {
-                $error = true;
-            } else {
-                if (is_numeric($id)) {
-                    $databases_id = $id;
-                } else {
-                    $databases_id = $osC_Database->nextID();
-                }
-            }
-
-            //content
-            if ($error === false) {
-                $error = !content::saveContent($id, $databases_id, 'databases', $data);
-            }
-
-            //Process Languages
-            if ($error === false) {
-                $error = !content::saveServerDescription($id, $databases_id, 'databases', $data);
-            }
-
-            //content_to_categories
-            if ($error === false) {
-                $error = !content::saveContentToCategories($id, $databases_id, 'databases', $data);
-            }
-
-            //images
-            if ($error === false) {
-                $error = !content::saveImages($databases_id, 'databases');
-            }
-
-            if ($error === false) {
-                $osC_Database->commitTransaction();
-                osC_Cache::clear('sefu-databases');
-                return true;
-            }
-
-            $osC_Database->rollbackTransaction();
-
-            $_SESSION['LAST_ERROR'] = $osC_Database->error;
-
-            return false;
+            $Qgroup = $osC_Database->query('insert into delta_server_groups (group_name) values (:group_name)');
         }
+
+        $Qgroup->bindValue(':group_name', $data['group_name']);
+        $Qgroup->execute();
+
+        if ($osC_Database->isError()) {
+            $error = true;
+        }
+
+        if ($error === false) {
+            $osC_Database->commitTransaction();
+            return true;
+        }
+
+        $osC_Database->rollbackTransaction();
+
+        $_SESSION['LAST_ERROR'] = $osC_Database->getError();
+
+        return false;
     }
 
     function saveFsState($data)
@@ -567,9 +532,33 @@ class toC_Servers_Admin
             $error = !content::saveImages($servers_id, 'servers');
         }
 
+        $Qdelete_groups = $osC_Database->query('delete from delta_server_to_groups where servers_id = :servers_id');
+        $Qdelete_groups->bindInt(':servers_id', $id);
+        $Qdelete_groups->execute();
+
+        if ($osC_Database->isError()) {
+            $error = true;
+        }
+
+        if ($error === false) {
+
+            if (is_array($data['group_id'])) {
+                foreach ($data['group_id'] as $group_id) {
+                    $Qgroups = $osC_Database->query('insert into delta_server_to_groups (group_id, servers_id) values (:group_id, :servers_id)');
+                    $Qgroups->bindInt(':servers_id', $id);
+                    $Qgroups->bindInt(':group_id', $group_id);
+                    $Qgroups->execute();
+
+                    if ($osC_Database->isError()) {
+                        $error = true;
+                    }
+                }
+            }
+        }
+
         if ($error === false) {
             $osC_Database->commitTransaction();
-            osC_Cache::clear('sefu-servers');
+            osC_Cache::clear('servers');
             return true;
         }
 
@@ -705,6 +694,33 @@ class toC_Servers_Admin
 
         $osC_Database->commitTransaction();
         osC_Cache::clear('sefu-Servers');
+        return true;
+    }
+
+    function deleteGroup($id)
+    {
+        global $osC_Database;
+        $error = false;
+
+        $osC_Database->startTransaction();
+
+        if ($error === false) {
+            $Qdelete = $osC_Database->query('delete from delta_server_groups where group_id = :group_id');
+            $Qdelete->bindInt(':group_id', $id);
+            $Qdelete->execute();
+
+            if ($osC_Database->isError()) {
+                $error = true;
+            }
+        }
+
+        if ($error == true) {
+            $_SESSION['last_error'] = $osC_Database->getError();
+            $osC_Database->rollbackTransaction();
+            return false;
+        }
+
+        $osC_Database->commitTransaction();
         return true;
     }
 

@@ -11,5 +11,5 @@
   as published by the Free Software Foundation.
 */
 
-#header( 'Location: http://10.100.120.32/dev/admin');
+header( 'Location: http://10.100.120.32/dev/admin');
 ?>

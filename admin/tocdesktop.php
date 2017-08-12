@@ -1,4 +1,16 @@
 <?php
+/*
+  $Id: account.php $
+  Mefobe Cart Solutions
+  http://www.mefobemarket.com
+
+  Copyright (c) 2009 Wuxi Elootec Technology Co., Ltd
+
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License v2 (1991)
+  as published by the Free Software Foundation.
+*/
+
 
   require_once('includes/application_top.php');
   
@@ -12,6 +24,9 @@
   require_once('includes/classes/desktop_settings.php');
   $toC_Desktop_Settings = new toC_Desktop_Settings();
   
+  require_once('includes/classes/currencies.php');
+  $osC_Currencies = new osC_Currencies();
+  
   header('Cache-Control: no-cache, must-revalidate');
   header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
   header('Content-Type: application/x-javascript');  
@@ -24,6 +39,8 @@ var token = '<?php echo $token ?>';
 Ext.Ajax.extraParams = {token: token};
 Ext.data.Connection.prototype.extraParams = {token: token};
 Ext.data.ScriptTagProxy.prototype.extraParams = {token: token};
+    
+var tocCurrenciesFormatter = Ext.util.Format.CurrencyFactory(parseInt('<?php echo $osC_Currencies->getDecimalPlaces(); ?>'), '<?php echo $osC_Language->getNumericDecimalSeparator(); ?>', '<?php echo $osC_Language->getNumericThousandsSeparator(); ?>', '<?php echo $osC_Currencies->getSymbolLeft(); ?>', '<?php echo $osC_Currencies->getSymbolRight(); ?>');
 
 /*
  * Desktop configuration

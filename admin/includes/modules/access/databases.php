@@ -16,11 +16,11 @@
         $_group = 'databases',
         $_icon = 'people.png',
         $_title,
-        $_sort_order = 101;
+        $_sort_order = 2;
 
     function osC_Access_Databases() {
 
-      $this->_title = 'Databases';
+      $this->_title = 'Referentiel Databases';
     }
   }
 ?>

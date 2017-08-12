@@ -12,14 +12,14 @@ Ext.override(TocDesktop.DatabasesPerfWindow, {
             //var grd = new Toc.DatabasesGrid({owner: this});
             //var availability_grd = new Toc.databasesAvailabilityDashboard({owner: this});
             //var dashboard = new Toc.DatabaseDashboard({owner: this});
-            var perf_grd = new Toc.DatabasesPerfDashboard({owner: this,header : false});
+            var perf_grd = new Toc.DatabasePerfDashboard({owner: this,header : false});
             //var space_grd = new Toc.databaseSpaceDashboard({owner: this});
             //var ogg_grd = new Toc.GoldenGateDashboardPanel({owner: this});
             //var dataguard_grd = new Toc.DataGuardDashboardPanel({owner: this});
 
             win = desktop.createWindow({
                 id: 'databases_perf-win',
-                title: 'Tableau de Bord',
+                title: 'Db Performance',
                 width: 800,
                 height: 400,
                 iconCls: 'icon-databases-win',

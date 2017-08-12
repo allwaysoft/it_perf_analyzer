@@ -1,15 +1,5 @@
 <?php
-/*
-  $Id: Servers.php $
-  Mefobe Cart Solutions
-  http://www.mefobemarket.com
 
-  Copyright (c) 2009 Wuxi Elootec Technology Co., Ltd
-
-  This program is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License v2 (1991)
-  as published by the Free Software Foundation.
-*/
 require('includes/classes/servers.php');
 require('includes/classes/email_account.php');
 require('includes/classes/email_accounts.php');
@@ -19,26 +9,27 @@ class toC_Json_Servers
 {
     function listServers()
     {
-        global $toC_Json, $osC_Language, $osC_Database;
+        global $toC_Json, $osC_Database;
 
-        $current_category_id = empty($_REQUEST['categories_id']) ? 0 : $_REQUEST['categories_id'];
+        $group_id = empty($_REQUEST['categories_id']) ? 0 : $_REQUEST['categories_id'];
 
         //$QServers = $osC_Database->query('select a.*, cd.*,c.*, atoc.*  from :table_servers a left outer join :table_content c on a.servers_id = c.content_id left outer join  :table_content_description cd on a.servers_id = cd.content_id left outer join :table_content_to_categories atoc on atoc.content_id = a.servers_id  where cd.language_id = :language_id and atoc.content_type = "servers" and c.content_type = "servers" AND cd.content_type = "servers"');
-        $QServers = $osC_Database->query('select a.* from :table_servers a ');
-
-        if ($current_category_id != 0) {
-            $QServers->appendQuery('and a.typ = :categories_id ');
-            $QServers->bindInt(':categories_id', $current_category_id);
-        }
+        $QServers = $osC_Database->query('select a.* from delta_servers a where 1 = 1 ');
 
         if (!empty($_REQUEST['search'])) {
-            $QServers->appendQuery('and (a.label like :content_name or a.host like :content_name or a.port like :content_name or a.typ like :content_name)');
+            $QServers->appendQuery(' and (a.label like :content_name or a.host like :content_name or a.port like :content_name or a.typ like :content_name)');
             $QServers->bindValue(':content_name', '%' . $_REQUEST['search'] . '%');
         }
 
+        if ($group_id != 0 && $group_id != -1) {
+            $QServers->appendQuery(' and a.servers_id IN (SELECT servers_id FROM delta_server_to_groups WHERE group_id = :group_id)');
+            $QServers->bindInt(':group_id', $group_id);
+        }
+
         $QServers->appendQuery('order by a.label ');
-        $QServers->bindTable(':table_servers', TABLE_SERVERS);
         $QServers->execute();
+
+        //var_dump($QServers);
 
         $records = array();
         while ($QServers->next()) {
@@ -50,9 +41,9 @@ class toC_Json_Servers
                     'user' => $QServers->Value('user'),
                     'pass' => $QServers->Value('pass'),
                     'typ' => $QServers->Value('typ'),
-                    'can_write' => $_SESSION[admin][username] == 'admin' ? 1 : $permissions[1],
-                    'can_modify' => $_SESSION[admin][username] == 'admin' ? '' : $permissions[2],
-                    'can_publish' => $_SESSION[admin][username] == 'admin' ? 1 : $permissions[3]
+                    'can_write' => $_SESSION['admin']['username'] == 'admin' ? 1 : $permissions[1],
+                    'can_modify' => $_SESSION['admin']['username'] == 'admin' ? '' : $permissions[2],
+                    'can_publish' => $_SESSION['admin']['username'] == 'admin' ? 1 : $permissions[3]
                 );
             } else {
                 $records[] = array('servers_id' => $QServers->ValueInt('servers_id'),
@@ -62,10 +53,76 @@ class toC_Json_Servers
                     'user' => $QServers->Value('user'),
                     'pass' => $QServers->Value('pass'),
                     'typ' => $QServers->Value('typ'),
-                    'can_read' => $_SESSION[admin][username] == 'admin' ? 1 : false,
-                    'can_write' => $_SESSION[admin][username] == 'admin' ? 1 : false,
-                    'can_modify' => $_SESSION[admin][username] == 'admin' ? '' : false,
-                    'can_publish' => $_SESSION[admin][username] == 'admin' ? 1 : false
+                    'can_read' => $_SESSION['admin']['username'] == 'admin' ? 1 : false,
+                    'can_write' => $_SESSION['admin']['username'] == 'admin' ? 1 : false,
+                    'can_modify' => $_SESSION['admin']['username'] == 'admin' ? '' : false,
+                    'can_publish' => $_SESSION['admin']['username'] == 'admin' ? 1 : false
+                );                
+            }
+        }
+
+        $response = array(EXT_JSON_READER_TOTAL => count($records),
+            EXT_JSON_READER_ROOT => $records);
+
+        echo $toC_Json->encode($response);
+    }
+
+    function listServerperf()
+    {
+        global $toC_Json, $osC_Database;
+
+        $group_id = empty($_REQUEST['category']) ? 0 : $_REQUEST['category'];
+
+        $query = "SELECT a.*,s.label,s.HOST,s.servers_id,s.typ,s.USER AS server_user,s.pass AS server_pass,s.PORT AS server_port FROM delta_databases a RIGHT OUTER JOIN delta_servers s ON a.servers_id = s.servers_id WHERE 1 = 1 ";
+        $QServers = $osC_Database->query($query);
+
+        if (!empty($_REQUEST['search'])) {
+            $QServers->appendQuery('and s.label like :content_name');
+            $QServers->bindValue(':content_name', '%' . $_REQUEST['search'] . '%');
+        }
+
+        if (!empty($_REQUEST['where'])) {
+            $QServers->appendQuery('and ' . $_REQUEST['where']);
+        }
+
+        if ($group_id != 0 && $group_id != -1) {
+            $QServers->appendQuery('and s.servers_id IN (SELECT servers_id FROM delta_server_to_groups WHERE group_id = :group_id)');
+            $QServers->bindInt(':group_id', $group_id);
+        }
+
+        $QServers->appendQuery('order by s.label ');
+        $QServers->execute();
+
+        $records = array();
+        while ($QServers->next()) {
+            if (isset($_REQUEST['permissions'])) {
+                $permissions = explode(',', $_REQUEST['permissions']);
+                $records[] = array('databases_id' => $QServers->ValueInt('databases_id'),
+                    'host' => $QServers->Value('HOST'),
+                    'server_user' => $QServers->Value('server_user'),
+                    'servers_id' => $QServers->Value('servers_id'),
+                    'server_pass' => $QServers->Value('server_pass'),
+                    'server_port' => $QServers->Value('server_port'),
+                    'label' => $QServers->Value('label'),
+                    'sid' => $QServers->Value('sid'),
+                    'port' => $QServers->Value('port'),
+                    'db_user' => $QServers->Value('user'),
+                    'typ' => $QServers->Value('typ'),
+                    'db_pass' => $QServers->Value('pass')
+                );
+            } else {
+                $records[] = array('databases_id' => $QServers->ValueInt('databases_id'),
+                    'host' => $QServers->Value('HOST'),
+                    'server_user' => $QServers->Value('server_user'),
+                    'servers_id' => $QServers->Value('servers_id'),
+                    'server_pass' => $QServers->Value('server_pass'),
+                    'server_port' => $QServers->Value('server_port'),
+                    'label' => $QServers->Value('label'),
+                    'sid' => $QServers->Value('sid'),
+                    'port' => $QServers->Value('port'),
+                    'db_user' => $QServers->Value('user'),
+                    'typ' => $QServers->Value('typ'),
+                    'db_pass' => $QServers->Value('pass')
                 );
             }
         }
@@ -74,6 +131,36 @@ class toC_Json_Servers
             EXT_JSON_READER_ROOT => $records);
 
         echo $toC_Json->encode($response);
+    }
+
+    function loadLayoutTree()
+    {
+        global $toC_Json,$osC_Database;
+
+        $QServers = $osC_Database->query('select a.* from delta_servers a where 1 = 1 ');
+        $QServers->appendQuery('order by a.label ');
+        $QServers->execute();
+
+        $records = array();
+        while ($QServers->next()) {
+            $records [] = array(
+                'servers_id' => $QServers->ValueInt('servers_id'),
+                'content_name' => $QServers->Value('label'),
+                'host' => $QServers->Value('host'),
+                'server_port' => $QServers->Value('port'),
+                'server_user' => $QServers->Value('user'),
+                'server_pass' => $QServers->Value('pass'),
+                'typ' => $QServers->Value('typ'),
+                'id' => $QServers->ValueInt('servers_id'),
+                'text' => $QServers->value('label'),
+                'icon' => 'templates/default/images/icons/16x16/server_info.png',
+                'leaf' => true
+            );
+        }
+
+        $QServers->freeResult();
+
+        echo $toC_Json->encode($records);
     }
 
     function listSpaceusage()
@@ -1010,8 +1097,8 @@ class toC_Json_Servers
                     $index++;
                 }
 
-                $cmd = "rm -f " . $out;
-                $resp = $ssh->exec($cmd);
+                $cmd = "rm -f " . $out . " " . $file;
+                $ssh->exec($cmd);
                 $ssh->disconnect();
             }
         }
@@ -1750,6 +1837,69 @@ WHERE delta_fs_usage.start_date = (select max(start_date) from delta_fs_usage wh
         echo $toC_Json->encode($response);
     }
 
+    function listPs()
+    {
+        global $toC_Json;
+
+        $host = $_REQUEST['host'];
+        $port = $_REQUEST['port'];
+        $user = $_REQUEST['user'];
+        $pass = $_REQUEST['pass'];
+        $typ = $_REQUEST['typ'];
+
+        $records = array();
+
+        switch ($typ) {
+            case "win":
+                $_SESSION['LAST_ERROR'] = "Ce systeme n'est pas encore supporte";
+                return false;
+            case "aix":
+                $_SESSION['LAST_ERROR'] = "Ce systeme n'est pas encore supporte";
+                return false;
+            case "lin":
+                $ssh = new Net_SSH2($host, $port);
+
+                if (empty($ssh->server_identifier)) {
+                    $_SESSION['LAST_ERROR'] = "Impossible de se connecter au serveur, veuillez contacter votre administrateur systeme";
+                    return false;
+                } else {
+                    if (!$ssh->login($user, $pass)) {
+                        $_SESSION['LAST_ERROR'] = 'Compte ou mot de passe invalide';
+                    } else {
+                        $ssh->disableQuietMode();
+
+                        $cmd = "ps aux | sort -nrk 3,3 | head -n 40 | grep -v ^USER";
+                        $resp = $ssh->exec($cmd);
+                        $ssh->disconnect();
+
+                        $rows = explode("\n", $resp);
+
+                        $index = 0;
+                        foreach ($rows as $row) {
+                            $record = explode(" ", $row);
+
+                            $records[] = array('fs' => $record[0],
+                                'typ' => $record[1],
+                                'size' => (int)($record[2]) / 1024,
+                                'used' => (int)($record[3]) / 1024,
+                                'dispo' => (int)($record[4]) / 1024,
+                                'pct_used' => $record[5],
+                                'mount' => $record[6]
+                            );
+
+                            $index++;
+                        }
+                    }
+                }
+                break;
+        }
+
+        $response = array(EXT_JSON_READER_TOTAL => $index,
+            EXT_JSON_READER_ROOT => $records);
+
+        echo $toC_Json->encode($response);
+    }
+
     function listFs()
     {
         global $toC_Json;
@@ -1944,6 +2094,8 @@ WHERE delta_fs_usage.start_date = (select max(start_date) from delta_fs_usage wh
 
             $disks = toC_Servers_Admin::GetDiskActivity($stat1, $stat2);
             $comment = '';
+
+            unlink($file);
         }
 
         $ssh->disconnect();
@@ -2005,7 +2157,7 @@ WHERE delta_fs_usage.start_date = (select max(start_date) from delta_fs_usage wh
             $pct = toC_Servers_Admin::GetCpuPercentages($stat1, $stat2);
             $comment = '';
 
-            //var_dump($pct);
+            unlink($file);
         }
 
         $ssh->disconnect();
@@ -2066,6 +2218,7 @@ WHERE delta_fs_usage.start_date = (select max(start_date) from delta_fs_usage wh
             $comment = '';
 
             //var_dump($pct);
+            unlink($file);
         }
 
         $ssh->disconnect();
@@ -2255,130 +2408,31 @@ WHERE delta_fs_usage.start_date = (select max(start_date) from delta_fs_usage wh
                             }
                         }
 
-                        $top = 0;
-                        foreach ($records as $rec) {
-                            $pcts = explode("%", $rec['pct_used']);
-                            if ($pcts[0] > $top && $pcts[0] < $recs[2]['pct_used']) {
-                                $top = $pcts[0];
+//                        $top = 0;
+//                        foreach ($records as $rec) {
+//                            $pcts = explode("%", $rec['pct_used']);
+//                            if ($pcts[0] > $top && $pcts[0] < $recs[2]['pct_used']) {
+//                                $top = $pcts[0];
+//
+//                                $recs[3] = array('fs' => $rec['fs'],
+//                                    'typ' => $rec['typ'],
+//                                    'size' => $rec['size'],
+//                                    'used' => $rec['used'],
+//                                    'dispo' => $rec['dispo'],
+//                                    'pct_used' => $pcts[0],
+//                                    'mount' => $rec['mount'],
+//                                    'qtip' => $rec['qtip'],
+//                                    'rest' => $rec['pct_used'] . ';' . $rec['size'] . ';' . $rec['dispo']
+//                                );
+//                            }
+//                        }
 
-                                $recs[3] = array('fs' => $rec['fs'],
-                                    'typ' => $rec['typ'],
-                                    'size' => $rec['size'],
-                                    'used' => $rec['used'],
-                                    'dispo' => $rec['dispo'],
-                                    'pct_used' => $pcts[0],
-                                    'mount' => $rec['mount'],
-                                    'qtip' => $rec['qtip'],
-                                    'rest' => $rec['pct_used'] . ';' . $rec['size'] . ';' . $rec['dispo']
-                                );
-                            }
-                        }
-
-                        $response = array(EXT_JSON_READER_TOTAL => 5,
+                        $response = array(EXT_JSON_READER_TOTAL => 3,
                             EXT_JSON_READER_ROOT => $recs);
                     }
                 }
                 break;
         }
-
-        echo $toC_Json->encode($response);
-    }
-
-    function listPerf()
-    {
-        global $toC_Json;
-
-        $host = $_REQUEST['host'];
-        $port = $_REQUEST['port'];
-        $user = $_REQUEST['user'];
-        $pass = $_REQUEST['pass'];
-        $typ = $_REQUEST['typ'];
-
-        $records = array();
-
-        switch ($typ) {
-            case "win":
-                $_SESSION['LAST_ERROR'] = "Ce systeme n'est pas encore supporte";
-                return false;
-            case "aix":
-                $_SESSION['LAST_ERROR'] = "Ce systeme n'est pas encore supporte";
-                return false;
-            case "lin":
-                $ssh = new Net_SSH2($host, $port);
-
-                if (empty($ssh->server_identifier)) {
-                    $_SESSION['LAST_ERROR'] = "Impossible de se connecter au serveur, veuillez contacter votre administrateur systeme";
-                    return false;
-                } else {
-                    if (!$ssh->login($user, $pass)) {
-                        $_SESSION['LAST_ERROR'] = 'Compte ou mot de passe invalide';
-                    } else {
-                        $ssh->disableQuietMode();
-
-                        $cmd = "top -b -n 2 | awk '{if (NR < 6) print \$0}'";
-                        $resp = $ssh->exec($cmd);
-                        $ssh->disconnect();
-
-                        $rows = explode(",", $resp);
-
-                        //$raw = $rows;
-                        $raw = '';
-                        $tasks = $rows[5];
-                        $tasks = explode(":", $tasks);
-                        $tasks = $tasks[1];
-                        $tasks = explode("total", $tasks);
-                        $tasks_total = $tasks[0];
-                        $tasks = $rows[6];
-                        $tasks = explode("running", $tasks);
-                        $tasks_used = $tasks[0];
-
-                        $tasks = (int)$tasks_used * 100 / (int)$tasks_total;
-
-                        $records[] = array('raw' => $raw, 'metric' => "Tasks", 'pct_used' => $tasks, 'qtip' => $tasks_used . ' taches en cours sur ' . $tasks_total);
-
-                        $cpu = $rows[9];
-                        $cpu = explode(":", $cpu);
-                        $cpu = $cpu[1];
-                        $cpu = explode("%", $cpu);
-                        $cpu = $cpu[0];
-
-                        $records[] = array('raw' => $raw, 'metric' => "CPU", 'pct_used' => (int)$cpu, 'qtip' => $cpu . '% CPU');
-
-                        $mem = $rows[16];
-                        $mem = explode(":", $mem);
-                        $mem = $mem[1];
-
-                        $mem_total = explode("k", $mem);
-                        $mem_total = $mem_total[0];
-
-                        $mem_used = $rows[17];
-                        $mem_used = explode("k", $mem_used);
-                        $mem_used = $mem_used[0];
-
-                        $mem = (int)$mem_used * 100 / (int)$mem_total;
-
-                        $records[] = array('raw' => $raw, 'metric' => "Memoire", 'pct_used' => $mem, 'qtip' => toC_Servers_Admin::formatSizeUnits(($mem_used * 1024)) . ' utilise sur ' . toC_Servers_Admin::formatSizeUnits(($mem_total * 1024)));
-
-                        $swap = $rows[19];
-                        $swap = explode(":", $swap);
-                        $swap = $swap[1];
-                        $swap_total = explode("k", $swap);
-                        $swap_total = $swap_total[0];
-
-                        $swap_used = $rows[20];
-                        $swap_used = explode("k", $swap_used);
-                        $swap_used = $swap_used[0];
-
-                        $swap = (int)$swap_used * 100 / (int)$swap_total;
-
-                        $records[] = array('raw' => $raw, 'metric' => "SWAP", 'pct_used' => $swap, 'qtip' => toC_Servers_Admin::formatSizeUnits(($swap_used * 1024)) . ' utilise sur ' . toC_Servers_Admin::formatSizeUnits(($swap_total * 1024)));
-                    }
-                }
-                break;
-        }
-
-        $response = array(EXT_JSON_READER_TOTAL => 4,
-            EXT_JSON_READER_ROOT => $records);
 
         echo $toC_Json->encode($response);
     }
@@ -2912,6 +2966,52 @@ WHERE delta_fs_usage.start_date = (select max(start_date) from delta_fs_usage wh
         echo $toC_Json->encode($response);
     }
 
+    function saveGroup()
+    {
+        global $toC_Json, $osC_Language;
+
+        if (toC_Servers_Admin::saveGroup((isset($_REQUEST['group_id']) && is_numeric($_REQUEST['group_id'])
+            ? $_REQUEST['group_id']
+            : null), $_REQUEST)) {
+            $response = array('success' => true, 'feedback' => $osC_Language->get('ms_success_action_performed'));
+        }
+        else
+        {
+            $response = array('success' => false, 'feedback' => $_SESSION['LAST_ERROR']);
+        }
+
+        echo $toC_Json->encode($response);
+    }
+
+    function listServerGroups()
+    {
+        global $toC_Json, $osC_Database;
+
+        $query = "select * from delta_server_groups order by group_name";
+        $Qgroups = $osC_Database->query($query);
+        $Qgroups->execute();
+
+        $records = array();
+
+        $count = 0;
+
+        while ($Qgroups->next()) {
+            $records[] = array(
+                'group_id' => $Qgroups->valueInt('group_id'),
+                'group_name' => $Qgroups->value('group_name')
+            );
+
+            $count++;
+        }
+
+        $Qgroups->freeResult();
+
+        $response = array(EXT_JSON_READER_TOTAL => $count,
+            EXT_JSON_READER_ROOT => $records);
+
+        echo $toC_Json->encode($response);
+    }
+
     function listServersconnexions()
     {
         global $toC_Json, $osC_Database;
@@ -2972,6 +3072,35 @@ WHERE delta_fs_usage.start_date = (select max(start_date) from delta_fs_usage wh
         echo $toC_Json->encode($response);
     }
 
+    function loadGroup()
+    {
+        global $toC_Json;
+
+        $data = toC_Servers_Admin::getGroup($_REQUEST['group_id']);
+
+        $response = array('success' => true, 'data' => $data);
+
+        echo $toC_Json->encode($response);
+    }
+
+    function loadGroupsTree()
+    {
+        global $osC_Database, $toC_Json;
+
+        $Qtree = $osC_Database->query('SELECT COUNT(ur.servers_id) AS count, ur.servers_id,r.group_id, r.group_name FROM delta_server_groups r LEFT OUTER JOIN delta_server_to_groups ur ON (r.group_id = ur.group_id) GROUP BY r.group_name, r.group_id ORDER BY r.group_name,r.group_id ASC');
+        $Qtree->execute();
+
+        $records = array();
+
+        while ($Qtree->next()) {
+            $records [] = array('group_id' => $Qtree->value('group_id'), 'id' => $Qtree->value('group_id'), 'text' => $Qtree->value('group_name') . ' (' . $Qtree->value('count') . ' )', 'icon' => 'templates/default/images/icons/16x16/server_info.png', 'leaf' => true);
+        }
+
+        $Qtree->freeResult();
+
+        echo $toC_Json->encode($records);
+    }
+
     function showLog()
     {
         global $toC_Json;
@@ -2980,47 +3109,6 @@ WHERE delta_fs_usage.start_date = (select max(start_date) from delta_fs_usage wh
 
         $response = array('success' => true, 'data' => $data);
 
-        echo $toC_Json->encode($response);
-    }
-
-    function saveDatabase()
-    {
-        global $toC_Json;
-
-        $data = array('content_name' => $_REQUEST['label'],
-            'content_url' => '',
-            'created_by' => $_SESSION[admin][username],
-            'modified_by' => $_SESSION[admin][username],
-            'content_description' => $_REQUEST['label'],
-            'content_order' => 0,
-            'content_status' => $_REQUEST['content_status'],
-            'page_title' => $_REQUEST['label'],
-            'meta_keywords' => $_REQUEST['label'],
-            'servers_id' => $_REQUEST['servers_id'],
-            'label' => $_REQUEST['label'],
-            'sid' => $_REQUEST['sid'],
-            'host' => $_REQUEST['host'],
-            'port' => $_REQUEST['port'],
-            'user' => $_REQUEST['user'],
-            'pass' => $_REQUEST['pass'],
-            'category' => $_REQUEST['category'],
-            'meta_descriptions' => $_REQUEST['label']);
-
-        if (isset($_REQUEST['content_categories_id'])) {
-            $data['categories'] = explode(',', $_REQUEST['content_categories_id']);
-        } else {
-            $data['categories'] = $_REQUEST['current_category_id'];
-        }
-
-        if (toC_Servers_Admin::saveDb((isset($_REQUEST['databases_id']) && ($_REQUEST['databases_id'] != -1)
-            ? $_REQUEST['databases_id'] : null), $data)
-        ) {
-            $response = array('success' => true, 'feedback' => 'Configuration enregistree ...');
-        } else {
-            $response = array('success' => false, 'feedback' => "Erreur survenue lors de l'enregistrement de la configuration : " . $_SESSION['LAST_ERROR']);
-        }
-
-        header('Content-type: application/json');
         echo $toC_Json->encode($response);
     }
 
@@ -3047,18 +3135,21 @@ WHERE delta_fs_usage.start_date = (select max(start_date) from delta_fs_usage wh
             'pass' => $_REQUEST['pass'],
             'meta_descriptions' => $_REQUEST['label']);
 
-        if (isset($_REQUEST['content_categories_id'])) {
-            $data['categories'] = explode(',', $_REQUEST['content_categories_id']);
-        } else {
-            $data['categories'] = $_REQUEST['current_category_id'];
-        }
+        if (isset($_REQUEST['group_id'])) {
+            $data['group_id'] = explode(',', $_REQUEST['group_id']);
 
-        if (toC_Servers_Admin::save((isset($_REQUEST['servers_id']) && ($_REQUEST['servers_id'] != -1)
-            ? $_REQUEST['servers_id'] : null), $data)
-        ) {
-            $response = array('success' => true, 'feedback' => 'Configuration enregistree ...');
+            if (is_array($data['group_id'])) {
+
+                if (toC_Servers_Admin::save((isset($_REQUEST['servers_id']) && ($_REQUEST['servers_id'] != -1)
+                    ? $_REQUEST['servers_id'] : null), $data)
+                ) {
+                    $response = array('success' => true, 'feedback' => 'Configuration enregistree ...');
+                } else {
+                    $response = array('success' => false, 'feedback' => "Erreur survenue lors de l'enregistrement de la configuration :\n" . $_SESSION['LAST_ERROR']);
+                }
+            }
         } else {
-            $response = array('success' => false, 'feedback' => "Erreur survenue lors de l'enregistrement de la configuration :\n" . $_SESSION['LAST_ERROR']);
+            $response = array('success' => false, 'feedback' => 'Vous devez selectionner au moins un groupe pour ce Serveur');
         }
 
         header('Content-Type: text/html');
@@ -3118,6 +3209,23 @@ WHERE delta_fs_usage.start_date = (select max(start_date) from delta_fs_usage wh
             }
         } else {
             $response = array('success' => false, 'feedback' => 'Veuillez selectionner l\'article que vous voulez supprimer');
+        }
+
+        echo $toC_Json->encode($response);
+    }
+
+    function deleteGroup()
+    {
+        if (isset($_REQUEST['group_id']) && !empty($_REQUEST['group_id'])) {
+            global $toC_Json, $osC_Language;
+
+            if (toC_Servers_Admin::deleteGroup($_REQUEST['group_id'])) {
+                $response = array('success' => true, 'feedback' => $osC_Language->get('ms_success_action_performed'));
+            } else {
+                $response = array('success' => false, 'feedback' => $_SESSION['last_error']);
+            }
+        } else {
+            $response = array('success' => false, 'feedback' => 'Veuillez selectionner !!');
         }
 
         echo $toC_Json->encode($response);

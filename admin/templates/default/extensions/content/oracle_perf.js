@@ -5,13 +5,51 @@ Toc.SessionsGrid = function (config) {
     config.started = false;
     config.region = 'center';
     config.loadMask = false;
-    config.layout = 'fit';
-    config.border = true;
-    config.autoHeight = true;
+    //config.layout = 'fit';
+    //config.border = true;
+    //config.autoHeight = true;
     config.title = 'Sessions';
+    config.count = 0;
+    config.reqs = 0;
     //config.columnLines = false;
     //config.hideHeaders = true;
     config.viewConfig = {emptyText: TocLanguage.gridNoRecords, forceFit: true};
+
+    config.listeners = {
+        activate: function (comp) {
+        },
+        show: function (comp) {
+            //console.log('show');
+        },
+        enable: function (panel) {
+            //console.log('enable');
+            //this.onRefresh();
+        },
+        deactivate: function (panel) {
+            //console.log('deactivate');
+            this.onStop();
+        },
+        destroy: function (panel) {
+            //console.log('destroy');
+            this.onStop();
+        },
+        disable: function (panel) {
+            //console.log('disable');
+            this.onStop();
+        },
+        remove: function (container, panel) {
+            //console.log('remove');
+            this.onStop();
+        },
+        removed: function (container, panel) {
+            //console.log('removed');
+            this.onStop();
+        },
+        render: function (comp) {
+            //console.log('render');
+        },
+        scope: this
+    };
 
     config.ds = new Ext.data.Store({
         url: Toc.CONF.CONN_URL,
@@ -32,7 +70,7 @@ Toc.SessionsGrid = function (config) {
             id: 'sid'
         }, [
             'sid',
-            'sessionid',
+            'sql_text',
             'serial',
             'username',
             'command',
@@ -46,23 +84,29 @@ Toc.SessionsGrid = function (config) {
             'osuser',
             'machine',
             'terminal',
-            'program',
-            'module',
             'action',
-            'sofar',
-            'totalwork',
             'pct_pga'
         ]),
         listeners: {
             load: function (store, records, opt) {
                 this.lblInfos.setText(store.data.length + ' Sessions actives ...');
-                setTimeout(that.refreshData(that), 10000);
+                //setTimeout(that.refreshData(that), 10000);
+                that.reqs--;
+
+                if (that.count == 0) {
+                    var interval = setInterval(function () {
+                        that.refreshData(that);
+                    }, that.freq || 2000);
+                    //setTimeout(that.refreshData, that.freq || 10000);
+                    that.count++;
+                    that.interval = interval;
+                }
             },
             beforeload: function (store, opt) {
                 return that.started;
             }, scope: that
         },
-        autoLoad: true
+        autoLoad: false
     });
 
     config.rowActions = new Ext.ux.grid.RowActions({
@@ -82,11 +126,12 @@ Toc.SessionsGrid = function (config) {
     config.cm = new Ext.grid.ColumnModel([
         config.sm,
         { id: 'username', header: 'DB User', dataIndex: 'username', width: 8},
-        { id: 'osuser', header: 'OS User', dataIndex: 'osuser', width: 8},
-        { id: 'machine', header: 'Machine', dataIndex: 'machine', width: 14},
-        { id: 'client_info', header: 'Info', dataIndex: 'program', width: 30, renderer: render},
-        { id: 'state', header: 'Status', dataIndex: 'state', width: 10},
-        { id: 'event', header: 'Event', dataIndex: 'event', width: 20, renderer: render},
+        { id: 'osuser', header: 'OS User', dataIndex: 'osuser', width: 7},
+        { id: 'machine', header: 'Machine', dataIndex: 'machine', width: 10},
+        { id: 'sql', header: 'SQL', dataIndex: 'sql_text', width: 25, renderer: render},
+        { id: 'client_info', header: 'Info', dataIndex: 'client_info', width: 20, renderer: render},
+        { id: 'state', header: 'Status', dataIndex: 'state', width: 10, renderer: render},
+        { id: 'event', header: 'Event', dataIndex: 'event', width: 10, renderer: render},
         { id: 'seconds_in_wait', header: 'Duree (S)', dataIndex: 'seconds_in_wait', width: 5, align: 'center'},
         { id: 'pga', header: '% PGA', dataIndex: 'pct_pga', width: 5, renderer: Toc.content.ContentManager.renderProgress},
         config.rowActions
@@ -221,13 +266,13 @@ Ext.extend(Toc.SessionsGrid, Ext.grid.GridPanel, {
     },
     onAwr: function () {
         var params = {
-                module: 'databases',
-                action: 'run_awr',
-                db_user: this.db_user,
-                db_pass: this.db_pass,
-                db_port: this.db_port,
-                db_host: this.host,
-                db_sid: this.sid
+            module: 'databases',
+            action: 'run_awr',
+            db_user: this.db_user,
+            db_pass: this.db_pass,
+            db_port: this.db_port,
+            db_host: this.host,
+            db_sid: this.sid
         };
 
         var dialog = new Toc.AWRDialog(params);
@@ -299,9 +344,12 @@ Ext.extend(Toc.SessionsGrid, Ext.grid.GridPanel, {
         });
     },
     refreshData: function (scope) {
-        if (scope) {
-            var store = this.getStore();
-            store.load();
+        if (scope && scope.started) {
+            if (scope.reqs == 0) {
+                var store = this.getStore();
+                scope.reqs++;
+                store.load();
+            }
         }
     },
     killUser: function (sid, serial,pbar,step,max) {
@@ -420,13 +468,23 @@ Ext.extend(Toc.SessionsGrid, Ext.grid.GridPanel, {
         var that = this;
 
         this.started = true;
+        this.count = 0;
+        this.reqs = 0;
         this.refreshData(this);
         this.topToolbar.items.items[4].setHandler(this.onStop, this);
         this.topToolbar.items.items[4].setIconClass('stop');
     },
     onStop: function () {
         this.started = false;
+        this.count = 10;
+        this.reqs = 10;
         this.refreshData(this);
+
+        if(this.interval)
+        {
+            clearInterval(this.interval);
+        }
+
         this.topToolbar.items.items[4].setHandler(this.onStart, this);
         this.topToolbar.items.items[4].setIconClass('play');
     },
@@ -1006,6 +1064,556 @@ Ext.extend(Toc.DatabasesPerfDashboard, Ext.Panel, {
     }
 });
 
+Toc.MemoryDashboardPanel = function (params) {
+    var that = this;
+    config = {};
+    config.params = params;
+    config.region = 'center';
+    config.title = 'Memory';
+    config.autoHeight = true;
+    config.layout = 'column';
+    config.loadMask = false;
+    config.autoScroll = true;
+    config.listeners = {
+        activate: function (panel) {
+            this.onRefresh();
+        },
+        deactivate: function (panel) {
+            this.onStop();
+        },
+        scope: this
+    };
+
+    config.combo_freq = Toc.content.ContentManager.getFrequenceCombo();
+    //config.categoryCombo = Toc.content.ContentManager.getDatabasesCategoryCombo();
+
+    config.tbar = [
+        {
+            text: TocLanguage.btnRefresh,
+            iconCls: 'refresh',
+            handler: this.onRefresh,
+            scope: this
+        },
+        '-',
+        {
+            text: 'Start',
+            iconCls: 'play',
+            handler: this.onStart,
+            scope: this
+        },
+        '-',
+        {
+            text: 'Stop',
+            iconCls: 'stop',
+            handler: this.onStop,
+            scope: this
+        },
+        '-',
+        config.combo_freq
+    ];
+
+    config.combo_freq.getStore().load();
+
+    var thisObj = this;
+
+    config.combo_freq.on('select', function (combo, record, index) {
+        thisObj.onStop();
+        var freq = thisObj.combo_freq.getValue();
+        thisObj.buildItems(freq);
+    });
+
+    Toc.MemoryDashboardPanel.superclass.constructor.call(this, config);
+};
+
+Ext.extend(Toc.MemoryDashboardPanel, Ext.Panel, {
+    onRefresh: function () {
+        //var category = this.categoryCombo.getValue();
+        this.buildItems();
+    },
+
+    buildItems: function (freq) {
+        if (this.items) {
+            this.removeAll(true);
+        }
+
+        this.panels = [];
+
+        var frequence = freq || 15000;
+
+        var panel = new Toc.SgaResizePanel(this.params);
+        panel.frequence = frequence;
+        this.add(panel);
+        this.panels[0] = panel;
+        //panel.buildItems(db);
+        this.doLayout();
+    },
+
+    onStop: function () {
+        if (this.panels) {
+            var i = 0;
+            while (i < this.panels.length) {
+                var panel = this.panels[i];
+                //console.debug(panel);
+                if (panel && panel.stop) {
+                    panel.stop();
+                }
+                i++;
+            }
+        }
+    },
+
+    onStart: function () {
+        if (this.panels) {
+            var i = 0;
+            while (i < this.panels.length) {
+                var panel = this.panels[i];
+                //console.debug(panel);
+                if (panel && panel.start) {
+                    panel.start();
+                }
+                i++;
+            }
+        }
+    }
+});
+
+Toc.DatabasePerfDashboard = function (config) {
+    var that = this;
+    config = config || {};
+    //console.log(config.isProduction);
+    config.region = 'center';
+    config.started = false;
+    config.layout = 'Column';
+    config.loadMask = false;
+    //config.body_height = '100px';
+    config.autoScroll = true;
+    config.listeners = {
+        activate: function (panel) {
+        },
+        add: function (container, component, index) {
+            //console.log('add databaseSpaceDashboard');
+            if (!thisObj.isProduction) {
+                //thisObj.buildItems(null, 15000);
+            }
+            //this.onRefresh();
+        },
+        added: function (component, ownerCt, index) {
+            //console.log('added databaseSpaceDashboard');
+            if (!thisObj.isProduction) {
+                //thisObj.buildItems(null, 15000);
+            }
+            //this.onRefresh();
+        },
+        afterlayout: function (container, layout) {
+            //console.log('afterlayout databaseSpaceDashboard');
+            if (!thisObj.isProduction) {
+                //thisObj.buildItems(null, 15000);
+            }
+            //this.onRefresh();
+        },
+        afterrender: function (panel) {
+            //console.log('afterrender databaseSpaceDashboard');
+            if (!thisObj.isProduction) {
+                //thisObj.buildItems(null, 15000);
+            }
+            //this.onRefresh();
+        },
+        enable: function (panel) {
+            //console.log('enable databaseSpaceDashboard');
+            if (!thisObj.isProduction) {
+                //thisObj.buildItems(null, 15000);
+            }
+            //this.onRefresh();
+        },
+        render: function (panel) {
+            //console.log('render databaseSpaceDashboard');
+            //console.debug(panel);
+            if (this.isProduction) {
+                this.buildItems('all', 2000);
+            }
+            //this.onRefresh();
+        },
+        show: function (panel) {
+            //console.log('show databaseSpaceDashboard');
+            if (!thisObj.isProduction) {
+                //thisObj.buildItems(null, 15000);
+            }
+            //this.onRefresh();
+        },
+        deactivate: function (panel) {
+            //console.log('deactivate');
+            this.onStop();
+        },
+        scope: this
+    };
+
+    var thisObj = this;
+
+    if (!config.label) {
+
+        if (!config.isProduction) {
+            config.combo_freq = Toc.content.ContentManager.getFrequenceCombo();
+            config.categoryCombo = Toc.content.ContentManager.getDatabasesCategoryCombo();
+
+            config.tbar = [
+                {
+                    text: '',
+                    iconCls: 'add',
+                    handler: this.onAdd,
+                    scope: this
+                },
+                '-',
+                {
+                    text: '',
+                    iconCls: 'refresh',
+                    handler: this.onRefresh,
+                    scope: this
+                },
+                '-',
+                {
+                    //text: this.started ? 'Stop' : 'Start',
+                    text: '',
+                    iconCls: this.started ? 'stop' : 'play',
+                    handler: this.started ? this.onStop : this.onStart,
+                    scope: this
+                },
+                '-',
+                config.combo_freq,
+                '->',
+                config.categoryCombo
+            ];
+
+            config.combo_freq.getStore().load();
+            config.categoryCombo.getStore().load();
+
+            config.categoryCombo.on('select', function (combo, record, index) {
+                thisObj.onStop();
+                thisObj.combo_freq.enable();
+                var category = record.data.group_id;
+                var freq = thisObj.combo_freq.getValue();
+                thisObj.buildItems(category, freq);
+            });
+
+            config.combo_freq.on('select', function (combo, record, index) {
+                if(thisObj.started)
+                    thisObj.onStop();
+                var category = thisObj.categoryCombo.getValue();
+                var freq = thisObj.combo_freq.getValue();
+                thisObj.buildItems(category, freq);
+            });
+        }
+        else {
+            config.tbar = [
+                {
+                    text: '',
+                    iconCls: 'add',
+                    handler: this.onAdd,
+                    scope: this
+                },
+                '-',
+                {
+                    text: '',
+                    iconCls: 'refresh',
+                    handler: this.onRefresh,
+                    scope: this
+                },
+                '-',
+                {
+                    //text: this.started ? 'Stop' : 'Start',
+                    text: '',
+                    iconCls: this.started ? 'stop' : 'play',
+                    handler: this.started ? this.onStop : this.onStart,
+                    scope: this
+                }
+            ];
+        }
+    }
+
+    Toc.DatabasePerfDashboard.superclass.constructor.call(this, config);
+};
+
+Ext.extend(Toc.DatabasePerfDashboard, Ext.Panel, {
+    onAdd: function () {
+    },
+
+    onRefresh: function () {
+        var category = this.isProduction ? 'all' : this.categoryCombo.getValue();
+        this.buildItems(category);
+    },
+
+    buildItems: function (category, freq) {
+        if (this.items) {
+            this.removeAll(true);
+        }
+
+        this.panels = [];
+
+        var frequence = freq || 5000;
+
+        this.getEl().mask('Chargement');
+        Ext.Ajax.request({
+            url: Toc.CONF.CONN_URL,
+            params: {
+                module: 'databases',
+                action: 'list_databasesperf',
+                category: category || 'all',
+                where: this.isProduction ? "a.databases_id in (45,44,23,22,10,54)" : ''
+            },
+            callback: function (options, success, response) {
+                this.getEl().unmask();
+                var result = Ext.decode(response.responseText);
+
+                if (result.total > 0) {
+                    var i = 0;
+                    while (i < result.total) {
+                        db = result.records[i];
+                        //console.debug(db);
+                        db.owner = this.owner;
+                        db.freq = frequence;
+                        db.width = '50%';
+                        db.classs = (i % 2 == 0) ? 'blue' : 'gray';
+
+                        var panel = new Toc.DatabasePerfPanel(db);
+                        //var panel = new Toc.TopWaitClassPanel(db);
+                        this.add(panel);
+                        this.panels[i] = panel;
+                        //panel.buildItems(db);
+                        this.doLayout();
+                        //panel.start();
+                        i++;
+                    }
+                }
+            },
+            scope: this
+        });
+    },
+
+    onStop: function () {
+        if (this.panels) {
+            var i = 0;
+            while (i < this.panels.length) {
+                var panel = this.panels[i];
+                //console.debug(panel);
+                if (panel && panel.stop) {
+                    panel.stop();
+                }
+                i++;
+            }
+        }
+
+        this.started = false;
+        this.topToolbar.items.items[4].setHandler(this.onStart, this);
+        this.topToolbar.items.items[4].setIconClass('play');
+    },
+
+    onStart: function () {
+        if (this.panels) {
+            var i = 0;
+            while (i < this.panels.length) {
+                var panel = this.panels[i];
+                //console.debug(panel);
+                if (panel && panel.start) {
+                    panel.start();
+                }
+                i++;
+            }
+        }
+
+        this.started = true;
+        this.topToolbar.items.items[4].setHandler(this.onStop, this);
+        this.topToolbar.items.items[4].setIconClass('stop');
+    }
+});
+
+Toc.DatabasePerfPanel = function (params) {
+    var that = this;
+    config = {};
+    config.params = params;
+    config.region = 'center';
+    config.border = true;
+    config.width = config.params.width || '50%';
+    config.layout = 'column';
+    config.cls = params.classs;
+    config.title = params.label;
+    //config.header = false;
+    //config.autoHeight = true;
+    config.listeners = {
+        show: function (comp) {
+        },
+        added: function (index) {
+        },
+        enable: function (comp) {
+        },
+        render: function (comp) {
+            this.buildItems(this.params);
+        },
+        afterrender: function (comp) {
+        },
+        scope: this
+    };
+
+    Toc.DatabasePerfPanel.superclass.constructor.call(this, config);
+};
+
+Ext.extend(Toc.DatabasePerfPanel, Ext.Panel, {
+    buildItems: function (params) {
+        params.owner = this.owner;
+        params.width = '14%';
+
+        var conf = {
+            status: 'up',
+            width: '20%',
+            autoExpandColumn: 'event',
+            label: 'Waits',
+            body_height: '75px',
+            freq: params.freq,
+            //hideHeaders: true,
+            databases_id: params.databases_id,
+            server_user: params.server_user,
+            server_pass: params.server_pass,
+            server_port: params.server_port,
+            servers_id: params.servers_id,
+            db_user: params.db_user,
+            db_pass: params.db_pass,
+            db_port: params.port,
+            db_host: params.host,
+            db_sid: params.sid,
+            port: params.port,
+            host: params.host,
+            sid: params.sid
+        };
+
+        this.dbperf = new Toc.TopEventsPanelCharts(conf);
+        this.add(this.dbperf);
+
+        var mem = {
+            width: '10%',
+            label: 'Swap',
+            body_height: '75px',
+            freq: params.freq * 5,
+            //hideHeaders:true,
+            databases_id: params.databases_id,
+            server_user: params.server_user,
+            server_pass: params.server_pass,
+            server_port: params.server_port,
+            servers_id: params.servers_id,
+            db_user: params.db_user,
+            db_pass: params.db_pass,
+            db_port: params.port,
+            db_host: params.host,
+            db_sid: params.sid,
+            port: params.port,
+            host: params.host,
+            sid: params.sid
+        };
+
+        this.mem_usage = new Toc.MemCharts(mem);
+        this.add(this.mem_usage);
+
+        var cpu = {
+            width: '12%',
+            label: 'CPU',
+            body_height: '75px',
+            freq: params.freq,
+            //hideHeaders:true,
+            databases_id: params.databases_id,
+            server_user: params.server_user,
+            server_pass: params.server_pass,
+            server_port: params.server_port,
+            servers_id: params.servers_id,
+            db_user: params.db_user,
+            db_pass: params.db_pass,
+            db_port: params.port,
+            db_host: params.host,
+            db_sid: params.sid,
+            port: params.port,
+            host: params.host,
+            sid: params.sid
+        };
+
+        this.cpu_usage = new Toc.CpuCharts(cpu);
+        this.add(this.cpu_usage);
+
+        var disk = {
+            width: '12%',
+            label: 'Disks (%)',
+            body_height: '75px',
+            freq: params.freq,
+            //hideHeaders:true,
+            databases_id: params.databases_id,
+            server_user: params.server_user,
+            server_pass: params.server_pass,
+            server_port: params.server_port,
+            servers_id: params.servers_id,
+            db_user: params.db_user,
+            db_pass: params.db_pass,
+            db_port: params.port,
+            db_host: params.host,
+            db_sid: params.sid,
+            port: params.port,
+            host: params.host,
+            sid: params.sid
+        };
+
+        this.disk_usage = new Toc.DiskCharts(disk);
+        this.add(this.disk_usage);
+
+        var net = {
+            width: '16%',
+            label: 'Net (MB/s)',
+            body_height: '75px',
+            freq: params.freq,
+            //hideHeaders:true,
+            databases_id: params.databases_id,
+            server_user: params.server_user,
+            server_pass: params.server_pass,
+            server_port: params.server_port,
+            servers_id: params.servers_id,
+            db_user: params.db_user,
+            db_pass: params.db_pass,
+            db_port: params.port,
+            db_host: params.host,
+            db_sid: params.sid,
+            port: params.port,
+            host: params.host,
+            sid: params.sid
+        };
+
+        this.net_usage = new Toc.NetCharts(net);
+        this.add(this.net_usage);
+
+        params.freq = params.freq * 5;
+        params.width = '15%';
+        params.body_height = '75px';
+        this.tbs = new Toc.TopTbsPanel(params);
+        this.add(this.tbs);
+
+        this.fs = new Toc.TopFsPanel(params);
+        this.add(this.fs);
+    },
+
+    start: function () {
+        this.dbperf.start();
+        this.tbs.start();
+        this.fs.start();
+        this.mem_usage.start();
+        this.cpu_usage.start();
+        this.disk_usage.start();
+        this.net_usage.start();
+    },
+
+    stop: function () {
+        this.dbperf.stop();
+        this.tbs.stop();
+        this.fs.stop();
+        this.mem_usage.stop();
+        this.cpu_usage.stop();
+        this.disk_usage.stop();
+        this.net_usage.stop();
+    }
+});
+
+
 Toc.TopEventsPanelCharts = function (config) {
     //console.debug(config);
     this.params = config;
@@ -1036,7 +1644,11 @@ Toc.TopEventsPanelCharts = function (config) {
 
                 var type = "line";
                 chart.dataProvider = thisObj.data;
-                chart.marginTop = 5;
+
+                chart.marginBottom = 1;
+                chart.marginLeft = 1;
+                chart.marginRight = 1;
+                chart.marginTop = 1;
                 chart.categoryField = "date";
 
                 // AXES
@@ -1312,16 +1924,18 @@ Ext.extend(Toc.TopEventsPanelCharts, Ext.Panel, {
                             if (valueAxis) {
                                 valueAxis.titleColor = "green";
                                 valueAxis.labelsEnabled = true;
-                                valueAxis.title = "Sessions";
+                                valueAxis.title = "";
                                 if (data) {
                                     this.data.push(data);
                                 }
                                 else {
+                                    valueAxis.labelsEnabled = false;
                                     valueAxis.titleColor = "red";
                                     valueAxis.title = "No Data";
                                 }
 
                                 if (data && data.comments) {
+                                    valueAxis.labelsEnabled = false;
                                     valueAxis.titleColor = "red";
                                     valueAxis.title = data.comments;
                                 }
@@ -1329,6 +1943,7 @@ Ext.extend(Toc.TopEventsPanelCharts, Ext.Panel, {
                         }
                         else {
                             if (valueAxis) {
+                                valueAxis.labelsEnabled = false;
                                 valueAxis.titleColor = "red";
                                 valueAxis.title = "Timeout";
                             }
@@ -1380,10 +1995,6 @@ Ext.extend(Toc.TopEventsPanelCharts, Ext.Panel, {
         if(this.interval)
         {
             clearInterval(this.interval);
-        }
-        else
-        {
-            Ext.MessageBox.alert(TocLanguage.msgErrTitle,"No job defined !!!");
         }
     }
 });
@@ -1583,4 +2194,57 @@ Ext.extend(Toc.AWRDialog, Ext.Window, {
             scope: this
         });
     }
+});
+
+Toc.SgaResizePanel = function (config) {
+    config = config || {};
+    config.loadMask = false;
+    config.border = true;
+    config.title = 'SGA resize OPS';
+    config.autoHeight = true;
+    config.viewConfig = {
+        emptyText: TocLanguage.gridNoRecords, forceFit: true
+    };
+
+    config.ds = new Ext.data.Store({
+        url: Toc.CONF.CONN_URL,
+        baseParams: {
+            module: 'databases',
+            action: 'sga_resize',
+            db_port: config.port,
+            db_user: config.db_user,
+            db_pass: config.db_pass,
+            db_host: config.host,
+            db_sid: config.sid
+        },
+        reader: new Ext.data.JsonReader({
+            root: Toc.CONF.JSON_READER_ROOT,
+            totalProperty: Toc.CONF.JSON_READER_TOTAL_PROPERTY,
+            id: 'index'
+        }, [
+            'index',
+            'icon',
+            'component',
+            'oper_type',
+            'status',
+            'nbre'
+        ]),
+        autoLoad: true
+    });
+
+    config.cm = new Ext.grid.ColumnModel([
+        {header: '', dataIndex: 'icon', width: 5},
+        {id: 'component', header: 'Component', dataIndex: 'component', width: 40},
+        {header: 'Oeration', dataIndex: 'oper_type', width: 25},
+        {header: 'Status', align: 'center', dataIndex: 'status', width: 20},
+        {header: 'Nbre', align: 'center', dataIndex: 'nbre', width: 10}
+    ]);
+    config.autoExpandColumn = 'component';
+
+    var thisObj = this;
+
+    Toc.SgaResizePanel.superclass.constructor.call(this, config);
+};
+
+Ext.extend(Toc.SgaResizePanel, Ext.grid.GridPanel, {
 });

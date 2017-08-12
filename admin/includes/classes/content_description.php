@@ -1,4 +1,11 @@
 <?php
+/**
+ * Created by JetBrains PhpStorm.
+ * User: Administrator
+ * Date: 10/3/11
+ * Time: 2:54 AM
+ * To change this template use File | Settings | File Templates.
+ */
  
 class content_description {
     private $description;

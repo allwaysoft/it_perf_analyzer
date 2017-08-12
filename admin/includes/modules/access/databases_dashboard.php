@@ -5,7 +5,7 @@
         $_group = 'databases',
         $_icon = 'dashboard.png',
         $_title,
-        $_sort_order = 2;
+        $_sort_order = 200;
 
     function osC_Access_Databases_dashboard() {
             
