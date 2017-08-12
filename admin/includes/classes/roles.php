@@ -231,7 +231,7 @@ class osC_Roles_Admin
                     $Qrole = $osC_Database->query('update :table_roles set roles_description = :roles_description, roles_name = :roles_name,administrators_id = :administrators_id where roles_id = :roles_id');
                     $Qrole->bindInt(':roles_id', $roles_id);
                 } else {
-                    $Qrole = $osC_Database->query('insert into :table_roles (roles_description, roles_name, administrators_id) values (:roles_description, :roles_name, :administrators_id,:department_id)');
+                    $Qrole = $osC_Database->query('insert into :table_roles (roles_description, roles_name, administrators_id) values (:roles_description, :roles_name, :administrators_id)');
                 }
 
                 $Qrole->bindTable(':table_roles', TABLE_ROLES);
