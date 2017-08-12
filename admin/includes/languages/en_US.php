@@ -8,7 +8,7 @@
 # it under the terms of the GNU General Public License v2 (1991)
 # as published by the Free Software Foundation.
 
-administration_title = SVP Administration Tool
+administration_title = THIRD Perf Analyser
 
 header_title_help = Help
 header_title_tomatocart_support_site = Mefobe Cart Support Site

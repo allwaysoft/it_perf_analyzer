@@ -188,6 +188,7 @@
     <file path="$PROJECT_DIR$/admin/includes/classes/inbound_mail.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1502542516285" ignored="false" />
     <file path="$PROJECT_DIR$/admin/includes/classes/email_account.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1502542516286" ignored="false" />
     <file path="$PROJECT_DIR$/admin/includes/jsons/users.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1502551789686" ignored="false" />
+    <file path="/fr_FR.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1502552184349" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -228,10 +229,37 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="default.php" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="default.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/admin/templates/default.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="14" column="34" selection-start="509" selection-end="509" vertical-scroll-proportion="0.569378">
+            <state line="14" column="34" selection-start="509" selection-end="509" vertical-scroll-proportion="-9.153846">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="fr_FR.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/admin/includes/languages/fr_FR.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="10" column="0" selection-start="321" selection-end="363" vertical-scroll-proportion="-6.5384617">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="en_US.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/admin/includes/languages/en_US.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="10" column="42" selection-start="389" selection-end="389" vertical-scroll-proportion="-6.5384617">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="de_DE.php" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/admin/includes/languages/de_DE.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -250,24 +278,6 @@
         <entry file="file://$PROJECT_DIR$/admin/includes/classes/databases.php">
           <provider selected="true" editor-type-id="text-editor">
             <state line="205" column="6" selection-start="6084" selection-end="6084" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="server.js" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/admin/templates/default/extensions/content/server.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="3337" column="11" selection-start="106391" selection-end="106391" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="main.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/servers_dashboard/main.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="13" column="51" selection-start="456" selection-end="471" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -301,9 +311,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/admin/includes/extmodules/server_explorer/main.php" />
-        <option value="$PROJECT_DIR$/admin/includes/extmodules/server_explorer/xxxx.js" />
-        <option value="$PROJECT_DIR$/admin/includes/extmodules/database_explorer/LayoutTreePanel.php" />
         <option value="$PROJECT_DIR$/admin/includes/extmodules/server_explorer/explorer_main_panel.php" />
         <option value="$PROJECT_DIR$/admin/load.php" />
         <option value="$PROJECT_DIR$/admin/includes/classes/module_loader.php" />
@@ -317,6 +324,9 @@
         <option value="$PROJECT_DIR$/admin/templates/default/extensions/content/oracle.js" />
         <option value="$PROJECT_DIR$/admin/templates/default/extensions/content/oracle_perf.js" />
         <option value="$PROJECT_DIR$/admin/templates/default.php" />
+        <option value="$PROJECT_DIR$/admin/includes/languages/fr_FR.php" />
+        <option value="$PROJECT_DIR$/admin/includes/languages/en_US.php" />
+        <option value="$PROJECT_DIR$/admin/includes/languages/de_DE.php" />
       </list>
     </option>
   </component>
@@ -409,7 +419,29 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="templates" />
+              <option name="myItemId" value="includes" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dev" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="cloud_perf_analyzer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="admin" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="includes" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="languages" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -882,27 +914,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/admin/includes/classes/databases.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="113" column="6" selection-start="3597" selection-end="3597" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/admin/templates/default/extensions/content/server.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="3306" column="11" selection-start="105183" selection-end="105183" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/servers_dashboard/main.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="13" column="51" selection-start="456" selection-end="471" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/databases_perf/main.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="14" column="56" selection-start="523" selection-end="544" vertical-scroll-proportion="0.0">
@@ -988,7 +999,28 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/admin/templates/default.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="14" column="34" selection-start="509" selection-end="509" vertical-scroll-proportion="0.569378">
+        <state line="14" column="34" selection-start="509" selection-end="509" vertical-scroll-proportion="-9.153846">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/includes/languages/fr_FR.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="10" column="0" selection-start="321" selection-end="363" vertical-scroll-proportion="-6.5384617">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/includes/languages/en_US.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="10" column="42" selection-start="389" selection-end="389" vertical-scroll-proportion="-6.5384617">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/includes/languages/de_DE.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>

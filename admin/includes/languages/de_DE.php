@@ -1,14 +1,4 @@
-# $Id: de_DE.php $
-# TomatoCart Open Source Shopping Cart Solutions
-# http://www.tomatocart.com
-#
-# Copyright (c) 2009-2010 Wuxi Elootec Technology Co., Ltd
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License v2 (1991)
-# as published by the Free Software Foundation.
-
-administration_title = TomatoCart Administrations Werkzeug
+administration_title = THIRD Perf Analyser
 
 header_title_help = Hilfe
 header_title_tomatocart_support_site = TomatoCart Supportseite
