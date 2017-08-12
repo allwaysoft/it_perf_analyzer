@@ -13,7 +13,7 @@
     <file path="/all.css" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1501773619477" ignored="false" />
     <file path="/servers_dialog.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1405707124063" ignored="false" />
     <file path="/servers_data_panel.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1388081561668" ignored="false" />
-    <file path="/servers.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1502452040205" ignored="false" />
+    <file path="/servers.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1502554478879" ignored="false" />
     <file path="/servers_grid.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1405706855356" ignored="false" />
     <file path="/content.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1477050732075" ignored="false" />
     <file path="/database_data_panel.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1388236772011" ignored="false" />
@@ -206,15 +206,6 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="oracle.js" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/admin/templates/default/extensions/content/oracle.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="1339" column="0" selection-start="38039" selection-end="38039" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="oracle_perf.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/admin/templates/default/extensions/content/oracle_perf.js">
           <provider selected="true" editor-type-id="text-editor">
@@ -245,10 +236,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="login.php" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="login.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/admin/includes/jsons/login.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="12" column="83" selection-start="317" selection-end="317" vertical-scroll-proportion="0.4473684">
+            <state line="12" column="83" selection-start="317" selection-end="317" vertical-scroll-proportion="-7.1923075">
               <folding />
             </state>
           </provider>
@@ -290,6 +281,15 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="servers.php" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/admin/includes/jsons/servers.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="75" column="156" selection-start="3821" selection-end="3821" vertical-scroll-proportion="0.576555">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="de_DE.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/admin/includes/languages/de_DE.php">
           <provider selected="true" editor-type-id="text-editor">
@@ -312,7 +312,6 @@
         <option value="$PROJECT_DIR$/admin/includes/modules/access/server_groups.php" />
         <option value="$PROJECT_DIR$/admin/includes/jsons/databases.php" />
         <option value="$PROJECT_DIR$/admin/includes/classes/databases.php" />
-        <option value="$PROJECT_DIR$/admin/includes/jsons/servers.php" />
         <option value="$PROJECT_DIR$/admin/templates/default/extensions/content/server.js" />
         <option value="$PROJECT_DIR$/admin/templates/default/extensions/content/oracle.js" />
         <option value="$PROJECT_DIR$/admin/templates/default/extensions/content/oracle_perf.js" />
@@ -325,6 +324,7 @@
         <option value="$PROJECT_DIR$/admin/includes/jsons/users.php" />
         <option value="$PROJECT_DIR$/admin/includes/classes/users.php" />
         <option value="$PROJECT_DIR$/admin/includes/jsons/login.php" />
+        <option value="$PROJECT_DIR$/admin/includes/jsons/servers.php" />
       </list>
     </option>
   </component>
@@ -400,6 +400,60 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="includes" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dev" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="cloud_perf_analyzer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="admin" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dev" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="cloud_perf_analyzer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="admin" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="includes" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dev" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="cloud_perf_analyzer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="admin" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="includes" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="jsons" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -888,13 +942,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/admin/includes/jsons/servers.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="51" column="5" selection-start="2703" selection-end="2703" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/admin/templates/default/extensions/content/server.js">
       <provider selected="true" editor-type-id="text-editor">
         <state line="3337" column="11" selection-start="106391" selection-end="106391" vertical-scroll-proportion="0.0">
@@ -968,6 +1015,13 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/admin/includes/jsons/login.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="12" column="83" selection-start="317" selection-end="317" vertical-scroll-proportion="-7.1923075">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/admin/includes/jsons/roles.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="224" column="39" selection-start="7315" selection-end="7315" vertical-scroll-proportion="-5.6153846">
@@ -975,9 +1029,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/admin/includes/jsons/login.php">
+    <entry file="file://$PROJECT_DIR$/admin/includes/jsons/servers.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="12" column="83" selection-start="317" selection-end="317" vertical-scroll-proportion="0.4473684">
+        <state line="75" column="156" selection-start="3821" selection-end="3821" vertical-scroll-proportion="0.576555">
           <folding />
         </state>
       </provider>

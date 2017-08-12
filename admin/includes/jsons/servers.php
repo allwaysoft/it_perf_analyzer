@@ -73,7 +73,7 @@ class toC_Json_Servers
 
         $group_id = empty($_REQUEST['category']) ? 0 : $_REQUEST['category'];
 
-        $query = "SELECT a.*,s.label,s.HOST,s.servers_id,s.typ,s.USER AS server_user,s.pass AS server_pass,s.PORT AS server_port FROM delta_databases a RIGHT OUTER JOIN delta_servers s ON a.servers_id = s.servers_id WHERE 1 = 1 ";
+        $query = "SELECT a.*,s.label,s.HOST,s.servers_id,s.typ,s.USER AS server_user,s.pass AS server_pass,s.PORT AS server_port FROM delta_databases a LEFT OUTER JOIN delta_servers s ON a.servers_id = s.servers_id WHERE 1 = 1 ";
         $QServers = $osC_Database->query($query);
 
         if (!empty($_REQUEST['search'])) {
