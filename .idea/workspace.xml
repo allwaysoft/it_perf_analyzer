@@ -245,19 +245,19 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="roles.php" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="roles.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/admin/includes/jsons/roles.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="350" column="22" selection-start="13550" selection-end="13550" vertical-scroll-proportion="0.4138756">
+            <state line="224" column="39" selection-start="7315" selection-end="7315" vertical-scroll-proportion="-5.6153846">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="roles.php" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="roles.php" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/admin/includes/classes/roles.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="5" selection-start="5" selection-end="5" vertical-scroll-proportion="-0.0">
+            <state line="300" column="26" selection-start="12827" selection-end="12827" vertical-scroll-proportion="0.040669855">
               <folding />
             </state>
           </provider>
@@ -323,8 +323,8 @@
         <option value="$PROJECT_DIR$/admin/includes/languages/de_DE.php" />
         <option value="$PROJECT_DIR$/admin/includes/languages/en_US.php" />
         <option value="$PROJECT_DIR$/admin/includes/languages/fr_FR.php" />
-        <option value="$PROJECT_DIR$/admin/includes/classes/roles.php" />
         <option value="$PROJECT_DIR$/admin/includes/jsons/roles.php" />
+        <option value="$PROJECT_DIR$/admin/includes/classes/roles.php" />
       </list>
     </option>
   </component>
@@ -1031,16 +1031,16 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/admin/includes/classes/roles.php">
+    <entry file="file://$PROJECT_DIR$/admin/includes/jsons/roles.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="5" selection-start="5" selection-end="5" vertical-scroll-proportion="-0.0">
+        <state line="224" column="39" selection-start="7315" selection-end="7315" vertical-scroll-proportion="-5.6153846">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/admin/includes/jsons/roles.php">
+    <entry file="file://$PROJECT_DIR$/admin/includes/classes/roles.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="350" column="22" selection-start="13550" selection-end="13550" vertical-scroll-proportion="0.4138756">
+        <state line="300" column="26" selection-start="12827" selection-end="12827" vertical-scroll-proportion="0.040669855">
           <folding />
         </state>
       </provider>

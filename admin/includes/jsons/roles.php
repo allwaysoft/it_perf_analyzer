@@ -209,7 +209,7 @@ class toC_Json_Roles
             'password' => '12345',
             'roles_name' => $_REQUEST['roles_name'],
             'roles_description' => $_REQUEST['roles_description'],
-            'email_address' => $randomString . '@innovics.org');
+            'email_address' => $randomString . '@cca.org');
 
         $mod = $_REQUEST['modules'] . ',documents';
         $modules = null;

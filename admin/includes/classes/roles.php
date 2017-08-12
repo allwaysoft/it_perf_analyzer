@@ -88,8 +88,6 @@ class osC_Roles_Admin
     {
         global $osC_Database;
 
-        $osC_Database->selectDatabase(DB_DATABASE);
-
         $error = false;
         if (osc_validate_email_address($data['email_address'])) {
             $QcheckEmail = $osC_Database->query('select id from :table_administrators where email_address = :email_address');
@@ -104,8 +102,8 @@ class osC_Roles_Admin
             $QcheckEmail->execute();
 
             if ($osC_Database->isError()) {
-                $_SESSION['errot'] = $osC_Database->getError();
-                var_dump($QcheckEmail);
+                $_SESSION['error'] = $osC_Database->getError();
+                //var_dump($QcheckEmail);
                 return -5;
             }
             if ($QcheckEmail->numberOfRows() > 0) {
@@ -128,8 +126,8 @@ class osC_Roles_Admin
         $Qcheck->execute();
 
         if ($osC_Database->isError()) {
-            $_SESSION['errot'] = $osC_Database->getError();
-            var_dump($Qcheck);
+            $_SESSION['error'] = $osC_Database->getError();
+            //var_dump($Qcheck);
             return -5;
         }
 
@@ -158,8 +156,8 @@ class osC_Roles_Admin
             $Qadmin->execute();
 
             if ($osC_Database->isError()) {
-                $_SESSION['errot'] = $osC_Database->getError();
-                var_dump($Qadmin);
+                $_SESSION['error'] = $osC_Database->getError();
+                //var_dump($Qadmin);
                 return -5;
             }
 
@@ -185,8 +183,8 @@ class osC_Roles_Admin
                         $Qcheck->execute();
 
                         if ($osC_Database->isError()) {
-                            $_SESSION['errot'] = $osC_Database->getError();
-                            var_dump($Qcheck);
+                            $_SESSION['error'] = $osC_Database->getError();
+                            //var_dump($Qcheck);
                             return -5;
                         }
 
@@ -199,8 +197,8 @@ class osC_Roles_Admin
                             $Qinsert->execute();
 
                             if ($osC_Database->isError()) {
-                                $_SESSION['errot'] = $osC_Database->getError();
-                                var_dump($Qinsert);
+                                $_SESSION['error'] = $osC_Database->getError();
+                                //var_dump($Qinsert);
                                 return -5;
                             }
                         }
@@ -222,8 +220,8 @@ class osC_Roles_Admin
                 $Qdel->execute();
 
                 if ($osC_Database->isError()) {
-                    $_SESSION['errot'] = $osC_Database->getError();
-                    var_dump($Qdel);
+                    $_SESSION['error'] = $osC_Database->getError();
+                    //var_dump($Qdel);
                     return -5;
                 }
             }
@@ -244,8 +242,8 @@ class osC_Roles_Admin
                 $Qrole->execute();
 
                 if ($osC_Database->isError()) {
-                    $_SESSION['errot'] = $osC_Database->getError();
-                    var_dump($Qrole);
+                    $_SESSION['error'] = $osC_Database->getError();
+                    //var_dump($Qrole);
                     return -5;
                 }
             }
@@ -261,8 +259,8 @@ class osC_Roles_Admin
                     $Qadmin->execute();
 
                     if ($osC_Database->isError()) {
-                        $_SESSION['errot'] = $osC_Database->getError();
-                        var_dump($Qadmin);
+                        $_SESSION['error'] = $osC_Database->getError();
+                        //var_dump($Qadmin);
                         return -5;
                     }
 
