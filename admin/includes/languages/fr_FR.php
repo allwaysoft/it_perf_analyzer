@@ -140,7 +140,7 @@ configuration_regulations_title = Règlements
 configuration_credit_cards_title = Cartes de crédit
 configuration_program_locations_title = Localisations de programmes
 
-init_system = Initialisation du système ...
+init_system = Initialisation du système ... THIRD IT
 
 provide_address = Vous devez fournir au moins une adresse email de destinataire.
 mailer_not_supported = Mailer non supporté.

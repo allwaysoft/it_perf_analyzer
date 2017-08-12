@@ -134,7 +134,7 @@ configuration_program_locations_title = Programmstandorte
 configuration_store_front_title = Shop Front
 configuration_content_management_system_title = Content Management System
 
-init_system = System initialisieren ...
+init_system = System initialisieren ... THIRD IT
 
 provide_address = Geben Sie bitte mindestens eine Empfänger Adresse an.
 mailer_not_supported = Mailer wird nicht unterstützt.

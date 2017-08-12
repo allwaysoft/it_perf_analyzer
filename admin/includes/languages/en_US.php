@@ -144,7 +144,7 @@ configuration_program_locations_title = Program Locations
 configuration_store_front_title = Store Front
 configuration_content_management_system_title = Content Management System
 
-init_system = Initializing System ...
+init_system = Initializing System ... THIRD IT
 
 provide_address = You must provide at least one recipient email address.
 mailer_not_supported =  mailer is not supported.
