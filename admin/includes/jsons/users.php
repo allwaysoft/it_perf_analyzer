@@ -11,7 +11,6 @@ if (!class_exists('content')) {
 require('includes/classes/image.php');
 require('includes/classes/email_account.php');
 require('includes/classes/email_accounts.php');
-require ('includes/classes/osticket.php');
 
 class toC_Json_Users
 {
@@ -224,81 +223,31 @@ class toC_Json_Users
                     $modules = array_unique($modules);
                 }
 
-                $saved = true;
-
-                $saved = osC_Ticket_Admin::deleteAgent($_REQUEST['staff_id'],$_REQUEST['user_name']);
-
-                $staff_id = 0;
-                $index = 0;
-
-                if($saved)
-                {
-                    foreach ($data['roles_id'] as $roles_id) {
-                        if($index == 0)
-                        {
-                            $staff_id = osC_Ticket_Admin::saveAgentPrimary($data,$roles_id);
-                        }
-                        else
-                        {
-                            $data['staff_id'] = $staff_id;
-                            $saved = osC_Ticket_Admin::saveAgentExtended($data,$roles_id);
+                switch (osC_Users_Admin::save((isset($_REQUEST['administrators_id']) && is_numeric($_REQUEST['administrators_id'])
+                    ? $_REQUEST['administrators_id'] : null), $data, $modules)) {
+                    case 1:
+                        if (isset($_REQUEST['administrators_id']) && is_numeric($_REQUEST['administrators_id']) && ($_REQUEST['administrators_id'] == $_SESSION['admin']['id'])) {
+                            $_SESSION['admin']['access'] = osC_Access::getUserLevels($_REQUEST['administrators_id']);
                         }
 
-                        $index++;
+                        $response = array('success' => true, 'feedback' => $osC_Language->get('ms_success_action_performed'));
+                        break;
 
-                        if(!$saved)
-                        {
-                            echo $_SESSION['error'];
-                            break;
-                        }
-                    }
+                    case -1:
+                        $response = array('success' => false, 'feedback' => $osC_Language->get('ms_error_action_not_performed') . $_SESSION['error']);
+                        break;
 
-                    if($staff_id != 0 && $staff_id != -1)
-                    {
-                        if($saved)
-                        {
-                            $data['staff_id'] = $staff_id;
+                    case -2:
+                        $response = array('success' => false, 'feedback' => $osC_Language->get('ms_error_username_already_exists'));
+                        break;
 
-                            switch (osC_Users_Admin::save((isset($_REQUEST['administrators_id']) && is_numeric($_REQUEST['administrators_id'])
-                                ? $_REQUEST['administrators_id'] : null), $data, $modules)) {
-                                case 1:
-                                    if (isset($_REQUEST['administrators_id']) && is_numeric($_REQUEST['administrators_id']) && ($_REQUEST['administrators_id'] == $_SESSION['admin']['id'])) {
-                                        $_SESSION['admin']['access'] = osC_Access::getUserLevels($_REQUEST['administrators_id']);
-                                    }
+                    case -3:
+                        $response = array('success' => false, 'feedback' => $osC_Language->get('ms_error_email_format'));
+                        break;
 
-                                    $response = array('success' => true, 'feedback' => $osC_Language->get('ms_success_action_performed'));
-                                    break;
-
-                                case -1:
-                                    $response = array('success' => false, 'feedback' => $osC_Language->get('ms_error_action_not_performed') . $_SESSION['error']);
-                                    break;
-
-                                case -2:
-                                    $response = array('success' => false, 'feedback' => $osC_Language->get('ms_error_username_already_exists'));
-                                    break;
-
-                                case -3:
-                                    $response = array('success' => false, 'feedback' => $osC_Language->get('ms_error_email_format'));
-                                    break;
-
-                                case -4:
-                                    $response = array('success' => false, 'feedback' => $osC_Language->get('ms_error_email_already_exists'));
-                                    break;
-                            }
-                        }
-                        else
-                        {
-                            $response = array('success' => false, 'feedback' => "Impossible de creer l'agent de ce compte " . $_SESSION['error']);
-                        }
-                    }
-                    else
-                    {
-                        $response = array('success' => false, 'feedback' => "Impossible de mettre à jour l'agent de ce compte "  . $_SESSION['error']);
-                    }
-                }
-                else
-                {
-                    $response = array('success' => false, 'feedback' => "Impossible de mettre à jour l'agent de ce compte "  . $_SESSION['error']);
+                    case -4:
+                        $response = array('success' => false, 'feedback' => $osC_Language->get('ms_error_email_already_exists'));
+                        break;
                 }
             }
         } else {

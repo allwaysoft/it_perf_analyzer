@@ -146,8 +146,6 @@ class osC_Users_Admin
         $_id = $id;
         global $osC_Database;
 
-        $osC_Database->selectDatabase(DB_DATABASE);
-
         $error = false;
         if (osc_validate_email_address($data['email_address'])) {
         } else {
@@ -170,7 +168,7 @@ class osC_Users_Admin
             $osC_Database->startTransaction();
 
             if (is_numeric($id)) {
-                $Qadmin = $osC_Database->query('update :table_administrators set user_name = :user_name, email_address = :email_address,staff_id = :staff_id');
+                $Qadmin = $osC_Database->query('update :table_administrators set user_name = :user_name, email_address = :email_address');
 
                 if (isset($data['password']) && !empty($data['password'])) {
                     $Qadmin->appendQuery(', user_password = :user_password');
@@ -180,14 +178,13 @@ class osC_Users_Admin
                 $Qadmin->appendQuery('where id = :id');
                 $Qadmin->bindInt(':id', $id);
             } else {
-                $Qadmin = $osC_Database->query('insert into :table_administrators (user_name, user_password, email_address,staff_id) values (:user_name, :user_password, :email_address,:staff_id)');
+                $Qadmin = $osC_Database->query('insert into :table_administrators (user_name, user_password, email_address) values (:user_name, :user_password, :email_address)');
                 $Qadmin->bindValue(':user_password', osc_encrypt_string(trim($data['password'])));
             }
 
             $Qadmin->bindTable(':table_administrators', TABLE_ADMINISTRATORS);
             $Qadmin->bindValue(':user_name', $data['user_name']);
             $Qadmin->bindValue(':email_address', $data['email_address']);
-            $Qadmin->bindInt(':staff_id', $data['staff_id']);
             $Qadmin->setLogging($_SESSION['module'], $id);
             $Qadmin->execute();
 

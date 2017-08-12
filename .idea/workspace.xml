@@ -236,19 +236,28 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="fr_FR.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/admin/includes/languages/fr_FR.php">
+      <file leaf-file-name="roles.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/admin/includes/jsons/roles.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="142" column="52" selection-start="5094" selection-end="5094" vertical-scroll-proportion="-6.0">
+            <state line="224" column="39" selection-start="7315" selection-end="7315" vertical-scroll-proportion="-5.6153846">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="roles.php" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/admin/includes/jsons/roles.php">
+      <file leaf-file-name="users.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/admin/includes/jsons/users.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="224" column="39" selection-start="7315" selection-end="7315" vertical-scroll-proportion="0.3492823">
+            <state line="225" column="43" selection-start="8136" selection-end="8136" vertical-scroll-proportion="-6.5384617">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="users.php" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/admin/includes/classes/users.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="303" column="13" selection-start="11624" selection-end="11624" vertical-scroll-proportion="0.55263156">
               <folding />
             </state>
           </provider>
@@ -290,15 +299,6 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="databases.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/admin/includes/classes/databases.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="205" column="6" selection-start="6084" selection-end="6084" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
     </leaf>
   </component>
   <component name="FindManager">
@@ -309,8 +309,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/admin/includes/classes/module_loader.php" />
-        <option value="$PROJECT_DIR$/admin/includes/extmodules/server_explorer/LayoutTreePanel.php" />
         <option value="$PROJECT_DIR$/admin/includes/modules/access/server_explorer.php" />
         <option value="$PROJECT_DIR$/admin/includes/modules/access/server_groups.php" />
         <option value="$PROJECT_DIR$/admin/includes/jsons/databases.php" />
@@ -325,6 +323,8 @@
         <option value="$PROJECT_DIR$/admin/includes/languages/fr_FR.php" />
         <option value="$PROJECT_DIR$/admin/includes/jsons/roles.php" />
         <option value="$PROJECT_DIR$/admin/includes/classes/roles.php" />
+        <option value="$PROJECT_DIR$/admin/includes/jsons/users.php" />
+        <option value="$PROJECT_DIR$/admin/includes/classes/users.php" />
       </list>
     </option>
   </component>
@@ -717,7 +717,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/admin/includes/jsons/users.php</url>
-          <line>133</line>
+          <line>132</line>
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/admin/includes/jsons/servers.php</url>
@@ -791,13 +791,8 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/admin/includes/jsons/users.php</url>
-          <line>113</line>
+          <line>112</line>
           <option name="timeStamp" value="66" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="php">
-          <url>file://$PROJECT_DIR$/admin/includes/jsons/users.php</url>
-          <line>257</line>
-          <option name="timeStamp" value="68" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/admin/includes/jsons/reports.php</url>
@@ -934,16 +929,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/admin/includes/modules/access/servers_dashboard.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="9" column="45" selection-start="257" selection-end="257" vertical-scroll-proportion="0.37317073" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/users/users_grid.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="67" column="4" selection-start="1924" selection-end="2112" vertical-scroll-proportion="0.6339713" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/databases_perf/main.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="14" column="56" selection-start="523" selection-end="531" vertical-scroll-proportion="0.0">
@@ -1040,7 +1025,21 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/admin/includes/jsons/roles.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="224" column="39" selection-start="7315" selection-end="7315" vertical-scroll-proportion="0.3492823">
+        <state line="224" column="39" selection-start="7315" selection-end="7315" vertical-scroll-proportion="-5.6153846">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/includes/jsons/users.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="225" column="43" selection-start="8136" selection-end="8136" vertical-scroll-proportion="-6.5384617">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/includes/classes/users.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="303" column="13" selection-start="11624" selection-end="11624" vertical-scroll-proportion="0.55263156">
           <folding />
         </state>
       </provider>
