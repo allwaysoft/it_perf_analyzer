@@ -11,7 +11,7 @@ class toC_Json_Login
 
         $response = array();
         if (!empty($_REQUEST['user_name']) && !empty($_REQUEST['user_password'])) {
-            if ($_REQUEST['user_name'] == "admin") {
+            if ($_REQUEST['user_name'] == "admin" || AUTH == "local") {
                 $Qadmin = $osC_Database->query('select id, user_name, user_password from :table_administrators where user_name = :user_name');
                 $Qadmin->bindTable(':table_administrators', TABLE_ADMINISTRATORS);
                 $Qadmin->bindValue(':user_name', $_REQUEST['user_name']);
