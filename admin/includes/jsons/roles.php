@@ -4,8 +4,6 @@ if (!class_exists('osC_Roles_Admin')) {
     include('includes/classes/roles.php');
 }
 
-require ('includes/classes/osticket.php');
-
 class toC_Json_Roles
 {
     function listRoles()
@@ -224,50 +222,36 @@ class toC_Json_Roles
         }
 
         if ($src == 'local') {
-            $department_id = osC_Ticket_Admin::saveDepartment((isset ($_REQUEST ['department_id']) && is_numeric($_REQUEST ['department_id'] && $_REQUEST ['department_id'] != 0)
-                ? $_REQUEST ['department_id'] : null),$data);
+            switch (osC_Roles_Admin::save((isset($_REQUEST['roles_id']) && is_numeric($_REQUEST['administrators_id'])
+                ? $_REQUEST['administrators_id']
+                : null), $data, $modules, (isset($_REQUEST['roles_id'])
+                ? $_REQUEST['roles_id'] : null))) {
+                case 1:
+                    if (isset($_REQUEST['administrators_id']) && is_numeric($_REQUEST['administrators_id']) && ($_REQUEST['administrators_id'] == $_SESSION['admin']['id'])) {
+                        $_SESSION['admin']['access'] = osC_Access::getUserLevels($_REQUEST['administrators_id']);
+                    }
 
-            //$department_id = $data['department_id'];
+                    $response = array('success' => true, 'feedback' => $osC_Language->get('ms_success_action_performed'));
+                    break;
 
-            if($department_id != -1 && $department_id != 0)
-            {
-                $data['department_id'] = $department_id;
+                case -1:
+                    $response = array('success' => false, 'feedback' => $osC_Language->get('ms_error_action_not_performed'));
+                    break;
 
-                switch (osC_Roles_Admin::save((isset($_REQUEST['roles_id']) && is_numeric($_REQUEST['administrators_id'])
-                    ? $_REQUEST['administrators_id']
-                    : null), $data, $modules, (isset($_REQUEST['roles_id'])
-                    ? $_REQUEST['roles_id'] : null))) {
-                    case 1:
-                        if (isset($_REQUEST['administrators_id']) && is_numeric($_REQUEST['administrators_id']) && ($_REQUEST['administrators_id'] == $_SESSION['admin']['id'])) {
-                            $_SESSION['admin']['access'] = osC_Access::getUserLevels($_REQUEST['administrators_id']);
-                        }
+                case -2:
+                    $response = array('success' => false, 'feedback' => $osC_Language->get('ms_error_username_already_exists'));
+                    break;
 
-                        $response = array('success' => true, 'feedback' => $osC_Language->get('ms_success_action_performed'));
-                        break;
+                case -3:
+                    $response = array('success' => false, 'feedback' => $osC_Language->get('ms_error_email_format'));
+                    break;
 
-                    case -1:
-                        $response = array('success' => false, 'feedback' => $osC_Language->get('ms_error_action_not_performed'));
-                        break;
-
-                    case -2:
-                        $response = array('success' => false, 'feedback' => $osC_Language->get('ms_error_username_already_exists'));
-                        break;
-
-                    case -3:
-                        $response = array('success' => false, 'feedback' => $osC_Language->get('ms_error_email_format'));
-                        break;
-
-                    case -4:
-                        $response = array('success' => false, 'feedback' => $osC_Language->get('ms_error_email_already_exists'));
-                        break;
-                    case -5:
-                        $response = array('success' => false, 'feedback' => $_SESSION['error']);
-                        break;
-                }
-            }
-            else
-            {
-                $response = array('success' => false, 'feedback' => "Impossible de creer le departement : " . $_SESSION['error']);
+                case -4:
+                    $response = array('success' => false, 'feedback' => $osC_Language->get('ms_error_email_already_exists'));
+                    break;
+                case -5:
+                    $response = array('success' => false, 'feedback' => $_SESSION['error']);
+                    break;
             }
         } else {
             switch (osC_Roles_Admin::saveExt((isset($_REQUEST['administrators_id'])

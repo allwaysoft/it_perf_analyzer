@@ -1,15 +1,4 @@
 <?php
-/*
-  $Id: roles.php $
-  Mefobe Cart Solutions
-  http://www.mefobemarket.com
-
-  Copyright (c) 2009 Wuxi Elootec Technology Co., Ltd;  Copyright (c) 2007 osCommerce
-
-  This program is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License v2 (1991)
-  as published by the Free Software Foundation.
-*/
 
 define('OSC_ADMINISTRATORS_ACCESS_MODE_ADD', 'add');
 define('OSC_ADMINISTRATORS_ACCESS_MODE_SET', 'set');
@@ -241,15 +230,14 @@ class osC_Roles_Admin
 
             if ($error === false) {
                 if (is_numeric($roles_id)) {
-                    $Qrole = $osC_Database->query('update :table_roles set roles_description = :roles_description, roles_name = :roles_name,administrators_id = :administrators_id,department_id = :department_id where roles_id = :roles_id');
+                    $Qrole = $osC_Database->query('update :table_roles set roles_description = :roles_description, roles_name = :roles_name,administrators_id = :administrators_id where roles_id = :roles_id');
                     $Qrole->bindInt(':roles_id', $roles_id);
                 } else {
-                    $Qrole = $osC_Database->query('insert into :table_roles (roles_description, roles_name, administrators_id,department_id) values (:roles_description, :roles_name, :administrators_id,:department_id)');
+                    $Qrole = $osC_Database->query('insert into :table_roles (roles_description, roles_name, administrators_id) values (:roles_description, :roles_name, :administrators_id,:department_id)');
                 }
 
                 $Qrole->bindTable(':table_roles', TABLE_ROLES);
                 $Qrole->bindInt(':administrators_id', $id);
-                $Qrole->bindInt(':department_id', $data['department_id']);
                 $Qrole->bindValue(':roles_description', $data['roles_description']);
                 $Qrole->bindValue(':roles_name', $data['roles_name']);
                 $Qrole->setLogging($_SESSION['module'], $id);
