@@ -10,7 +10,7 @@
     <file path="/programmes_amplitude.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1387197648658" ignored="false" />
     <file path="/a.dummy" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1501942765981" ignored="false" />
     <file path="/users.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1484570503998" ignored="false" />
-    <file path="/all.css" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1502706095366" ignored="false" />
+    <file path="/all.css" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1502706219322" ignored="false" />
     <file path="/servers_dialog.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1405707124063" ignored="false" />
     <file path="/servers_data_panel.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1388081561668" ignored="false" />
     <file path="/servers.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1502554478879" ignored="false" />
@@ -283,7 +283,7 @@
       <file leaf-file-name="all.css" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/admin/templates/default/desktop/css/all.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="1982" column="0" selection-start="48183" selection-end="48183" vertical-scroll-proportion="0.5843521">
+            <state line="1979" column="44" selection-start="48009" selection-end="48009" vertical-scroll-proportion="0.49078342">
               <folding />
             </state>
           </provider>
@@ -1160,7 +1160,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/admin/templates/default/desktop/css/all.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="1982" column="0" selection-start="48183" selection-end="48183" vertical-scroll-proportion="0.5843521">
+        <state line="1979" column="44" selection-start="48009" selection-end="48009" vertical-scroll-proportion="0.49078342">
           <folding />
         </state>
       </provider>
