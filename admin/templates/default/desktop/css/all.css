@@ -1962,13 +1962,13 @@ div.ext-ux-wiz-Header {
 }
 
 .icon-server_explorer-shortcut img {
-    background-image: url(../../images/icons/48x48/server-explorer.png);
-    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src = 'templates/default/images/icons/48x48/server-explorer.png', sizingMethod = 'scale');
+    background-image: url(../../images/icons/48x48/server_info.png);
+    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src = 'templates/default/images/icons/48x48/server_info.png.png', sizingMethod = 'scale');
 }
 
 .icon-servers_dashboard-shortcut img {
-    background-image: url(../../images/icons/48x48/server-explorer.png);
-    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src = 'templates/default/images/icons/48x48/server-explorer.png', sizingMethod = 'scale');
+    background-image: url(../../images/icons/48x48/big_data_analytics.png);
+    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src = 'templates/default/images/icons/48x48/big_data_analytics.png', sizingMethod = 'scale');
 }
 
 .icon-database_explorer-shortcut img {
