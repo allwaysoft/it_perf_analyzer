@@ -189,6 +189,13 @@ Toc.SessionsGrid = function (config) {
         },
         '-',
         {
+            text: 'ADDM',
+            iconCls: 'report',
+            handler: this.onAddm,
+            scope: this
+        },
+        '-',
+        {
             text: 'AWR',
             iconCls: 'awr',
             handler: this.onAwr,
@@ -232,6 +239,45 @@ Ext.extend(Toc.SessionsGrid, Ext.grid.GridPanel, {
             params: {
                 module: 'databases',
                 action: 'run_ash',
+                db_user: this.db_user,
+                db_pass: this.db_pass,
+                db_port: this.db_port,
+                db_host: this.host,
+                db_sid: this.sid
+            },
+            callback: function (options, success, response) {
+                this.getEl().unmask();
+                var result = Ext.decode(response.responseText);
+
+                if (result.success == true) {
+                    if (result.task_id) {
+                        var request = {
+                            status: "run",
+                            task_id: result.task_id,
+                            comment: result.comment
+                        };
+
+                        this.downloadReport(request);
+
+                    }
+                    else {
+                        Ext.MessageBox.alert(TocLanguage.msgErrTitle, "No task_id !!!");
+                    }
+                }
+                else {
+                    Ext.MessageBox.alert(TocLanguage.msgErrTitle, result.feedback);
+                }
+            },
+            scope: this
+        });
+    },
+    onAddm: function () {
+        this.getEl().mask('Creation du job ...');
+        Ext.Ajax.request({
+            url: Toc.CONF.CONN_URL,
+            params: {
+                module: 'databases',
+                action: 'run_addm',
                 db_user: this.db_user,
                 db_pass: this.db_pass,
                 db_port: this.db_port,

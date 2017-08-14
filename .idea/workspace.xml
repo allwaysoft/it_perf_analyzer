@@ -18,7 +18,7 @@
     <file path="/content.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1477050732075" ignored="false" />
     <file path="/database_data_panel.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1388236772011" ignored="false" />
     <file path="/content_manager.js" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1487246553443" ignored="false" />
-    <file path="/databases.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1502446504937" ignored="false" />
+    <file path="/databases.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1502720381663" ignored="false" />
     <file path="/databases_dialog.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1388751624222" ignored="false" />
     <file path="/databases_grid.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1388408936605" ignored="false" />
     <file path="/content_logs_dialog.js" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1388410457061" ignored="false" />
@@ -172,7 +172,7 @@
     <file path="/databases_goldengate.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1486372233099" ignored="false" />
     <file path="/servers_main_panel.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1486392646139" ignored="false" />
     <file path="/servers_dashboard.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1486462432351" ignored="false" />
-    <file path="/oracle_perf.js" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1502371069326" ignored="false" />
+    <file path="/oracle_perf.js" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1502720127474" ignored="false" />
     <file path="/group_grid.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1501938279554" ignored="false" />
     <file path="/group_dialog.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1501942782495" ignored="false" />
     <file path="/server_groups.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1501943291771" ignored="false" />
@@ -251,10 +251,38 @@
       <file leaf-file-name="oracle_perf.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/admin/templates/default/extensions/content/oracle_perf.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="1372" column="24" selection-start="42366" selection-end="42412" vertical-scroll-proportion="0.0">
+            <state line="329" column="0" selection-start="9941" selection-end="9941" vertical-scroll-proportion="0.0">
               <folding>
-                <marker date="1502705289806" expanded="false" signature="3623:3643" placeholder="..." />
-                <marker date="1502705289806" expanded="false" signature="25487:25507" placeholder="..." />
+                <marker date="1502720401475" expanded="false" signature="3623:3643" placeholder="..." />
+                <marker date="1502720401475" expanded="false" signature="26957:26977" placeholder="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="databases.php" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/admin/includes/jsons/databases.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="2886" column="0" selection-start="127209" selection-end="127209" vertical-scroll-proportion="0.039627038">
+              <folding>
+                <marker date="1502722758379" expanded="false" signature="248362:248373" placeholder="..." />
+                <marker date="1502722758379" expanded="false" signature="248397:248449" placeholder="..." />
+                <marker date="1502722758379" expanded="false" signature="257111:257133" placeholder="..." />
+                <marker date="1502722758379" expanded="false" signature="257157:257247" placeholder="..." />
+                <marker date="1502722758379" expanded="false" signature="257262:257277" placeholder="..." />
+                <marker date="1502722758379" expanded="false" signature="257292:257306" placeholder="..." />
+                <marker date="1502722758379" expanded="false" signature="259643:259654" placeholder="..." />
+                <marker date="1502722758379" expanded="false" signature="259678:259730" placeholder="..." />
+                <marker date="1502722758379" expanded="false" signature="259745:259759" placeholder="..." />
+                <marker date="1502722758379" expanded="false" signature="259774:259789" placeholder="..." />
+                <marker date="1502722758379" expanded="false" signature="259897:259908" placeholder="..." />
+                <marker date="1502722758379" expanded="false" signature="259932:260001" placeholder="..." />
+                <marker date="1502722758379" expanded="false" signature="260016:260030" placeholder="..." />
+                <marker date="1502722758379" expanded="false" signature="260075:260144" placeholder="..." />
+                <marker date="1502722758379" expanded="false" signature="260159:260173" placeholder="..." />
+                <marker date="1502722758379" expanded="false" signature="260219:260288" placeholder="..." />
+                <marker date="1502722758379" expanded="false" signature="260303:260317" placeholder="..." />
+                <marker date="1502722758379" expanded="false" signature="260364:260401" placeholder="..." />
               </folding>
             </state>
           </provider>
@@ -280,19 +308,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="all.css" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="all.css" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/admin/templates/default/desktop/css/all.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="1979" column="44" selection-start="48009" selection-end="48009" vertical-scroll-proportion="0.49078342">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="account.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/account.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-0.0">
+            <state line="1987" column="0" selection-start="48431" selection-end="48431" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -316,33 +335,6 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="news.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/news.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="robots.txt" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/robots.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="tunnel.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/tunnel.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
     </leaf>
   </component>
   <component name="FindManager">
@@ -353,7 +345,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/admin/includes/jsons/databases.php" />
         <option value="$PROJECT_DIR$/admin/includes/classes/databases.php" />
         <option value="$PROJECT_DIR$/admin/templates/default.php" />
         <option value="$PROJECT_DIR$/admin/includes/languages/de_DE.php" />
@@ -366,9 +357,10 @@
         <option value="$PROJECT_DIR$/admin/includes/jsons/login.php" />
         <option value="$PROJECT_DIR$/admin/includes/jsons/servers.php" />
         <option value="$PROJECT_DIR$/admin/templates/default/extensions/content/oracle.js" />
-        <option value="$PROJECT_DIR$/admin/templates/default/extensions/content/oracle_perf.js" />
         <option value="$PROJECT_DIR$/admin/templates/default/extensions/content/server.js" />
         <option value="$PROJECT_DIR$/admin/templates/default/desktop/css/all.css" />
+        <option value="$PROJECT_DIR$/admin/templates/default/extensions/content/oracle_perf.js" />
+        <option value="$PROJECT_DIR$/admin/includes/jsons/databases.php" />
       </list>
     </option>
   </component>
@@ -509,7 +501,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="desktop" />
+              <option name="myItemId" value="extensions" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -535,11 +527,51 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="desktop" />
+              <option name="myItemId" value="extensions" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="css" />
+              <option name="myItemId" value="content" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dev" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="cloud_perf_analyzer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="admin" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="includes" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dev" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="cloud_perf_analyzer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="admin" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="includes" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="jsons" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -1007,13 +1039,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/admin/includes/classes/roles.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="231" column="60" selection-start="9257" selection-end="9257" vertical-scroll-proportion="-4.6923075">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/admin/includes/jsons/users.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="225" column="43" selection-start="8136" selection-end="8136" vertical-scroll-proportion="-6.5384617">
@@ -1130,16 +1155,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/admin/templates/default/extensions/content/oracle_perf.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="1372" column="24" selection-start="42366" selection-end="42412" vertical-scroll-proportion="0.0">
-          <folding>
-            <marker date="1502705289806" expanded="false" signature="3623:3643" placeholder="..." />
-            <marker date="1502705289806" expanded="false" signature="25487:25507" placeholder="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/admin/templates/default/extensions/content/server.js">
       <provider selected="true" editor-type-id="text-editor">
         <state line="3356" column="40" selection-start="107026" selection-end="107026" vertical-scroll-proportion="0.0">
@@ -1160,8 +1175,44 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/admin/templates/default/desktop/css/all.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="1979" column="44" selection-start="48009" selection-end="48009" vertical-scroll-proportion="0.49078342">
+        <state line="1987" column="0" selection-start="48431" selection-end="48431" vertical-scroll-proportion="0.0">
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/templates/default/extensions/content/oracle_perf.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="329" column="0" selection-start="9941" selection-end="9941" vertical-scroll-proportion="0.0">
+          <folding>
+            <marker date="1502720401475" expanded="false" signature="3623:3643" placeholder="..." />
+            <marker date="1502720401475" expanded="false" signature="26957:26977" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/includes/jsons/databases.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="2886" column="0" selection-start="127209" selection-end="127209" vertical-scroll-proportion="0.039627038">
+          <folding>
+            <marker date="1502722758379" expanded="false" signature="248362:248373" placeholder="..." />
+            <marker date="1502722758379" expanded="false" signature="248397:248449" placeholder="..." />
+            <marker date="1502722758379" expanded="false" signature="257111:257133" placeholder="..." />
+            <marker date="1502722758379" expanded="false" signature="257157:257247" placeholder="..." />
+            <marker date="1502722758379" expanded="false" signature="257262:257277" placeholder="..." />
+            <marker date="1502722758379" expanded="false" signature="257292:257306" placeholder="..." />
+            <marker date="1502722758379" expanded="false" signature="259643:259654" placeholder="..." />
+            <marker date="1502722758379" expanded="false" signature="259678:259730" placeholder="..." />
+            <marker date="1502722758379" expanded="false" signature="259745:259759" placeholder="..." />
+            <marker date="1502722758379" expanded="false" signature="259774:259789" placeholder="..." />
+            <marker date="1502722758379" expanded="false" signature="259897:259908" placeholder="..." />
+            <marker date="1502722758379" expanded="false" signature="259932:260001" placeholder="..." />
+            <marker date="1502722758379" expanded="false" signature="260016:260030" placeholder="..." />
+            <marker date="1502722758379" expanded="false" signature="260075:260144" placeholder="..." />
+            <marker date="1502722758379" expanded="false" signature="260159:260173" placeholder="..." />
+            <marker date="1502722758379" expanded="false" signature="260219:260288" placeholder="..." />
+            <marker date="1502722758379" expanded="false" signature="260303:260317" placeholder="..." />
+            <marker date="1502722758379" expanded="false" signature="260364:260401" placeholder="..." />
+          </folding>
         </state>
       </provider>
     </entry>

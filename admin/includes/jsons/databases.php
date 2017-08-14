@@ -2734,6 +2734,185 @@ GROUP BY component, oper_type, status";
         echo $toC_Json->encode($response);
     }
 
+    function addmReport()
+    {
+        global $toC_Json;
+
+        $db_user = $_REQUEST['db_user'];
+        $db_pass = $_REQUEST['db_pass'];
+        $db_host = $_REQUEST['db_host'];
+        $db_sid = $_REQUEST['db_sid'];
+        $data = $_REQUEST;
+
+        $detail = array('task_id' => $data['task_id'], 'status' => 'run','comments' => 'recuperation des parametres ...');
+        toC_Reports_Admin::addJobDetail($detail);
+
+        $c = oci_pconnect($db_user, $db_pass, $db_host . "/" . $db_sid);
+        if (!$c) {
+            $e = oci_error();
+            $detail = array('task_id' => $data['task_id'], 'status' => 'error','comments' => 'Could not connect to database: ' . htmlentities($e['message']));
+            toC_Reports_Admin::addJobDetail($detail);
+            $response = array('success' => false, 'feedback' => 'Could not connect to database: ' . htmlentities($e['message']));
+        } else {
+            $query = "SELECT (SELECT MIN (snap_id)
+          FROM DBA_HIST_SNAPSHOT
+         WHERE startup_time =
+                  (SELECT MAX (startup_time) FROM DBA_HIST_SNAPSHOT))
+          start_snap,
+       (SELECT MAX (snap_id) FROM DBA_HIST_SNAPSHOT) end_snap
+  FROM DUAL";
+
+            $s = oci_parse($c, $query);
+            if (!$s) {
+                $e = oci_error($c);
+                $detail = array('task_id' => $data['task_id'], 'status' => 'error','comments' => "Impossible de charger les snap id " . htmlentities($e['message']));
+                toC_Reports_Admin::addJobDetail($detail);
+                $response = array('success' => false, 'feedback' => "Impossible de charger les snap id " . htmlentities($e['message']));
+            } else {
+                $r = oci_execute($s, OCI_COMMIT_ON_SUCCESS);
+                if (!$r) {
+                    $e = oci_error($s);
+                    $detail = array('task_id' => $data['task_id'], 'status' => 'error','comments' => 'Erreur : ' . htmlentities($e['message']));
+                    toC_Reports_Admin::addJobDetail($detail);
+                    $response = array('success' => false, 'feedback' => 'Erreur : ' . htmlentities($e['message']));
+                } else {
+                    $start_snap = 0;
+                    $end_snap = 0;
+
+                    while (($row = oci_fetch_array($s, OCI_ASSOC))) {
+                        $start_snap = $row['START_SNAP'];
+                        $end_snap = $row['END_SNAP'];
+                    }
+
+                    oci_free_statement($s);
+
+                    $query = "SELECT DISTINCT dbid, db_name, instance_number  FROM DBA_HIST_DATABASE_INSTANCE";
+
+                    $s = oci_parse($c, $query);
+                    if (!$s) {
+                        $e = oci_error($c);
+                        $detail = array('task_id' => $data['task_id'], 'status' => 'error','comments' => "Impossible de charger les metatada de cette base " . htmlentities($e['message']));
+                        toC_Reports_Admin::addJobDetail($detail);
+                        $response = array('success' => false, 'feedback' => "Impossible de charger les metatada de cette base " . htmlentities($e['message']));
+                    } else {
+                        $r = oci_execute($s, OCI_COMMIT_ON_SUCCESS);
+                        if (!$r) {
+                            $e = oci_error($s);
+                            $detail = array('task_id' => $data['task_id'], 'status' => 'error','comments' => 'Erreur : ' . htmlentities($e['message']));
+                            toC_Reports_Admin::addJobDetail($detail);
+                            $response = array('success' => false, 'feedback' => 'Erreur : ' . htmlentities($e['message']));
+                        } else {
+                            $dbid = -1;
+                            $instance_number = 0;
+                            $db_name = '???????????';
+
+                            while (($row = oci_fetch_array($s, OCI_ASSOC))) {
+                                $dbid = $row['DBID'];
+                                $db_name = $row['DB_NAME'];
+                                $instance_number = $row['INSTANCE_NUMBER'];
+                            }
+
+                            oci_free_statement($s);
+
+                            $detail = array('task_id' => $data['task_id'], 'status' => 'run','comments' => 'Generation du rapport ...');
+                            toC_Reports_Admin::addJobDetail($detail);
+
+                            $characters = '0123456789';
+                            $charactersLength = strlen($characters);
+                            $randomString = '';
+                            for ($i = 0; $i < 5; $i++) {
+                                $randomString .= $characters[rand(0, $charactersLength - 1)];
+                            }
+
+                            $task_name = 'addm_report_' . $randomString;
+
+                            $query = "DECLARE
+  tname  VARCHAR2 (60);
+  taskid  NUMBER;
+  BEGIN
+  tname := '" . $task_name . "'; dbms_advisor.create_task('ADDM', taskid, tname); dbms_advisor.set_task_parameter(tname, 'START_SNAPSHOT'," . $start_snap . "); dbms_advisor.set_task_parameter(tname, 'END_SNAPSHOT', " . $end_snap . "); dbms_advisor.set_task_parameter(tname, 'INSTANCE', " . $instance_number . "); dbms_advisor.set_task_parameter(tname, 'DB_ID', " . $dbid . "); dbms_advisor.execute_task(tname); END;";
+
+                            $s = oci_parse($c, $query);
+                            if (!$s) {
+                                $e = oci_error($c);
+                                $detail = array('task_id' => $data['task_id'], 'status' => 'error','comments' => "Impossible de generer ASH " . htmlentities($e['message']));
+                                toC_Reports_Admin::addJobDetail($detail);
+                                $response = array('success' => false, 'feedback' => "Impossible de generer ADDM " . htmlentities($e['message']));
+                            } else {
+                                $r = oci_execute($s, OCI_COMMIT_ON_SUCCESS);
+                                if (!$r) {
+                                    $e = oci_error($s);
+                                    $detail = array('task_id' => $data['task_id'], 'status' => 'error','comments' => 'Erreur : ' . htmlentities($e['message']));
+                                    toC_Reports_Admin::addJobDetail($detail);
+                                    $response = array('success' => false, 'feedback' => 'Erreur : ' . htmlentities($e['message']));
+                                } else {
+                                    oci_free_statement($s);
+
+                                    $query = "SELECT DBMS_ADVISOR.get_task_report ('" . $task_name . "','TEXT','ALL','ALL') report FROM DBA_ADVISOR_TASKS t WHERE     t.task_name = '" . $task_name . "' AND t.owner = SYS_CONTEXT ('USERENV', 'session_user')";
+                                    $s = oci_parse($c, $query);
+
+                                    if (!$s) {
+                                        $e = oci_error($c);
+                                        $detail = array('task_id' => $data['task_id'], 'status' => 'error','comments' => 'Erreur : ' . htmlentities($e['message']));
+                                        toC_Reports_Admin::addJobDetail($detail);
+                                        $response = array('success' => false, 'feedback' => 'Erreur : ' . htmlentities($e['message']));
+                                        $response = array('success' => false, 'feedback' => "Impossible de generer ADDM REPORT " . htmlentities($e['message']));
+                                    } else {
+                                        $r = oci_execute($s, OCI_COMMIT_ON_SUCCESS);
+                                        if (!$r) {
+                                            $e = oci_error($s);
+                                            $detail = array('task_id' => $data['task_id'], 'status' => 'error','comments' => 'Erreur : ' . htmlentities($e['message']));
+                                            toC_Reports_Admin::addJobDetail($detail);
+                                            $response = array('success' => false, 'feedback' => 'Erreur : ' . htmlentities($e['message']));
+                                            $response = array('success' => false, 'feedback' => 'Erreur : ' . htmlentities($e['message']));
+                                        } else {
+                                            //oci_fetch_all($s, $output);
+
+                                            $out = '';
+                                            while ($row = oci_fetch_array($s, OCI_ASSOC + OCI_RETURN_LOBS)) {
+                                                $out = $out . $row['REPORT'];
+                                            }
+
+                                            $dir = realpath(DIR_WS_REPORTS) . '/';
+                                            if (!file_exists($dir)) {
+                                                mkdir($dir, 0777, true);
+                                            }
+                                            $report = 'addm_' . $data['task_id'] . '.html';
+                                            $file_name = $dir . '/' . $report;
+                                            $b = file_put_contents($file_name,$out);
+
+                                            oci_free_statement($s);
+                                            oci_close($c);
+
+                                            if($b > 0)
+                                            {
+                                                $detail = array('task_id' => $data['task_id'], 'status' => 'complete','comments' => $report);
+                                                toC_Reports_Admin::addJobDetail($detail);
+
+                                                if(isset($data['to']) && !empty($data['to']) && isset($data['subject']) && !empty($data['subject']))
+                                                {
+                                                    $data['body'] = $out;
+                                                    toC_Reports_Admin::sendEmail($data);
+                                                }
+                                            }
+                                            else
+                                            {
+                                                $detail = array('task_id' => $data['task_id'], 'status' => 'error','comments' => "Impossible de creer le fichier de rapport");
+                                                toC_Reports_Admin::addJobDetail($detail);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        echo $toC_Json->encode($response);
+    }
+
     function awrReport()
     {
         global $toC_Json;
