@@ -1976,7 +1976,7 @@ div.ext-ux-wiz-Header {
     filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src = 'templates/default/images/icons/48x48/import_export.png', sizingMethod = 'scale');
 }
 
-.icon-database_dashboard-shortcut img {
+.icon-database_perf-shortcut img {
     background-image: url(../../images/icons/48x48/report_web.png);
     filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src = 'templates/default/images/icons/48x48/report_web.png', sizingMethod = 'scale');
 }
