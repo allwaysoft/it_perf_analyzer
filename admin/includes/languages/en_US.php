@@ -8,7 +8,7 @@
 # it under the terms of the GNU General Public License v2 (1991)
 # as published by the Free Software Foundation.
 
-administration_title = THIRD Perf Analyser
+administration_title = Perf Analyser
 
 header_title_help = Help
 header_title_tomatocart_support_site = Mefobe Cart Support Site
@@ -144,7 +144,7 @@ configuration_program_locations_title = Program Locations
 configuration_store_front_title = Store Front
 configuration_content_management_system_title = Content Management System
 
-init_system = Initializing System ... THIRD IT
+init_system = Initializing System ... 
 
 provide_address = You must provide at least one recipient email address.
 mailer_not_supported =  mailer is not supported.

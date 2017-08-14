@@ -1,15 +1,5 @@
 <?php
-/*
-  $Id: main.php $
-  Mefobe Cart Solutions
-  http://www.mefobemarket.com
 
-  Copyright (c) 2009 Wuxi Elootec Technology Co., Ltd
-
-  This program is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License v2 (1991)
-  as published by the Free Software Foundation.
-*/
 
   echo 'Ext.namespace("Toc.roles");';
 
@@ -30,7 +20,7 @@ Ext.override(TocDesktop.RolesWindow, {
       
       win = desktop.createWindow({
         id: 'roles-win',
-        title: "Gestionnaire des Groupes d'utilisateurs",
+        title: 'Gestionnaire des Profils',
         width: 800,
         height: 400,
         iconCls: 'icon-roles-win',

@@ -1370,7 +1370,7 @@ Ext.extend(Toc.DatabasePerfDashboard, Ext.Panel, {
                         //console.debug(db);
                         db.owner = this.owner;
                         db.freq = frequence;
-                        db.width = '50%';
+                        db.width = result.total <= 6 ? '100%' : '50%';
                         db.classs = (i % 2 == 0) ? 'blue' : 'gray';
 
                         var panel = new Toc.DatabasePerfPanel(db);
@@ -1431,7 +1431,7 @@ Toc.DatabasePerfPanel = function (params) {
     config.params = params;
     config.region = 'center';
     config.border = true;
-    config.width = config.params.width || '50%';
+    config.width = config.params.width || '100%';
     config.layout = 'column';
     config.cls = params.classs;
     config.title = params.label;

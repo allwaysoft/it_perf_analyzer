@@ -16,7 +16,7 @@ class osC_Roles_Admin
 
         $data = null;
 
-        if ($src == 'local') {
+        if (AUTH == 'local') {
             if ($id != -1) {
                 $Qadmin = $osC_Database->query('select r.*,a.* from :table_roles r INNER JOIN :table_administrators a ON (r.administrators_id = a.id) where r.roles_id = :id');
                 $Qadmin->bindTable(':table_roles', TABLE_ROLES);
@@ -41,7 +41,7 @@ class osC_Roles_Admin
                 'administrators_id' => -1,
                 'roles_id' => -1,
                 'user_name' => 'everyone',
-                'email_address' => 'everyone@innovics.org',
+                'email_address' => 'everyone@everyone.com',
                 'roles_name' => 'Tout le monde',
                 'roles_description' => 'Tout le monde'
             );
@@ -49,28 +49,127 @@ class osC_Roles_Admin
             if ($id != -1) {
                 $Qadmin->freeResult();
             }
+        } else {
 
-            if (is_array($admin)) {
-                $data = array_merge($admin, $modules);
-            } else {
-                $data = $modules;
+            $db_user = empty($_REQUEST['db_user']) ? DB_USER : $_REQUEST['db_user'];
+            $db_pass = empty($_REQUEST['db_pass']) ? DB_PASS : $_REQUEST['db_pass'];
+            $db_host = empty($_REQUEST['db_host']) ? DB_HOST : $_REQUEST['db_host'];
+            $db_sid = empty($_REQUEST['db_sid']) ? DB_SID : $_REQUEST['db_sid'];
+
+            $c = oci_pconnect($db_user,$db_pass,$db_host . "/" . $db_sid);
+            if (!$c) {
+                $e = oci_error();
+                trigger_error('Could not connect to database: ' . $e['message'], E_USER_ERROR);
             }
 
-            unset($modules);
-            $Qaccess->freeResult();
+            $query = "SELECT TRIM (EVUTI.CUTI) CUTI,LTRIM (RTRIM (LIB)) LIB,(SELECT COUNT (*) FROM evuti) TOTAL,EMAIL,UNIX FROM EVUTI LEFT OUTER JOIN EVUTAUT ON (EVUTI.CUTI = EVUTAUT.CUTI) WHERE EVUTI.SUS = 'N' and trim(EVUTI.CUTI) = :CUTI";
+            $s = oci_parse($c, $query);
+            if (!$s) {
+                $e = oci_error($c);
+                trigger_error('Could not parse statement: ' . $e['message'], E_USER_ERROR);
+            }
+
+            oci_bind_by_name($s, ":CUTI", $id);
+
+            $r = oci_execute($s);
+            if (!$r) {
+                $e = oci_error($s);
+                trigger_error('Could not execute statement: ' . $e['message'], E_USER_ERROR);
+            }
+
+            while (($row = oci_fetch_array($s, OCI_ASSOC))) {
+                $admin = array(
+                    'administrators_id' => '-1',
+                    'roles_id' => $row['CUTI'],
+                    'user_name' => $row['UNIX'],
+                    'email_address' => $row['EMAIL'],
+                    'roles_name' => $row['LIB'] . " ( " . $row['CUTI'] . " )",
+                    'roles_description' => $row['LIB'] . " ( " . $row['CUTI'] . " )",
+                    'src' => 'extern'
+                );
+            }
+
+            oci_free_statement($r);
+            oci_close($c);
+
+            $modules = array('access_modules' => array());
+
+            $Qaccess = $osC_Database->query('select module from :table_administrators_access where administrators_id = :roles_id');
+            $Qaccess->bindTable(':table_administrators_access', TABLE_DELTA_ACCESS);
+            $Qaccess->bindValue(':roles_id', $id);
+            $Qaccess->execute();
+
+            while ($Qaccess->next()) {
+                $modules['access_modules'][] = $Qaccess->value('module');
+            }
         }
 
+        if (is_array($admin)) {
+            $data = array_merge($admin, $modules);
+        } else {
+            $data = $modules;
+        }
+
+        unset($modules);
+        $Qaccess->freeResult();
+
         return $data;
+    }
+
+    function getRoleDelta($id)
+    {
+        $db_user = empty($_REQUEST['db_user']) ? DB_USER : $_REQUEST['db_user'];
+        $db_pass = empty($_REQUEST['db_pass']) ? DB_PASS : $_REQUEST['db_pass'];
+        $db_host = empty($_REQUEST['db_host']) ? DB_HOST : $_REQUEST['db_host'];
+        $db_sid = empty($_REQUEST['db_sid']) ? DB_SID : $_REQUEST['db_sid'];
+
+        $c = oci_pconnect($db_user, $db_pass, $db_host . "/" . $db_sid);
+        if (!$c) {
+            $e = oci_error();
+            trigger_error('Could not connect to database: ' . $e['message'], E_USER_ERROR);
+        }
+
+        $s = oci_parse($c, "SELECT TRIM (EVUTI.CUTI) CUTI,LTRIM(RTRIM (LIB)) LIB,0 TOTAL,EMAIL,UNIX FROM EVUTI LEFT OUTER JOIN EVUTAUT ON (EVUTI.CUTI = EVUTAUT.CUTI) WHERE trim (evuti.cuti) = :cuti");
+        if (!$s) {
+            $e = oci_error($c);
+            trigger_error('Could not parse statement: ' . $e['message'], E_USER_ERROR);
+        }
+
+        oci_bind_by_name($s, ":cuti", $id);
+
+        $r = oci_execute($s);
+        if (!$r) {
+            $e = oci_error($s);
+            trigger_error('Could not execute statement: ' . $e['message'], E_USER_ERROR);
+        }
+
+        $count = 0;
+        $roles = array();
+
+        while (($row = oci_fetch_array($s, OCI_ASSOC))) {
+            $roles[] = array(
+                'roles_id' => $row['CUTI'],
+                'user_name' => $row['LIB'],
+                'email_address' => $row['EMAIL'],
+                'roles_name' => $row['LIB'] . ' ( ' . $row['CUTI'] . ' )',
+                'roles_description' => $row['LIB'],
+                'icon' => osc_icon('folder_account.png')
+            );
+
+            $count++;
+        }
+
+        oci_free_statement($r);
+        oci_close($c);
+
+        return $roles;
     }
 
     function getRole($id)
     {
         global $osC_Database;
 
-        $osC_Database->selectDatabase(DB_DATABASE);
-
         $data = null;
-
         $Qadmin = $osC_Database->query('select r.*,a.* from :table_roles r INNER JOIN :table_administrators a ON (r.administrators_id = a.id) where r.roles_id = :id');
         $Qadmin->bindTable(':table_roles', TABLE_ROLES);
         $Qadmin->bindTable(':table_administrators', TABLE_ADMINISTRATORS);

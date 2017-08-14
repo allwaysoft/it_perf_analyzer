@@ -1100,6 +1100,8 @@ Toc.TopFsPanel = function (config) {
     config.loadMask = false;
     config.region = 'center';
     //config.width = this.params.width ||'50%';
+    config.count = 0;
+    config.reqs = 0;
     config.title = 'FS';
     config.height  = 110;
     config.hideHeaders = true;
@@ -1139,7 +1141,16 @@ Toc.TopFsPanel = function (config) {
         ]),
         listeners: {
             load: function (store, records, opt) {
-                setTimeout(that.refreshData(that), that.freq);
+                that.reqs--;
+
+                if (that.count == 0) {
+                    var interval = setInterval(function () {
+                        that.refreshData(that);
+                    }, that.freq || 5000);
+                    //setTimeout(that.refreshData, that.freq || 10000);
+                    that.count++;
+                    that.interval = interval;
+                }
             },
             beforeload: function (store, opt) {
                 return that.started;
@@ -1202,7 +1213,8 @@ Toc.TopFsPanel = function (config) {
             id: 'refresh',
             qtip: 'Refresh',
             handler: function (event, toolEl, panel) {
-                thisObj.getStore().load();
+                thisObj.stop();
+                thisObj.start();
             }
         }
     ];
@@ -1214,9 +1226,12 @@ Toc.TopFsPanel = function (config) {
 
 Ext.extend(Toc.TopFsPanel, Ext.grid.GridPanel, {
     refreshData: function (scope) {
-        if (scope) {
-            var store = this.getStore();
-            store.load();
+        if (scope && scope.started) {
+            if (scope.reqs == 0) {
+                var store = this.getStore();
+                scope.reqs++;
+                store.load();
+            }
         }
     },
     onEdit: function (record) {
@@ -1272,11 +1287,20 @@ Ext.extend(Toc.TopFsPanel, Ext.grid.GridPanel, {
     },
     start: function () {
         this.started = true;
+        this.count = 0;
+        this.reqs = 0;
         this.refreshData(this);
     },
     stop: function () {
         this.started = false;
+        this.count = 10;
+        this.reqs = 10;
         this.refreshData(this);
+
+        if(this.interval)
+        {
+            clearInterval(this.interval);
+        }
     }
 });
 
@@ -3320,7 +3344,8 @@ Ext.extend(Toc.ServerDashboard, Ext.Panel, {
                         //console.debug(db);
                         db.owner = this.owner;
                         db.freq = frequence;
-                        db.width = '33%';
+                        db.width = result.total <= 6 ? '100%' : '50%';
+                        //db.width = '33%';
                         db.classs = (i % 2 == 0) ? 'blue' : 'gray';
 
                         var panel = new Toc.ServerDashboardPanel(db);

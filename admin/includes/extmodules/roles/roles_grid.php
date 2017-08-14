@@ -21,7 +21,6 @@ Toc.roles.RolesGrid = function(config) {
     }, 
     [
       'administrators_id',
-      'department_id',
       'roles_id',
       'user_name',
       'email_address',
@@ -151,7 +150,7 @@ Ext.extend(Toc.roles.RolesGrid, Ext.grid.GridPanel, {
   onDelete: function(record) {
     var administrators_id = record.get('administrators_id');
     roles_id = record.get('roles_id');
-    department_id = record.get('department_id');
+
 
     Ext.MessageBox.confirm(
       TocLanguage.msgWarningTitle, 
@@ -164,7 +163,7 @@ Ext.extend(Toc.roles.RolesGrid, Ext.grid.GridPanel, {
               module: 'roles',
               action: 'delete_role',
               administrators_id: administrators_id,
-              department_id: department_id,
+
               roles_id : roles_id
             },
             callback: function(options, success, response) {

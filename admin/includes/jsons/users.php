@@ -58,7 +58,6 @@ class toC_Json_Users
         while ($Qadmin->next()) {
             $data = array(
                 'users_id' => $Qadmin->valueInt('users_id'),
-                'staff_id' => $Qadmin->valueInt('staff_id'),
                 'administrators_id' => $Qadmin->valueInt('administrators_id'),
                 'user_name' => $Qadmin->value('user_name'),
                 'status' => $Qadmin->value('status'),

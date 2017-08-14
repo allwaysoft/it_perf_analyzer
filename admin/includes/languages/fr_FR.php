@@ -1,14 +1,6 @@
-# $Id: fr_FR.php $
-# Mefobe Cart Solutions
-# http://www.mefobemarket.com
-#
-# Copyright (c) 2009-2010 Wuxi Elootec Technology Co., Ltd
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License v2 (1991)
-# as published by the Free Software Foundation.
 
-administration_title = THIRD Perf Analyser
+
+administration_title = Perf Analyser
 
 header_title_help = Aide
 header_title_tomatocart_support_site = Site du support de Mefobe Cart
@@ -140,7 +132,7 @@ configuration_regulations_title = Règlements
 configuration_credit_cards_title = Cartes de crédit
 configuration_program_locations_title = Localisations de programmes
 
-init_system = Initialisation du système ... THIRD IT
+init_system = Initialisation du système ... 
 
 provide_address = Vous devez fournir au moins une adresse email de destinataire.
 mailer_not_supported = Mailer non supporté.

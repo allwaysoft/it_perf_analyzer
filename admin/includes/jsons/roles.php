@@ -193,7 +193,7 @@ class toC_Json_Roles
     {
         global $toC_Json, $osC_Language;
 
-        $src = 'local';
+        $src = AUTH;
         $roles_id = $_REQUEST['roles_id'];
 
         $characters = 'abcdefghijklmnopqrstuvxyz';
@@ -209,7 +209,7 @@ class toC_Json_Roles
             'password' => '12345',
             'roles_name' => $_REQUEST['roles_name'],
             'roles_description' => $_REQUEST['roles_description'],
-            'email_address' => $randomString . '@cca.org');
+            'email_address' => $randomString . '@monitoring.org');
 
         $mod = $_REQUEST['modules'] . ',documents';
         $modules = null;

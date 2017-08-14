@@ -1,23 +1,13 @@
 <?php
-/*
-  $Id: roles_dialog.php $
-  Mefobe Cart Solutions
-  http://www.mefobemarket.com
 
-  Copyright (c) 2009 Wuxi Elootec Technology Co., Ltd
-
-  This program is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License v2 (1991)
-  as published by the Free Software Foundation.
-*/
 ?>
 Toc.roles.RolesDialog = function(config) {
   config = config || {};
   
   config.id = 'roles_dialog-win';
-  config.title = "Configurer un Groupe d'utilisateurs";
+  config.title = 'Configurer un Profil';
   config.width = 800;
-  config.height = 385;
+  config.height = 500;
   config.modal = true;
   config.iconCls = 'icon-roles-win';
   config.layout = 'fit';

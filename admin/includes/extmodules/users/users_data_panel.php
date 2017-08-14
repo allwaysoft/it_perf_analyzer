@@ -1,15 +1,5 @@
 <?php
-/*
-  $Id: users_general_panel.php $
-  Mefobe Cart Solutions
-  http://www.mefobemarket.com
 
-  Copyright (c) 2010 Wuxi Elootec Technology Co., Ltd
-
-  This program is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License v2 (1991)
-  as published by the Free Software Foundation.
-*/
 
 ?>
 
@@ -97,11 +87,6 @@ Ext.extend(Toc.users.DataPanel, Ext.Panel, {
                             fieldLabel: 'Email',
                             name: 'email_address',
                             allowBlank: false
-                        },{
-                            xtype: 'hidden',
-                            name: 'staff_id',
-                            id: 'staff_id',
-                            allowBlank: true
                         },
                         {xtype:'textarea', fieldLabel: 'Description', name: 'description', id: 'users_intro',maxLength : 500,height:150}
                     ]

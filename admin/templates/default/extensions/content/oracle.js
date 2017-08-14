@@ -1,3 +1,4 @@
+
 Toc.content.ContentManager.getOracleConnexionsCombo = function (config) {
     var dsOracleConnexionsCombo = new Ext.data.Store({
         url: Toc.CONF.CONN_URL,
@@ -1837,16 +1838,16 @@ Ext.extend(Toc.MoveDatafileDialog, Ext.Window, {
         });
 
         this.browser = new Toc.DirSelectorField(params);
-        this.frmMoveTable.add(this.browser);
-        this.frmMoveTable.doLayout(false, true);
+        this.frmMoveDatafile.add(this.browser);
+        this.frmMoveDatafile.doLayout(false, true);
 
         this.txtFilename = new Ext.form.TextField({
             fieldLabel: 'Nom Fichier ',
             allowBlank: false,
             width: '95%'
         });
-        this.frmMoveTable.add(this.txtFilename);
-        this.frmMoveTable.doLayout(false, true);
+        this.frmMoveDatafile.add(this.txtFilename);
+        this.frmMoveDatafile.doLayout(false, true);
 
         this.center();
         this.doLayout(true, true);
@@ -1871,7 +1872,7 @@ Ext.extend(Toc.MoveDatafileDialog, Ext.Window, {
     },
 
     buildForm: function (params) {
-        this.frmMoveTable = new Ext.form.FormPanel({
+        this.frmMoveDatafile = new Ext.form.FormPanel({
             layout: 'form',
             autoScroll: true,
             id: 'frmMoveTable',
@@ -1889,7 +1890,7 @@ Ext.extend(Toc.MoveDatafileDialog, Ext.Window, {
             items: []
         });
 
-        return this.frmMoveTable;
+        return this.frmMoveDatafile;
     },
 
     submitForm: function () {

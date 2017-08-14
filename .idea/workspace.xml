@@ -126,8 +126,8 @@
     <file path="$APPLICATION_HOME_DIR$/plugins/php/lib/php.jar!/com/jetbrains/php/lang/psi/stubs/data/Core_d.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1440422395602" ignored="false" />
     <file path="/database.js" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1442675249011" ignored="false" />
     <file path="/ogg.js" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1489595577498" ignored="false" />
-    <file path="/oracle.js" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1502465739018" ignored="false" />
-    <file path="/server.js" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1502449988239" ignored="false" />
+    <file path="/oracle.js" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1502699497312" ignored="false" />
+    <file path="/server.js" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1502699629154" ignored="false" />
     <file path="/jobs.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1446735718570" ignored="false" />
     <file path="/jobs_main_panel.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1446636861154" ignored="false" />
     <file path="/jobs_schedule_dialog.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1446721655964" ignored="false" />
@@ -187,6 +187,7 @@
     <file path="/fr_FR.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1502552374525" ignored="false" />
     <file path="/de_DE.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1502552345408" ignored="false" />
     <file path="/en_US.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1502552363927" ignored="false" />
+    <file path="$PROJECT_DIR$/../dev/admin/templates/default/extensions/content/oracle.js" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1502700235618" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -206,94 +207,137 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="oracle_perf.js" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/admin/templates/default/extensions/content/oracle_perf.js">
+      <file leaf-file-name="oracle.js" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/admin/templates/default/extensions/content/oracle.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="57" column="36" selection-start="1635" selection-end="1635" vertical-scroll-proportion="0.0">
+            <state line="687" column="3" selection-start="14623" selection-end="19426" vertical-scroll-proportion="0.0">
               <folding>
-                <marker date="1502469801409" expanded="false" signature="3623:3643" placeholder="..." />
-                <marker date="1502469801409" expanded="false" signature="25487:25507" placeholder="..." />
+                <marker date="1502699895678" expanded="false" signature="16836:16856" placeholder="..." />
+                <marker date="1502699895678" expanded="false" signature="61770:61785" placeholder="..." />
+                <marker date="1502699895678" expanded="false" signature="61913:61928" placeholder="..." />
+                <marker date="1502699895678" expanded="false" signature="83427:83442" placeholder="..." />
+                <marker date="1502699895678" expanded="false" signature="83570:83585" placeholder="..." />
+                <marker date="1502699895678" expanded="false" signature="83936:83951" placeholder="..." />
+                <marker date="1502699895678" expanded="false" signature="84079:84094" placeholder="..." />
+                <marker date="1502699895678" expanded="false" signature="116224:116239" placeholder="..." />
+                <marker date="1502699895678" expanded="false" signature="116381:116396" placeholder="..." />
+                <marker date="1502699895678" expanded="false" signature="135358:135373" placeholder="..." />
+                <marker date="1502699895678" expanded="false" signature="135501:135516" placeholder="..." />
+                <marker date="1502699895678" expanded="false" signature="135853:135868" placeholder="..." />
+                <marker date="1502699895678" expanded="false" signature="135996:136011" placeholder="..." />
+                <marker date="1502699895678" expanded="false" signature="144895:144910" placeholder="..." />
+                <marker date="1502699895678" expanded="false" signature="145038:145053" placeholder="..." />
+                <marker date="1502699895678" expanded="false" signature="159521:159536" placeholder="..." />
+                <marker date="1502699895678" expanded="false" signature="159664:159679" placeholder="..." />
+                <marker date="1502699895678" expanded="false" signature="160017:160032" placeholder="..." />
+                <marker date="1502699895678" expanded="false" signature="160160:160175" placeholder="..." />
+                <marker date="1502699895678" expanded="false" signature="160516:160531" placeholder="..." />
+                <marker date="1502699895678" expanded="false" signature="160659:160674" placeholder="..." />
+                <marker date="1502699895678" expanded="false" signature="177979:177994" placeholder="..." />
+                <marker date="1502699895678" expanded="false" signature="178205:178220" placeholder="..." />
+                <marker date="1502699895678" expanded="false" signature="178426:178441" placeholder="..." />
+                <marker date="1502699895678" expanded="false" signature="178648:178663" placeholder="..." />
+                <marker date="1502699895678" expanded="false" signature="178799:178814" placeholder="..." />
+                <marker date="1502699895678" expanded="false" signature="198934:198948" placeholder="..." />
+                <marker date="1502699895678" expanded="false" signature="198963:198988" placeholder="..." />
+                <marker date="1502699895678" expanded="false" signature="199072:199086" placeholder="..." />
+                <marker date="1502699895678" expanded="false" signature="199101:199126" placeholder="..." />
+                <marker date="1502699895678" expanded="false" signature="220150:220170" placeholder="..." />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="default.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/admin/templates/default.php">
+      <file leaf-file-name="oracle_perf.js" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/admin/templates/default/extensions/content/oracle_perf.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="58" column="71" selection-start="3407" selection-end="3418" vertical-scroll-proportion="-10.846154">
-              <folding />
+            <state line="1372" column="24" selection-start="42366" selection-end="42412" vertical-scroll-proportion="0.0">
+              <folding>
+                <marker date="1502705289806" expanded="false" signature="3623:3643" placeholder="..." />
+                <marker date="1502705289806" expanded="false" signature="25487:25507" placeholder="..." />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="roles.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/admin/includes/jsons/roles.php">
+      <file leaf-file-name="server.js" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/admin/templates/default/extensions/content/server.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="224" column="39" selection-start="7315" selection-end="7315" vertical-scroll-proportion="-5.6153846">
-              <folding />
+            <state line="3346" column="70" selection-start="106555" selection-end="106555" vertical-scroll-proportion="0.33410138">
+              <folding>
+                <marker date="1502705289818" expanded="true" signature="37059:37079" placeholder="..." />
+                <marker date="1502705289818" expanded="false" signature="77568:77583" placeholder="..." />
+                <marker date="1502705289818" expanded="false" signature="77725:77740" placeholder="..." />
+                <marker date="1502705289818" expanded="false" signature="114561:114591" placeholder="..." />
+                <marker date="1502705289818" expanded="false" signature="115074:115104" placeholder="..." />
+                <marker date="1502705289818" expanded="false" signature="115589:115619" placeholder="..." />
+                <marker date="1502705289818" expanded="false" signature="116109:116139" placeholder="..." />
+                <marker date="1502705289818" expanded="false" signature="116628:116658" placeholder="..." />
+                <marker date="1502705289818" expanded="false" signature="139698:139728" placeholder="..." />
+                <marker date="1502705289818" expanded="false" signature="140211:140241" placeholder="..." />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="login.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/admin/includes/jsons/login.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="12" column="83" selection-start="317" selection-end="317" vertical-scroll-proportion="-7.1923075">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="users.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/admin/includes/jsons/users.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="225" column="43" selection-start="8136" selection-end="8136" vertical-scroll-proportion="-6.5384617">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="users.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/admin/includes/classes/users.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="303" column="13" selection-start="11624" selection-end="11624" vertical-scroll-proportion="-8.884615">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="roles.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/admin/includes/classes/roles.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="231" column="60" selection-start="9257" selection-end="9257" vertical-scroll-proportion="-4.6923075">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="en_US.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/admin/includes/languages/en_US.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="146" column="46" selection-start="4836" selection-end="4836" vertical-scroll-proportion="-6.1538463">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="servers.php" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="servers.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/admin/includes/jsons/servers.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="125" column="5" selection-start="6041" selection-end="6041" vertical-scroll-proportion="0.9186603">
+            <state line="114" column="69" selection-start="5721" selection-end="5721" vertical-scroll-proportion="-7.576923">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="de_DE.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/admin/includes/languages/de_DE.php">
+      <file leaf-file-name="account.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/account.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="136" column="48" selection-start="4938" selection-end="4938" vertical-scroll-proportion="-2.6470587">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="main.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/servers_dashboard/main.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="13" column="51" selection-start="456" selection-end="471" vertical-scroll-proportion="-8.5">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="main.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/databases_perf/main.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="14" column="56" selection-start="523" selection-end="544" vertical-scroll-proportion="-9.153846">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="news.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/news.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="robots.txt" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/robots.txt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="tunnel.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/tunnel.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-0.0">
               <folding />
             </state>
           </provider>
@@ -312,9 +356,6 @@
         <option value="$PROJECT_DIR$/admin/includes/modules/access/server_groups.php" />
         <option value="$PROJECT_DIR$/admin/includes/jsons/databases.php" />
         <option value="$PROJECT_DIR$/admin/includes/classes/databases.php" />
-        <option value="$PROJECT_DIR$/admin/templates/default/extensions/content/server.js" />
-        <option value="$PROJECT_DIR$/admin/templates/default/extensions/content/oracle.js" />
-        <option value="$PROJECT_DIR$/admin/templates/default/extensions/content/oracle_perf.js" />
         <option value="$PROJECT_DIR$/admin/templates/default.php" />
         <option value="$PROJECT_DIR$/admin/includes/languages/de_DE.php" />
         <option value="$PROJECT_DIR$/admin/includes/languages/en_US.php" />
@@ -325,6 +366,9 @@
         <option value="$PROJECT_DIR$/admin/includes/classes/users.php" />
         <option value="$PROJECT_DIR$/admin/includes/jsons/login.php" />
         <option value="$PROJECT_DIR$/admin/includes/jsons/servers.php" />
+        <option value="$PROJECT_DIR$/admin/templates/default/extensions/content/oracle.js" />
+        <option value="$PROJECT_DIR$/admin/templates/default/extensions/content/oracle_perf.js" />
+        <option value="$PROJECT_DIR$/admin/templates/default/extensions/content/server.js" />
       </list>
     </option>
   </component>
@@ -340,10 +384,10 @@
   <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
   <component name="PhpXdebugProxy" ide_key="PHPSTORM" host="10.100.23.7" port="9000" />
   <component name="ProjectFrameBounds">
-    <option name="x" value="-4" />
-    <option name="y" value="-4" />
-    <option name="width" value="1348" />
-    <option name="height" value="650" />
+    <option name="x" value="1" />
+    <option name="y" value="1" />
+    <option name="width" value="1338" />
+    <option name="height" value="640" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -399,20 +443,6 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="includes" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dev" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="cloud_perf_analyzer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
               <option name="myItemId" value="admin" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -431,6 +461,102 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="templates" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dev" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="cloud_perf_analyzer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="admin" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="templates" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="default" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dev" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="cloud_perf_analyzer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="admin" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="templates" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="default" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="extensions" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dev" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="cloud_perf_analyzer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="admin" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="templates" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="default" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="extensions" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="content" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dev" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="cloud_perf_analyzer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="admin" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="includes" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -453,7 +579,59 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="jsons" />
+              <option name="myItemId" value="extmodules" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dev" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="cloud_perf_analyzer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="admin" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="includes" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="extmodules" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="servers_dashboard" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dev" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="cloud_perf_analyzer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="admin" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="includes" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="extmodules" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="databases_perf" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -622,15 +800,15 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-4" y="-4" width="1348" height="650" extended-state="0" />
+    <frame x="1" y="1" width="1338" height="640" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32890365" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.27125195" sideWeight="0.39484128" order="1" side_tool="true" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.27336448" sideWeight="0.39473686" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Remote Host" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32954547" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.27125195" sideWeight="0.60515875" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.27336448" sideWeight="0.6032389" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3327032" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.19587629" sideWeight="0.34175083" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3327032" sideWeight="0.5" order="9" side_tool="true" content_ui="tabs" />
@@ -709,7 +887,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/admin/includes/jsons/users.php</url>
-          <line>132</line>
+          <line>131</line>
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/admin/includes/jsons/servers.php</url>
@@ -783,7 +961,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/admin/includes/jsons/users.php</url>
-          <line>112</line>
+          <line>111</line>
           <option name="timeStamp" value="66" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
@@ -921,72 +1099,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/admin/includes/classes/databases.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="205" column="6" selection-start="6084" selection-end="6084" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/servers_dashboard/main.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="13" column="51" selection-start="456" selection-end="471" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/admin/includes/jsons/databases.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="4159" column="5" selection-start="183642" selection-end="183642" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/admin/templates/default/extensions/content/server.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="3337" column="11" selection-start="106391" selection-end="106391" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/admin/templates/default/extensions/content/oracle.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="1339" column="0" selection-start="38039" selection-end="38039" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/admin/templates/default/extensions/content/oracle_perf.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="57" column="36" selection-start="1635" selection-end="1635" vertical-scroll-proportion="0.0">
-          <folding>
-            <marker date="1502469801409" expanded="false" signature="3623:3643" placeholder="..." />
-            <marker date="1502469801409" expanded="false" signature="25487:25507" placeholder="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/admin/templates/default.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="58" column="71" selection-start="3407" selection-end="3418" vertical-scroll-proportion="-10.846154">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/admin/includes/languages/de_DE.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="136" column="48" selection-start="4938" selection-end="4938" vertical-scroll-proportion="-2.6470587">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/admin/includes/languages/en_US.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="146" column="46" selection-start="4836" selection-end="4836" vertical-scroll-proportion="-6.1538463">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/admin/includes/languages/fr_FR.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="142" column="52" selection-start="5094" selection-end="5094" vertical-scroll-proportion="-6.0">
@@ -1024,15 +1136,124 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/admin/includes/jsons/roles.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="224" column="39" selection-start="7315" selection-end="7315" vertical-scroll-proportion="-5.6153846">
+        <state line="224" column="39" selection-start="7319" selection-end="7319" vertical-scroll-proportion="-5.6153846">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/admin/includes/jsons/servers.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="125" column="5" selection-start="6041" selection-end="6041" vertical-scroll-proportion="0.9186603">
+        <state line="114" column="69" selection-start="5721" selection-end="5721" vertical-scroll-proportion="-7.576923">
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/account.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/news.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/robots.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tunnel.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/templates/default/extensions/content/oracle.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="687" column="3" selection-start="14623" selection-end="19426" vertical-scroll-proportion="0.0">
+          <folding>
+            <marker date="1502699895678" expanded="false" signature="16836:16856" placeholder="..." />
+            <marker date="1502699895678" expanded="false" signature="61770:61785" placeholder="..." />
+            <marker date="1502699895678" expanded="false" signature="61913:61928" placeholder="..." />
+            <marker date="1502699895678" expanded="false" signature="83427:83442" placeholder="..." />
+            <marker date="1502699895678" expanded="false" signature="83570:83585" placeholder="..." />
+            <marker date="1502699895678" expanded="false" signature="83936:83951" placeholder="..." />
+            <marker date="1502699895678" expanded="false" signature="84079:84094" placeholder="..." />
+            <marker date="1502699895678" expanded="false" signature="116224:116239" placeholder="..." />
+            <marker date="1502699895678" expanded="false" signature="116381:116396" placeholder="..." />
+            <marker date="1502699895678" expanded="false" signature="135358:135373" placeholder="..." />
+            <marker date="1502699895678" expanded="false" signature="135501:135516" placeholder="..." />
+            <marker date="1502699895678" expanded="false" signature="135853:135868" placeholder="..." />
+            <marker date="1502699895678" expanded="false" signature="135996:136011" placeholder="..." />
+            <marker date="1502699895678" expanded="false" signature="144895:144910" placeholder="..." />
+            <marker date="1502699895678" expanded="false" signature="145038:145053" placeholder="..." />
+            <marker date="1502699895678" expanded="false" signature="159521:159536" placeholder="..." />
+            <marker date="1502699895678" expanded="false" signature="159664:159679" placeholder="..." />
+            <marker date="1502699895678" expanded="false" signature="160017:160032" placeholder="..." />
+            <marker date="1502699895678" expanded="false" signature="160160:160175" placeholder="..." />
+            <marker date="1502699895678" expanded="false" signature="160516:160531" placeholder="..." />
+            <marker date="1502699895678" expanded="false" signature="160659:160674" placeholder="..." />
+            <marker date="1502699895678" expanded="false" signature="177979:177994" placeholder="..." />
+            <marker date="1502699895678" expanded="false" signature="178205:178220" placeholder="..." />
+            <marker date="1502699895678" expanded="false" signature="178426:178441" placeholder="..." />
+            <marker date="1502699895678" expanded="false" signature="178648:178663" placeholder="..." />
+            <marker date="1502699895678" expanded="false" signature="178799:178814" placeholder="..." />
+            <marker date="1502699895678" expanded="false" signature="198934:198948" placeholder="..." />
+            <marker date="1502699895678" expanded="false" signature="198963:198988" placeholder="..." />
+            <marker date="1502699895678" expanded="false" signature="199072:199086" placeholder="..." />
+            <marker date="1502699895678" expanded="false" signature="199101:199126" placeholder="..." />
+            <marker date="1502699895678" expanded="false" signature="220150:220170" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/databases_perf/main.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="14" column="56" selection-start="523" selection-end="544" vertical-scroll-proportion="-9.153846">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/servers_dashboard/main.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="13" column="51" selection-start="456" selection-end="471" vertical-scroll-proportion="-8.5">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/templates/default/extensions/content/oracle_perf.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="1372" column="24" selection-start="42366" selection-end="42412" vertical-scroll-proportion="0.0">
+          <folding>
+            <marker date="1502705289806" expanded="false" signature="3623:3643" placeholder="..." />
+            <marker date="1502705289806" expanded="false" signature="25487:25507" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/templates/default/extensions/content/server.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="3346" column="70" selection-start="106555" selection-end="106555" vertical-scroll-proportion="0.33410138">
+          <folding>
+            <marker date="1502705289818" expanded="true" signature="37059:37079" placeholder="..." />
+            <marker date="1502705289818" expanded="false" signature="77568:77583" placeholder="..." />
+            <marker date="1502705289818" expanded="false" signature="77725:77740" placeholder="..." />
+            <marker date="1502705289818" expanded="false" signature="114561:114591" placeholder="..." />
+            <marker date="1502705289818" expanded="false" signature="115074:115104" placeholder="..." />
+            <marker date="1502705289818" expanded="false" signature="115589:115619" placeholder="..." />
+            <marker date="1502705289818" expanded="false" signature="116109:116139" placeholder="..." />
+            <marker date="1502705289818" expanded="false" signature="116628:116658" placeholder="..." />
+            <marker date="1502705289818" expanded="false" signature="139698:139728" placeholder="..." />
+            <marker date="1502705289818" expanded="false" signature="140211:140241" placeholder="..." />
+          </folding>
         </state>
       </provider>
     </entry>

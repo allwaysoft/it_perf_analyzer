@@ -1,4 +1,4 @@
-administration_title = THIRD Perf Analyser
+administration_title = Perf Analyser
 
 header_title_help = Hilfe
 header_title_tomatocart_support_site = TomatoCart Supportseite
@@ -134,7 +134,7 @@ configuration_program_locations_title = Programmstandorte
 configuration_store_front_title = Shop Front
 configuration_content_management_system_title = Content Management System
 
-init_system = System initialisieren ... THIRD IT
+init_system = System initialisieren ... 
 
 provide_address = Geben Sie bitte mindestens eine Empfänger Adresse an.
 mailer_not_supported = Mailer wird nicht unterstützt.
