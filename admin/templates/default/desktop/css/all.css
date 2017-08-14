@@ -1951,6 +1951,41 @@ div.ext-ux-wiz-Header {
     filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src = 'templates/default/images/icons/48x48/article_categories.png', sizingMethod = 'scale');
 }
 
+.icon-database_groups-shortcut img {
+    background-image: url(../../images/icons/48x48/database.png);
+    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src = 'templates/default/images/icons/48x48/database.png', sizingMethod = 'scale');
+}
+
+.icon-server_groups-shortcut img {
+    background-image: url(../../images/icons/48x48/server-group.png);
+    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src = 'templates/default/images/icons/48x48/server-group.png', sizingMethod = 'scale');
+}
+
+.icon-server_explorer-shortcut img {
+    background-image: url(../../images/icons/48x48/server-explorer.png);
+    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src = 'templates/default/images/icons/48x48/server-explorer.png', sizingMethod = 'scale');
+}
+
+.icon-servers_dashboard-shortcut img {
+    background-image: url(../../images/icons/48x48/server-explorer.png);
+    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src = 'templates/default/images/icons/48x48/server-explorer.png', sizingMethod = 'scale');
+}
+
+.icon-database_explorer-shortcut img {
+    background-image: url(../../images/icons/48x48/import_export.png);
+    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src = 'templates/default/images/icons/48x48/import_export.png', sizingMethod = 'scale');
+}
+
+.icon-database_dashboard-shortcut img {
+    background-image: url(../../images/icons/48x48/report_web.png);
+    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src = 'templates/default/images/icons/48x48/report_web.png', sizingMethod = 'scale');
+}
+
+.icon-databases-shortcut img {
+    background-image: url(../../images/icons/48x48/invoices.png);
+    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src = 'templates/default/images/icons/48x48/invoices.png', sizingMethod = 'scale');
+}
+
 .icon-articles-shortcut img {
     background-image: url(../../images/icons/48x48/article.png);
     filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src = 'templates/default/images/icons/48x48/article.png', sizingMethod = 'scale');

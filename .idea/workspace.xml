@@ -10,7 +10,7 @@
     <file path="/programmes_amplitude.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1387197648658" ignored="false" />
     <file path="/a.dummy" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1501942765981" ignored="false" />
     <file path="/users.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1484570503998" ignored="false" />
-    <file path="/all.css" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1501773619477" ignored="false" />
+    <file path="/all.css" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1502635668270" ignored="false" />
     <file path="/servers_dialog.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1405707124063" ignored="false" />
     <file path="/servers_data_panel.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1388081561668" ignored="false" />
     <file path="/servers.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1502554478879" ignored="false" />
@@ -206,22 +206,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="oracle_perf.js" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/admin/templates/default/extensions/content/oracle_perf.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="57" column="36" selection-start="1635" selection-end="1635" vertical-scroll-proportion="0.0">
-              <folding>
-                <marker date="1502469801409" expanded="false" signature="3623:3643" placeholder="..." />
-                <marker date="1502469801409" expanded="false" signature="25487:25507" placeholder="..." />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="default.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/admin/templates/default.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="58" column="71" selection-start="3407" selection-end="3418" vertical-scroll-proportion="-10.846154">
+            <state line="58" column="71" selection-start="3407" selection-end="3418" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -230,7 +218,7 @@
       <file leaf-file-name="roles.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/admin/includes/jsons/roles.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="224" column="39" selection-start="7315" selection-end="7315" vertical-scroll-proportion="-5.6153846">
+            <state line="224" column="39" selection-start="7315" selection-end="7315" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -239,7 +227,7 @@
       <file leaf-file-name="login.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/admin/includes/jsons/login.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="12" column="83" selection-start="317" selection-end="317" vertical-scroll-proportion="-7.1923075">
+            <state line="12" column="83" selection-start="317" selection-end="317" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -248,7 +236,7 @@
       <file leaf-file-name="users.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/admin/includes/jsons/users.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="225" column="43" selection-start="8136" selection-end="8136" vertical-scroll-proportion="-6.5384617">
+            <state line="225" column="43" selection-start="8136" selection-end="8136" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -257,7 +245,7 @@
       <file leaf-file-name="users.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/admin/includes/classes/users.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="303" column="13" selection-start="11624" selection-end="11624" vertical-scroll-proportion="-8.884615">
+            <state line="303" column="13" selection-start="11624" selection-end="11624" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -266,7 +254,7 @@
       <file leaf-file-name="roles.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/admin/includes/classes/roles.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="231" column="60" selection-start="9257" selection-end="9257" vertical-scroll-proportion="-4.6923075">
+            <state line="231" column="60" selection-start="9257" selection-end="9257" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -275,16 +263,25 @@
       <file leaf-file-name="en_US.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/admin/includes/languages/en_US.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="146" column="46" selection-start="4836" selection-end="4836" vertical-scroll-proportion="-6.1538463">
+            <state line="146" column="46" selection-start="4836" selection-end="4836" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="servers.php" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="servers.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/admin/includes/jsons/servers.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="125" column="5" selection-start="6041" selection-end="6041" vertical-scroll-proportion="0.9186603">
+            <state line="125" column="5" selection-start="6041" selection-end="6041" vertical-scroll-proportion="-0.65384614">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="all.css" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/admin/templates/default/desktop/css/all.css">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="1968" column="23" selection-start="47416" selection-end="47416" vertical-scroll-proportion="0.57726467">
               <folding />
             </state>
           </provider>
@@ -293,7 +290,7 @@
       <file leaf-file-name="de_DE.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/admin/includes/languages/de_DE.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="136" column="48" selection-start="4938" selection-end="4938" vertical-scroll-proportion="-2.6470587">
+            <state line="136" column="48" selection-start="4938" selection-end="4938" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -309,7 +306,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/admin/includes/modules/access/server_groups.php" />
         <option value="$PROJECT_DIR$/admin/includes/jsons/databases.php" />
         <option value="$PROJECT_DIR$/admin/includes/classes/databases.php" />
         <option value="$PROJECT_DIR$/admin/templates/default/extensions/content/server.js" />
@@ -325,6 +321,7 @@
         <option value="$PROJECT_DIR$/admin/includes/classes/users.php" />
         <option value="$PROJECT_DIR$/admin/includes/jsons/login.php" />
         <option value="$PROJECT_DIR$/admin/includes/jsons/servers.php" />
+        <option value="$PROJECT_DIR$/admin/templates/default/desktop/css/all.css" />
       </list>
     </option>
   </component>
@@ -342,8 +339,8 @@
   <component name="ProjectFrameBounds">
     <option name="x" value="-4" />
     <option name="y" value="-4" />
-    <option name="width" value="1348" />
-    <option name="height" value="650" />
+    <option name="width" value="1374" />
+    <option name="height" value="748" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -371,6 +368,7 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -385,7 +383,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="cloud_perf_analyzer" />
+              <option name="myItemId" value="it_perf_analyzer" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -395,21 +393,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="cloud_perf_analyzer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="includes" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dev" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="cloud_perf_analyzer" />
+              <option name="myItemId" value="it_perf_analyzer" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -423,7 +407,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="cloud_perf_analyzer" />
+              <option name="myItemId" value="it_perf_analyzer" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -441,7 +425,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="cloud_perf_analyzer" />
+              <option name="myItemId" value="it_perf_analyzer" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -453,13 +437,12 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="jsons" />
+              <option name="myItemId" value="extmodules" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -475,20 +458,10 @@
     <property name="restartRequiresConfirmation" value="true" />
     <property name="WebServerToolWindowPanel.toolwindow.highlight.symlinks" value="true" />
     <property name="FullScreen" value="false" />
-    <property name="options.splitter.details.proportions" value="0.2" />
     <property name="options.searchVisible" value="true" />
+    <property name="options.splitter.details.proportions" value="0.2" />
   </component>
-  <component name="PublishConfig" serverName="svp" serverId="2d2efcc8-ee1d-46e8-b9ca-9fef4a0e1bec">
-    <servers>
-      <server id="2d2efcc8-ee1d-46e8-b9ca-9fef4a0e1bec">
-        <serverdata>
-          <mappings>
-            <mapping deploy="/opt/lampp/htdocs/bicec/admin" local="$PROJECT_DIR$" web="" />
-          </mappings>
-        </serverdata>
-      </server>
-    </servers>
-  </component>
+  <component name="PublishConfig" serverName="svp" serverId="2d2efcc8-ee1d-46e8-b9ca-9fef4a0e1bec" />
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\xampp\htdocs\dev\admin\includes\modules\access" />
@@ -513,11 +486,11 @@
     <configuration default="true" type="PhpWebAppRunConfigurationType" factoryName="PHP Web Application" editBeforeRun="true" server_name="local" start_url="http://10.100.1.144/dev/admin/json.php?action=list_programmes&amp;categories_id=-1&amp;count=0&amp;current_category_id=-1&amp;module=users&amp;search=&amp;token=716e5cec8ae1c96707c821ca90c4d869">
       <method />
     </configuration>
-    <configuration default="true" type="PhpRemoteDebugRunConfigurationType" factoryName="PHP Remote Debug" editBeforeRun="true" server_name="svp">
-      <method />
-    </configuration>
     <configuration default="true" type="PhpHttpRequestRunConfigurationType" factoryName="PHP HTTP Request" server_name="local" url="http://127.0.0.1/dev/admin/json.php">
       <HttpRequestSettings request_body="content_status&#9;1&#10;content_name&#9;eeeeeeeeee&#10;content_description&#9;eeeeeeeeeeeeeeeee&#10;field_jrxml&#9;&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt; &lt;jasperReport xmlns=&quot;http://jasperreports.sourceforge.net/jasperreports&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xsi:schemaLocation=&quot;http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd&quot; name=&quot;report7&quot; pageWidth=&quot;595&quot; pageHeight=&quot;842&quot; columnWidth=&quot;585&quot; leftMargin=&quot;5&quot; rightMargin=&quot;5&quot; topMargin=&quot;5&quot; bottomMargin=&quot;5&quot; uuid=&quot;19b3117d-bf85-46d3-922c-a34d4def95e3&quot;&gt; &lt;property name=&quot;ireport.zoom&quot; value=&quot;1.0&quot;/&gt; &lt;property name=&quot;ireport.x&quot; value=&quot;0&quot;/&gt; &lt;property name=&quot;ireport.y&quot; value=&quot;0&quot;/&gt; &lt;style name=&quot;table&quot;&gt; &lt;box&gt; &lt;pen lineWidth=&quot;1.0&quot; lineColor=&quot;#000000&quot;/&gt; &lt;/box&gt; &lt;/style&gt; &lt;style name=&quot;table_TH&quot; mode=&quot;Opaque&quot; backcolor=&quot;#A9A9A9&quot;&gt; &lt;box&gt; &lt;pen lineWidth=&quot;0.5&quot; lineColor=&quot;#000000&quot;/&gt; &lt;/box&gt; &lt;/style&gt; &lt;style name=&quot;table_CH&quot; mode=&quot;Opaque&quot; backcolor=&quot;#FFBFBF&quot;&gt; &lt;box&gt; &lt;pen lineWidth=&quot;0.5&quot; lineColor=&quot;#000000&quot;/&gt; &lt;/box&gt; &lt;/style&gt; &lt;style name=&quot;table_TD&quot; mode=&quot;Opaque&quot; backcolor=&quot;#FFFFFF&quot;&gt; &lt;box&gt; &lt;pen lineWidth=&quot;0.5&quot; lineColor=&quot;#000000&quot;/&gt; &lt;/box&gt; &lt;/style&gt; &lt;style name=&quot;table 1&quot;&gt; &lt;box&gt; &lt;pen lineWidth=&quot;1.0&quot; lineColor=&quot;#000000&quot;/&gt; &lt;/box&gt; &lt;/style&gt; &lt;style name=&quot;table 1_TH&quot; mode=&quot;Opaque&quot; backcolor=&quot;#F0F8FF&quot;&gt; &lt;box&gt; &lt;pen lineWidth=&quot;0.5&quot; lineColor=&quot;#000000&quot;/&gt; &lt;/box&gt; &lt;/style&gt; &lt;style name=&quot;table 1_CH&quot; mode=&quot;Opaque&quot; backcolor=&quot;#BFE1FF&quot;&gt; &lt;box&gt; &lt;pen lineWidth=&quot;0.5&quot; lineColor=&quot;#000000&quot;/&gt; &lt;/box&gt; &lt;/style&gt; &lt;style name=&quot;table 1_TD&quot; mode=&quot;Opaque&quot; backcolor=&quot;#FFFFFF&quot;&gt; &lt;box&gt; &lt;pen lineWidth=&quot;0.5&quot; lineColor=&quot;#000000&quot;/&gt; &lt;/box&gt; &lt;/style&gt; &lt;style name=&quot;table 2&quot;&gt; &lt;box&gt; &lt;pen lineWidth=&quot;1.0&quot; lineColor=&quot;#000000&quot;/&gt; &lt;/box&gt; &lt;/style&gt; &lt;style name=&quot;table 2_TH&quot; mode=&quot;Opaque&quot; backcolor=&quot;#F0F8FF&quot;&gt; &lt;box&gt; &lt;pen lineWidth=&quot;0.5&quot; lineColor=&quot;#000000&quot;/&gt; &lt;/box&gt; &lt;/style&gt; &lt;style name=&quot;table 2_CH&quot; mode=&quot;Opaque&quot; backcolor=&quot;#BFE1FF&quot;&gt; &lt;box&gt; &lt;pen lineWidth=&quot;0.5&quot; lineColor=&quot;#000000&quot;/&gt; &lt;/box&gt; &lt;/style&gt; &lt;style name=&quot;table 2_TD&quot; mode=&quot;Opaque&quot; backcolor=&quot;#FFFFFF&quot;&gt; &lt;box&gt; &lt;pen lineWidth=&quot;0.5&quot; lineColor=&quot;#000000&quot;/&gt; &lt;/box&gt; &lt;/style&gt; &lt;style name=&quot;table 3&quot;&gt; &lt;box&gt; &lt;pen lineWidth=&quot;1.0&quot; lineColor=&quot;#000000&quot;/&gt; &lt;/box&gt; &lt;/style&gt; &lt;style name=&quot;table 3_TH&quot; mode=&quot;Opaque&quot; backcolor=&quot;#F0F8FF&quot;&gt; &lt;box&gt; &lt;pen lineWidth=&quot;0.5&quot; lineColor=&quot;#000000&quot;/&gt; &lt;/box&gt; &lt;/style&gt; &lt;style name=&quot;table 3_CH&quot; mode=&quot;Opaque&quot; backcolor=&quot;#BFE1FF&quot;&gt; &lt;box&gt; &lt;pen lineWidth=&quot;0.5&quot; lineColor=&quot;#000000&quot;/&gt; &lt;/box&gt; &lt;/style&gt; &lt;style name=&quot;table 3_TD&quot; mode=&quot;Opaque&quot; backcolor=&quot;#FFFFFF&quot;&gt; &lt;box&gt; &lt;pen lineWidth=&quot;0.5&quot; lineColor=&quot;#000000&quot;/&gt; &lt;/box&gt; &lt;/style&gt; &lt;parameter name=&quot;LABEL_SERVEUR&quot; class=&quot;java.lang.String&quot;/&gt; &lt;queryString language=&quot;linux&quot;&gt; &lt;![CDATA[user=oracle#pass=oracle#port=22#host=10.100.1.51#cmd=df -PT|awk '{if (NR &gt; 1) {print $1&quot;;&quot;$2&quot;;&quot;$3&quot;;&quot;$4&quot;;&quot;$5&quot;;&quot;$6&quot;;&quot;$7}}']]&gt; &lt;/queryString&gt; &lt;field name=&quot;mount&quot; class=&quot;java.lang.String&quot;&gt; &lt;fieldDescription&gt;&lt;![CDATA[mount]]&gt;&lt;/fieldDescription&gt; &lt;/field&gt; &lt;field name=&quot;pct_used&quot; class=&quot;java.lang.String&quot;&gt; &lt;fieldDescription&gt;&lt;![CDATA[pct_used]]&gt;&lt;/fieldDescription&gt; &lt;/field&gt; &lt;field name=&quot;dispo&quot; class=&quot;java.lang.Number&quot;&gt; &lt;fieldDescription&gt;&lt;![CDATA[dispo]]&gt;&lt;/fieldDescription&gt; &lt;/field&gt; &lt;field name=&quot;used&quot; class=&quot;java.lang.Number&quot;&gt; &lt;fieldDescription&gt;&lt;![CDATA[used]]&gt;&lt;/fieldDescription&gt; &lt;/field&gt; &lt;field name=&quot;size&quot; class=&quot;java.lang.Number&quot;&gt; &lt;fieldDescription&gt;&lt;![CDATA[size]]&gt;&lt;/fieldDescription&gt; &lt;/field&gt; &lt;background&gt; &lt;band splitType=&quot;Stretch&quot;/&gt; &lt;/background&gt; &lt;title&gt; &lt;band height=&quot;79&quot; splitType=&quot;Stretch&quot;&gt; &lt;rectangle&gt; &lt;reportElement x=&quot;0&quot; y=&quot;0&quot; width=&quot;585&quot; height=&quot;79&quot; backcolor=&quot;#000066&quot; uuid=&quot;8ffaa7b1-6381-482d-a0de-c6d6903da8f6&quot;/&gt; &lt;/rectangle&gt; &lt;textField&gt; &lt;reportElement x=&quot;0&quot; y=&quot;0&quot; width=&quot;585&quot; height=&quot;79&quot; forecolor=&quot;#FFFFFF&quot; uuid=&quot;444433a1-aac7-4f30-8870-b00c28486ece&quot;/&gt; &lt;textElement textAlignment=&quot;Center&quot; verticalAlignment=&quot;Middle&quot;&gt; &lt;font size=&quot;24&quot;/&gt; &lt;/textElement&gt; &lt;textFieldExpression&gt;&lt;![CDATA[&quot;Etat des FS du Serveur &quot; + $P{LABEL_SERVEUR}]]&gt;&lt;/textFieldExpression&gt; &lt;/textField&gt; &lt;/band&gt; &lt;/title&gt; &lt;columnHeader&gt; &lt;band height=&quot;753&quot; splitType=&quot;Stretch&quot;&gt; &lt;stackedBarChart&gt; &lt;chart isShowLegend=&quot;true&quot; evaluationTime=&quot;Report&quot;&gt; &lt;reportElement positionType=&quot;Float&quot; stretchType=&quot;RelativeToBandHeight&quot; mode=&quot;Transparent&quot; x=&quot;0&quot; y=&quot;0&quot; width=&quot;585&quot; height=&quot;753&quot; uuid=&quot;63cb2e2b-3370-4b93-98f9-7c1174f738b8&quot;/&gt; &lt;chartTitle/&gt; &lt;chartSubtitle/&gt; &lt;chartLegend position=&quot;Top&quot;/&gt; &lt;/chart&gt; &lt;categoryDataset&gt; &lt;categorySeries&gt; &lt;seriesExpression&gt;&lt;![CDATA[&quot;Utilisé (GB)&quot;]]&gt;&lt;/seriesExpression&gt; &lt;categoryExpression&gt;&lt;![CDATA[$F{mount}]]&gt;&lt;/categoryExpression&gt; &lt;valueExpression&gt;&lt;![CDATA[$F{used}]]&gt;&lt;/valueExpression&gt; &lt;/categorySeries&gt; &lt;categorySeries&gt; &lt;seriesExpression&gt;&lt;![CDATA[&quot;Disponible (GB)&quot;]]&gt;&lt;/seriesExpression&gt; &lt;categoryExpression&gt;&lt;![CDATA[$F{mount}]]&gt;&lt;/categoryExpression&gt; &lt;valueExpression&gt;&lt;![CDATA[$F{dispo}]]&gt;&lt;/valueExpression&gt; &lt;/categorySeries&gt; &lt;/categoryDataset&gt; &lt;barPlot&gt; &lt;plot orientation=&quot;Horizontal&quot;&gt; &lt;seriesColor seriesOrder=&quot;0&quot; color=&quot;#FA0505&quot;/&gt; &lt;seriesColor seriesOrder=&quot;1&quot; color=&quot;#037303&quot;/&gt; &lt;/plot&gt; &lt;itemLabel/&gt; &lt;categoryAxisFormat&gt; &lt;axisFormat/&gt; &lt;/categoryAxisFormat&gt; &lt;valueAxisFormat&gt; &lt;axisFormat/&gt; &lt;/valueAxisFormat&gt; &lt;/barPlot&gt; &lt;/stackedBarChart&gt; &lt;/band&gt; &lt;/columnHeader&gt; &lt;/jasperReport&gt;&#10;content_categories_id&#9;12&#10;module&#9;reports&#10;action&#9;save_report&#10;current_category_id&#9;0&#10;token&#9;24f762659575d54fbe53314198c87203&#10;Source&#10;-----------------------------114782935826962 Content-Disposition: form-data; name=&quot;content_status&quot; 1 -----------------------------114782935826962 Content-Disposition: form-data; name=&quot;content_name&quot; eeeeeeeeee -----------------------------114782935826962 Content-Disposition: form-data; name=&quot;content_description&quot; eeeeeeeeeeeeeeeee -----------------------------114782935826962 Content-Disposition: form-data; name=&quot;field_jrxml&quot;; filename=&quot;report7.jrxml&quot; Content-Type: application/octet-stream &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt; &lt;jasperReport xmlns=&quot;http://jasperreports.sourceforge.net/jasperreports&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xsi:schemaLocation=&quot;http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd&quot; name=&quot;report7&quot; pageWidth=&quot;595&quot; pageHeight=&quot;842&quot; columnWidth=&quot;585&quot; leftMargin=&quot;5&quot; rightMargin=&quot;5&quot; topMargin=&quot;5&quot; bottomMargin=&quot;5&quot; uuid=&quot;19b3117d-bf85-46d3-922c-a34d4def95e3&quot;&gt; &lt;property name=&quot;ireport.zoom&quot; value=&quot;1.0&quot;/&gt; &lt;property name=&quot;ireport.x&quot; value=&quot;0&quot;/&gt; &lt;property name=&quot;ireport.y&quot; value=&quot;0&quot;/&gt; &lt;style name=&quot;table&quot;&gt; &lt;box&gt; &lt;pen lineWidth=&quot;1.0&quot; lineColor=&quot;#000000&quot;/&gt; &lt;/box&gt; &lt;/style&gt; &lt;style name=&quot;table_TH&quot; mode=&quot;Opaque&quot; backcolor=&quot;#A9A9A9&quot;&gt; &lt;box&gt; &lt;pen lineWidth=&quot;0.5&quot; lineColor=&quot;#000000&quot;/&gt; &lt;/box&gt; &lt;/style&gt; &lt;style name=&quot;table_CH&quot; mode=&quot;Opaque&quot; backcolor=&quot;#FFBFBF&quot;&gt; &lt;box&gt; &lt;pen lineWidth=&quot;0.5&quot; lineColor=&quot;#000000&quot;/&gt; &lt;/box&gt; &lt;/style&gt; &lt;style name=&quot;table_TD&quot; mode=&quot;Opaque&quot; backcolor=&quot;#FFFFFF&quot;&gt; &lt;box&gt; &lt;pen lineWidth=&quot;0.5&quot; lineColor=&quot;#000000&quot;/&gt; &lt;/box&gt; &lt;/style&gt; &lt;style name=&quot;table 1&quot;&gt; &lt;box&gt; &lt;pen lineWidth=&quot;1.0&quot; lineColor=&quot;#000000&quot;/&gt; &lt;/box&gt; &lt;/style&gt; &lt;style name=&quot;table 1_TH&quot; mode=&quot;Opaque&quot; backcolor=&quot;#F0F8FF&quot;&gt; &lt;box&gt; &lt;pen lineWidth=&quot;0.5&quot; lineColor=&quot;#000000&quot;/&gt; &lt;/box&gt; &lt;/style&gt; &lt;style name=&quot;table 1_CH&quot; mode=&quot;Opaque&quot; backcolor=&quot;#BFE1FF&quot;&gt; &lt;box&gt; &lt;pen lineWidth=&quot;0.5&quot; lineColor=&quot;#000000&quot;/&gt; &lt;/box&gt; &lt;/style&gt; &lt;style name=&quot;table 1_TD&quot; mode=&quot;Opaque&quot; backcolor=&quot;#FFFFFF&quot;&gt; &lt;box&gt; &lt;pen lineWidth=&quot;0.5&quot; lineColor=&quot;#000000&quot;/&gt; &lt;/box&gt; &lt;/style&gt; &lt;style name=&quot;table 2&quot;&gt; &lt;box&gt; &lt;pen lineWidth=&quot;1.0&quot; lineColor=&quot;#000000&quot;/&gt; &lt;/box&gt; &lt;/style&gt; &lt;style name=&quot;table 2_TH&quot; mode=&quot;Opaque&quot; backcolor=&quot;#F0F8FF&quot;&gt; &lt;box&gt; &lt;pen lineWidth=&quot;0.5&quot; lineColor=&quot;#000000&quot;/&gt; &lt;/box&gt; &lt;/style&gt; &lt;style name=&quot;table 2_CH&quot; mode=&quot;Opaque&quot; backcolor=&quot;#BFE1FF&quot;&gt; &lt;box&gt; &lt;pen lineWidth=&quot;0.5&quot; lineColor=&quot;#000000&quot;/&gt; &lt;/box&gt; &lt;/style&gt; &lt;style name=&quot;table 2_TD&quot; mode=&quot;Opaque&quot; backcolor=&quot;#FFFFFF&quot;&gt; &lt;box&gt; &lt;pen lineWidth=&quot;0.5&quot; lineColor=&quot;#000000&quot;/&gt; &lt;/box&gt; &lt;/style&gt; &lt;style name=&quot;table 3&quot;&gt; &lt;box&gt; &lt;pen lineWidth=&quot;1.0&quot; lineColor=&quot;#000000&quot;/&gt; &lt;/box&gt; &lt;/style&gt; &lt;style name=&quot;table 3_TH&quot; mode=&quot;Opaque&quot; backcolor=&quot;#F0F8FF&quot;&gt; &lt;box&gt; &lt;pen lineWidth=&quot;0.5&quot; lineColor=&quot;#000000&quot;/&gt; &lt;/box&gt; &lt;/style&gt; &lt;style name=&quot;table 3_CH&quot; mode=&quot;Opaque&quot; backcolor=&quot;#BFE1FF&quot;&gt; &lt;box&gt; &lt;pen lineWidth=&quot;0.5&quot; lineColor=&quot;#000000&quot;/&gt; &lt;/box&gt; &lt;/style&gt; &lt;style name=&quot;table 3_TD&quot; mode=&quot;Opaque&quot; backcolor=&quot;#FFFFFF&quot;&gt; &lt;box&gt; &lt;pen lineWidth=&quot;0.5&quot; lineColor=&quot;#000000&quot;/&gt; &lt;/box&gt; &lt;/style&gt; &lt;parameter name=&quot;LABEL_SERVEUR&quot; class=&quot;java.lang.String&quot;/&gt; &lt;queryString language=&quot;linux&quot;&gt; &lt;![CDATA[user=oracle#pass=oracle#port=22#host=10.100.1.51#cmd=df -PT|awk '{if (NR &gt; 1) {print $1&quot;;&quot;$2&quot;;&quot;$3&quot;;&quot;$4&quot;;&quot;$5&quot;;&quot;$6&quot;;&quot;$7}}']]&gt; &lt;/queryString&gt; &lt;field name=&quot;mount&quot; class=&quot;java.lang.String&quot;&gt; &lt;fieldDescription&gt;&lt;![CDATA[mount]]&gt;&lt;/fieldDescription&gt; &lt;/field&gt; &lt;field name=&quot;pct_used&quot; class=&quot;java.lang.String&quot;&gt; &lt;fieldDescription&gt;&lt;![CDATA[pct_used]]&gt;&lt;/fieldDescription&gt; &lt;/field&gt; &lt;field name=&quot;dispo&quot; class=&quot;java.lang.Number&quot;&gt; &lt;fieldDescription&gt;&lt;![CDATA[dispo]]&gt;&lt;/fieldDescription&gt; &lt;/field&gt; &lt;field name=&quot;used&quot; class=&quot;java.lang.Number&quot;&gt; &lt;fieldDescription&gt;&lt;![CDATA[used]]&gt;&lt;/fieldDescription&gt; &lt;/field&gt; &lt;field name=&quot;size&quot; class=&quot;java.lang.Number&quot;&gt; &lt;fieldDescription&gt;&lt;![CDATA[size]]&gt;&lt;/fieldDescription&gt; &lt;/field&gt; &lt;background&gt; &lt;band splitType=&quot;Stretch&quot;/&gt; &lt;/background&gt; &lt;title&gt; &lt;band height=&quot;79&quot; splitType=&quot;Stretch&quot;&gt; &lt;rectangle&gt; &lt;reportElement x=&quot;0&quot; y=&quot;0&quot; width=&quot;585&quot; height=&quot;79&quot; backcolor=&quot;#000066&quot; uuid=&quot;8ffaa7b1-6381-482d-a0de-c6d6903da8f6&quot;/&gt; &lt;/rectangle&gt; &lt;textField&gt; &lt;reportElement x=&quot;0&quot; y=&quot;0&quot; width=&quot;585&quot; height=&quot;79&quot; forecolor=&quot;#FFFFFF&quot; uuid=&quot;444433a1-aac7-4f30-8870-b00c28486ece&quot;/&gt; &lt;textElement textAlignment=&quot;Center&quot; verticalAlignment=&quot;Middle&quot;&gt; &lt;font size=&quot;24&quot;/&gt; &lt;/textElement&gt; &lt;textFieldExpression&gt;&lt;![CDATA[&quot;Etat des FS du Serveur &quot; + $P{LABEL_SERVEUR}]]&gt;&lt;/textFieldExpression&gt; &lt;/textField&gt; &lt;/band&gt; &lt;/title&gt; &lt;columnHeader&gt; &lt;band height=&quot;753&quot; splitType=&quot;Stretch&quot;&gt; &lt;stackedBarChart&gt; &lt;chart isShowLegend=&quot;true&quot; evaluationTime=&quot;Report&quot;&gt; &lt;reportElement positionType=&quot;Float&quot; stretchType=&quot;RelativeToBandHeight&quot; mode=&quot;Transparent&quot; x=&quot;0&quot; y=&quot;0&quot; width=&quot;585&quot; height=&quot;753&quot; uuid=&quot;63cb2e2b-3370-4b93-98f9-7c1174f738b8&quot;/&gt; &lt;chartTitle/&gt; &lt;chartSubtitle/&gt; &lt;chartLegend position=&quot;Top&quot;/&gt; &lt;/chart&gt; &lt;categoryDataset&gt; &lt;categorySeries&gt; &lt;seriesExpression&gt;&lt;![CDATA[&quot;Utilisé (GB)&quot;]]&gt;&lt;/seriesExpression&gt; &lt;categoryExpression&gt;&lt;![CDATA[$F{mount}]]&gt;&lt;/categoryExpression&gt; &lt;valueExpression&gt;&lt;![CDATA[$F{used}]]&gt;&lt;/valueExpression&gt; &lt;/categorySeries&gt; &lt;categorySeries&gt; &lt;seriesExpression&gt;&lt;![CDATA[&quot;Disponible (GB)&quot;]]&gt;&lt;/seriesExpression&gt; &lt;categoryExpression&gt;&lt;![CDATA[$F{mount}]]&gt;&lt;/categoryExpression&gt; &lt;valueExpression&gt;&lt;![CDATA[$F{dispo}]]&gt;&lt;/valueExpression&gt; &lt;/categorySeries&gt; &lt;/categoryDataset&gt; &lt;barPlot&gt; &lt;plot orientation=&quot;Horizontal&quot;&gt; &lt;seriesColor seriesOrder=&quot;0&quot; color=&quot;#FA0505&quot;/&gt; &lt;seriesColor seriesOrder=&quot;1&quot; color=&quot;#037303&quot;/&gt; &lt;/plot&gt; &lt;itemLabel/&gt; &lt;categoryAxisFormat&gt; &lt;axisFormat/&gt; &lt;/categoryAxisFormat&gt; &lt;valueAxisFormat&gt; &lt;axisFormat/&gt; &lt;/valueAxisFormat&gt; &lt;/barPlot&gt; &lt;/stackedBarChart&gt; &lt;/band&gt; &lt;/columnHeader&gt; &lt;/jasperReport&gt; -----------------------------114782935826962 Content-Disposition: form-data; name=&quot;content_categories_id&quot; 12 -----------------------------114782935826962 Content-Disposition: form-data; name=&quot;module&quot; reports -----------------------------114782935826962 Content-Disposition: form-data; name=&quot;action&quot; save_report -----------------------------114782935826962 Content-Disposition: form-data; name=&quot;current_category_id&quot; 0 -----------------------------114782935826962 Content-Disposition: form-data; name=&quot;token&quot; 24f762659575d54fbe53314198c87203 -----------------------------114782935826962--" request_method="POST" />
+      <method />
+    </configuration>
+    <configuration default="true" type="PhpRemoteDebugRunConfigurationType" factoryName="PHP Remote Debug" editBeforeRun="true" server_name="svp">
       <method />
     </configuration>
     <configuration default="true" type="PhpLocalRunConfigurationType" factoryName="PHP Console">
@@ -546,14 +519,14 @@
       </JSRemoteDebuggerConfigurationSettings>
       <method />
     </configuration>
+    <configuration default="true" type="PhpUnitRemoteRunConfigurationType" factoryName="PHPUnit on Server" server_id="1ce1d161-749d-4ab4-a4c2-8c827288f82c" server_name="svp">
+      <method />
+    </configuration>
     <configuration default="true" type="JavascriptDebugSession" factoryName="Local" singleton="true">
       <JSDebuggerConfigurationSettings>
         <option name="engineId" value="firefox" />
         <option name="fileUrl" />
       </JSDebuggerConfigurationSettings>
-      <method />
-    </configuration>
-    <configuration default="true" type="PhpUnitRemoteRunConfigurationType" factoryName="PHPUnit on Server" server_id="1ce1d161-749d-4ab4-a4c2-8c827288f82c" server_name="svp">
       <method />
     </configuration>
     <configuration default="false" name="Unnamed" type="PhpHttpRequestRunConfigurationType" factoryName="PHP HTTP Request" editBeforeRun="true" server_name="local" url="http://127.0.0.1/dev/admin/json.php">
@@ -622,15 +595,15 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-4" y="-4" width="1348" height="650" extended-state="0" />
+    <frame x="-4" y="-4" width="1374" height="748" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32890365" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.27125195" sideWeight="0.39484128" order="1" side_tool="true" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.23939393" sideWeight="0.39534885" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Remote Host" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32954547" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.27125195" sideWeight="0.60515875" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.23939393" sideWeight="0.60465115" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3327032" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.19587629" sideWeight="0.34175083" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3327032" sideWeight="0.5" order="9" side_tool="true" content_ui="tabs" />
@@ -921,117 +894,104 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/admin/includes/classes/databases.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="205" column="6" selection-start="6084" selection-end="6084" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/servers_dashboard/main.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="13" column="51" selection-start="456" selection-end="471" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="13" column="51" selection-start="456" selection-end="471" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/admin/includes/jsons/databases.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="4159" column="5" selection-start="183642" selection-end="183642" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="4159" column="5" selection-start="183642" selection-end="183642" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/admin/templates/default/extensions/content/server.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="3337" column="11" selection-start="106391" selection-end="106391" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="3337" column="11" selection-start="106391" selection-end="106391" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/admin/templates/default/extensions/content/oracle.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="1339" column="0" selection-start="38039" selection-end="38039" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="1339" column="0" selection-start="38039" selection-end="38039" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/admin/templates/default/extensions/content/oracle_perf.js">
       <provider selected="true" editor-type-id="text-editor">
         <state line="57" column="36" selection-start="1635" selection-end="1635" vertical-scroll-proportion="0.0">
-          <folding>
-            <marker date="1502469801409" expanded="false" signature="3623:3643" placeholder="..." />
-            <marker date="1502469801409" expanded="false" signature="25487:25507" placeholder="..." />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/admin/templates/default.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="58" column="71" selection-start="3407" selection-end="3418" vertical-scroll-proportion="-10.846154">
+        <state line="58" column="71" selection-start="3407" selection-end="3418" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/admin/includes/languages/de_DE.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="136" column="48" selection-start="4938" selection-end="4938" vertical-scroll-proportion="-2.6470587">
+        <state line="136" column="48" selection-start="4938" selection-end="4938" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/admin/includes/languages/en_US.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="146" column="46" selection-start="4836" selection-end="4836" vertical-scroll-proportion="-6.1538463">
+        <state line="146" column="46" selection-start="4836" selection-end="4836" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/admin/includes/languages/fr_FR.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="142" column="52" selection-start="5094" selection-end="5094" vertical-scroll-proportion="-6.0">
-          <folding />
-        </state>
+        <state line="142" column="52" selection-start="5094" selection-end="5094" vertical-scroll-proportion="-6.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/admin/includes/classes/roles.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="231" column="60" selection-start="9257" selection-end="9257" vertical-scroll-proportion="-4.6923075">
+        <state line="231" column="60" selection-start="9257" selection-end="9257" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/admin/includes/jsons/users.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="225" column="43" selection-start="8136" selection-end="8136" vertical-scroll-proportion="-6.5384617">
+        <state line="225" column="43" selection-start="8136" selection-end="8136" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/admin/includes/classes/users.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="303" column="13" selection-start="11624" selection-end="11624" vertical-scroll-proportion="-8.884615">
+        <state line="303" column="13" selection-start="11624" selection-end="11624" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/admin/includes/jsons/login.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="12" column="83" selection-start="317" selection-end="317" vertical-scroll-proportion="-7.1923075">
+        <state line="12" column="83" selection-start="317" selection-end="317" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/admin/includes/jsons/roles.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="224" column="39" selection-start="7315" selection-end="7315" vertical-scroll-proportion="-5.6153846">
+        <state line="224" column="39" selection-start="7315" selection-end="7315" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/admin/includes/jsons/servers.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="125" column="5" selection-start="6041" selection-end="6041" vertical-scroll-proportion="0.9186603">
+        <state line="125" column="5" selection-start="6041" selection-end="6041" vertical-scroll-proportion="-0.65384614">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/templates/default/desktop/css/all.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="1968" column="23" selection-start="47416" selection-end="47416" vertical-scroll-proportion="0.57726467">
           <folding />
         </state>
       </provider>
