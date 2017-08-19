@@ -1504,7 +1504,7 @@ Toc.DatabasePerfPanel = function (params) {
 Ext.extend(Toc.DatabasePerfPanel, Ext.Panel, {
     buildItems: function (params) {
         params.owner = this.owner;
-        params.width = '14%';
+        //params.width = '14%';
 
         var conf = {
             status: 'up',
@@ -1634,6 +1634,9 @@ Ext.extend(Toc.DatabasePerfPanel, Ext.Panel, {
         this.tbs = new Toc.TopTbsPanel(params);
         this.add(this.tbs);
 
+        params.freq = params.freq * 5;
+        params.width = '15%';
+        params.body_height = '75px';
         this.fs = new Toc.TopFsPanel(params);
         this.add(this.fs);
     },
@@ -2294,3 +2297,151 @@ Toc.SgaResizePanel = function (config) {
 
 Ext.extend(Toc.SgaResizePanel, Ext.grid.GridPanel, {
 });
+
+Toc.exploreDatabase = function (node, panel) {
+    panel.removeAll();
+
+    if(node.id == 0)
+    {
+        panel.removeAll();
+    }
+    else
+    {
+        if (node) {
+
+            if (node) {
+                panel.node = node;
+            }
+            else {
+                Ext.Msg.alert(TocLanguage.msgErrTitle, "Aucun element selectionne !!!");
+                return false;
+            }
+
+            panel.getEl().mask("Chargement ...");
+
+            var pnlDashboard = new Toc.DatabaseDashboardPanel({label: "Dashboard", databases_id: node.attributes.databases_id, sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port,port: node.attributes.db_port,db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner,server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, typ: node.attributes.typ});
+
+            var tab = new Ext.TabPanel({
+                activeTab: 0,
+                defaults: {
+                    hideMode: 'offsets'
+                },
+                deferredRender: false,
+                items: [pnlDashboard]
+            });
+
+            tab.add(pnlDashboard);
+
+            panel.add(tab);
+            panel.doLayout();
+
+            var pnlSessions = new Toc.SessionsGrid({label: node.attributes.label, databases_id: node.attributes.databases_id, sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
+            var pnlVerrous = new Toc.LockTreeGrid({label: node.attributes.label, databases_id: node.attributes.databases_id, sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
+            var pnlMemory = new Toc.MemoryDashboardPanel({sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner, server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, typ: node.attributes.typ});
+
+            var tab_perf = new Ext.TabPanel({
+                activeTab: 0,
+                hideParent: false,
+                title: 'Perf',
+                region: 'center',
+                defaults: {
+                    hideMode: 'offsets'
+                },
+                deferredRender: false,
+                items: [
+                    pnlSessions,pnlVerrous,pnlMemory
+                ]
+            });
+
+            tab.add(tab_perf);
+            tab.doLayout();
+
+            var pnlUsers = new Toc.usersGrid({label: node.attributes.label, databases_id: node.attributes.databasesId, sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
+
+            tab.add(pnlUsers);
+            tab.doLayout();
+
+            var pnlTbs = new Toc.tbsGrid({sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
+            var pnlDatafiles = new Toc.datafilesGrid({sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: node.attributes.owner, server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, typ: node.attributes.typ});
+            var pnlFS = new Toc.fsGrid({host: node.attributes.host, server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, owner: this.owner, typ: node.attributes.typ});
+
+            var tab_storage = new Ext.TabPanel({
+                activeTab: 0,
+                hideParent: false,
+                title: 'Storage',
+                region: 'center',
+                defaults: {
+                    hideMode: 'offsets'
+                },
+                deferredRender: false,
+                items: [
+                    pnlFS,pnlTbs,pnlDatafiles
+                ]
+            });
+
+            tab.add(tab_storage);
+            tab.doLayout();
+
+            var pnlTables = new Toc.tablesGrid({sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
+            var pnlIndexes = new Toc.indexesGrid({sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
+
+            var tab_schema = new Ext.TabPanel({
+                activeTab: 0,
+                hideParent: false,
+                title: 'Schema',
+                region: 'center',
+                defaults: {
+                    hideMode: 'offsets'
+                },
+                deferredRender: false,
+                items: [
+                    pnlTables,pnlIndexes
+                ]
+            });
+
+            tab.add(tab_schema);
+            tab.doLayout();
+
+            //this.pnlDocuments = new Toc.content.DocumentsPanel({content_id: this.databasesId, content_type: 'databases', owner: this.owner});
+            //this.pnlLinks = new Toc.content.LinksPanel({content_id: this.databasesId, content_type: 'databases', owner: this.owner});
+            //this.pnlComments = new Toc.content.CommentsPanel({content_id: this.databasesId, content_type: 'databases', owner: this.owner});
+
+            var pnlRmanConfig = new Toc.RmanConfigGrid({sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner, server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, typ: node.attributes.typ});
+            var pnlRmanBackup = new Toc.RmanBackupGrid({sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner, server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, typ: node.attributes.typ});
+
+            var tab_rman = new Ext.TabPanel({
+                activeTab: 0,
+                hideParent: false,
+                title: 'Rman',
+                region: 'center',
+                defaults: {
+                    hideMode: 'offsets'
+                },
+                deferredRender: false,
+                items: [
+                    pnlRmanConfig,pnlRmanBackup
+                ]
+            });
+
+            tab.add(tab_rman);
+            tab.doLayout();
+
+            var pnlLogs = new Toc.logPanel({host: node.attributes.host, server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, content_id: node.attributes.databases_id, content_type: 'databases', owner: this.owner});
+            var pnlNotifications = new Toc.notificationsGrid({databases_id: node.attributes.databasesId, owner: this.owner});
+
+            tab.add(pnlLogs);
+            tab.add(pnlNotifications);
+            tab.doLayout();
+
+            panel.getEl().unmask();
+        }
+        else
+        {
+            Ext.Msg.alert(TocLanguage.msgErrTitle, "Aucune Database selectionnee !!!");
+        }
+    }
+
+    panel.mainPanel.doLayout();
+
+    return true;
+};

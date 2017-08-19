@@ -1,4 +1,4 @@
-Toc.GoldenGateConfigPanel = function (params) {
+Toc.GoldenGateMonitorPanel = function (params) {
     var that = this;
     config = {};
     config.params = params;
@@ -57,41 +57,19 @@ Toc.GoldenGateConfigPanel = function (params) {
             load: function (store, records, opt) {
                 //console.log('load');
                 that.reqs--;
-                if(that && that.started)
-                {
-                    if(that.count == 0)
-                    {
-                        var interval = setInterval(function(){
-                            store.load();
-                        }, that.freq || 5000);
 
-                        //setTimeout(that.refreshData, that.freq || 10000);
-                        that.count++;
-                        that.interval = interval;
-                    }
-                    else
-                    {
-                        //console.log('that.count' + that.count);
-                    }
+                if (that.count == 0) {
+                    var interval = setInterval(function () {
+                        that.refreshData(that);
+                    }, that.freq || 5000);
+                    //setTimeout(that.refreshData, that.freq || 10000);
+                    that.count++;
+                    that.interval = interval;
                 }
             },
             beforeload: function (store, opt) {
-                //console.log('beforeload');
-                //console.log('reqs ==> ' + that.reqs);
-                //console.log('that.started ? ' + that.started);
-                if(that.reqs == 0)
-                {
-                    if(that.started)
-                    {
-                        that.reqs++;
-                    }
-                }
-                else
-                {
-                    return false;
-                }
                 return that.started;
-            }, scope: this
+            }, scope: that
         },
         autoLoad: false
     });
@@ -167,15 +145,20 @@ Toc.GoldenGateConfigPanel = function (params) {
 
     var thisObj = this;
 
-    Toc.GoldenGateConfigPanel.superclass.constructor.call(this, config);
+    Toc.GoldenGateMonitorPanel.superclass.constructor.call(this, config);
     this.getView().scrollOffset = 0;
     //this.start();
 };
 
-Ext.extend(Toc.GoldenGateConfigPanel, Ext.grid.GridPanel, {
-    refreshData: function () {
-        var store = this.getStore();
-        store.load();
+Ext.extend(Toc.GoldenGateMonitorPanel, Ext.grid.GridPanel, {
+    refreshData: function (scope) {
+        if (scope && scope.started) {
+            if (scope.reqs == 0) {
+                var store = this.getStore();
+                scope.reqs++;
+                store.load();
+            }
+        }
     },
     onEdit: function (record) {
         //console.debug(params);
@@ -204,19 +187,19 @@ Ext.extend(Toc.GoldenGateConfigPanel, Ext.grid.GridPanel, {
 
     start: function () {
         this.started = true;
-        this.refreshData();
-
+        this.count = 0;
+        this.reqs = 0;
+        this.refreshData(this);
     },
     stop: function () {
         this.started = false;
-        this.refreshData();
+        this.count = 10;
+        this.reqs = 10;
+        this.refreshData(this);
+
         if(this.interval)
         {
             clearInterval(this.interval);
-        }
-        else
-        {
-            Ext.MessageBox.alert(TocLanguage.msgErrTitle,"No job defined !!!");
         }
     },
     onClick: function (e, target) {
@@ -804,7 +787,7 @@ Ext.extend(Toc.GoldenGateDashboardPanel, Ext.Panel, {
                         ogg.owner = this.owner;
                         ogg.freq = frequence;
 
-                        var panel = new Toc.GoldenGateConfigPanel(ogg);
+                        var panel = new Toc.GoldenGateMonitorPanel(ogg);
                         //var panel = new Toc.TopWaitClassPanel(db);
                         this.add(panel);
                         this.panels[i] = panel;

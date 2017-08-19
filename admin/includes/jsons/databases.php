@@ -2734,6 +2734,44 @@ GROUP BY component, oper_type, status";
         echo $toC_Json->encode($response);
     }
 
+    function runAddm()
+    {
+        global $toC_Json;
+
+        $ssh = new Net_SSH2(REPORT_RUNNER, '22');
+
+        if (empty($ssh->server_identifier)) {
+            $response = array('success' => false, 'msg' => 'Impossible de se connecter au serveur pour generer cet etat, veuillez contacter votre administrateur systeme', 'subscriptions_id' => null, 'status' => null);
+        } else {
+            if (!$ssh->login("guyfomi", "12345")) {
+                $response = array('success' => false, 'msg' => 'Impossible de se connecter au serveur pour generer cet etat, Compte ou mot de passe invalide', 'subscriptions_id' => null, 'status' => null);
+            } else {
+                $ssh->disableQuietMode();
+
+                $data = $_REQUEST;
+                $characters = '0123456789';
+                $charactersLength = strlen($characters);
+                $randomString = '';
+                for ($i = 0; $i < 10; $i++) {
+                    $randomString .= $characters[rand(0, $charactersLength - 1)];
+                }
+
+                $cmd = "nohup curl '" . HTTP_SERVER . "/" . HTTP_COOKIE_PATH . "/admin/json.php' --data 'module=databases&action=addm_report&db_host=" . $data['db_host'] . "&db_user=" . $data['db_user'] . "&db_pass=" . $data['db_pass'] . "&db_sid=" . $data['db_sid'] . "&databases_id=" . $data['databases_id'] . "&task_id=" . $randomString . "' &";
+                $ssh->exec($cmd);
+                //var_dump($cmd);
+
+                $ssh->disconnect();
+
+                $detail = array('task_id' => $randomString, 'status' => 'run','comments' => 'Job cree avec succes');
+                toC_Reports_Admin::addJobDetail($detail);
+
+                $response = array('success' => true, 'msg' => 'Tache creee avec succes', 'task_id' => $randomString, 'status' => 'run');
+            }
+        }
+
+        echo $toC_Json->encode($response);
+    }
+
     function addmReport()
     {
         global $toC_Json;
@@ -2877,7 +2915,7 @@ GROUP BY component, oper_type, status";
                                             if (!file_exists($dir)) {
                                                 mkdir($dir, 0777, true);
                                             }
-                                            $report = 'addm_' . $data['task_id'] . '.html';
+                                            $report = 'addm_' . $db_host . '_' . $start_snap . '_' . $end_snap . '.txt';
                                             $file_name = $dir . '/' . $report;
                                             $b = file_put_contents($file_name,$out);
 

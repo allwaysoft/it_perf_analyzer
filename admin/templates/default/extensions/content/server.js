@@ -959,7 +959,14 @@ Toc.fsGrid = function (config) {
     config.viewConfig = {emptyText: TocLanguage.gridNoRecords};
 
     config.listeners = {
+        activate: function (panel) {
+            if (!this.activated) {
+                this.activated = true;
+                this.getStore().load();
+            }
+        },
         'rowclick': this.onRowClick
+        ,scope:this
     };
 
     config.ds = new Ext.data.Store({
@@ -4111,6 +4118,7 @@ Ext.extend(Toc.MemCharts, Ext.Panel, {
                     },
                     callback: function (options, success, response) {
 
+                        scope.reqs--;
                         var gaugeChart = this.gauge;
 
                         if (gaugeChart) {
@@ -4177,7 +4185,7 @@ Ext.extend(Toc.MemCharts, Ext.Panel, {
                             }
                         }
 
-                        //setTimeout(this.refreshData(this), this.freq);
+
 
                         if(scope.count == 0)
                         {
@@ -4198,7 +4206,7 @@ Ext.extend(Toc.MemCharts, Ext.Panel, {
             }
         }
 
-        console.log('requetes ==> ' + scope.reqs);
+        //console.log('requetes ==> ' + scope.reqs);
     },
 
     onRefresh: function () {
