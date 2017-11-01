@@ -1555,8 +1555,12 @@ class toC_Json_Servers
                     }
                 }
 
+                $ssh->disconnect();
+
                 break;
         }
+
+        session_write_close();
 
         return 0;
     }
@@ -1998,16 +2002,16 @@ WHERE delta_fs_usage.start_date = (select max(start_date) from delta_fs_usage wh
 
     function memUsage()
     {
+        global $toC_Json;
+
         $db_host = $_REQUEST['db_host'];
         $os_user = $_REQUEST['server_user'];
         $os_pass = $_REQUEST['server_pass'];
 
-        global $toC_Json;
-
         $usage = array();
         $pct = 0;
 
-        $ssh = new Net_SSH2($db_host);
+        $ssh = new Net_SSH2($db_host,22,5);
         if (!$ssh->login($os_user, $os_pass)) {
             $comment = 'Impossible de se connecter au serveur ' . $db_host;
             $pct = null;
@@ -2041,16 +2045,18 @@ WHERE delta_fs_usage.start_date = (select max(start_date) from delta_fs_usage wh
         $response = array(EXT_JSON_READER_TOTAL => count($usage),
             EXT_JSON_READER_ROOT => $usage, 'comment' => $comment, 'pct' => $pct);
 
+        session_write_close();
+
         echo $toC_Json->encode($response);
     }
 
     function diskActivity()
     {
+        global $toC_Json;
+
         $db_host = $_REQUEST['db_host'];
         $os_user = $_REQUEST['server_user'];
         $os_pass = $_REQUEST['server_pass'];
-
-        global $toC_Json;
 
         $characters = '0123456789';
         $charactersLength = strlen($characters);
@@ -2095,16 +2101,18 @@ WHERE delta_fs_usage.start_date = (select max(start_date) from delta_fs_usage wh
         $response = array(EXT_JSON_READER_TOTAL => count($disks),
             EXT_JSON_READER_ROOT => $disks, 'comment' => $comment);
 
+        session_write_close();
+
         echo $toC_Json->encode($response);
     }
 
     function cpuUsage()
     {
+        global $toC_Json;
+
         $db_host = $_REQUEST['db_host'];
         $os_user = $_REQUEST['server_user'];
         $os_pass = $_REQUEST['server_pass'];
-
-        global $toC_Json;
 
         $pct = array();
 
@@ -2115,7 +2123,7 @@ WHERE delta_fs_usage.start_date = (select max(start_date) from delta_fs_usage wh
             $randomString .= $characters[rand(0, $charactersLength - 1)];
         }
 
-        $ssh = new Net_SSH2($db_host);
+        $ssh = new Net_SSH2($db_host,22,5);
         if (!$ssh->login($os_user, $os_pass)) {
             $comment = 'Impossible de se connecter au serveur ' . $db_host;
             $pct = null;
@@ -2157,6 +2165,8 @@ WHERE delta_fs_usage.start_date = (select max(start_date) from delta_fs_usage wh
         $response = array(EXT_JSON_READER_TOTAL => count($pct),
             EXT_JSON_READER_ROOT => $pct, 'comment' => $comment);
 
+        session_write_close();
+
         echo $toC_Json->encode($response);
     }
 
@@ -2175,7 +2185,7 @@ WHERE delta_fs_usage.start_date = (select max(start_date) from delta_fs_usage wh
             $randomString .= $characters[rand(0, $charactersLength - 1)];
         }
 
-        $ssh = new Net_SSH2($db_host);
+        $ssh = new Net_SSH2($db_host,22,5);
         if (!$ssh->login($os_user, $os_pass)) {
             $comment = 'Impossible de se connecter au serveur ' . $db_host;
             $net = null;
@@ -2283,7 +2293,7 @@ WHERE delta_fs_usage.start_date = (select max(start_date) from delta_fs_usage wh
                 $_SESSION['LAST_ERROR'] = "Ce systeme n'est pas encore supporte";
                 return false;
             case "lin":
-                $ssh = new Net_SSH2($host, $port);
+                $ssh = new Net_SSH2($host, $port,5);
 
                 if (empty($ssh->server_identifier)) {
                     $_SESSION['LAST_ERROR'] = "Impossible de se connecter au serveur, veuillez contacter votre administrateur systeme";
@@ -2423,8 +2433,13 @@ WHERE delta_fs_usage.start_date = (select max(start_date) from delta_fs_usage wh
                             EXT_JSON_READER_ROOT => $recs);
                     }
                 }
+
+                $ssh->disconnect();
+
                 break;
         }
+
+        session_write_close();
 
         echo $toC_Json->encode($response);
     }

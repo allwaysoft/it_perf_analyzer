@@ -1,58 +1,43 @@
 Toc.SessionsGrid = function (config) {
-    //console.debug(config);
     var that = this;
     config = config || {};
     config.started = false;
     config.region = 'center';
-    config.loadMask = false;
-    //config.layout = 'fit';
-    //config.border = true;
-    //config.autoHeight = true;
+    config.loadMask = true;
     config.title = 'Sessions';
     config.count = 0;
     config.reqs = 0;
-    //config.columnLines = false;
-    //config.hideHeaders = true;
     config.viewConfig = {emptyText: TocLanguage.gridNoRecords, forceFit: true};
 
     config.listeners = {
         activate: function (comp) {
         },
         show: function (comp) {
-            //console.log('show');
         },
         enable: function (panel) {
-            //console.log('enable');
-            //this.onRefresh();
         },
         deactivate: function (panel) {
-            //console.log('deactivate');
             this.onStop();
         },
         destroy: function (panel) {
-            //console.log('destroy');
             this.onStop();
         },
         disable: function (panel) {
-            //console.log('disable');
             this.onStop();
         },
         remove: function (container, panel) {
-            //console.log('remove');
             this.onStop();
         },
         removed: function (container, panel) {
-            //console.log('removed');
             this.onStop();
         },
         render: function (comp) {
-            //console.log('render');
         },
         scope: this
     };
 
     config.ds = new Ext.data.Store({
-        url: Toc.CONF.CONN_URL,
+        url: Toc.CONF.ORACLE_URL,
         baseParams: {
             module: 'databases',
             action: 'list_sessions',
@@ -90,14 +75,12 @@ Toc.SessionsGrid = function (config) {
         listeners: {
             load: function (store, records, opt) {
                 this.lblInfos.setText(store.data.length + ' Sessions actives ...');
-                //setTimeout(that.refreshData(that), 10000);
                 that.reqs--;
 
                 if (that.count == 0) {
                     var interval = setInterval(function () {
                         that.refreshData(that);
                     }, that.freq || 2000);
-                    //setTimeout(that.refreshData, that.freq || 10000);
                     that.count++;
                     that.interval = interval;
                 }
@@ -373,7 +356,7 @@ Ext.extend(Toc.SessionsGrid, Ext.grid.GridPanel, {
                             {
                                 this.task_id = req.task_id;
                                 this.getEl().unmask();
-                                setTimeout(this.downloadReport(req), 2000);
+                                this.downloadReport(req);
                             }
                             else {
                                 Ext.MessageBox.alert(TocLanguage.msgErrTitle, "No task id specified !!!");
@@ -383,7 +366,7 @@ Ext.extend(Toc.SessionsGrid, Ext.grid.GridPanel, {
                     }
                 }
                 else {
-                    setTimeout(this.downloadReport(request), 2000);
+                    this.downloadReport(request)
                 }
             },
             scope: this
@@ -459,60 +442,9 @@ Ext.extend(Toc.SessionsGrid, Ext.grid.GridPanel, {
         }
     },
     onKill: function (record) {
-        var sid = record.get('sid');
-        var serial = record.get('serial');
-
-        Ext.MessageBox.confirm(
-            TocLanguage.msgWarningTitle,
-            'Voulez-vous vraiment deconnecter cet utilisateur ?',
-            function (btn) {
-                if (btn == 'yes') {
-                    this.getEl().mask('Creation du Job ...');
-                    Ext.Ajax.request({
-                        url: Toc.CONF.CONN_URL,
-                        params: {
-                            module: 'databases',
-                            action: 'kill_session',
-                            sid: sid,
-                            db_user: this.db_user,
-                            db_pass: this.db_pass,
-                            db_port: this.db_port,
-                            db_host: this.host,
-                            db_sid: this.sid,
-                            serial: serial
-                        },
-                        callback: function (options, success, response) {
-                            this.getEl().unmask();
-                            var result = Ext.decode(response.responseText);
-
-                            if (result.success == true) {
-                                var params = {
-                                    db_user: this.db_user,
-                                    db_pass: this.db_pass,
-                                    db_port: this.db_port,
-                                    db_host: this.host,
-                                    db_sid: this.sid,
-                                    job_name: result.job_name,
-                                    panel: this,
-                                    description: 'Deconnexion de la session ' + sid + ':' + serial
-                                };
-
-                                this.proc_name = result.proc_name;
-                                Toc.watchJob(params);
-                            } else {
-                                Ext.MessageBox.alert(TocLanguage.msgErrTitle, result.feedback);
-                            }
-                        },
-                        scope: this
-                    });
-                }
-            },
-            this
-        );
+        Toc.KillUser(record,this);
     },
     onStart: function () {
-        var that = this;
-
         this.started = true;
         this.count = 0;
         this.reqs = 0;
@@ -538,6 +470,16 @@ Ext.extend(Toc.SessionsGrid, Ext.grid.GridPanel, {
         this.onStart();
         this.onStop();
     },
+    onSearch: function () {
+        var filter;
+        this.onStop();
+
+        filter = this.txtSearch.getValue() || null;
+        var store = this.getStore();
+        store.baseParams['search'] = filter;
+
+        this.onStart();
+    },
     onRowAction: function (grid, record, action, row, col) {
         switch (action) {
             case 'icon-delete-record':
@@ -547,17 +489,306 @@ Ext.extend(Toc.SessionsGrid, Ext.grid.GridPanel, {
     }
 });
 
+Toc.LockedObjGrid = function (config) {
+
+    var that = this;
+    config = config || {};
+    config.started = false;
+    config.region = 'center';
+    config.loadMask = true;
+    config.count = 0;
+    config.reqs = 0;
+    config.title = 'Verrous Objets';
+
+    //config.hideHeaders = true;
+    config.viewConfig = {emptyText: TocLanguage.gridNoRecords, forceFit: true};
+
+    config.listeners = {
+        activate: function (comp) {
+        },
+        show: function (comp) {
+        },
+        enable: function (panel) {
+        },
+        deactivate: function (panel) {
+            this.onStop();
+        },
+        destroy: function (panel) {
+            this.onStop();
+        },
+        disable: function (panel) {
+            this.onStop();
+        },
+        remove: function (container, panel) {
+            this.onStop();
+        },
+        removed: function (container, panel) {
+            this.onStop();
+        },
+        render: function (comp) {
+        },
+        scope: this
+    };
+
+    config.ds = new Ext.data.Store({
+        url: Toc.CONF.CONN_URL,
+        baseParams: {
+            module: 'databases',
+            action: 'lock_obj',
+            db_user: config.db_user,
+            db_pass: config.db_pass,
+            db_port: config.db_port,
+            db_host: config.host,
+            db_sid: config.sid
+        },
+        reader: new Ext.data.JsonReader({
+            root: Toc.CONF.JSON_READER_ROOT,
+            totalProperty: Toc.CONF.JSON_READER_TOTAL_PROPERTY,
+            id: 'sid'
+        }, [
+            'sid',
+            'serial',
+            'username',
+            'osuser',
+            'duree',
+            'locked_object',
+            'status',
+            'description'
+        ]),
+        listeners: {
+            load: function (store, records, opt) {
+                this.lblInfos.setText(store.data.length + ' Verrous ...');
+                that.reqs--;
+
+                if (that.count == 0) {
+                    var interval = setInterval(function () {
+                        that.refreshData(that);
+                    }, that.freq || 5000);
+                    that.count++;
+                    that.interval = interval;
+                }
+            },
+            beforeload: function (store, opt) {
+                return that.started;
+            }, scope: that
+        },
+        autoLoad: false
+    });
+
+    config.rowActions = new Ext.ux.grid.RowActions({
+        actions: [
+
+            {iconCls: 'icon-delete-record', qtip: 'Deconnecter'}
+        ],
+        widthIntercept: Ext.isSafari ? 4 : 2
+    });
+    config.rowActions.on('action', this.onRowAction, this);
+    config.plugins = config.rowActions;
+
+    render = function (row) {
+        return '<div style = "white-space : normal">' + row + '</div>';
+    };
+
+    config.sm = new Ext.grid.CheckboxSelectionModel();
+    config.cm = new Ext.grid.ColumnModel([
+        config.sm,
+        { id: 'username', header: 'DB User', dataIndex: 'username', width: 15},
+        { id: 'osuser', header: 'OS User', dataIndex: 'osuser', width: 10},
+        { id: 'duree', header: 'Duree (Min)', dataIndex: 'duree', width: 10},
+        { id: 'locked_object', header: 'Objet', dataIndex: 'locked_object', width: 20},
+        { id: 'description', header: 'SQL', dataIndex: 'description', width: 45,renderer : render},
+        config.rowActions
+    ]);
+    config.autoExpandColumn = 'username';
+
+    var thisObj = this;
+
+    config.txtSearch = new Ext.form.TextField({
+        width: 100,
+        hideLabel: true
+    });
+
+    config.lblInfos = new Ext.form.Label({
+        width: 200,
+        text:'O Verrous',
+        autoShow:true
+    });
+
+    config.pBar = new Ext.ProgressBar({
+        hidden: true,
+        width: 300,
+        hideLabel: true
+    });
+
+    config.tbar = [
+        {
+
+            text: '',
+            iconCls: 'remove',
+            handler: this.onBatchKill,
+            scope: this
+        },
+        '-',
+        {
+
+            text: '',
+            iconCls: 'refresh',
+            handler: this.onRefresh,
+            scope: this
+        },
+        '-',
+        {
+
+            text: '',
+            iconCls: this.started ? 'stop' : 'play',
+            handler: this.started ? this.onStop : this.onStart,
+            scope: this
+        },
+        '->',
+        config.txtSearch,
+        ' ',
+        {
+            text: '',
+            iconCls: 'search',
+            handler: this.onSearch,
+            scope: this
+        }
+    ];
+
+    Toc.LockedObjGrid.superclass.constructor.call(this, config);
+};
+
+Ext.extend(Toc.LockedObjGrid, Ext.grid.GridPanel, {
+
+    refreshData: function (scope) {
+        if (scope && scope.started) {
+            if (scope.reqs == 0) {
+                var store = this.getStore();
+                scope.reqs++;
+                store.load();
+            }
+        }
+    },
+    killUser: function (sid, serial,pbar,step,max) {
+        Ext.Ajax.request({
+            url: Toc.CONF.CONN_URL,
+            params: {
+                module: 'databases',
+                action: 'kill_session',
+                sid: sid,
+                db_user: this.db_user,
+                db_pass: this.db_pass,
+                db_port: this.db_port,
+                db_host: this.host,
+                db_sid: this.sid,
+                serial: serial
+            },
+            callback: function (options, success, response) {
+                var result = Ext.decode(response.responseText);
+
+                pbar.val = pbar.val + step;
+                pbar.count = pbar.count + 1;
+                pbar.updateProgress(pbar.val,sid + " deconnecte ...",true);
+
+                if(pbar.count >= max)
+                {
+                    pbar.reset();
+                    pbar.hide();
+                    this.onRefresh();
+                }
+
+                if (result.success == true) {
+
+                }
+                else
+                    this.owner.app.showNotification({title: TocLanguage.msgSuccessTitle, html: result.feedback});
+            },
+            scope: this
+        });
+    },
+    onBatchKill : function() {
+        var count = this.selModel.getCount();
+        if(count > 0)
+        {
+            this.pBar.reset();
+            this.pBar.updateProgress(0,"",true);
+            this.pBar.val = 0;
+            this.pBar.count = 0;
+            this.pBar.show();
+            var step = 1/count;
+
+            for (var i=0;i<count;i++)
+            {
+                var sid = this.selModel.selections.items[i].data.sid;
+                var serial = this.selModel.selections.items[i].data.serial;
+
+                this.killUser(sid, serial,this.pBar,step,count);
+            }
+        }
+        else {
+            Ext.MessageBox.alert(TocLanguage.msgInfoTitle, TocLanguage.msgMustSelectOne);
+        }
+    },
+    onKill: function (record) {
+        Toc.KillUser(record,this);
+    },
+    onStart: function () {
+        var that = this;
+
+        this.started = true;
+        this.count = 0;
+        this.reqs = 0;
+        this.refreshData(this);
+        this.topToolbar.items.items[4].setHandler(this.onStop, this);
+        this.topToolbar.items.items[4].setIconClass('stop');
+    },
+    onStop: function () {
+        this.started = false;
+        this.count = 10;
+        this.reqs = 10;
+        this.refreshData(this);
+        if(this.interval)
+        {
+            clearInterval(this.interval);
+        }
+
+        this.topToolbar.items.items[4].setHandler(this.onStart, this);
+        this.topToolbar.items.items[4].setIconClass('play');
+    },
+    onRefresh: function () {
+        this.onStart();
+        this.onStop();
+    },
+
+    onRowAction: function (grid, record, action, row, col) {
+        switch (action) {
+            case 'icon-delete-record':
+                this.onKill(record);
+                break;
+        }
+    },
+    onSearch: function () {
+        var filter = this.txtSearch.getValue() || null;
+        var store = this.getStore();
+
+        store.baseParams['search'] = filter;
+        store.reload();
+    }
+});
+
 Toc.LockTreeGrid = function (config) {
     //console.debug(config);
     var that = this;
     config = config || {};
     config.started = false;
     config.region = 'center';
-    config.loadMask = false;
+    config.loadMask = true;
     //config.width = '25%';
     //config.border = true;
     config.autoHeight = true;
-    config.title = 'Verrous';
+    config.count = 0;
+    config.reqs = 0;
+    config.title = 'Verrous Sessions';
     config.columnLines = false;
     //config.hideHeaders = true;
     config.viewConfig = {emptyText: TocLanguage.gridNoRecords, forceFit: true};
@@ -589,13 +820,21 @@ Toc.LockTreeGrid = function (config) {
         ]),
         listeners: {
             load: function (store, records, opt) {
-                setTimeout(that.refreshData(that), that.freq);
+                that.reqs--;
+
+                if (that.count == 0) {
+                    var interval = setInterval(function () {
+                        that.refreshData(that);
+                    }, that.freq || 5000);
+                    that.count++;
+                    that.interval = interval;
+                }
             },
             beforeload: function (store, opt) {
                 return that.started;
             }, scope: that
         },
-        autoLoad: true
+        autoLoad: false
     });
 
     config.rowActions = new Ext.ux.grid.RowActions({
@@ -678,12 +917,13 @@ Toc.LockTreeGrid = function (config) {
 };
 
 Ext.extend(Toc.LockTreeGrid, Ext.grid.GridPanel, {
-
-
     refreshData: function (scope) {
-        if (scope) {
-            var store = this.getStore();
-            store.load();
+        if (scope && scope.started) {
+            if (scope.reqs == 0) {
+                var store = this.getStore();
+                scope.reqs++;
+                store.load();
+            }
         }
     },
     onEdit: function (record) {
@@ -712,66 +952,26 @@ Ext.extend(Toc.LockTreeGrid, Ext.grid.GridPanel, {
     },
 
     onKill: function (record) {
-        var sid = record.get('sid');
-        var serial = record.get('serial');
-
-        Ext.MessageBox.confirm(
-            TocLanguage.msgWarningTitle,
-            'Voulez-vous vraiment deconnecter cet utilisateur ?',
-            function (btn) {
-                if (btn == 'yes') {
-                    this.getEl().mask('Creation du Job ...');
-                    Ext.Ajax.request({
-                        url: Toc.CONF.CONN_URL,
-                        params: {
-                            module: 'databases',
-                            action: 'kill_session',
-                            sid: sid,
-                            db_user: this.db_user,
-                            db_pass: this.db_pass,
-                            db_port: this.db_port,
-                            db_host: this.host,
-                            db_sid: this.sid,
-                            serial: serial
-                        },
-                        callback: function (options, success, response) {
-                            this.getEl().unmask();
-                            var result = Ext.decode(response.responseText);
-
-                            if (result.success == true) {
-                                var params = {
-                                    db_user: this.db_user,
-                                    db_pass: this.db_pass,
-                                    db_port: this.db_port,
-                                    db_host: this.host,
-                                    db_sid: this.sid,
-                                    job_name: result.job_name,
-                                    panel: this,
-                                    description: 'Deconnexion de la session ' + sid + ':' + serial
-                                };
-
-                                this.proc_name = result.proc_name;
-                                Toc.watchJob(params);
-                            } else {
-                                Ext.MessageBox.alert(TocLanguage.msgErrTitle, result.feedback);
-                            }
-                        },
-                        scope: this
-                    });
-                }
-            },
-            this
-        );
+        Toc.KillUser(record,this);
     },
     onStart: function () {
         this.started = true;
+        this.count = 0;
+        this.reqs = 0;
         this.refreshData(this);
         this.topToolbar.items.items[4].setHandler(this.onStop, this);
         this.topToolbar.items.items[4].setIconClass('stop');
     },
     onStop: function () {
         this.started = false;
+        this.count = 10;
+        this.reqs = 10;
         this.refreshData(this);
+        if(this.interval)
+        {
+            clearInterval(this.interval);
+        }
+
         this.topToolbar.items.items[4].setHandler(this.onStart, this);
         this.topToolbar.items.items[4].setIconClass('play');
     },
@@ -1058,12 +1258,7 @@ Ext.extend(Toc.DatabasesPerfDashboard, Ext.Panel, {
                         db.body_height = '140px';
 
                         var panel = new Toc.TopEventsPanelCharts(db);
-                        //console.log(panel.id);
-                        //var panel = new Toc.TopEventsPanel(db);
-
-                        //var panel = new Toc.TopWaitClassPanel(db);
                         this.add(panel);
-                        //panel.buildItems(db);
                         this.doLayout();
                         i++;
                     }
@@ -1275,7 +1470,7 @@ Toc.DatabasePerfDashboard = function (config) {
             //console.log('render databaseSpaceDashboard');
             //console.debug(panel);
             if (this.isProduction) {
-                this.buildItems('all', 2000);
+                this.buildItems('all', 5000);
             }
             //this.onRefresh();
         },
@@ -1582,7 +1777,7 @@ Ext.extend(Toc.DatabasePerfPanel, Ext.Panel, {
 
         var disk = {
             width: '12%',
-            label: 'Disks (%)',
+            label: 'Disks',
             body_height: '75px',
             freq: params.freq,
             //hideHeaders:true,
@@ -1634,9 +1829,6 @@ Ext.extend(Toc.DatabasePerfPanel, Ext.Panel, {
         this.tbs = new Toc.TopTbsPanel(params);
         this.add(this.tbs);
 
-        params.freq = params.freq * 5;
-        params.width = '15%';
-        params.body_height = '75px';
         this.fs = new Toc.TopFsPanel(params);
         this.add(this.fs);
     },
@@ -1661,7 +1853,6 @@ Ext.extend(Toc.DatabasePerfPanel, Ext.Panel, {
         this.net_usage.stop();
     }
 });
-
 
 Toc.TopEventsPanelCharts = function (config) {
     //console.debug(config);
@@ -1888,6 +2079,14 @@ Toc.TopEventsPanelCharts = function (config) {
     };
 
     config.tools = [
+        {
+            id: 'refresh',
+            qtip: 'Refresh',
+            handler: function (event, toolEl, panel) {
+                thisObj.stop();
+                thisObj.start();
+            }
+        }
     ];
 
     Toc.TopEventsPanelCharts.superclass.constructor.call(this, config);
@@ -1930,14 +2129,15 @@ Ext.extend(Toc.TopEventsPanelCharts, Ext.Panel, {
     },
 
     refreshData: function (scope) {
+        scope.setTitle(scope.title + '.');
         if (scope && scope.started) {
             if(scope.reqs == 0)
             {
-                console.log('reqs++');
                 scope.reqs++;
+                scope.setTitle(scope.label + ' .');
 
-                Ext.Ajax.request({
-                    url: Toc.CONF.CONN_URL,
+                scope.transactionId = Ext.Ajax.request({
+                    url: Toc.CONF.ORACLE_URL,
                     params: {
                         module: 'databases',
                         action: 'list_waits',
@@ -1949,73 +2149,81 @@ Ext.extend(Toc.TopEventsPanelCharts, Ext.Panel, {
                         databases_id: this.databases_id
                     },
                     callback: function (options, success, response) {
-                        console.log('reqs--');
                         scope.reqs--;
+                        scope.setTitle(scope.label);
 
-                        var chart = this.chart;
-                        var valueAxis = chart.valueAxes[0];
+                        if(scope.chart)
+                        {
+                            var chart = scope.chart;
+                            var valueAxis = chart.valueAxes[0];
 
-                        if (success) {
-                            var json = Ext.decode(response.responseText);
+                            if (success) {
+                                var json = Ext.decode(response.responseText);
 
-                            //console.debug(json);
-                            var data = json.records[0];
+                                //console.debug(json);
+                                var data = json ? json.records[0] : [];
 
-                            if (this.data.length > 50) {
-                                this.data.shift();
-                            }
-
-                            chart.dataProvider = this.data;
-                            if (chart.chartData.length > 50) {
-                                chart.chartData.shift();
-                            }
-
-                            if (valueAxis) {
-                                valueAxis.titleColor = "green";
-                                valueAxis.labelsEnabled = true;
-                                valueAxis.title = "";
-                                if (data) {
-                                    this.data.push(data);
+                                if (this.data.length > 200) {
+                                    this.data.shift();
                                 }
-                                else {
+
+                                chart.dataProvider = this.data;
+                                if (chart.chartData.length > 200) {
+                                    chart.chartData.shift();
+                                }
+
+                                if (valueAxis) {
+                                    valueAxis.titleColor = "green";
+                                    valueAxis.labelsEnabled = true;
+                                    valueAxis.title = "";
+                                    if (data) {
+                                        this.data.push(data);
+                                    }
+                                    else {
+                                        valueAxis.labelsEnabled = false;
+                                        valueAxis.titleColor = "red";
+                                        valueAxis.title = "No Data";
+                                    }
+
+                                    if (data && data.comments) {
+                                        valueAxis.labelsEnabled = false;
+                                        valueAxis.titleColor = "red";
+                                        valueAxis.title = data.comments;
+                                    }
+                                }
+                            }
+                            else {
+                                if (valueAxis) {
                                     valueAxis.labelsEnabled = false;
                                     valueAxis.titleColor = "red";
-                                    valueAxis.title = "No Data";
-                                }
-
-                                if (data && data.comments) {
-                                    valueAxis.labelsEnabled = false;
-                                    valueAxis.titleColor = "red";
-                                    valueAxis.title = data.comments;
+                                    //valueAxis.title = "Timeout";
+                                    valueAxis.title = response.responseText;
                                 }
                             }
-                        }
-                        else {
-                            if (valueAxis) {
-                                valueAxis.labelsEnabled = false;
-                                valueAxis.titleColor = "red";
-                                valueAxis.title = "Timeout";
+
+                            chart.validateNow();
+
+                            if(json.records.length > 0)
+                            {
+                                chart.validateData();
                             }
-                        }
-
-                        chart.validateData();
-
-                        if(scope.count == 0)
-                        {
-                            var interval = setInterval(function(){
-                                scope.refreshData(scope)
-                            }, scope.freq || 5000);
-                            //setTimeout(that.refreshData, that.freq || 10000);
-                            scope.count++;
-                            scope.interval = interval;
-                        }
-                        else
-                        {
-                            //console.log('that.count' + scope.count);
                         }
                     },
                     scope: this
                 });
+            }
+            else
+            {
+                scope.setTitle(scope.title + '.');
+            }
+
+            if(scope.count == 0)
+            {
+                var interval = setInterval(function(){
+                    scope.refreshData(scope)
+                }, scope.freq || 5000);
+                scope.count++;
+                scope.interval = interval;
             }
         }
     },
@@ -2034,17 +2242,22 @@ Ext.extend(Toc.TopEventsPanelCharts, Ext.Panel, {
 
     start: function () {
         this.started = true;
+        this.count = 0;
+        this.reqs = 0;
         this.refreshData(this);
     },
-
     stop: function () {
         this.started = false;
+        this.count = 10;
+        this.reqs = 10;
         this.refreshData(this);
 
         if(this.interval)
         {
             clearInterval(this.interval);
         }
+
+        this.interval = null;
     }
 });
 
@@ -2200,7 +2413,7 @@ Ext.extend(Toc.AWRDialog, Ext.Window, {
                             {
                                 this.task_id = req.task_id;
                                 this.getEl().unmask();
-                                setTimeout(this.downloadReport(req), 2000);
+                                this.downloadReport(req);
                             }
                             else {
                                 Ext.MessageBox.alert(TocLanguage.msgErrTitle, "No task id specified !!!");
@@ -2210,7 +2423,7 @@ Ext.extend(Toc.AWRDialog, Ext.Window, {
                     }
                 }
                 else {
-                    setTimeout(this.downloadReport(request), 2000);
+                    this.downloadReport(request);
                 }
             },
             scope: this
@@ -2278,7 +2491,7 @@ Toc.SgaResizePanel = function (config) {
             'status',
             'nbre'
         ]),
-        autoLoad: true
+        autoLoad: false
     });
 
     config.cm = new Ext.grid.ColumnModel([
@@ -2317,8 +2530,6 @@ Toc.exploreDatabase = function (node, panel) {
                 return false;
             }
 
-            panel.getEl().mask("Chargement ...");
-
             var pnlDashboard = new Toc.DatabaseDashboardPanel({label: "Dashboard", databases_id: node.attributes.databases_id, sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port,port: node.attributes.db_port,db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner,server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, typ: node.attributes.typ});
 
             var tab = new Ext.TabPanel({
@@ -2330,13 +2541,14 @@ Toc.exploreDatabase = function (node, panel) {
                 items: [pnlDashboard]
             });
 
-            tab.add(pnlDashboard);
+            //tab.add(pnlDashboard);
 
             panel.add(tab);
             panel.doLayout();
 
             var pnlSessions = new Toc.SessionsGrid({label: node.attributes.label, databases_id: node.attributes.databases_id, sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
             var pnlVerrous = new Toc.LockTreeGrid({label: node.attributes.label, databases_id: node.attributes.databases_id, sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
+            var pnlLockedObj = new Toc.LockedObjGrid({label: node.attributes.label, databases_id: node.attributes.databases_id, sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
             var pnlMemory = new Toc.MemoryDashboardPanel({sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner, server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, typ: node.attributes.typ});
 
             var tab_perf = new Ext.TabPanel({
@@ -2349,7 +2561,7 @@ Toc.exploreDatabase = function (node, panel) {
                 },
                 deferredRender: false,
                 items: [
-                    pnlSessions,pnlVerrous,pnlMemory
+                    pnlSessions,pnlVerrous,pnlLockedObj,pnlMemory
                 ]
             });
 
@@ -2432,8 +2644,6 @@ Toc.exploreDatabase = function (node, panel) {
             tab.add(pnlLogs);
             tab.add(pnlNotifications);
             tab.doLayout();
-
-            panel.getEl().unmask();
         }
         else
         {
@@ -2444,4 +2654,57 @@ Toc.exploreDatabase = function (node, panel) {
     panel.mainPanel.doLayout();
 
     return true;
+};
+
+Toc.KillUser = function (record,scope) {
+    var sid = record.get('sid');
+    var serial = record.get('serial');
+
+    Ext.MessageBox.confirm(
+        TocLanguage.msgWarningTitle,
+        'Voulez-vous vraiment deconnecter cet utilisateur ?',
+        function (btn) {
+            if (btn == 'yes') {
+                scope.getEl().mask('Creation du Job ...');
+                Ext.Ajax.request({
+                    url: Toc.CONF.CONN_URL,
+                    params: {
+                        module: 'databases',
+                        action: 'kill_session',
+                        sid: sid,
+                        db_user: scope.db_user,
+                        db_pass: scope.db_pass,
+                        db_port: scope.db_port,
+                        db_host: scope.host,
+                        db_sid: scope.sid,
+                        serial: serial
+                    },
+                    callback: function (options, success, response) {
+                        scope.getEl().unmask();
+                        var result = Ext.decode(response.responseText);
+
+                        if (result.success == true) {
+                            var params = {
+                                db_user: scope.db_user,
+                                db_pass: scope.db_pass,
+                                db_port: scope.db_port,
+                                db_host: scope.host,
+                                db_sid: scope.sid,
+                                job_name: result.job_name,
+                                panel: scope,
+                                description: 'Deconnexion de la session ' + sid + ':' + serial
+                            };
+
+                            scope.proc_name = result.proc_name;
+                            Toc.watchJob(params);
+                        } else {
+                            Ext.MessageBox.alert(TocLanguage.msgErrTitle, result.feedback);
+                        }
+                    },
+                    scope: scope
+                });
+            }
+        },
+        scope
+    );
 };

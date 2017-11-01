@@ -1110,6 +1110,7 @@ Toc.TopFsPanel = function (config) {
     config.count = 0;
     config.reqs = 0;
     config.title = 'FS';
+    config.label = 'FS';
     config.height  = 110;
     config.hideHeaders = true;
     config.border = true;
@@ -1121,7 +1122,7 @@ Toc.TopFsPanel = function (config) {
     };
 
     config.ds = new Ext.data.Store({
-        url: Toc.CONF.CONN_URL,
+        url: Toc.CONF.LINUX_URL,
         baseParams: {
             module: 'servers',
             action: 'list_topfs',
@@ -1147,19 +1148,23 @@ Toc.TopFsPanel = function (config) {
             'rest'
         ]),
         listeners: {
+            exception : function(misc){
+                that.reqs--;
+                that.setTitle(that.label + (' error !!! ') + that.reqs);
+            },
             load: function (store, records, opt) {
                 that.reqs--;
-
+                that.setTitle(that.label);
+            },
+            beforeload: function (store, opt) {
                 if (that.count == 0) {
                     var interval = setInterval(function () {
                         that.refreshData(that);
                     }, that.freq || 5000);
-                    //setTimeout(that.refreshData, that.freq || 10000);
                     that.count++;
                     that.interval = interval;
                 }
-            },
-            beforeload: function (store, opt) {
+
                 return that.started;
             }, scope: that
         },
@@ -1233,10 +1238,12 @@ Toc.TopFsPanel = function (config) {
 
 Ext.extend(Toc.TopFsPanel, Ext.grid.GridPanel, {
     refreshData: function (scope) {
+        scope.setTitle(scope.title + '.');
         if (scope && scope.started) {
             if (scope.reqs == 0) {
                 var store = this.getStore();
                 scope.reqs++;
+                scope.setTitle(scope.label + ' .');
                 store.load();
             }
         }
@@ -3682,111 +3689,121 @@ Toc.CpuCharts = function (config) {
 Ext.extend(Toc.CpuCharts, Ext.Panel, {
 
     refreshData: function (scope) {
+        scope.setTitle(scope.title + '.');
         if (scope && scope.started) {
-            if(scope.reqs == 0)
+            if(scope.chart)
             {
-                console.log('reqs++');
-                scope.reqs++;
-                Ext.Ajax.request({
-                    url: Toc.CONF.CONN_URL,
-                    params: {
-                        module: 'servers',
-                        action: 'cpu_usage',
-                        server_user: this.server_user,
-                        server_pass: this.server_pass,
-                        db_host: this.db_host
-                    },
-                    callback: function (options, success, response) {
-                        console.log('reqs--');
-                        scope.reqs--;
+                var chart = scope.chart;
 
-                        var chart = this.chart;
-                        var valueAxis = chart.valueAxes[0];
+                var valueAxis = chart.valueAxes[0];
 
-                        if(success)
-                        {
-                            var json = Ext.decode(response.responseText);
+                if(scope.reqs == 0)
+                {
+                    scope.reqs++;
+                    scope.transactionId = Ext.Ajax.request({
+                        url: Toc.CONF.LINUX_URL,
+                        params: {
+                            module: 'servers',
+                            action: 'cpu_usage',
+                            server_user: this.server_user,
+                            server_pass: this.server_pass,
+                            db_host: this.db_host
+                        },
+                        callback: function (options, success, response) {
+                            scope.reqs--;
+                            scope.setTitle(scope.label);
 
-                            //console.debug(json);
-                            var data = json ? json.records : [];
+                            if(success)
+                            {
+                                var json = Ext.decode(response.responseText);
 
-                            this.data.push(data);
+                                //console.debug(json);
+                                var data = json ? json.records : [];
 
-                            if (this.data.length > 100) {
-                                this.data.shift();
-                            }
+                                this.data.push(data);
 
-                            chart.dataProvider = this.data;
-                            if (chart.chartData.length > 100) {
-                                chart.chartData.shift();
-                            }
-
-                            if (valueAxis) {
-                                valueAxis.titleColor = "green";
-                                valueAxis.labelsEnabled = false;
-                                valueAxis.title = "";
-                                if (!json) {
-                                    valueAxis.titleColor = "red";
-                                    valueAxis.title = "No Data";
+                                if (this.data.length > 200) {
+                                    this.data.shift();
                                 }
-                                else {
-                                    if (json.comment) {
+
+                                chart.dataProvider = this.data;
+                                if (chart.chartData.length > 200) {
+                                    chart.chartData.shift();
+                                }
+
+                                if (valueAxis) {
+                                    valueAxis.titleColor = "green";
+                                    valueAxis.labelsEnabled = false;
+                                    valueAxis.title = "";
+                                    if (!json) {
                                         valueAxis.titleColor = "red";
-                                        valueAxis.title = json.comment;
-                                        valueAxis.labelsEnabled = true;
+                                        valueAxis.title = "No Data";
                                     }
+                                    else {
+                                        valueAxis.titleColor = "green";
+                                        valueAxis.labelsEnabled = false;
+                                        valueAxis.title = "";
+
+                                        if (json.comment) {
+                                            valueAxis.titleColor = "red";
+                                            valueAxis.title = json.comment;
+                                            valueAxis.labelsEnabled = true;
+                                        }
+                                    }
+
+                                    chart.validateNow();
+                                }
+
+                                chart.validateData();
+                            }
+                            else
+                            {
+                                if (valueAxis) {
+                                    valueAxis.labelsEnabled = false;
+                                    valueAxis.titleColor = "red";
+                                    valueAxis.title = "Time out";
+
+                                    chart.validateNow();
                                 }
                             }
-                        }
-                        else
-                        {
-                            if (valueAxis) {
-                                valueAxis.labelsEnabled = false;
-                                valueAxis.titleColor = "red";
-                                valueAxis.title = "Time out";
-                            }
-                        }
+                        },
+                        scope: this
+                    });
+                }
+            }
 
-                        chart.validateData();
-
-                        if(scope.count == 0)
-                        {
-                            var interval = setInterval(function(){
-                                scope.refreshData(scope)
-                            }, scope.freq || 5000);
-                            //setTimeout(that.refreshData, that.freq || 10000);
-                            scope.count++;
-                            scope.interval = interval;
-                        }
-                        else
-                        {
-                            //console.log('that.count' + scope.count);
-                        }
-                        //setTimeout(this.refreshData(this), this.freq);
-                    },
-                    scope: this
-                });
+            if(scope.count == 0)
+            {
+                var interval = setInterval(function(){
+                    scope.refreshData(scope)
+                }, scope.freq || 5000);
+                scope.count++;
+                scope.interval = interval;
             }
         }
-        console.log('requetes ==> ' + scope.reqs);
     },
 
     onRefresh: function () {
         this.getStore().reload();
     },
-
     start: function () {
         this.started = true;
+        this.count = 0;
+        this.reqs = 0;
         this.refreshData(this);
     },
-
     stop: function () {
         this.started = false;
+        this.count = 10;
+        this.reqs = 10;
         this.refreshData(this);
+
         if(this.interval)
         {
             clearInterval(this.interval);
         }
+
+        this.interval = null;
     }
 });
 
@@ -3887,6 +3904,14 @@ Toc.NetCharts = function (config) {
     };
 
     config.tools = [
+        {
+            id: 'refresh',
+            qtip: 'Refresh',
+            handler: function (event, toolEl, panel) {
+                thisObj.stop();
+                thisObj.start();
+            }
+        }
     ];
 
     Toc.NetCharts.superclass.constructor.call(this, config);
@@ -3894,111 +3919,119 @@ Toc.NetCharts = function (config) {
 
 Ext.extend(Toc.NetCharts, Ext.Panel, {
     refreshData: function (scope) {
+        scope.setTitle(scope.title + '.');
         if (scope && scope.started) {
-            if(scope.reqs == 0)
+
+            if(scope.chart)
             {
-                console.log('reqs++');
-                scope.reqs++;
-                Ext.Ajax.request({
-                    url: Toc.CONF.CONN_URL,
-                    params: {
-                        module: 'servers',
-                        action: 'net_usage',
-                        server_user: this.server_user,
-                        server_pass: this.server_pass,
-                        db_host: this.db_host
-                    },
-                    callback: function (options, success, response) {
+                var chart = scope.chart;
+                var valueAxis = chart.valueAxes[0];
 
-                        scope.reqs--;
-                        var chart = this.chart;
-                        var valueAxis = chart.valueAxes[0];
+                if(scope.reqs == 0)
+                {
+                    scope.reqs++;
+                    scope.setTitle(scope.label + ' .');
+                    scope.transactionId = Ext.Ajax.request({
+                        url: Toc.CONF.LINUX_URL,
+                        params: {
+                            module: 'servers',
+                            action: 'net_usage',
+                            server_user: this.server_user,
+                            server_pass: this.server_pass,
+                            db_host: this.db_host
+                        },
+                        callback: function (options, success, response) {
 
-                        if(success)
-                        {
-                            var json = Ext.decode(response.responseText);
+                            scope.reqs--;
+                            scope.setTitle(scope.label);
 
-                            //console.debug(json);
-                            var data = json ? json.records : [];
+                            if(success)
+                            {
+                                var json = Ext.decode(response.responseText);
 
-                            this.data.push(data);
+                                //console.debug(json);
+                                var data = json ? json.records : [];
 
-                            if (this.data.length > 100) {
-                                this.data.shift();
-                            }
+                                this.data.push(data);
 
-                            chart.dataProvider = this.data;
-                            if (chart.chartData.length > 100) {
-                                chart.chartData.shift();
-                            }
-
-                            if (valueAxis) {
-                                valueAxis.titleColor = "green";
-                                //valueAxis.labelsEnabled = false;
-                                valueAxis.title = "";
-                                if (!json) {
-                                    valueAxis.titleColor = "red";
-                                    valueAxis.title = "No Data";
+                                if (this.data.length > 200) {
+                                    this.data.shift();
                                 }
-                                else {
-                                    if (json.comment) {
+
+                                chart.dataProvider = this.data;
+                                if (chart.chartData.length > 200) {
+                                    chart.chartData.shift();
+                                }
+
+                                if (valueAxis) {
+                                    valueAxis.titleColor = "green";
+                                    //valueAxis.labelsEnabled = false;
+                                    valueAxis.title = "";
+                                    if (!json) {
                                         valueAxis.titleColor = "red";
-                                        valueAxis.title = json.comment;
-                                        //valueAxis.labelsEnabled = true;
+                                        valueAxis.title = "No Data";
                                     }
+                                    else {
+                                        if (json.comment) {
+                                            valueAxis.titleColor = "red";
+                                            valueAxis.title = json.comment;
+                                            //valueAxis.labelsEnabled = true;
+                                        }
+                                    }
+
+                                    chart.validateNow();
                                 }
                             }
-                        }
-                        else
-                        {
-                            if (valueAxis) {
-                                //valueAxis.labelsEnabled = false;
-                                valueAxis.titleColor = "red";
-                                valueAxis.title = "Time out";
+                            else
+                            {
+                                if (valueAxis) {
+                                    //valueAxis.labelsEnabled = false;
+                                    valueAxis.titleColor = "red";
+                                    valueAxis.title = "Time out";
+                                    chart.validateNow();
+                                }
                             }
-                        }
 
-                        chart.validateData();
-
-                        if(scope.count == 0)
-                        {
-                            var interval = setInterval(function(){
-                                scope.refreshData(scope)
-                            }, scope.freq || 5000);
-                            //setTimeout(that.refreshData, that.freq || 10000);
-                            scope.count++;
-                            scope.interval = interval;
-                        }
-                        else
-                        {
-                            //console.log('that.count' + scope.count);
-                        }
-                    },
-                    scope: this
-                });
+                            chart.validateData();
+                        },
+                        scope: this
+                    });
+                }
             }
         }
 
-        console.log('requetes ==> ' + scope.reqs);
-    },
-
-    onRefresh: function () {
-        this.getStore().reload();
+        if(scope.count == 0)
+        {
+            var interval = setInterval(function(){
+                scope.refreshData(scope)
+            }, scope.freq || 5000);
+            scope.count++;
+            scope.interval = interval;
+        }
     },
 
     start: function () {
         this.started = true;
+        this.count = 0;
+        this.reqs = 0;
         this.refreshData(this);
     },
-
     stop: function () {
         this.started = false;
+        this.count = 10;
+        this.reqs = 10;
         this.refreshData(this);
 
         if(this.interval)
         {
             clearInterval(this.interval);
         }
+
+        this.interval = null;
+    },
+
+    onRefresh: function () {
+        this.getStore().reload();
     }
 });
 
@@ -4093,6 +4126,14 @@ Toc.MemCharts = function (config) {
     };
 
     config.tools = [
+        {
+            id: 'refresh',
+            qtip: 'Refresh',
+            handler: function (event, toolEl, panel) {
+                thisObj.stop();
+                thisObj.start();
+            }
+        }
     ];
 
     Toc.MemCharts.superclass.constructor.call(this, config);
@@ -4101,14 +4142,30 @@ Toc.MemCharts = function (config) {
 Ext.extend(Toc.MemCharts, Ext.Panel, {
 
     refreshData: function (scope) {
+        scope.setTitle(scope.title + '.');
         if (scope && scope.started) {
+            var gaugeChart = this.gauge;
+
+            if (gaugeChart) {
+                if (gaugeChart.arrows) {
+                    if (gaugeChart.arrows[ 0 ]) {
+                        if (gaugeChart.arrows[ 0 ].setValue) {
+                            gaugeChart.arrows[ 0 ].setValue(0);
+                            gaugeChart.arrows[ 0 ].color = "black";
+                            gaugeChart.axes[ 0 ].setBottomText("??");
+                            gaugeChart.axes[ 0 ].bottomTextColor = "green";
+                        }
+                    }
+                }
+            }
+
             if(scope.reqs == 0)
             {
-                console.log('reqs++');
                 scope.reqs++;
+                scope.setTitle(scope.label + ' .');
 
-                Ext.Ajax.request({
-                    url: Toc.CONF.CONN_URL,
+                scope.transactionId = Ext.Ajax.request({
+                    url: Toc.CONF.LINUX_URL,
                     params: {
                         module: 'servers',
                         action: 'mem_usage',
@@ -4119,7 +4176,7 @@ Ext.extend(Toc.MemCharts, Ext.Panel, {
                     callback: function (options, success, response) {
 
                         scope.reqs--;
-                        var gaugeChart = this.gauge;
+                        scope.setTitle(scope.label);
 
                         if (gaugeChart) {
                             if (gaugeChart.arrows) {
@@ -4184,48 +4241,47 @@ Ext.extend(Toc.MemCharts, Ext.Panel, {
                                 }
                             }
                         }
-
-
-
-                        if(scope.count == 0)
-                        {
-                            var interval = setInterval(function(){
-                                scope.refreshData(scope)
-                            }, scope.freq || 5000);
-                            //setTimeout(that.refreshData, that.freq || 10000);
-                            scope.count++;
-                            scope.interval = interval;
-                        }
-                        else
-                        {
-                            //console.log('that.count' + scope.count);
-                        }
                     },
                     scope: this
                 });
             }
+            else
+            {
+                scope.setTitle(scope.title + '.');
+            }
         }
 
-        //console.log('requetes ==> ' + scope.reqs);
+        if(scope.count == 0)
+        {
+            var interval = setInterval(function(){
+                scope.refreshData(scope)
+            }, scope.freq || 5000);
+            scope.count++;
+            scope.interval = interval;
+        }
     },
 
     onRefresh: function () {
         this.getStore().reload();
     },
-
     start: function () {
         this.started = true;
+        this.count = 0;
+        this.reqs = 0;
         this.refreshData(this);
     },
-
     stop: function () {
         this.started = false;
+        this.count = 10;
+        this.reqs = 10;
         this.refreshData(this);
 
         if(this.interval)
         {
             clearInterval(this.interval);
         }
+
+        this.interval = null;
     }
 });
 
@@ -4319,6 +4375,14 @@ Toc.DiskCharts = function (config) {
     };
 
     config.tools = [
+        {
+            id: 'refresh',
+            qtip: 'Refresh',
+            handler: function (event, toolEl, panel) {
+                thisObj.stop();
+                thisObj.start();
+            }
+        }
     ];
 
     Toc.DiskCharts.superclass.constructor.call(this, config);
@@ -4327,80 +4391,91 @@ Toc.DiskCharts = function (config) {
 Ext.extend(Toc.DiskCharts, Ext.Panel, {
 
     refreshData: function (scope) {
+        scope.setTitle(scope.title + '.');
         if (scope && scope.started) {
-            if(scope.reqs == 0)
+            if(scope.chart)
             {
-                console.log('reqs++');
-                scope.reqs++;
+                var chart = scope.chart;
+                var valueAxis = chart.valueAxes[0];
 
-                Ext.Ajax.request({
-                    url: Toc.CONF.CONN_URL,
-                    params: {
-                        module: 'servers',
-                        action: 'disk_activity',
-                        server_user: this.server_user,
-                        server_pass: this.server_pass,
-                        db_host: this.db_host
-                    },
-                    callback: function (options, success, response) {
-                        console.log('reqs--');
-                        scope.reqs--;
+                if(scope.reqs == 0)
+                {
+                    scope.reqs++;
+                    scope.setTitle(scope.label + ' .');
 
-                        var chart = this.chart;
-                        var valueAxis = chart.valueAxes[0];
-                        if(success)
-                        {
-                            var json = Ext.decode(response.responseText);
+                    scope.transactionId = Ext.Ajax.request({
+                        url: Toc.CONF.LINUX_URL,
+                        params: {
+                            module: 'servers',
+                            action: 'disk_activity',
+                            server_user: this.server_user,
+                            server_pass: this.server_pass,
+                            db_host: this.db_host
+                        },
+                        callback: function (options, success, response) {
+                            scope.reqs--;
+                            scope.setTitle(scope.label);
 
-                            this.data = json ? json.records : [];
+                            if(success)
+                            {
+                                var json = Ext.decode(response.responseText);
 
-                            if (valueAxis) {
-                                valueAxis.titleColor = "green";
-                                valueAxis.title = "";
-                                valueAxis.labelsEnabled = false;
-                                if (!json) {
-                                    valueAxis.titleColor = "red";
-                                    valueAxis.title = "No Data";
-                                }
-                                else {
-                                    chart.dataProvider = this.data;
+                                this.data = json ? json.records : [];
 
-                                    if (json.comment || !json.records) {
+                                if (valueAxis) {
+                                    valueAxis.titleColor = "green";
+                                    valueAxis.title = "";
+                                    valueAxis.labelsEnabled = false;
+                                    if (!json) {
                                         valueAxis.titleColor = "red";
-                                        valueAxis.title = json.comment;
-                                        valueAxis.labelsEnabled = false;
+                                        valueAxis.title = "No Data";
                                     }
+                                    else {
+                                        chart.dataProvider = this.data;
+
+                                        if (json.comment || !json.records) {
+                                            valueAxis.titleColor = "red";
+                                            valueAxis.title = json.comment;
+                                            valueAxis.labelsEnabled = false;
+                                        }
+                                    }
+
+                                    chart.validateNow();
+                                }
+
+                                if(json.records.length > 0)
+                                {
+                                    chart.validateData();
                                 }
                             }
-                        }
-                        else
-                        {
-                            if (valueAxis) {
-                                valueAxis.labelsEnabled = false;
-                                valueAxis.titleColor = "red";
-                                valueAxis.title = "Time out";
+                            else
+                            {
+                                if (valueAxis) {
+                                    valueAxis.labelsEnabled = false;
+                                    valueAxis.titleColor = "red";
+                                    valueAxis.title = "Time out";
+
+                                    chart.validateNow();
+                                }
                             }
-                        }
-
-                        chart.validateData();
-
-                        if(scope.count == 0)
-                        {
-                            var interval = setInterval(function(){
-                                scope.refreshData(scope)
-                            }, scope.freq || 5000);
-                            //setTimeout(that.refreshData, that.freq || 10000);
-                            scope.count++;
-                            scope.interval = interval;
-                        }
-                        else
-                        {
-                            console.log('that.count' + scope.count);
-                        }
-                    },
-                    scope: this
-                });
+                        },
+                        scope: this
+                    });
+                }
             }
+        }
+        else
+        {
+            scope.setTitle(scope.title + '.');
+        }
+
+        if(scope.count == 0)
+        {
+            var interval = setInterval(function(){
+                scope.refreshData(scope)
+            }, scope.freq || 5000);
+            scope.count++;
+            scope.interval = interval;
         }
     },
 
@@ -4410,17 +4485,22 @@ Ext.extend(Toc.DiskCharts, Ext.Panel, {
 
     start: function () {
         this.started = true;
+        this.count = 0;
+        this.reqs = 0;
         this.refreshData(this);
     },
-
     stop: function () {
         this.started = false;
+        this.count = 10;
+        this.reqs = 10;
         this.refreshData(this);
 
         if(this.interval)
         {
             clearInterval(this.interval);
         }
+
+        this.interval = null;
     }
 });
 

@@ -386,6 +386,21 @@ class toC_Json_Categories
         }
     }
 
+    function loadDashboardTree()
+    {
+        global $toC_Json;
+
+        $include_custom_pages = isset($_REQUEST['filter']) && $_REQUEST['filter'] != '-1' ? true : false;
+        $show_home = isset($_REQUEST['sh']) && $_REQUEST['sh'] == '1' ? true : false;
+        $check_permissions = true;
+        $osC_DashboardsTree = new osC_DashboardsTree();
+        $osC_DashboardsTree->setShowCategoryProductCount(false);
+
+        $categories_array = $osC_DashboardsTree->buildExtJsonTreeArrayForUser(0, '', $include_custom_pages, $show_home, $check_permissions);
+
+        echo $toC_Json->encode($categories_array);
+    }
+
     function listRolePermissions()
     {
         $categories_array = array();

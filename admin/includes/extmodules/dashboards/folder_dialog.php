@@ -1,11 +1,11 @@
 <?php
 
 ?>
-Toc.categories.CategoriesDialog = function (config) {
+Toc.dashboards.FolderDialog = function (config) {
   config = config || {};
   
   config.id = 'categories-dialog-win';
-  config.title = 'Configurer un Espace';
+  config.title = 'Configurer un Dossier';
   config.layout = 'fit';
   config.width = 730;
   config.height = 380;
@@ -31,11 +31,11 @@ Toc.categories.CategoriesDialog = function (config) {
   ];
     
   this.addEvents({'saveSuccess': true});
-  
-  Toc.categories.CategoriesDialog.superclass.constructor.call(this, config);
+
+  Toc.dashboards.FolderDialog.superclass.constructor.call(this, config);
 }
 
-Ext.extend(Toc.categories.CategoriesDialog, Ext.Window, {
+Ext.extend(Toc.dashboards.FolderDialog, Ext.Window, {
   
   show: function (id, pId) {
     this.categoriesId = id || null;
@@ -45,27 +45,11 @@ Ext.extend(Toc.categories.CategoriesDialog, Ext.Window, {
     this.frmCategories.form.baseParams['categories_id'] = this.categoriesId;
 
     Toc.categories.CategoriesDialog.superclass.show.call(this);
-        
-    this.pnlGeneral.cboParentCategories.getStore().on('load', function() {
-      this.pnlGeneral.cboParentCategories.setValue(parentId);
-    }, this);
-
-    if(this.categoriesId == -1)
-    {
-        this.tabCategories.removeAll(false);
-        this.pnlPermissions = new Toc.content.PermissionsPanel({content_id : this.categoriesId,content_type : 'pages',owner : this.owner,action:'list_perms'});
-        this.pnlNotifications = new Toc.content.NotificationsPanel({content_id : this.categoriesId,content_type : 'pages',owner : this.owner});
-        this.tabCategories.add(this.pnlPermissions);
-        this.tabCategories.add(this.pnlNotifications);
-        this.buttons[0].disable();
-        this.tabCategories.activate(this.pnlPermissions);
-        return;
-    }
 
     if (this.categoriesId && this.categoriesId > 0) {
-        this.pnlPermissions = new Toc.content.PermissionsPanel({content_id : this.categoriesId,content_type : 'pages',owner : this.owner,action:'list_perms'});
-        this.pnlNotifications = new Toc.content.NotificationsPanel({content_id : this.categoriesId,content_type : 'pages',owner : this.owner});
-        this.pnlComments =  new Toc.content.CommentsPanel({content_id : this.categoriesId,content_type : 'pages',owner : Toc.content.ContentManager});
+        this.pnlPermissions = new Toc.content.PermissionsPanel({content_id : this.categoriesId,content_type : 'folder',owner : this.owner,action:'list_perms'});
+        this.pnlNotifications = new Toc.content.NotificationsPanel({content_id : this.categoriesId,content_type : 'folder',owner : this.owner});
+        this.pnlComments =  new Toc.content.CommentsPanel({content_id : this.categoriesId,content_type : 'folder',owner : Toc.content.ContentManager});
         this.tabCategories.add(this.pnlPermissions);
         this.tabCategories.add(this.pnlNotifications);
         this.tabCategories.add(this.pnlComments);
@@ -94,13 +78,6 @@ Ext.extend(Toc.categories.CategoriesDialog, Ext.Window, {
           if(panel)
           {
              panel.getEl().unmask();
-          }
-
-          var img = action.result.data.categories_image;
-
-          if (img) {
-            var html = '<img src ="../images/categories/' + img + '"  style = "margin-left: 170px; width: 70px; height:70px" /><br/><span style = "padding-left: 170px;">/images/categories/' + img + '</span>';
-            this.frmCategories.findById('categories_image_panel').body.update(html);
           }
         },
         failure: function (form, action) {
@@ -137,7 +114,6 @@ Ext.extend(Toc.categories.CategoriesDialog, Ext.Window, {
     this.frmCategories = new Ext.form.FormPanel({
       id: 'form-categories',
       layout: 'fit',
-      fileUpload: true,
       labelWidth: 120,
       url: Toc.CONF.CONN_URL,
       baseParams: {  

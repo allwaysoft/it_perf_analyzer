@@ -103,6 +103,10 @@
     
     Toc.CONF = {
       CONN_URL: '<?php echo osc_href_link_admin(FILENAME_JSON); ?>',
+      ORACLE_URL: '<?php echo osc_href_link_admin(FILENAME_ORACLE); ?>',
+      LINUX_URL: '<?php echo osc_href_link_admin(FILENAME_LINUX); ?>',
+      MYSQL_URL: '<?php echo osc_href_link_admin(FILENAME_MYSQL); ?>',
+      WINDOWS_URL: '<?php echo osc_href_link_admin(FILENAME_WINDOWS); ?>',
       REPORT_URL: '<?php echo HTTP_REPORT . DIR_REPORT_HTTP_CATALOG . DIR_FS_ADMIN . '/json.php'; ?>',
       LOAD_URL: '<?php echo osc_href_link_admin(FILENAME_LOAD); ?>',
       PDF_URL: '<?php echo osc_href_link_admin(FILENAME_PDF); ?>',

@@ -62,7 +62,6 @@ Toc.GoldenGateMonitorPanel = function (params) {
                     var interval = setInterval(function () {
                         that.refreshData(that);
                     }, that.freq || 5000);
-                    //setTimeout(that.refreshData, that.freq || 10000);
                     that.count++;
                     that.interval = interval;
                 }
@@ -112,23 +111,28 @@ Toc.GoldenGateMonitorPanel = function (params) {
     };
 
     renderFS = function (percent) {
-        var pct = percent.split("%")[0];
+        if(percent)
+        {
+            var pct = percent.split("%")[0];
 
-        if (pct == 0) {
-            return '';
-        }
+            if (pct == 0) {
+                return '';
+            }
 
-        if (pct >= 90) {
-            return "<div id='my-progressbar' style='width: 100%; height: 15px;' class='progressbar-control'><div style='opacity: 1; float: left; position: relative; width: " + percent + ";' class='item-bar red'></div></div>";
-        }
-        else {
-            if (pct < 90 && pct >= 80) {
-                return "<div id='my-progressbar' style='width: 100%; height: 15px;' class='progressbar-control'><div style='opacity: 1; float: left; position: relative; width: " + percent + ";' class='item-bar yellow'></div></div>";
+            if (pct >= 90) {
+                return "<div id='my-progressbar' style='width: 100%; height: 15px;' class='progressbar-control'><div style='opacity: 1; float: left; position: relative; width: " + percent + ";' class='item-bar red'></div></div>";
             }
             else {
-                return "<div id='my-progressbar' style='width: 100%; height: 15px;' class='progressbar-control'><div style='opacity: 1; float: left; position: relative; width: " + percent + ";' class='item-bar green'></div></div>";
+                if (pct < 90 && pct >= 80) {
+                    return "<div id='my-progressbar' style='width: 100%; height: 15px;' class='progressbar-control'><div style='opacity: 1; float: left; position: relative; width: " + percent + ";' class='item-bar yellow'></div></div>";
+                }
+                else {
+                    return "<div id='my-progressbar' style='width: 100%; height: 15px;' class='progressbar-control'><div style='opacity: 1; float: left; position: relative; width: " + percent + ";' class='item-bar green'></div></div>";
+                }
             }
         }
+
+        return '';
     };
 
     config.cm = new Ext.grid.ColumnModel([

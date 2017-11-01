@@ -1,7 +1,18 @@
 <?php
+/*
+  $Id: asset_grid.php $
+  Mefobe Cart Solutions
+  http://www.mefobemarket.com
 
+  Copyright (c) 2009 Wuxi Elootec Technology Co., Ltd
+
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License v2 (1991)
+  as published by the Free Software Foundation.
+*/
+  
 ?>
-Toc.categories.CategoriesGrid = function (config) {
+Toc.asset.assetGrid = function (config) {
   config = config || {};
   
   config.region = 'center';
@@ -9,16 +20,16 @@ Toc.categories.CategoriesGrid = function (config) {
   config.ds = new Ext.data.Store({
     url: Toc.CONF.CONN_URL,
     baseParams: {
-      module: 'categories',
-      action: 'list_categories'        
+      module: 'asset',
+      action: 'list_asset'
     },
     reader: new Ext.data.JsonReader({
       root: Toc.CONF.JSON_READER_ROOT,
       totalProperty: Toc.CONF.JSON_READER_TOTAL_PROPERTY,
-      id: 'categories_id'
+      id: 'asset_id'
     }, [
-      'categories_id', 
-      'categories_name',
+      'asset_id',
+      'asset_name',
       'status',
       'path'
     ])
@@ -48,11 +59,11 @@ Toc.categories.CategoriesGrid = function (config) {
   config.sm = new Ext.grid.CheckboxSelectionModel();
   config.cm = new Ext.grid.ColumnModel([
     config.sm,
-    {id: 'products_categories_name', header: 'Page', dataIndex: 'categories_name'},
+    {id: 'products_asset_name', header: 'Page', dataIndex: 'asset_name'},
     { header: 'Status', dataIndex: 'status', align: 'center', renderer: renderActive},
     config.rowActions
   ]);
-  config.autoExpandColumn = 'products_categories_name';
+  config.autoExpandColumn = 'products_asset_name';
   
   config.listeners = {"rowdblclick": this.onGrdRowDbClick};
   config.search = new Ext.form.TextField({name: 'search', width: 150});
@@ -129,42 +140,42 @@ Toc.categories.CategoriesGrid = function (config) {
     prevStepText: TocLanguage.prevStepText,
     nextStepText: TocLanguage.nextStepText
   });
-  Toc.categories.CategoriesGrid.superclass.constructor.call(this, config);
+  Toc.asset.assetGrid.superclass.constructor.call(this, config);
 };
 
-Ext.extend(Toc.categories.CategoriesGrid, Ext.grid.GridPanel, {
+Ext.extend(Toc.asset.assetGrid, Ext.grid.GridPanel, {
 
   onAdd: function () {
-    var dlg = this.owner.createCategoriesDialog();
+    var dlg = this.owner.createassetDialog();
     
     dlg.on('saveSuccess', function() {
-      this.mainPanel.getCategoriesTree().refresh();
+      this.mainPanel.getassetTree().refresh();
     }, this);
         
-    dlg.show(null, this.mainPanel.getCategoriesTree().getCategoriesPath(null));
+    dlg.show(null, this.mainPanel.getassetTree().getassetPath(null));
   },
   
   onEdit: function (record) {
-    var dlg = this.owner.createCategoriesDialog();
-    var parent_id = this.mainPanel.getCategoriesTree().getCategoriesPath(null);
-    dlg.setTitle(record.get('categories_name'));
+    var dlg = this.owner.createassetDialog();
+    var parent_id = this.mainPanel.getassetTree().getassetPath(null);
+    dlg.setTitle(record.get('asset_name'));
     
     dlg.on('saveSuccess', function() {
-      this.mainPanel.getCategoriesTree().refresh();
+      this.mainPanel.getassetTree().refresh();
     }, this);
     
-    dlg.show(record.get('categories_id'),parent_id);
+    dlg.show(record.get('asset_id'),parent_id);
   },
   
   onMove: function (record) {
-    var dlg = this.owner.createCategoriesMoveDialog();
-    dlg.setTitle('<?php echo $osC_Language->get("action_heading_batch_move_categories"); ?>');
+    var dlg = this.owner.createassetMoveDialog();
+    dlg.setTitle('<?php echo $osC_Language->get("action_heading_batch_move_asset"); ?>');
 
     dlg.on('saveSuccess', function() {
-      this.mainPanel.getCategoriesTree().refresh();
+      this.mainPanel.getassetTree().refresh();
     }, this);
     
-    dlg.show(record.get('categories_id'), this.mainPanel.getCategoriesTree().getCategoriesPath());
+    dlg.show(record.get('asset_id'), this.mainPanel.getassetTree().getassetPath());
   }, 
   
   onBathMove: function () {
@@ -172,11 +183,11 @@ Ext.extend(Toc.categories.CategoriesGrid, Ext.grid.GridPanel, {
 
     if (keys.length > 0) {
       var batch = keys.join(',');
-      var dialog = this.owner.createCategoriesMoveDialog();
-      dialog.setTitle('<?php echo $osC_Language->get("action_heading_batch_move_categories"); ?>');
+      var dialog = this.owner.createassetMoveDialog();
+      dialog.setTitle('<?php echo $osC_Language->get("action_heading_batch_move_asset"); ?>');
 
       dialog.on('saveSuccess', function() {
-        this.mainPanel.getCategoriesTree().refresh();
+        this.mainPanel.getassetTree().refresh();
       }, this);
       
       dialog.show(batch);
@@ -186,7 +197,7 @@ Ext.extend(Toc.categories.CategoriesGrid, Ext.grid.GridPanel, {
   }, 
   
   onDelete: function (record) {
-    var categoriesId = record.get('categories_id');
+    var assetId = record.get('asset_id');
     
     Ext.MessageBox.confirm(
       TocLanguage.msgWarningTitle, 
@@ -197,9 +208,9 @@ Ext.extend(Toc.categories.CategoriesGrid, Ext.grid.GridPanel, {
             waitMsg: TocLanguage.formSubmitWaitMsg,
             url: Toc.CONF.CONN_URL,
             params: {
-              module: 'categories',
+              module: 'asset',
               action: 'delete_category',
-              categories_id: categoriesId
+              asset_id: assetId
             },
             callback: function (options, success, response) {
               var result = Ext.decode(response.responseText);
@@ -207,7 +218,7 @@ Ext.extend(Toc.categories.CategoriesGrid, Ext.grid.GridPanel, {
               if (result.success == true) {
                 this.owner.app.showNotification({title: TocLanguage.msgSuccessTitle, html: result.feedback});
                 
-                this.mainPanel.getCategoriesTree().refresh();
+                this.mainPanel.getassetTree().refresh();
               } else {
                 Ext.MessageBox.alert(TocLanguage.msgErrTitle, result.feedback);
               }
@@ -234,8 +245,8 @@ Ext.extend(Toc.categories.CategoriesGrid, Ext.grid.GridPanel, {
               waitMsg: TocLanguage.formSubmitWaitMsg,
               url: Toc.CONF.CONN_URL,
               params: {
-                module: 'categories',
-                action: 'delete_categories',
+                module: 'asset',
+                action: 'delete_asset',
                 batch: batch
               },
               callback: function (options, success, response) {
@@ -244,7 +255,7 @@ Ext.extend(Toc.categories.CategoriesGrid, Ext.grid.GridPanel, {
                 if (result.success == true) {
                   this.owner.app.showNotification({title: TocLanguage.msgSuccessTitle, html: result.feedback});
                   
-                  this.mainPanel.getCategoriesTree().refresh();
+                  this.mainPanel.getassetTree().refresh();
                 } else {
                   Ext.MessageBox.alert(TocLanguage.msgErrTitle, result.feedback);
                 }
@@ -282,16 +293,16 @@ Ext.extend(Toc.categories.CategoriesGrid, Ext.grid.GridPanel, {
     store.reload();
   },
   
-  refreshGrid: function (categoriesId) {
+  refreshGrid: function (assetId) {
     var store = this.getStore();
 
-    store.baseParams['categories_id'] = categoriesId;
+    store.baseParams['asset_id'] = assetId;
     store.load();
   },
 
   onGrdRowDbClick: function () {
-    var categoriesId = this.getSelectionModel().getSelected().get('categories_id');
-    this.mainPanel.getCategoriesTree().setCategoryId(categoriesId);
+    var assetId = this.getSelectionModel().getSelected().get('asset_id');
+    this.mainPanel.getassetTree().setCategoryId(assetId);
   },
   
   onClick: function(e, target) {
@@ -308,7 +319,7 @@ Ext.extend(Toc.categories.CategoriesGrid, Ext.grid.GridPanel, {
       }
 
       if (action != 'img-button') {
-        var categoriesId = this.getStore().getAt(row).get('categories_id');
+        var assetId = this.getStore().getAt(row).get('asset_id');
         var module = 'set_status';
         
         switch(action) {
@@ -320,9 +331,9 @@ Ext.extend(Toc.categories.CategoriesGrid, Ext.grid.GridPanel, {
               TocLanguage.msgDisableProducts, 
               function (btn) {
                 if (btn == 'no') {
-                  this.onAction(module, categoriesId, flag, 0);
+                  this.onAction(module, assetId, flag, 0);
                 } else{
-                  this.onAction(module, categoriesId, flag, 1);
+                  this.onAction(module, assetId, flag, 1);
                 }
               }, 
               this
@@ -332,20 +343,20 @@ Ext.extend(Toc.categories.CategoriesGrid, Ext.grid.GridPanel, {
           case 'status-on':
             flag = (action == 'status-on') ? 1 : 0;
             
-			      this.onAction(module, categoriesId, flag, 0);
+			      this.onAction(module, assetId, flag, 0);
 			      break;         
         }
       }
     }
   },
   
-  onAction: function(action, categoriesId, flag, product_flag) {
+  onAction: function(action, assetId, flag, product_flag) {
     Ext.Ajax.request({
       url: Toc.CONF.CONN_URL,
       params: {
-        module: 'categories',
+        module: 'asset',
         action: action,
-        categories_id: categoriesId,
+        asset_id: assetId,
         flag: flag,
         product_flag: product_flag
       },
@@ -354,7 +365,7 @@ Ext.extend(Toc.categories.CategoriesGrid, Ext.grid.GridPanel, {
         
         if (result.success == true) {
           var store = this.getStore();
-          store.getById(categoriesId).set('status', flag);
+          store.getById(assetId).set('status', flag);
           store.commitChanges();
           
           this.owner.app.showNotification({title: TocLanguage.msgSuccessTitle, html: result.feedback});

@@ -311,6 +311,8 @@ FROM
         global $osC_Database;
         $start_date = date("Y-m-d H:i:s");
 
+        $osC_Database->startTransaction();
+
         $query = "INSERT INTO delta_ogg_capture_state (config_id,state,comments,lag,date,db_status,db_sequence,fs_state,capture_sequence,trail_seqno,trail_rba) VALUES (:config_id,:state,:comments,:lag,:when,:db_status,:db_sequence,:fs_state,:capture_sequence,:trail_seqno,:trail_rba)";
 
         $Qserver = $osC_Database->query($query);
@@ -329,6 +331,8 @@ FROM
         $Qserver->execute();
 
         if ($osC_Database->isError()) {
+            var_dump($osC_Database);
+            $osC_Database->rollbackTransaction();
             return false;
         }
 
@@ -340,9 +344,12 @@ FROM
         $Qserver->execute();
 
         if ($osC_Database->isError()) {
+            var_dump($osC_Database);
+            $osC_Database->rollbackTransaction();
             return false;
         }
 
+        $osC_Database->commitTransaction();
         return true;
     }
 
@@ -375,6 +382,8 @@ FROM
         global $osC_Database;
         $start_date = date("Y-m-d H:i:s");
 
+        $osC_Database->startTransaction();
+
         $query = "INSERT INTO delta_ogg_replication_state (config_id,state,comments,lag,date,fs_state,trail_seqno,trail_rba) VALUES (:config_id,:state,:comments,:lag,:when,:fs_state,:trail_seqno,:trail_rba)";
 
         $Qserver = $osC_Database->query($query);
@@ -390,6 +399,8 @@ FROM
         $Qserver->execute();
 
         if ($osC_Database->isError()) {
+            var_dump($osC_Database);
+            $osC_Database->rollbackTransaction();
             return false;
         }
 
@@ -400,6 +411,13 @@ FROM
         $Qserver = $osC_Database->query($query);
         $Qserver->execute();
 
+        if ($osC_Database->isError()) {
+            var_dump($osC_Database);
+            $osC_Database->rollbackTransaction();
+            return false;
+        }
+
+        $osC_Database->commitTransaction();
         return true;
     }
 
@@ -408,6 +426,8 @@ FROM
         global $osC_Database;
 
         $start_date = date("Y-m-d H:i:s");
+
+        $osC_Database->startTransaction();
 
         $query = "INSERT INTO delta_ogg_propagation_state (config_id,state,comments,lag,net,date,trail_seqno,trail_rba) VALUES (:config_id,:state,:comments,:lag,:net,:when,:trail_seqno,:trail_rba)";
 
@@ -424,6 +444,8 @@ FROM
         $Qserver->execute();
 
         if ($osC_Database->isError()) {
+            var_dump($osC_Database);
+            $osC_Database->rollbackTransaction();
             return false;
         }
 
@@ -434,6 +456,13 @@ FROM
         $Qserver = $osC_Database->query($query);
         $Qserver->execute();
 
+        if ($osC_Database->isError()) {
+            var_dump($osC_Database);
+            $osC_Database->rollbackTransaction();
+            return false;
+        }
+
+        $osC_Database->commitTransaction();
         return true;
     }
 

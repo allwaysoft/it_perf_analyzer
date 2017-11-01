@@ -1,20 +1,13 @@
 <?php
-/*
-  $Id: filenames.php $
-  Mefobe Cart Solutions
-  http://www.mefobemarket.com
-
-  Copyright (c) 2009 Wuxi Elootec Technology Co., Ltd;  Copyright (c) 2007 osCommerce
-
-  This program is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License v2 (1991)
-  as published by the Free Software Foundation.
-*/
 
 // define the filenames used in the project
   define('FILENAME_CATALOG_ACCOUNT_HISTORY_INFO', 'account_history_info.php');
   define('FILENAME_DEFAULT', 'index.php');
   define('FILENAME_JSON', 'json.php');
+  define('FILENAME_ORACLE', 'oracle.php');
+  define('FILENAME_LINUX', 'linux.php');
+  define('FILENAME_MYSQL', 'mysql.php');
+  define('FILENAME_WINDOWS', 'windows.php');
   define('FILENAME_LOAD', 'load.php');
   define('FILENAME_PDF', 'pdf.php');
   define('FILENAME_ACCOUNT', 'account.php');

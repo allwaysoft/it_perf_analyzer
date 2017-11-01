@@ -525,13 +525,14 @@ Toc.TopTbsPanel = function (config) {
     config.count = 0;
     config.reqs = 0;
     config.title = 'TBS';
+    config.label = 'TBS';
     config.height  = 110;
     config.hideHeaders = true;
     config.border = true;
     config.viewConfig = {emptyText: TocLanguage.gridNoRecords, forceFit: true};
 
     config.ds = new Ext.data.Store({
-        url: Toc.CONF.CONN_URL,
+        url: Toc.CONF.ORACLE_URL,
         baseParams: {
             module: 'databases',
             action: 'list_toptbs',
@@ -554,21 +555,22 @@ Toc.TopTbsPanel = function (config) {
         ]),
         listeners: {
             exception : function(misc){
-
+                that.reqs--;
+                that.setTitle(that.label + (' error !!! ') + that.reqs);
             },
             load: function (store, records, opt) {
                 that.reqs--;
-
+                that.setTitle(that.label);
+            },
+            beforeload: function (store, opt) {
                 if (that.count == 0) {
                     var interval = setInterval(function () {
                         that.refreshData(that);
                     }, that.freq || 5000);
-                    //setTimeout(that.refreshData, that.freq || 10000);
                     that.count++;
                     that.interval = interval;
                 }
-            },
-            beforeload: function (store, opt) {
+
                 return that.started;
             }, scope: that
         },
@@ -596,8 +598,6 @@ Toc.TopTbsPanel = function (config) {
 
     var thisObj = this;
 
-    config.tools = [];
-
     config.tools = [
         /*{
          id: 'browse',
@@ -623,9 +623,11 @@ Toc.TopTbsPanel = function (config) {
 Ext.extend(Toc.TopTbsPanel, Ext.grid.GridPanel, {
     refreshData: function (scope) {
         if (scope && scope.started) {
+            scope.setTitle(scope.title + '.');
             if (scope.reqs == 0) {
                 var store = this.getStore();
                 scope.reqs++;
+                scope.setTitle(scope.label + ' .');
                 store.load();
             }
         }

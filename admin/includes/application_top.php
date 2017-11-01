@@ -1,27 +1,11 @@
 <?php
-/*
-  $Id: application_top.php $
-  Mefobe Cart Solutions
-  http://www.mefobemarket.com
-
-  Copyright (c) 2009 Wuxi Elootec Technology Co., Ltd;  Copyright (c) 2007 osCommerce
-
-  This program is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License v2 (1991)
-  as published by the Free Software Foundation.
-*/
 
 // start the timer for the page parse time log
   define('PAGE_PARSE_START_TIME', microtime());
 
   define('TOC_IN_ADMIN', true);
 
-// set the level of error reporting to E_ALL except E_NOTICE
-  if (version_compare(PHP_VERSION, '5.3.0') >= 0) {
-    error_reporting(0);
-  } else {
-    error_reporting(0);
-  }
+  error_reporting(E_ERROR);
 
 // set the local configuration parameters - mainly for developers
   if ( file_exists('../includes/local/configure.php') ) {
@@ -35,7 +19,7 @@
   require('../includes/toc_constants.php');  
     
 // Define the project version
-  define('PROJECT_VERSION', 'TomatoCart v1.1.2');
+  define('PROJECT_VERSION', 'Perf Analyzer v1.1.2');
 
 // set the type of request (secure or not)
   $request_type = (isset($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) == 'on')) ? 'SSL' : 'NONSSL';

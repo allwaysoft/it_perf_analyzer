@@ -1,16 +1,16 @@
 <?php
 
 ?>
-Toc.categories.CategoriesDialog = function (config) {
+Toc.asset.assetDialog = function (config) {
   config = config || {};
   
-  config.id = 'categories-dialog-win';
-  config.title = 'Configurer un Espace';
-  config.layout = 'fit';
+  config.id = 'asset-dialog-win';
+  config.title = 'Nouvelle page';
+  config.asset = 'fit';
   config.width = 730;
   config.height = 380;
   config.modal = true;
-  config.iconCls = 'icon-categories-win';
+  config.iconCls = 'icon-asset-win';
   config.items = this.buildForm();
   
   config.buttons = [
@@ -32,60 +32,56 @@ Toc.categories.CategoriesDialog = function (config) {
     
   this.addEvents({'saveSuccess': true});
   
-  Toc.categories.CategoriesDialog.superclass.constructor.call(this, config);
+  Toc.asset.assetDialog.superclass.constructor.call(this, config);
 }
 
-Ext.extend(Toc.categories.CategoriesDialog, Ext.Window, {
+Ext.extend(Toc.asset.assetDialog, Ext.Window, {
   
   show: function (id, pId) {
-    this.categoriesId = id || null;
+    this.assetId = id || null;
     var parentId = pId || 0;
     
-    this.frmCategories.form.reset();
-    this.frmCategories.form.baseParams['categories_id'] = this.categoriesId;
+    this.frmasset.form.reset();
+    this.frmasset.form.baseParams['asset_id'] = this.assetId;
 
-    Toc.categories.CategoriesDialog.superclass.show.call(this);
+    Toc.asset.assetDialog.superclass.show.call(this);
         
-    this.pnlGeneral.cboParentCategories.getStore().on('load', function() {
-      this.pnlGeneral.cboParentCategories.setValue(parentId);
+    this.pnlGeneral.cboParentasset.getStore().on('load', function() {
+      this.pnlGeneral.cboParentasset.setValue(parentId);
     }, this);
 
-    if(this.categoriesId == -1)
+    if(this.assetId == -1)
     {
-        this.tabCategories.removeAll(false);
-        this.pnlPermissions = new Toc.content.PermissionsPanel({content_id : this.categoriesId,content_type : 'pages',owner : this.owner,action:'list_perms'});
-        this.pnlNotifications = new Toc.content.NotificationsPanel({content_id : this.categoriesId,content_type : 'pages',owner : this.owner});
-        this.tabCategories.add(this.pnlPermissions);
-        this.tabCategories.add(this.pnlNotifications);
+        this.tabasset.removeAll(false);
+        this.pnlPermissions = new Toc.content.PermissionsPanel({content_id : this.assetId,content_type : 'pages',owner : this.owner});
+        this.tabasset.add(this.pnlPermissions);
         this.buttons[0].disable();
-        this.tabCategories.activate(this.pnlPermissions);
+        this.tabasset.activate(this.pnlPermissions);
         return;
     }
 
-    if (this.categoriesId && this.categoriesId > 0) {
-        this.pnlPermissions = new Toc.content.PermissionsPanel({content_id : this.categoriesId,content_type : 'pages',owner : this.owner,action:'list_perms'});
-        this.pnlNotifications = new Toc.content.NotificationsPanel({content_id : this.categoriesId,content_type : 'pages',owner : this.owner});
-        this.pnlComments =  new Toc.content.CommentsPanel({content_id : this.categoriesId,content_type : 'pages',owner : Toc.content.ContentManager});
-        this.tabCategories.add(this.pnlPermissions);
-        this.tabCategories.add(this.pnlNotifications);
-        this.tabCategories.add(this.pnlComments);
+    if (this.assetId && this.assetId > 0) {
+        this.pnlPermissions = new Toc.content.PermissionsPanel({content_id : this.assetId,content_type : 'pages',owner : this.owner});
+        this.pnlComments =  new Toc.content.CommentsPanel({content_id : this.assetId,content_type : 'pages',owner : Toc.content.ContentManager});
+        this.tabasset.add(this.pnlPermissions);
+        this.tabasset.add(this.pnlComments);
 
         this.loadCategory(this.pnlGeneral);
     }
     else
     {
-        this.tabCategories.activate(this.pnlGeneral);
+        this.tabasset.activate(this.pnlGeneral);
     }
   },
 
   loadCategory : function(panel){
 
-    if (this.categoriesId && this.categoriesId > 0) {
+    if (this.assetId && this.assetId > 0) {
       if(panel)
       {
         panel.getEl().mask('Chargement en cours....');
       }
-      this.frmCategories.load({
+      this.frmasset.load({
         url: Toc.CONF.CONN_URL,
         params: {
           action: 'load_category'
@@ -96,11 +92,11 @@ Ext.extend(Toc.categories.CategoriesDialog, Ext.Window, {
              panel.getEl().unmask();
           }
 
-          var img = action.result.data.categories_image;
+          var img = action.result.data.asset_image;
 
           if (img) {
-            var html = '<img src ="../images/categories/' + img + '"  style = "margin-left: 170px; width: 70px; height:70px" /><br/><span style = "padding-left: 170px;">/images/categories/' + img + '</span>';
-            this.frmCategories.findById('categories_image_panel').body.update(html);
+            var html = '<img src ="../images/asset/' + img + '"  style = "margin-left: 170px; width: 70px; height:70px" /><br/><span style = "padding-left: 170px;">/images/asset/' + img + '</span>';
+            this.frmasset.findById('asset_image_panel').body.update(html);
           }
         },
         failure: function (form, action) {
@@ -122,10 +118,10 @@ Ext.extend(Toc.categories.CategoriesDialog, Ext.Window, {
   },
   
   buildForm: function () {
-    this.pnlGeneral = new Toc.categories.GeneralPanel();
+    this.pnlGeneral = new Toc.asset.GeneralPanel();
     this.pnlMetaInfo = new Toc.content.MetaInfoPanel();
 
-    this.tabCategories = new Ext.TabPanel({
+    this.tabasset = new Ext.TabPanel({
       activeTab: 0,
       defaults:{
         hideMode:'offsets'
@@ -134,21 +130,21 @@ Ext.extend(Toc.categories.CategoriesDialog, Ext.Window, {
       items: [this.pnlGeneral,this.pnlMetaInfo]
     });
     
-    this.frmCategories = new Ext.form.FormPanel({
-      id: 'form-categories',
-      layout: 'fit',
+    this.frmasset = new Ext.form.FormPanel({
+      id: 'form-asset',
+      asset: 'fit',
       fileUpload: true,
       labelWidth: 120,
       url: Toc.CONF.CONN_URL,
       baseParams: {  
-        module: 'categories',
+        module: 'asset',
         action: 'save_category'
       },
       scope: this,
-      items: this.tabCategories
+      items: this.tabasset
     });
     
-    return this.frmCategories; 
+    return this.frmasset;
   },
   
   submitForm: function () {        
@@ -156,16 +152,16 @@ Ext.extend(Toc.categories.CategoriesDialog, Ext.Window, {
     status = status[0].getGroupValue();
     
     if(status == 0) {
-      this.frmCategories.form.baseParams['product_flag'] = 1;
+      this.frmasset.form.baseParams['product_flag'] = 1;
     
       Ext.MessageBox.confirm(
         TocLanguage.msgWarningTitle, 
         TocLanguage.msgDisableProducts, 
         function (btn) {
           if (btn == 'no') {
-            this.frmCategories.form.baseParams['product_flag'] = 0;
+            this.frmasset.form.baseParams['product_flag'] = 0;
 
-				    this.frmCategories.form.submit({
+				    this.frmasset.form.submit({
 				      waitMsg: TocLanguage.formSubmitWaitMsg,
 				      success: function (form, action) {
 				        this.fireEvent('saveSuccess', action.result.feedback);
@@ -180,10 +176,10 @@ Ext.extend(Toc.categories.CategoriesDialog, Ext.Window, {
 				    });
 
           } else{
-				    this.frmCategories.form.submit({
+				    this.frmasset.form.submit({
 				      waitMsg: TocLanguage.formSubmitWaitMsg,
 				      success: function (form, action) {
-				        this.fireEvent('saveSuccess', action.result.feedback, action.result.categories_id, action.result.text);
+				        this.fireEvent('saveSuccess', action.result.feedback, action.result.asset_id, action.result.text);
 				        this.close();
 				      },
 				      failure: function (form, action) {
@@ -199,10 +195,10 @@ Ext.extend(Toc.categories.CategoriesDialog, Ext.Window, {
         this
       );       
     } else {
-	    this.frmCategories.form.submit({
+	    this.frmasset.form.submit({
 	      waitMsg: TocLanguage.formSubmitWaitMsg,
 	      success: function (form, action) {
-	        this.fireEvent('saveSuccess', action.result.feedback, action.result.categories_id, action.result.text);
+	        this.fireEvent('saveSuccess', action.result.feedback, action.result.asset_id, action.result.text);
 	        this.close();
 	      },
 	      failure: function (form, action) {

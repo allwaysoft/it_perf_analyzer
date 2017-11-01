@@ -2,7 +2,7 @@
 
 ?>
 
-Toc.categories.GeneralPanel = function(config) {
+Toc.dashboards.GeneralPanel = function(config) {
   config = config || {};
 
   config.title = '<?php echo $osC_Language->get('section_general'); ?>';

@@ -121,7 +121,7 @@ WHERE config_id= " . $data['config_id'] . " and snaps_id =
         echo $toC_Json->encode($response);
     }
 
-    function monOgg()
+    function monOgg_orig()
     {
         global $toC_Json, $osC_Database;
         $data = $_REQUEST;
@@ -192,6 +192,81 @@ WHERE delta_ogg_config.id = delta_ogg_capture_state.config_id and config_id= " .
             EXT_JSON_READER_ROOT => $recs);
 
         echo $toC_Json->encode($response);
+    }
+
+    function monOgg()
+    {
+        global $toC_Json;
+        $data = $_REQUEST;
+        $recs = array();
+
+        $file1 = "/dev/shm/capture_" . $data['config_id'];
+        $capture = file_get_contents($file1);
+        $capture = $toC_Json->decode($capture);
+
+        //var_dump($capture);
+
+        $file2 = "/dev/shm/datapump_" . $data['config_id'];
+        $datapump = file_get_contents($file2);
+        $datapump = $toC_Json->decode($datapump);
+
+        //var_dump($datapump);
+
+        $file3 = "/dev/shm/replicat_" . $data['config_id'];
+        $replicat = file_get_contents($file3);
+        $replicat = $toC_Json->decode($replicat);
+
+        //var_dump($replicat);
+        //$sec = explode(' ', $capture['lag']);
+
+        $recs[] = array('index' => 0,
+            'process' => 'extract',
+            'pct' => $capture->pct,
+            'seqno' => $capture->seqno,
+            'rba' => $capture->rba,
+            'latence' => $capture->lag,
+            'network' => '',
+            'status' => $capture->state
+        );
+
+        $size = explode(' ', $datapump->net);
+        $net = toC_Servers_Admin::formatSizeUnits($size[0]);
+        $sec = explode(' ', $datapump->lag);
+
+        $recs[] = array('index' => 1,
+            'process' => 'datapump',
+            'pct' => '0%',
+            'seqno' => $datapump->seqno,
+            'rba' => $datapump->rba,
+            'latence' => $sec[0] . ' s',
+            'network' => empty($size[0]) ? $size[0] : $net . '/s',
+            'status' => $datapump->state
+        );
+
+        $size = explode(' ', $replicat->net);
+        $net = toC_Servers_Admin::formatSizeUnits($size[0]);
+        $sec = explode(' ', $replicat->lag);
+
+        $recs[] = array('index' => 2,
+            'process' => 'replicat',
+            'pct' => $replicat->pct,
+            'seqno' => $replicat->seqno,
+            'rba' => $replicat->rba,
+            'latence' => $sec[0] . ' s',
+            'network' => empty($size[0]) ? $size[0] : $net . '/s',
+            'status' => $replicat->state
+        );
+
+        //var_dump($datapump);
+
+        $response = array(EXT_JSON_READER_TOTAL => 3,
+            EXT_JSON_READER_ROOT => $recs);
+
+        echo $toC_Json->encode($response);
+
+        //unlink($file1);
+        //unlink($file2);
+        //unlink($file3);
     }
 
     function watchOgg_orig()
@@ -2774,6 +2849,7 @@ GROUP BY component, oper_type, status";
 
     function addmReport()
     {
+        error_reporting(E_ALL);
         global $toC_Json;
 
         $db_user = $_REQUEST['db_user'];
@@ -2915,7 +2991,8 @@ GROUP BY component, oper_type, status";
                                             if (!file_exists($dir)) {
                                                 mkdir($dir, 0777, true);
                                             }
-                                            $report = 'addm_' . $db_host . '_' . $start_snap . '_' . $end_snap . '.txt';
+
+                                            $report = 'addm_' . '_' . $start_snap . '_' . $end_snap . '.txt';
                                             $file_name = $dir . '/' . $report;
                                             $b = file_put_contents($file_name,$out);
 
@@ -3102,6 +3179,7 @@ GROUP BY component, oper_type, status";
 
     function ashReport()
     {
+        error_reporting(E_ALL);
         global $toC_Json;
 
         $db_user = $_REQUEST['db_user'];
@@ -3340,7 +3418,11 @@ GROUP BY component, oper_type, status";
 
         $data = $_REQUEST;
 
-        $success = toC_Databases_Admin::saveCaptureState($data);
+        $file = "/dev/shm/capture_" . $data['config_id'];
+        $json = $toC_Json->encode($data);
+        $success = file_put_contents($file, $json) > 0;
+
+        //$success = toC_Databases_Admin::saveCaptureState($data);
 
         $response = array('success' => $success, 'feedback' => $success ? "OK" : "NOK");
 
@@ -3362,11 +3444,15 @@ GROUP BY component, oper_type, status";
 
     function monDatapump()
     {
-        global $toC_Json, $osC_Database;
+        global $toC_Json;
 
         $data = $_REQUEST;
 
-        $success = toC_Databases_Admin::savePropagationState($data);
+        $file = "/dev/shm/datapump_" . $data['config_id'];
+        $json = $toC_Json->encode($data);
+        $success = file_put_contents($file, $json) > 0;
+
+        //$success = toC_Databases_Admin::savePropagationState($data);
 
         $response = array('success' => $success, 'feedback' => $success ? "OK" : "NOK");
 
@@ -3379,7 +3465,11 @@ GROUP BY component, oper_type, status";
 
         $data = $_REQUEST;
 
-        $success = toC_Databases_Admin::saveReplicationState($data);
+        $file = "/dev/shm/replicat_" . $data['config_id'];
+        $json = $toC_Json->encode($data);
+        $success = file_put_contents($file, $json) > 0;
+
+        //$success = toC_Databases_Admin::saveReplicationState($data);
 
         $response = array('success' => $success, 'feedback' => $success ? "OK" : "NOK");
 
@@ -4498,7 +4588,7 @@ GROUP BY component, oper_type, status";
 
         $records = array();
 
-        $c = oci_pconnect($db_user, $db_pass, $db_host . "/" . $db_sid);
+        $c = oci_connect($db_user, $db_pass, $db_host . "/" . $db_sid);
         if (!$c) {
             $e = oci_error();
 
@@ -4864,7 +4954,7 @@ GROUP BY component, oper_type, status";
         $records = array();
         $total = 0;
 
-        $c = oci_pconnect($db_user, $db_pass, $db_host . "/" . $db_sid);
+        $c = oci_connect($db_user, $db_pass, $db_host . "/" . $db_sid);
         if (!$c) {
             $e = oci_error();
 
@@ -4906,14 +4996,15 @@ GROUP BY component, oper_type, status";
                         $records [] = array('tbs' => strtolower($row['TABLESPACE_NAME']), 'status' => $row['STATUS'], 'contents' => $row['CONTENTS'], 'extent_management' => $row['EXTENT_MANAGEMENT'], 'bigfile' => $row['BIGFILE'], 'megs_alloc' => $row['MEGS_ALLOC'], 'megs_free' => $row['MEGS_FREE'], 'megs_used' => $row['MEGS_USED'], 'pct_used' => $total_percent_used, 'max' => $row['MAX'], 'free' => $row['FREE'], 'rest' => $total_percent_used . ';' . $row['MEGS_FREE'] . ';' . $row['MAX'], 'qtip' => $tip);
                     }
 
-                    oci_free_statement($s);
-                    oci_close($c);
-
                     $response = array('success' => true, 'feedback' => $total . ' espaces logiques', EXT_JSON_READER_TOTAL => $total,
                         EXT_JSON_READER_ROOT => $records);
                 }
             }
+
+            oci_free_statement($s);
         }
+
+        oci_close($c);
 
         echo $toC_Json->encode($response);
     }
@@ -5336,6 +5427,85 @@ SELECT LEVEL,username,osuser,machine,sid,serial,object_name,
                 'machine' => $row['MACHINE'],
                 'sql_text' => $row['SQL_TEXT'],
                 'object_name' => $row['OBJECT_NAME']
+            );
+
+            $count++;
+        }
+
+        oci_free_statement($s);
+        oci_close($c);
+
+        $response = array(EXT_JSON_READER_TOTAL => $count,
+            EXT_JSON_READER_ROOT => $records);
+
+        echo $toC_Json->encode($response);
+    }
+
+    function lockObj()
+    {
+        global $toC_Json;
+
+        $db_user = $_REQUEST['db_user'];
+        $db_pass = $_REQUEST['db_pass'];
+        $db_host = $_REQUEST['db_host'];
+        $db_sid = $_REQUEST['db_sid'];
+
+        $c = oci_pconnect($db_user, $db_pass, $db_host . "/" . $db_sid);
+        if (!$c) {
+            $e = oci_error();
+            trigger_error('Could not connect to database: ' . $e['message'], E_USER_ERROR);
+        }
+
+        $query = "SELECT s.SID,
+  s.serial# serial,
+  s.username,
+  ROUND(CTIME/60) AS duree,
+  do.object_name  AS locked_object,
+  s.status,
+  s.osuser,
+  (select description from V\$LOCK_TYPE where type = l.type) description
+FROM v\$lock l
+JOIN v\$session s
+ON l.sid=s.sid
+JOIN v\$process p
+ON p.addr = s.paddr
+JOIN v\$locked_object lo
+ON l.SID = lo.SESSION_ID
+JOIN dba_objects DO
+ON lo.OBJECT_ID = do.OBJECT_ID
+where 1 = 1 ";
+
+        if (!empty($_REQUEST['search'])) {
+            $query = $query . " and (lower(s.username) like '%" . strtolower($_REQUEST['search']) . "%' or lower(do.object_name) like '%" . strtolower($_REQUEST['search']) . "%')";
+        }
+
+        $query = $query . " ORDER BY 5";
+
+        $s = oci_parse($c, $query);
+        if (!$s) {
+            $e = oci_error($c);
+            trigger_error('Could not parse statement: ' . $e['message'], E_USER_ERROR);
+        }
+
+        $r = oci_execute($s);
+        if (!$r) {
+            $e = oci_error($s);
+            trigger_error('Could not execute statement: ' . $e['message'], E_USER_ERROR);
+        }
+
+        $records = array();
+        //$sum = 0;
+        $count = 0;
+
+        while (($row = oci_fetch_array($s, OCI_ASSOC))) {
+            $records [] = array('sid' => $row['SID'],
+                'serial' => $row['SERIAL'],
+                'username' => $row['USERNAME'],
+                'osuser' => $row['OSUSER'],
+                'duree' => $row['DUREE'],
+                'locked_object' => $row['LOCKED_OBJECT'],
+                'status' => $row['STATUS'],
+                'description' => $row['DESCRIPTION']
             );
 
             $count++;
@@ -5826,7 +5996,7 @@ ORDER BY 1";
             $response = array('success' => false, 'feedback' => 'Could not connect to database: ' . htmlentities($e['message']));
             var_dump($e);
         } else {
-            $query = "select rep_name,table_name,errno,optype,count(*) occurences from gm_fomi.GGS_EXCEPTIONS group by rep_name,table_name,errno,optype order by 1,2";
+            $query = "select rep_name,table_name,errno,optype,count(*) occurences from gm_fomi.EXCEPTIONS group by rep_name,table_name,errno,optype order by 1,2";
 
             $s = oci_parse($c, $query);
             if (!$s) {
