@@ -253,16 +253,27 @@ if (isset($_REQUEST['action'])) {
                 $randomString .= $characters[rand(0, $charactersLength - 1)];
             }
 
+            $start_date = date("Y-m-d H:i:s");
+
+            $pct = array(
+                'user' => 0,
+                'nice' => 0,
+                'sys' => 0,
+                'idle' => 0,
+                'iowait' => 0,
+                'category' => $start_date
+            );
+
             $ssh = new Net_SSH2($db_host,22,5);
             if (empty($ssh->server_identifier)) {
                 $comment = 'Impossible de se connecter au serveur ' . $db_host;
-                $pct = null;
+                //$pct = null;
             }
             else
             {
                 if (!$ssh->login($os_user, $os_pass)) {
-                    $comment = 'Impossible de se connecter au serveur ' . $db_host;
-                    $pct = null;
+                    $comment = 'Compte ou Mot de passe invalide ...';
+                    //$pct = null;
                 } else {
                     $ssh->disableQuietMode();
                     $ssh->setTimeout(5);
@@ -317,16 +328,34 @@ if (isset($_REQUEST['action'])) {
                 $randomString .= $characters[rand(0, $charactersLength - 1)];
             }
 
+            $start_date = date("Y-m-d H:i:s");
+
+            $disks = array();
+            $dif = array();
+            $dif['name'] = "error";
+            $dif['read'] = 0;
+            //$dif['read'] = round($dif['read']/1000);
+            $dif['write'] = 0;
+            //$dif['write'] = round($dif['write']/1000);
+
+            $read = $dif['read'];
+            $write = $dif['write'];
+            $total = 1000;
+            $dif['read'] = $read*100/$total;
+            $dif['write'] = $write*100/$total;
+
+            $disks[0] = $dif;
+
             $ssh = new Net_SSH2($db_host,22,5);
             if (empty($ssh->server_identifier)) {
                 $comment = 'Impossible de se connecter au serveur ' . $db_host;
-                $disks = null;
+                //$disks = null;
             }
             else
             {
                 if (!$ssh->login($os_user, $os_pass)) {
-                    $comment = 'Impossible de se connecter au serveur ' . $db_host;
-                    $disks = null;
+                    $comment = 'Compte ou Mot de passe invalide ...';
+                    //$disks = null;
                 } else {
                     $ssh->disableQuietMode();
                     $ssh->setTimeout(5);
@@ -375,16 +404,24 @@ if (isset($_REQUEST['action'])) {
                 $randomString .= $characters[rand(0, $charactersLength - 1)];
             }
 
+            $start_date = date("Y-m-d H:i:s");
+
+            $net = $values = array(
+                'rec' => 0,
+                'trans' => 0,
+                'category' => $start_date
+            );
+
             $ssh = new Net_SSH2($db_host,22,5);
             if (empty($ssh->server_identifier)) {
                 $comment = 'Impossible de se connecter au serveur ' . $db_host;
-                $net = null;
+//                $net = null;
             }
             else
             {
                 if (!$ssh->login($os_user, $os_pass)) {
-                    $comment = 'Impossible de se connecter au serveur ' . $db_host;
-                    $net = null;
+                    $comment = 'Compte ou Mot de passe invalide ...';
+                    //$net = null;
                 } else {
                     $ssh->disableQuietMode();
                     $ssh->setTimeout(5);
@@ -434,6 +471,19 @@ if (isset($_REQUEST['action'])) {
             $user = $_REQUEST['user'];
             $pass = $_REQUEST['pass'];
             $typ = $_REQUEST['typ'];
+
+            $records [] = array('fs' => '',
+                'typ' => '',
+                'size' => 100,
+                'used' => 100,
+                'dispo' => 0,
+                'pct_used' => 100,
+                'mount' => 'Connecting ...',
+                'qtip' => 'Connecting ...',
+                'rest' => 100 . ';' . 100 . ';' . 0);
+
+            $response = array(EXT_JSON_READER_TOTAL => 1,
+                EXT_JSON_READER_ROOT => $records);
 
             $records = array();
             $recs = array();

@@ -920,7 +920,7 @@ WHERE delta_ogg_config.id = delta_ogg_capture_state.config_id and config_id= " .
 
     function loadLayoutTree()
     {
-        global $toC_Json,$osC_Database;
+        global $toC_Json, $osC_Database;
 
         $query = "SELECT a.*,s.label,s.HOST,s.servers_id,s.typ,s.USER AS server_user,s.pass AS server_pass,s.PORT AS server_port FROM delta_databases a INNER JOIN delta_servers s ON a.servers_id = s.servers_id";
         $Qdatabases = $osC_Database->query($query);
@@ -1018,11 +1018,10 @@ WHERE delta_ogg_config.id = delta_ogg_capture_state.config_id and config_id= " .
 
         if (toC_Databases_Admin::saveGroup((isset($_REQUEST['group_id']) && is_numeric($_REQUEST['group_id'])
             ? $_REQUEST['group_id']
-            : null), $_REQUEST)) {
+            : null), $_REQUEST)
+        ) {
             $response = array('success' => true, 'feedback' => $osC_Language->get('ms_success_action_performed'));
-        }
-        else
-        {
+        } else {
             $response = array('success' => false, 'feedback' => $_SESSION['LAST_ERROR']);
         }
 
@@ -1347,6 +1346,51 @@ WHERE delta_ogg_config.id = delta_ogg_capture_state.config_id and config_id= " .
                 }
             }
         }
+
+        echo $toC_Json->encode($response);
+    }
+
+    function listIoevents()
+    {
+        global $toC_Json;
+
+        $db_user = $_REQUEST['db_user'];
+        $db_pass = $_REQUEST['db_pass'];
+        $db_host = $_REQUEST['db_host'];
+        $db_sid = $_REQUEST['db_sid'];
+        $class = $_REQUEST['class'];
+        $records = array();
+
+        $c = oci_pconnect($db_user, $db_pass, $db_host . "/" . $db_sid);
+        if (!$c) {
+            $e = oci_error();
+            $response = array('success' => false, 'feedback' => 'Could not connect to database: ' . htmlentities($e['message']));
+        } else {
+            $query = "select event,count(*) from v\$event_histogram where last_update_time is not null and wait_time_milli > 1000 and event in (select name from v\$event_name where wait_class = '" . $class . "') group by event having count(*) > 1";
+
+            $s = oci_parse($c, $query);
+            if (!$s) {
+                $e = oci_error($c);
+                $records[] = array('event' => "Impossible d'executer cette requete : " . htmlentities($e['message']));
+            } else {
+                $r = oci_execute($s, OCI_COMMIT_ON_SUCCESS);
+                if (!$r) {
+                    $e = oci_error($s);
+                    $records[] = array('event' => "Impossible de lister les evenements IO : " . htmlentities($e['message']));
+                } else {
+                    while (($row = oci_fetch_array($s, OCI_ASSOC))) {
+                        $records[] = array('event' => $row['EVENT']);
+                    }
+                }
+
+                oci_free_statement($s);
+            }
+
+            oci_close($c);
+        }
+
+        $response = array(EXT_JSON_READER_TOTAL => count($records),
+            EXT_JSON_READER_ROOT => $records);
 
         echo $toC_Json->encode($response);
     }
@@ -1914,6 +1958,77 @@ WHERE delta_ogg_config.id = delta_ogg_capture_state.config_id and config_id= " .
         echo $toC_Json->encode($response);
     }
 
+    function gatherIndexstats()
+    {
+        global $toC_Json;
+
+        $db_user = $_REQUEST['db_user'];
+        $db_pass = $_REQUEST['db_pass'];
+        $db_host = $_REQUEST['db_host'];
+        $db_sid = $_REQUEST['db_sid'];
+        $schema = $_REQUEST['owner'];
+        $table = $_REQUEST['segment_name'];
+
+        $c = oci_pconnect($db_user, $db_pass, $db_host . "/" . $db_sid);
+        if (!$c) {
+            $e = oci_error();
+            $response = array('success' => false, 'feedback' => 'Could not connect to database : ' . htmlentities($e['message']));
+        } else {
+
+            $characters = '0123456789';
+            $charactersLength = strlen($characters);
+            $randomString = '';
+            for ($i = 0; $i < 5; $i++) {
+                $randomString .= $characters[rand(0, $charactersLength - 1)];
+            }
+
+            $proc_name = 'proc_gather_stats_' . $randomString;
+            $job_name = 'job_gather_stats_' . $randomString;
+
+            $args = "''" . $schema . "'',''" . $table . "''";
+
+            $action = "DBMS_STATS.GATHER_INDEX_STATS(" . $args . ");";
+
+            $query = "begin execute immediate 'CREATE OR REPLACE PROCEDURE " . $proc_name . " AUTHID CURRENT_USER AS BEGIN " . $action . "END;';END;";
+
+            //var_dump($query);
+            $s = oci_parse($c, $query);
+            if (!$s) {
+                $e = oci_error($c);
+                $response = array('success' => false, 'feedback' => 'Impossible de parser la requete ' . $query . ' ... raison : ' . htmlentities($e['message']));
+            } else {
+                $r = oci_execute($s, OCI_COMMIT_ON_SUCCESS);
+                if (!$r) {
+                    $e = oci_error($s);
+                    $response = array('success' => false, 'feedback' => 'Impossible d executer la requete ' . $query . ' ... raison : ' . htmlentities($e['message']));
+                } else {
+                    $response = array('success' => true, 'feedback' => "Procedure creee avec succes ...", 'proc_name' => $proc_name);
+                    $query = "BEGIN DBMS_SCHEDULER.create_job (job_name => '" . $job_name . "',job_type => 'PLSQL_BLOCK',job_action => 'BEGIN " . $proc_name . ";END;',start_date => SYSTIMESTAMP,enabled => TRUE,auto_drop => TRUE);END;";
+
+                    $s = oci_parse($c, $query);
+                    if (!$s) {
+                        $e = oci_error($c);
+                        $response = array('success' => false, 'feedback' => 'Impossible de creer ce job : ' . htmlentities($e['message']));
+                    } else {
+                        $r = oci_execute($s, OCI_COMMIT_ON_SUCCESS);
+                        if (!$r) {
+                            $e = oci_error($s);
+                            $response = array('success' => false, 'feedback' => 'Impossible de creer ce job : ' . htmlentities($e['message']));
+                        } else {
+                            $response = array('success' => true, 'feedback' => "Job cree avec succes ...", 'job_name' => $job_name, 'proc_name' => $proc_name);
+                        }
+                    }
+                }
+            }
+
+            oci_free_statement($s);
+        }
+
+        oci_close($c);
+
+        echo $toC_Json->encode($response);
+    }
+
     function dropProcedure()
     {
         global $toC_Json;
@@ -2145,26 +2260,215 @@ WHERE delta_ogg_config.id = delta_ogg_capture_state.config_id and config_id= " .
         $db_pass = $_REQUEST['db_pass'];
         $db_host = $_REQUEST['db_host'];
         $db_sid = $_REQUEST['db_sid'];
+        $records = array();
+
+        $c = oci_pconnect($db_user, $db_pass, $db_host . "/" . $db_sid);
+        if (!$c) {
+            $e = oci_error();
+            $entry_icon = osc_icon_from_filename('xxxxxxxx.error');
+            $records [] = array('icon' => $entry_icon,
+                'index' => 0,
+                'component' => htmlentities($e['message']),
+                'parameter' => '',
+                'status' => 'ERROR',
+                'initial_size' => '',
+                'target_size' => '',
+                'final_size' => '',
+                'start_time' => '',
+                'end_time' => '',
+                'duree' => '');
+        } else {
+            $query = "SELECT component,
+       parameter,
+       round(initial_size/1024/1024) initial_size,
+       round(target_size/1024/1024) target_size,
+       round(final_size/1024/1024) final_size,
+       status,
+       start_time,
+       end_time,
+       EXTRACT(SECOND FROM(end_time - start_time) DAY TO SECOND) as duree
+    from v\$sga_resize_ops  order by start_time desc";
+
+            $s = oci_parse($c, $query);
+            if (!$s) {
+                $e = oci_error($c);
+                $entry_icon = osc_icon_from_filename('xxxxxxxx.error');
+                $records [] = array('icon' => $entry_icon,
+                    'index' => 0,
+                    'component' => htmlentities($e['message']),
+                    'parameter' => '',
+                    'status' => 'ERROR',
+                    'initial_size' => '',
+                    'target_size' => '',
+                    'final_size' => '',
+                    'start_time' => '',
+                    'end_time' => '',
+                    'duree' => '');
+            } else {
+                $r = oci_execute($s, OCI_COMMIT_ON_SUCCESS);
+                if (!$r) {
+                    $e = oci_error($s);
+                    $entry_icon = osc_icon_from_filename('xxxxxxxx.error');
+                    $records [] = array('icon' => $entry_icon,
+                        'index' => 0,
+                        'component' => htmlentities($e['message']),
+                        'parameter' => '',
+                        'status' => 'ERROR',
+                        'initial_size' => '',
+                        'target_size' => '',
+                        'final_size' => '',
+                        'start_time' => '',
+                        'end_time' => '',
+                        'duree' => '');
+                } else {
+                    $index = 0;
+
+                    while (($row = oci_fetch_array($s, OCI_ASSOC))) {
+                        $entry_icon = osc_icon_from_filename('xxxxxxxx.' . $row['STATUS']);
+                        $records [] = array('icon' => $entry_icon,
+                            'index' => $index,
+                            'component' => $row['COMPONENT'],
+                            'parameter' => $row['PARAMETER'],
+                            'status' => $row['STATUS'],
+                            'initial_size' => $row['INITIAL_SIZE'],
+                            'target_size' => $row['TARGET_SIZE'],
+                            'final_size' => $row['FINAL_SIZE'],
+                            'start_time' => $row['START_TIME'],
+                            'end_time' => $row['END_TIME'],
+                            'duree' => $row['DUREE']);
+                        $index++;
+                    }
+                }
+            }
+
+            oci_free_statement($s);
+        }
+
+        oci_close($c);
+
+        $response = array(EXT_JSON_READER_TOTAL => count($records),
+            EXT_JSON_READER_ROOT => $records);
+
+        echo $toC_Json->encode($response);
+    }
+
+    function memoryResize()
+    {
+        global $toC_Json;
+
+        $db_user = $_REQUEST['db_user'];
+        $db_pass = $_REQUEST['db_pass'];
+        $db_host = $_REQUEST['db_host'];
+        $db_sid = $_REQUEST['db_sid'];
+        $records = array();
+
+        $c = oci_pconnect($db_user, $db_pass, $db_host . "/" . $db_sid);
+        if (!$c) {
+            $e = oci_error();
+            $entry_icon = osc_icon_from_filename('xxxxxxxx.error');
+            $records [] = array('icon' => $entry_icon,
+                'index' => 0,
+                'component' => htmlentities($e['message']),
+                'parameter' => '',
+                'status' => 'ERROR',
+                'initial_size' => '',
+                'target_size' => '',
+                'final_size' => '',
+                'start_time' => '',
+                'end_time' => '',
+                'duree' => '');
+        } else {
+            $query = "SELECT component,
+       parameter,
+       round(initial_size/1024/1024) initial_size,
+       round(target_size/1024/1024) target_size,
+       round(final_size/1024/1024) final_size,
+       status,
+       start_time,
+       end_time,
+       EXTRACT(SECOND FROM(end_time - start_time) DAY TO SECOND) as duree
+    from V\$MEMORY_RESIZE_OPS order by start_time desc";
+
+            $s = oci_parse($c, $query);
+            if (!$s) {
+                $e = oci_error($c);
+                $entry_icon = osc_icon_from_filename('xxxxxxxx.error');
+                $records [] = array('icon' => $entry_icon,
+                    'index' => 0,
+                    'component' => htmlentities($e['message']),
+                    'parameter' => '',
+                    'status' => 'ERROR',
+                    'initial_size' => '',
+                    'target_size' => '',
+                    'final_size' => '',
+                    'start_time' => '',
+                    'end_time' => '',
+                    'duree' => '');
+            } else {
+                $r = oci_execute($s, OCI_COMMIT_ON_SUCCESS);
+                if (!$r) {
+                    $e = oci_error($s);
+                    $entry_icon = osc_icon_from_filename('xxxxxxxx.error');
+                    $records [] = array('icon' => $entry_icon,
+                        'index' => 0,
+                        'component' => htmlentities($e['message']),
+                        'parameter' => '',
+                        'status' => 'ERROR',
+                        'initial_size' => '',
+                        'target_size' => '',
+                        'final_size' => '',
+                        'start_time' => '',
+                        'end_time' => '',
+                        'duree' => '');
+                } else {
+                    $index = 0;
+
+                    while (($row = oci_fetch_array($s, OCI_ASSOC))) {
+                        $entry_icon = osc_icon_from_filename('xxxxxxxx.' . $row['STATUS']);
+                        $records [] = array('icon' => $entry_icon,
+                            'index' => $index,
+                            'component' => $row['COMPONENT'],
+                            'parameter' => $row['PARAMETER'],
+                            'status' => $row['STATUS'],
+                            'initial_size' => $row['INITIAL_SIZE'],
+                            'target_size' => $row['TARGET_SIZE'],
+                            'final_size' => $row['FINAL_SIZE'],
+                            'start_time' => $row['START_TIME'],
+                            'end_time' => $row['END_TIME'],
+                            'duree' => $row['DUREE']);
+                        $index++;
+                    }
+                }
+            }
+
+            oci_free_statement($s);
+        }
+
+        oci_close($c);
+
+        $response = array(EXT_JSON_READER_TOTAL => count($records),
+            EXT_JSON_READER_ROOT => $records);
+
+        echo $toC_Json->encode($response);
+    }
+
+    function pgaStats()
+    {
+        global $toC_Json;
+
+        $db_user = $_REQUEST['db_user'];
+        $db_pass = $_REQUEST['db_pass'];
+        $db_host = $_REQUEST['db_host'];
+        $db_sid = $_REQUEST['db_sid'];
 
         $c = oci_pconnect($db_user, $db_pass, $db_host . "/" . $db_sid);
         if (!$c) {
             $e = oci_error();
             $response = array('success' => false, 'feedback' => 'Could not connect to database: ' . htmlentities($e['message']));
         } else {
-            $query = "SELECT component,
-         oper_type,
-         status,
-         COUNT (*) nbre
-    FROM (SELECT component,
-                 oper_type,
-                 oper_mode,
-                 parameter,
-                 initial_size,
-                 target_size,
-                 final_size,
-                 status
-            FROM v\$sga_resize_ops)
-GROUP BY component, oper_type, status";
+            $query = "SELECT name,
+       CASE unit WHEN 'bytes' THEN to_char(round(VALUE / 1024 / 1024)) || ' MB' ELSE to_char(VALUE) END val
+  FROM v\$PGASTAT";
 
             $s = oci_parse($c, $query);
             if (!$s) {
@@ -2180,19 +2484,19 @@ GROUP BY component, oper_type, status";
                     $index = 0;
 
                     while (($row = oci_fetch_array($s, OCI_ASSOC))) {
-                        $entry_icon = osc_icon_from_filename('xxxxxxxx.' . $row['STATUS']);
-                        $records [] = array('icon' => $entry_icon, 'index' => $index, 'component' => $row['COMPONENT'], 'oper_type' => $row['OPER_TYPE'], 'status' => $row['STATUS'], 'nbre' => $row['NBRE']);
+                        $records [] = array('index' => $index, 'name' => $row['NAME'], 'val' => $row['VAL']);
                         $index++;
                     }
 
                     oci_free_statement($s);
-                    oci_close($c);
 
                     $response = array('success' => true, EXT_JSON_READER_TOTAL => count($records),
                         EXT_JSON_READER_ROOT => $records);
                 }
             }
         }
+
+        oci_close($c);
 
         echo $toC_Json->encode($response);
     }
@@ -2747,14 +3051,14 @@ GROUP BY component, oper_type, status";
 
     function getJobStatus()
     {
-        global $osC_Database,$toC_Json;
+        global $osC_Database, $toC_Json;
         $task_id = $_REQUEST['task_id'];
 
         $query = "SELECT * FROM :table_logs where task_id = :task_id ORDER BY LOGS_ID DESC LIMIT 0, 1";
         $Qreports = $osC_Database->query($query);
 
-        $Qreports->bindTable(':table_logs',TABLE_LOGS);
-        $Qreports->bindValue(':task_id',$task_id);
+        $Qreports->bindTable(':table_logs', TABLE_LOGS);
+        $Qreports->bindValue(':task_id', $task_id);
         $Qreports->execute();
 
         $records = array();
@@ -2793,13 +3097,89 @@ GROUP BY component, oper_type, status";
                     $randomString .= $characters[rand(0, $charactersLength - 1)];
                 }
 
-                $cmd = "nohup curl '" . HTTP_SERVER . "/" . HTTP_COOKIE_PATH . "/admin/json.php' --data 'module=databases&action=ash_report&db_host=" . $data['db_host'] . "&db_user=" . $data['db_user'] . "&db_pass=" . $data['db_pass'] . "&db_sid=" . $data['db_sid'] . "&databases_id=" . $data['databases_id'] . "&task_id=" . $randomString . "' &";
+                $cmd = "nohup curl '" . HTTP_SERVER . "/" . HTTP_COOKIE_PATH . "/admin/json.php' --data 'module=databases&action=ash_report&startValue=" . $data['startValue'] . "&endValue=" . $data['endValue'] . "&db_host=" . $data['db_host'] . "&db_user=" . $data['db_user'] . "&db_pass=" . $data['db_pass'] . "&db_sid=" . $data['db_sid'] . "&databases_id=" . $data['databases_id'] . "&task_id=" . $randomString . "' &";
                 $ssh->exec($cmd);
                 //var_dump($cmd);
 
                 $ssh->disconnect();
 
-                $detail = array('task_id' => $randomString, 'status' => 'run','comments' => 'Job cree avec succes');
+                $detail = array('task_id' => $randomString, 'status' => 'run', 'comments' => 'Job cree avec succes');
+                toC_Reports_Admin::addJobDetail($detail);
+
+                $response = array('success' => true, 'msg' => 'Tache creee avec succes', 'task_id' => $randomString, 'status' => 'run');
+            }
+        }
+
+        echo $toC_Json->encode($response);
+    }
+
+    function sqlReport()
+    {
+        global $toC_Json;
+
+        $ssh = new Net_SSH2(REPORT_RUNNER, '22');
+
+        if (empty($ssh->server_identifier)) {
+            $response = array('success' => false, 'msg' => 'Impossible de se connecter au serveur pour generer cet etat, veuillez contacter votre administrateur systeme', 'subscriptions_id' => null, 'status' => null);
+        } else {
+            if (!$ssh->login("guyfomi", "12345")) {
+                $response = array('success' => false, 'msg' => 'Impossible de se connecter au serveur pour generer cet etat, Compte ou mot de passe invalide', 'subscriptions_id' => null, 'status' => null);
+            } else {
+                $ssh->disableQuietMode();
+
+                $data = $_REQUEST;
+                $characters = '0123456789';
+                $charactersLength = strlen($characters);
+                $randomString = '';
+                for ($i = 0; $i < 10; $i++) {
+                    $randomString .= $characters[rand(0, $charactersLength - 1)];
+                }
+
+                $cmd = "nohup curl '" . HTTP_SERVER . "/" . HTTP_COOKIE_PATH . "/admin/json.php' --data 'module=databases&action=sql_rep&db_host=" . $data['db_host'] . "&sql_id=" . $data['sql_id'] . "&db_user=" . $data['db_user'] . "&db_pass=" . $data['db_pass'] . "&db_sid=" . $data['db_sid'] . "&databases_id=" . $data['databases_id'] . "&task_id=" . $randomString . "' &";
+                $ssh->exec($cmd);
+                //var_dump($cmd);
+
+                $ssh->disconnect();
+
+                $detail = array('task_id' => $randomString, 'status' => 'run', 'comments' => 'Job cree avec succes');
+                toC_Reports_Admin::addJobDetail($detail);
+
+                $response = array('success' => true, 'msg' => 'Tache creee avec succes', 'task_id' => $randomString, 'status' => 'run');
+            }
+        }
+
+        echo $toC_Json->encode($response);
+    }
+
+    function sqlTune()
+    {
+        global $toC_Json;
+
+        $ssh = new Net_SSH2(REPORT_RUNNER, '22');
+
+        if (empty($ssh->server_identifier)) {
+            $response = array('success' => false, 'msg' => 'Impossible de se connecter au serveur pour generer cet etat, veuillez contacter votre administrateur systeme', 'subscriptions_id' => null, 'status' => null);
+        } else {
+            if (!$ssh->login("guyfomi", "12345")) {
+                $response = array('success' => false, 'msg' => 'Impossible de se connecter au serveur pour generer cet etat, Compte ou mot de passe invalide', 'subscriptions_id' => null, 'status' => null);
+            } else {
+                $ssh->disableQuietMode();
+
+                $data = $_REQUEST;
+                $characters = '0123456789';
+                $charactersLength = strlen($characters);
+                $randomString = '';
+                for ($i = 0; $i < 10; $i++) {
+                    $randomString .= $characters[rand(0, $charactersLength - 1)];
+                }
+
+                $cmd = "nohup curl '" . HTTP_SERVER . "/" . HTTP_COOKIE_PATH . "/admin/json.php' --data 'module=databases&action=sql_tuning&db_host=" . $data['db_host'] . "&sql_id=" . $data['sql_id'] . "&db_user=" . $data['db_user'] . "&db_pass=" . $data['db_pass'] . "&db_sid=" . $data['db_sid'] . "&databases_id=" . $data['databases_id'] . "&task_id=" . $randomString . "' &";
+                $ssh->exec($cmd);
+                //var_dump($cmd);
+
+                $ssh->disconnect();
+
+                $detail = array('task_id' => $randomString, 'status' => 'run', 'comments' => 'Job cree avec succes');
                 toC_Reports_Admin::addJobDetail($detail);
 
                 $response = array('success' => true, 'msg' => 'Tache creee avec succes', 'task_id' => $randomString, 'status' => 'run');
@@ -2837,12 +3217,175 @@ GROUP BY component, oper_type, status";
 
                 $ssh->disconnect();
 
-                $detail = array('task_id' => $randomString, 'status' => 'run','comments' => 'Job cree avec succes');
+                $detail = array('task_id' => $randomString, 'status' => 'run', 'comments' => 'Job cree avec succes');
                 toC_Reports_Admin::addJobDetail($detail);
 
                 $response = array('success' => true, 'msg' => 'Tache creee avec succes', 'task_id' => $randomString, 'status' => 'run');
             }
         }
+
+        echo $toC_Json->encode($response);
+    }
+
+    function getAlertlog()
+    {
+        global $toC_Json;
+
+        $host = $_REQUEST['db_host'];
+        $port = $_REQUEST['port'];
+        $user = $_REQUEST['user'];
+        $pass = $_REQUEST['pass'];
+
+        $db_user = $_REQUEST['db_user'];
+        $db_pass = $_REQUEST['db_pass'];
+        $db_host = $_REQUEST['db_host'];
+        $db_sid = $_REQUEST['db_sid'];
+
+        $instance_name = '';
+        $background_dump_dest = '';
+        $records = array();
+
+        $c = oci_pconnect($db_user, $db_pass, $db_host . "/" . $db_sid);
+        if (!$c) {
+            $e = oci_error();
+            $records[] = array(
+                'success' => false,
+                'feedback' => 'Could not connect to database: ' . htmlentities($e['message']),
+                'url' => '',
+                'lines' => 0,
+                'size' => 0,
+                'can_read' => $_SESSION[admin][username] == 'admin' ? 1 : false,
+                'can_write' => $_SESSION[admin][username] == 'admin' ? 1 : false,
+                'can_modify' => $_SESSION[admin][username] == 'admin' ? '' : false,
+                'can_publish' => $_SESSION[admin][username] == 'admin' ? 1 : false
+            );
+        } else {
+            $query = "SELECT (SELECT SYS_CONTEXT ('USERENV', 'INSTANCE_NAME') FROM DUAL)           instance_name,       (SELECT VALUE           FROM v\$parameter          WHERE name = 'background_dump_dest')           background_dump_dest   FROM DUAL";
+
+            $s = oci_parse($c, $query);
+            if (!$s) {
+                $e = oci_error($c);
+
+                $records[] = array(
+                    'success' => false,
+                    'feedback' => "Impossible d'executer le scrip de chargement des parametres : " . htmlentities($e['message']),
+                    'url' => '',
+                    'lines' => 0,
+                    'size' => 0,
+                    'can_read' => $_SESSION[admin][username] == 'admin' ? 1 : false,
+                    'can_write' => $_SESSION[admin][username] == 'admin' ? 1 : false,
+                    'can_modify' => $_SESSION[admin][username] == 'admin' ? '' : false,
+                    'can_publish' => $_SESSION[admin][username] == 'admin' ? 1 : false
+                );
+            } else {
+                $r = oci_execute($s, OCI_COMMIT_ON_SUCCESS);
+                if (!$r) {
+                    $e = oci_error($s);
+                    $records[] = array(
+                        'success' => false,
+                        'feedback' => htmlentities($e['message']),
+                        'url' => '',
+                        'lines' => 0,
+                        'size' => 0,
+                        'can_read' => $_SESSION[admin][username] == 'admin' ? 1 : false,
+                        'can_write' => $_SESSION[admin][username] == 'admin' ? 1 : false,
+                        'can_modify' => $_SESSION[admin][username] == 'admin' ? '' : false,
+                        'can_publish' => $_SESSION[admin][username] == 'admin' ? 1 : false
+                    );
+                } else {
+                    while (($row = oci_fetch_array($s, OCI_ASSOC))) {
+                        $instance_name = $row['INSTANCE_NAME'];
+                        $background_dump_dest = $row['BACKGROUND_DUMP_DEST'];
+                    }
+                }
+            }
+
+            oci_free_statement($s);
+        }
+
+        oci_close($c);
+
+        if (!empty($instance_name) && !empty($background_dump_dest)) {
+            $ssh = new Net_SSH2($host, $port);
+
+            if (empty($ssh->server_identifier)) {
+                $records[] = array(
+                    'success' => false,
+                    'feedback' => "Impossible de se connecter au serveur, veuillez contacter votre administrateur systeme",
+                    'url' => '',
+                    'lines' => 0,
+                    'size' => 0,
+                    'can_read' => $_SESSION[admin][username] == 'admin' ? 1 : false,
+                    'can_write' => $_SESSION[admin][username] == 'admin' ? 1 : false,
+                    'can_modify' => $_SESSION[admin][username] == 'admin' ? '' : false,
+                    'can_publish' => $_SESSION[admin][username] == 'admin' ? 1 : false
+                );
+            } else {
+                if (!$ssh->login($user, $pass)) {
+                    $records[] = array(
+                        'success' => false,
+                        'feedback' => "Compte ou mot de passe invalide",
+                        'url' => '',
+                        'lines' => 0,
+                        'size' => 0,
+                        'can_read' => $_SESSION[admin][username] == 'admin' ? 1 : false,
+                        'can_write' => $_SESSION[admin][username] == 'admin' ? 1 : false,
+                        'can_modify' => $_SESSION[admin][username] == 'admin' ? '' : false,
+                        'can_publish' => $_SESSION[admin][username] == 'admin' ? 1 : false
+                    );
+                } else {
+                    $ssh->disableQuietMode();
+
+                    $url = $background_dump_dest . '/alert_' . $instance_name . '.log';
+                    $cmd = "du -m " . $url . " |awk '{print $1'}";
+                    $resp = trim($ssh->exec($cmd));
+
+                    $size = (int)$resp;
+
+                    $file = '/dev/shm/' . substr(md5(rand()), 0, 7) . '.log';
+                    $cmd = 'strings ' . $url . ' > ' . $file;
+                    $ssh->exec($cmd);
+                    $url = $file;
+
+                    $cmd = "wc -l " . $url . " |awk '{print $1'}";
+                    $resp = trim($ssh->exec($cmd));
+
+                    $lc = (int)$resp;
+
+                    if (isset($_REQUEST['permissions'])) {
+                        $permissions = explode(',', $_REQUEST['permissions']);
+
+                        $records[] = array(
+                            'success' => true,
+                            'feedback' => "OK",
+                            'url' => $url,
+                            'lines' => $lc,
+                            'size' => $size,
+                            'can_write' => $_SESSION[admin][username] == 'admin' ? 1 : $permissions[1],
+                            'can_modify' => $_SESSION[admin][username] == 'admin' ? '' : $permissions[2],
+                            'can_publish' => $_SESSION[admin][username] == 'admin' ? 1 : $permissions[3]
+                        );
+                    } else {
+                        $records[] = array(
+                            'success' => true,
+                            'feedback' => "OK",
+                            'url' => $url,
+                            'lines' => $lc,
+                            'size' => $size,
+                            'can_read' => $_SESSION[admin][username] == 'admin' ? 1 : false,
+                            'can_write' => $_SESSION[admin][username] == 'admin' ? 1 : false,
+                            'can_modify' => $_SESSION[admin][username] == 'admin' ? '' : false,
+                            'can_publish' => $_SESSION[admin][username] == 'admin' ? 1 : false
+                        );
+                    }
+
+                    $ssh->disconnect();
+                }
+            }
+        }
+
+        $response = array(EXT_JSON_READER_TOTAL => count($records),
+            EXT_JSON_READER_ROOT => $records);
 
         echo $toC_Json->encode($response);
     }
@@ -2858,13 +3401,13 @@ GROUP BY component, oper_type, status";
         $db_sid = $_REQUEST['db_sid'];
         $data = $_REQUEST;
 
-        $detail = array('task_id' => $data['task_id'], 'status' => 'run','comments' => 'recuperation des parametres ...');
+        $detail = array('task_id' => $data['task_id'], 'status' => 'run', 'comments' => 'recuperation des parametres ...');
         toC_Reports_Admin::addJobDetail($detail);
 
         $c = oci_pconnect($db_user, $db_pass, $db_host . "/" . $db_sid);
         if (!$c) {
             $e = oci_error();
-            $detail = array('task_id' => $data['task_id'], 'status' => 'error','comments' => 'Could not connect to database: ' . htmlentities($e['message']));
+            $detail = array('task_id' => $data['task_id'], 'status' => 'error', 'comments' => 'Could not connect to database: ' . htmlentities($e['message']));
             toC_Reports_Admin::addJobDetail($detail);
             $response = array('success' => false, 'feedback' => 'Could not connect to database: ' . htmlentities($e['message']));
         } else {
@@ -2879,14 +3422,14 @@ GROUP BY component, oper_type, status";
             $s = oci_parse($c, $query);
             if (!$s) {
                 $e = oci_error($c);
-                $detail = array('task_id' => $data['task_id'], 'status' => 'error','comments' => "Impossible de charger les snap id " . htmlentities($e['message']));
+                $detail = array('task_id' => $data['task_id'], 'status' => 'error', 'comments' => "Impossible de charger les snap id " . htmlentities($e['message']));
                 toC_Reports_Admin::addJobDetail($detail);
                 $response = array('success' => false, 'feedback' => "Impossible de charger les snap id " . htmlentities($e['message']));
             } else {
                 $r = oci_execute($s, OCI_COMMIT_ON_SUCCESS);
                 if (!$r) {
                     $e = oci_error($s);
-                    $detail = array('task_id' => $data['task_id'], 'status' => 'error','comments' => 'Erreur : ' . htmlentities($e['message']));
+                    $detail = array('task_id' => $data['task_id'], 'status' => 'error', 'comments' => 'Erreur : ' . htmlentities($e['message']));
                     toC_Reports_Admin::addJobDetail($detail);
                     $response = array('success' => false, 'feedback' => 'Erreur : ' . htmlentities($e['message']));
                 } else {
@@ -2905,14 +3448,14 @@ GROUP BY component, oper_type, status";
                     $s = oci_parse($c, $query);
                     if (!$s) {
                         $e = oci_error($c);
-                        $detail = array('task_id' => $data['task_id'], 'status' => 'error','comments' => "Impossible de charger les metatada de cette base " . htmlentities($e['message']));
+                        $detail = array('task_id' => $data['task_id'], 'status' => 'error', 'comments' => "Impossible de charger les metatada de cette base " . htmlentities($e['message']));
                         toC_Reports_Admin::addJobDetail($detail);
                         $response = array('success' => false, 'feedback' => "Impossible de charger les metatada de cette base " . htmlentities($e['message']));
                     } else {
                         $r = oci_execute($s, OCI_COMMIT_ON_SUCCESS);
                         if (!$r) {
                             $e = oci_error($s);
-                            $detail = array('task_id' => $data['task_id'], 'status' => 'error','comments' => 'Erreur : ' . htmlentities($e['message']));
+                            $detail = array('task_id' => $data['task_id'], 'status' => 'error', 'comments' => 'Erreur : ' . htmlentities($e['message']));
                             toC_Reports_Admin::addJobDetail($detail);
                             $response = array('success' => false, 'feedback' => 'Erreur : ' . htmlentities($e['message']));
                         } else {
@@ -2928,7 +3471,7 @@ GROUP BY component, oper_type, status";
 
                             oci_free_statement($s);
 
-                            $detail = array('task_id' => $data['task_id'], 'status' => 'run','comments' => 'Generation du rapport ...');
+                            $detail = array('task_id' => $data['task_id'], 'status' => 'run', 'comments' => 'Generation du rapport ...');
                             toC_Reports_Admin::addJobDetail($detail);
 
                             $characters = '0123456789';
@@ -2949,14 +3492,14 @@ GROUP BY component, oper_type, status";
                             $s = oci_parse($c, $query);
                             if (!$s) {
                                 $e = oci_error($c);
-                                $detail = array('task_id' => $data['task_id'], 'status' => 'error','comments' => "Impossible de generer ASH " . htmlentities($e['message']));
+                                $detail = array('task_id' => $data['task_id'], 'status' => 'error', 'comments' => "Impossible de generer ASH " . htmlentities($e['message']));
                                 toC_Reports_Admin::addJobDetail($detail);
                                 $response = array('success' => false, 'feedback' => "Impossible de generer ADDM " . htmlentities($e['message']));
                             } else {
                                 $r = oci_execute($s, OCI_COMMIT_ON_SUCCESS);
                                 if (!$r) {
                                     $e = oci_error($s);
-                                    $detail = array('task_id' => $data['task_id'], 'status' => 'error','comments' => 'Erreur : ' . htmlentities($e['message']));
+                                    $detail = array('task_id' => $data['task_id'], 'status' => 'error', 'comments' => 'Erreur : ' . htmlentities($e['message']));
                                     toC_Reports_Admin::addJobDetail($detail);
                                     $response = array('success' => false, 'feedback' => 'Erreur : ' . htmlentities($e['message']));
                                 } else {
@@ -2967,7 +3510,7 @@ GROUP BY component, oper_type, status";
 
                                     if (!$s) {
                                         $e = oci_error($c);
-                                        $detail = array('task_id' => $data['task_id'], 'status' => 'error','comments' => 'Erreur : ' . htmlentities($e['message']));
+                                        $detail = array('task_id' => $data['task_id'], 'status' => 'error', 'comments' => 'Erreur : ' . htmlentities($e['message']));
                                         toC_Reports_Admin::addJobDetail($detail);
                                         $response = array('success' => false, 'feedback' => 'Erreur : ' . htmlentities($e['message']));
                                         $response = array('success' => false, 'feedback' => "Impossible de generer ADDM REPORT " . htmlentities($e['message']));
@@ -2975,7 +3518,7 @@ GROUP BY component, oper_type, status";
                                         $r = oci_execute($s, OCI_COMMIT_ON_SUCCESS);
                                         if (!$r) {
                                             $e = oci_error($s);
-                                            $detail = array('task_id' => $data['task_id'], 'status' => 'error','comments' => 'Erreur : ' . htmlentities($e['message']));
+                                            $detail = array('task_id' => $data['task_id'], 'status' => 'error', 'comments' => 'Erreur : ' . htmlentities($e['message']));
                                             toC_Reports_Admin::addJobDetail($detail);
                                             $response = array('success' => false, 'feedback' => 'Erreur : ' . htmlentities($e['message']));
                                             $response = array('success' => false, 'feedback' => 'Erreur : ' . htmlentities($e['message']));
@@ -2994,25 +3537,21 @@ GROUP BY component, oper_type, status";
 
                                             $report = 'addm_' . '_' . $start_snap . '_' . $end_snap . '.txt';
                                             $file_name = $dir . '/' . $report;
-                                            $b = file_put_contents($file_name,$out);
+                                            $b = file_put_contents($file_name, $out);
 
                                             oci_free_statement($s);
                                             oci_close($c);
 
-                                            if($b > 0)
-                                            {
-                                                $detail = array('task_id' => $data['task_id'], 'status' => 'complete','comments' => $report);
+                                            if ($b > 0) {
+                                                $detail = array('task_id' => $data['task_id'], 'status' => 'complete', 'comments' => $report);
                                                 toC_Reports_Admin::addJobDetail($detail);
 
-                                                if(isset($data['to']) && !empty($data['to']) && isset($data['subject']) && !empty($data['subject']))
-                                                {
+                                                if (isset($data['to']) && !empty($data['to']) && isset($data['subject']) && !empty($data['subject'])) {
                                                     $data['body'] = $out;
                                                     toC_Reports_Admin::sendEmail($data);
                                                 }
-                                            }
-                                            else
-                                            {
-                                                $detail = array('task_id' => $data['task_id'], 'status' => 'error','comments' => "Impossible de creer le fichier de rapport");
+                                            } else {
+                                                $detail = array('task_id' => $data['task_id'], 'status' => 'error', 'comments' => "Impossible de creer le fichier de rapport");
                                                 toC_Reports_Admin::addJobDetail($detail);
                                             }
                                         }
@@ -3040,30 +3579,32 @@ GROUP BY component, oper_type, status";
         $end_snap = $_REQUEST['end_snap'];
         $data = $_REQUEST;
 
-        $detail = array('task_id' => $data['task_id'], 'status' => 'run','comments' => 'recuperation des parametres ...');
+        $detail = array('task_id' => $data['task_id'], 'status' => 'run', 'comments' => 'Connexion à la BD ...');
         toC_Reports_Admin::addJobDetail($detail);
 
         $c = oci_pconnect($db_user, $db_pass, $db_host . "/" . $db_sid);
         if (!$c) {
             $e = oci_error();
-            $detail = array('task_id' => $data['task_id'], 'status' => 'error','comments' => 'Could not connect to database: ' . htmlentities($e['message']));
+            $detail = array('task_id' => $data['task_id'], 'status' => 'error', 'comments' => 'Could not connect to database: ' . htmlentities($e['message']));
             toC_Reports_Admin::addJobDetail($detail);
 
             $response = array('success' => false, 'feedback' => 'Could not connect to database: ' . htmlentities($e['message']));
         } else {
+            $detail = array('task_id' => $data['task_id'], 'status' => 'run', 'comments' => 'Recuperation des Parametres ...');
+            toC_Reports_Admin::addJobDetail($detail);
             $query = "SELECT DISTINCT dbid, db_name, instance_number  FROM DBA_HIST_DATABASE_INSTANCE";
 
             $s = oci_parse($c, $query);
             if (!$s) {
                 $e = oci_error($c);
-                $detail = array('task_id' => $data['task_id'], 'status' => 'error','comments' => "Impossible de charger les metatada de cette base " . htmlentities($e['message']));
+                $detail = array('task_id' => $data['task_id'], 'status' => 'error', 'comments' => "Impossible de charger les metatada de cette base " . htmlentities($e['message']));
                 toC_Reports_Admin::addJobDetail($detail);
                 $response = array('success' => false, 'feedback' => "Impossible de charger les metatada de cette base " . htmlentities($e['message']));
             } else {
                 $r = oci_execute($s, OCI_COMMIT_ON_SUCCESS);
                 if (!$r) {
                     $e = oci_error($s);
-                    $detail = array('task_id' => $data['task_id'], 'status' => 'error','comments' => 'Erreur : ' . htmlentities($e['message']));
+                    $detail = array('task_id' => $data['task_id'], 'status' => 'error', 'comments' => 'Erreur : ' . htmlentities($e['message']));
                     toC_Reports_Admin::addJobDetail($detail);
 
                     $response = array('success' => false, 'feedback' => 'Erreur : ' . htmlentities($e['message']));
@@ -3080,56 +3621,69 @@ GROUP BY component, oper_type, status";
 
                     oci_free_statement($s);
 
+                    $detail = array('task_id' => $data['task_id'], 'status' => 'run', 'comments' => 'Execution du Script ...');
+                    toC_Reports_Admin::addJobDetail($detail);
+
                     $query = "Select * from table(dbms_workload_repository.AWR_REPORT_HTML(" . $dbid . "," . $instance_number . "," . $start_snap . "," . $end_snap . ",8))";
                     $s = oci_parse($c, $query);
 
                     if (!$s) {
                         $e = oci_error($c);
-                        $detail = array('task_id' => $data['task_id'], 'status' => 'error','comments' => "Impossible de generer AWR_REPORT_HTML " . htmlentities($e['message']));
+                        $detail = array('task_id' => $data['task_id'], 'status' => 'error', 'comments' => "Impossible de generer AWR_REPORT_HTML " . htmlentities($e['message']));
                         toC_Reports_Admin::addJobDetail($detail);
                         $response = array('success' => false, 'feedback' => "Impossible de generer AWR_REPORT_HTML " . htmlentities($e['message']));
                     } else {
-                        $detail = array('task_id' => $data['task_id'], 'status' => 'run','comments' => 'Generation du rapport ...');
-                        toC_Reports_Admin::addJobDetail($detail);
-
-                        $output = '';
-
-                        while (($row = oci_fetch_array($s, OCI_ASSOC))) {
-                            $output = $output . $row['OUTPUT'];
-                        }
-
-                        oci_free_statement($s);
-                        oci_close($c);
-
-                        $dir = realpath(DIR_WS_REPORTS) . '/';
-                        if (!file_exists($dir)) {
-                            mkdir($dir, 0777, true);
-                        }
-
-                        $report = 'awr_' . $data['task_id'] . '.html';
-                        $file_name = $dir . '/' . $report;
-
-                        $b = file_put_contents($file_name,$output);
-
-                        if($b > 0)
-                        {
-                            $detail = array('task_id' => $data['task_id'], 'status' => 'complete','comments' => $report);
+                        $r = oci_execute($s, OCI_COMMIT_ON_SUCCESS);
+                        if (!$r) {
+                            $e = oci_error($s);
+                            $detail = array('task_id' => $data['task_id'], 'status' => 'error', 'comments' => 'Erreur : ' . htmlentities($e['message']));
+                            toC_Reports_Admin::addJobDetail($detail);
+                            $response = array('success' => false, 'feedback' => 'Erreur : ' . htmlentities($e['message']));
+                        } else {
+                            $detail = array('task_id' => $data['task_id'], 'status' => 'run', 'comments' => 'Generation du rapport ...');
                             toC_Reports_Admin::addJobDetail($detail);
 
-                            if(isset($data['to']) && !empty($data['to']) && isset($data['subject']) && !empty($data['subject']))
-                            {
-                                $data['body'] = $output;
-                                toC_Reports_Admin::sendEmail($data);
+                            $output = array();
+
+                            oci_fetch_all($s, $output);
+
+                            oci_free_statement($s);
+                            oci_close($c);
+
+                            $out = '';
+
+                            foreach ($output as $col) {
+                                foreach ($col as $item) {
+                                    $out = $out . $item;
+                                }
                             }
 
-                            $response = array('success' => true);
-                        }
-                        else
-                        {
-                            $detail = array('task_id' => $data['task_id'], 'status' => 'error','comments' => "Impossible de creer le fichier de rapport");
-                            toC_Reports_Admin::addJobDetail($detail);
+                            $dir = realpath(DIR_WS_REPORTS);
+                            if (!file_exists($dir)) {
+                                mkdir($dir, 0777, true);
+                            }
 
-                            $response = array('success' => false);
+                            $report = 'awr_' . $data['task_id'] . '.html';
+                            $file_name = $dir . '/' . $report;
+
+                            $b = file_put_contents($file_name, $out);
+
+                            if ($b > 0) {
+                                $detail = array('task_id' => $data['task_id'], 'status' => 'complete', 'comments' => $report);
+                                toC_Reports_Admin::addJobDetail($detail);
+
+                                if (isset($data['to']) && !empty($data['to']) && isset($data['subject']) && !empty($data['subject'])) {
+                                    $data['body'] = $output;
+                                    toC_Reports_Admin::sendEmail($data);
+                                }
+
+                                $response = array('success' => true);
+                            } else {
+                                $detail = array('task_id' => $data['task_id'], 'status' => 'error', 'comments' => "Impossible de creer le fichier de rapport : " . $query);
+                                toC_Reports_Admin::addJobDetail($detail);
+
+                                $response = array('success' => false);
+                            }
                         }
                     }
                 }
@@ -3161,13 +3715,13 @@ GROUP BY component, oper_type, status";
                     $randomString .= $characters[rand(0, $charactersLength - 1)];
                 }
 
-                $cmd = "nohup curl '" . HTTP_SERVER . "/" . HTTP_COOKIE_PATH . "/admin/json.php' --data 'module=databases&action=awr_report&db_host=" . $data['db_host'] . "&start_snap=" . $data['start_snap'] . "&end_snap=" . $data['end_snap'] . "&db_user=" . $data['db_user'] . "&db_pass=" . $data['db_pass'] . "&db_sid=" . $data['db_sid'] . "&databases_id=" . $data['databases_id'] . "&task_id=" . $randomString . "' &";
+                $cmd = "nohup curl '" . HTTP_SERVER . "/" . HTTP_COOKIE_PATH . "/admin/json.php' --data 'module=databases&action=awr_report&db_host=" . $data['db_host'] . "&start_snap=" . $data['PARAM_START_SNAP'] . "&end_snap=" . $data['PARAM_END_SNAP'] . "&db_user=" . $data['db_user'] . "&db_pass=" . $data['db_pass'] . "&db_sid=" . $data['db_sid'] . "&databases_id=" . $data['databases_id'] . "&task_id=" . $randomString . "' &";
                 $ssh->exec($cmd);
                 //var_dump($cmd);
 
                 $ssh->disconnect();
 
-                $detail = array('task_id' => $randomString, 'status' => 'run','comments' => 'Job cree avec succes');
+                $detail = array('task_id' => $randomString, 'status' => 'run', 'comments' => 'Job cree avec succes');
                 toC_Reports_Admin::addJobDetail($detail);
 
                 $response = array('success' => true, 'msg' => 'Tache creee avec succes', 'task_id' => $randomString, 'status' => 'run');
@@ -3186,31 +3740,45 @@ GROUP BY component, oper_type, status";
         $db_pass = $_REQUEST['db_pass'];
         $db_host = $_REQUEST['db_host'];
         $db_sid = $_REQUEST['db_sid'];
+        $endValue = $_REQUEST['endValue'];
+        $startValue = $_REQUEST['startValue'];
         $data = $_REQUEST;
 
-        $detail = array('task_id' => $data['task_id'], 'status' => 'run','comments' => 'recuperation des parametres ...');
+        $detail = array('task_id' => $data['task_id'], 'status' => 'run', 'comments' => 'Connexion à la BD ...');
         toC_Reports_Admin::addJobDetail($detail);
 
         $c = oci_pconnect($db_user, $db_pass, $db_host . "/" . $db_sid);
         if (!$c) {
             $e = oci_error();
-            $detail = array('task_id' => $data['task_id'], 'status' => 'error','comments' => 'Could not connect to database: ' . htmlentities($e['message']));
+            $detail = array('task_id' => $data['task_id'], 'status' => 'error', 'comments' => 'Could not connect to database: ' . htmlentities($e['message']));
             toC_Reports_Admin::addJobDetail($detail);
             $response = array('success' => false, 'feedback' => 'Could not connect to database: ' . htmlentities($e['message']));
         } else {
-            $query = "select TO_char(max(SAMPLE_TIME) - 15/1440,'YYYY/MM/DD HH24:MI:SS') START_SNAP,TO_char(max(SAMPLE_TIME),'YYYY/MM/DD HH24:MI:SS') END_SNAP from v\$active_session_history";
+            $detail = array('task_id' => $data['task_id'], 'status' => 'run', 'comments' => 'Recuperation des metadonnees ...');
+            toC_Reports_Admin::addJobDetail($detail);
+            $minutes = 15;
+
+            parse:
+            if(isset($endValue) && !empty($endValue) && isset($startValue) && !empty($startValue))
+            {
+                $query = "select TO_char(min(SAMPLE_TIME),'YYYY/MM/DD HH24:MI:SS') START_SNAP,TO_char(max(SAMPLE_TIME),'YYYY/MM/DD HH24:MI:SS') END_SNAP from v\$active_session_history where sample_time between '" . $startValue . "' and '" . $endValue . "'";
+            }
+            else
+            {
+                $query = "select TO_char(min(SAMPLE_TIME) + $minutes/1440,'YYYY/MM/DD HH24:MI:SS') START_SNAP,TO_char(max(SAMPLE_TIME),'YYYY/MM/DD HH24:MI:SS') END_SNAP from v\$active_session_history";
+            }
 
             $s = oci_parse($c, $query);
             if (!$s) {
                 $e = oci_error($c);
-                $detail = array('task_id' => $data['task_id'], 'status' => 'error','comments' => "Impossible de charger les snap id " . htmlentities($e['message']));
+                $detail = array('task_id' => $data['task_id'], 'status' => 'error', 'comments' => "Impossible de charger les metadonnees " . htmlentities($e['message']));
                 toC_Reports_Admin::addJobDetail($detail);
                 $response = array('success' => false, 'feedback' => "Impossible de charger les snap id " . htmlentities($e['message']));
             } else {
                 $r = oci_execute($s, OCI_COMMIT_ON_SUCCESS);
                 if (!$r) {
                     $e = oci_error($s);
-                    $detail = array('task_id' => $data['task_id'], 'status' => 'error','comments' => 'Erreur : ' . htmlentities($e['message']));
+                    $detail = array('task_id' => $data['task_id'], 'status' => 'error', 'comments' => 'Erreur : ' . htmlentities($e['message']));
                     toC_Reports_Admin::addJobDetail($detail);
                     $response = array('success' => false, 'feedback' => 'Erreur : ' . htmlentities($e['message']));
                 } else {
@@ -3229,14 +3797,14 @@ GROUP BY component, oper_type, status";
                     $s = oci_parse($c, $query);
                     if (!$s) {
                         $e = oci_error($c);
-                        $detail = array('task_id' => $data['task_id'], 'status' => 'error','comments' => "Impossible de charger les metatada de cette base " . htmlentities($e['message']));
+                        $detail = array('task_id' => $data['task_id'], 'status' => 'error', 'comments' => "Impossible de charger les metatada de cette base " . htmlentities($e['message']));
                         toC_Reports_Admin::addJobDetail($detail);
                         $response = array('success' => false, 'feedback' => "Impossible de charger les metatada de cette base " . htmlentities($e['message']));
                     } else {
                         $r = oci_execute($s, OCI_COMMIT_ON_SUCCESS);
                         if (!$r) {
                             $e = oci_error($s);
-                            $detail = array('task_id' => $data['task_id'], 'status' => 'error','comments' => 'Erreur : ' . htmlentities($e['message']));
+                            $detail = array('task_id' => $data['task_id'], 'status' => 'error', 'comments' => 'Erreur : ' . htmlentities($e['message']));
                             toC_Reports_Admin::addJobDetail($detail);
                             $response = array('success' => false, 'feedback' => 'Erreur : ' . htmlentities($e['message']));
                         } else {
@@ -3252,7 +3820,7 @@ GROUP BY component, oper_type, status";
 
                             oci_free_statement($s);
 
-                            $detail = array('task_id' => $data['task_id'], 'status' => 'run','comments' => 'Generation du rapport ...');
+                            $detail = array('task_id' => $data['task_id'], 'status' => 'run', 'comments' => 'Generation du rapport ...');
                             toC_Reports_Admin::addJobDetail($detail);
 
                             $query = "Select * from table(dbms_workload_repository.ASH_REPORT_HTML(l_dbid => " . $dbid . ",l_inst_num => " . $instance_number . ", l_btime => " . " TO_DATE('" . $start_snap . "','YYYY/MM/DD HH24:MI:SS')," . "l_etime => " . " TO_DATE('" . $end_snap . "','YYYY/MM/DD HH24:MI:SS')," . "l_options => 0,l_slot_width => 0,l_sid => null,l_sql_id => null,l_wait_class => null,l_service_hash => null,l_module => null,l_action => null,l_client_id => null,l_plsql_entry => null))";
@@ -3260,20 +3828,28 @@ GROUP BY component, oper_type, status";
 
                             if (!$s) {
                                 $e = oci_error($c);
-                                $detail = array('task_id' => $data['task_id'], 'status' => 'error','comments' => "Impossible de generer ASH " . htmlentities($e['message']));
+                                $detail = array('task_id' => $data['task_id'], 'status' => 'error', 'comments' => "Impossible de generer ASH " . htmlentities($e['message']));
                                 toC_Reports_Admin::addJobDetail($detail);
                                 $response = array('success' => false, 'feedback' => "Impossible de generer ASH " . htmlentities($e['message']));
                             } else {
                                 $r = oci_execute($s, OCI_COMMIT_ON_SUCCESS);
                                 if (!$r) {
                                     $e = oci_error($s);
-                                    $detail = array('task_id' => $data['task_id'], 'status' => 'error','comments' => 'Erreur : ' . htmlentities($e['message']));
-                                    toC_Reports_Admin::addJobDetail($detail);
-                                    $response = array('success' => false, 'feedback' => 'Erreur : ' . htmlentities($e['message']));
+                                    if (strpos($e['message'], '01843') !== false)
+                                    {
+                                        $detail = array('task_id' => $data['task_id'], 'status' => 'run', 'comments' => htmlentities($e['message']));
+                                        toC_Reports_Admin::addJobDetail($detail);
+                                        $minutes = $minutes + 15;
+                                        goto parse;
+                                    }
+                                    else
+                                    {
+                                        $detail = array('task_id' => $data['task_id'], 'status' => 'error', 'comments' => 'Erreur : ' . htmlentities($e['message']));
+                                        toC_Reports_Admin::addJobDetail($detail);
+                                        $response = array('success' => false, 'feedback' => 'Erreur : ' . htmlentities($e['message']));
+                                    }
                                 } else {
                                     oci_fetch_all($s, $output);
-
-                                    //var_dump($output);
 
                                     oci_free_statement($s);
                                     oci_close($c);
@@ -3294,22 +3870,236 @@ GROUP BY component, oper_type, status";
                                     $report = 'ash_' . $data['task_id'] . '.html';
                                     $file_name = $dir . '/' . $report;
 
-                                    $b = file_put_contents($file_name,$out);
+                                    $b = file_put_contents($file_name, $out);
 
-                                    if($b > 0)
-                                    {
-                                        $detail = array('task_id' => $data['task_id'], 'status' => 'complete','comments' => $report);
+                                    if ($b > 0) {
+                                        $detail = array('task_id' => $data['task_id'], 'status' => 'complete', 'comments' => $report);
                                         toC_Reports_Admin::addJobDetail($detail);
 
-                                        if(isset($data['to']) && !empty($data['to']) && isset($data['subject']) && !empty($data['subject']))
-                                        {
+                                        if (isset($data['to']) && !empty($data['to']) && isset($data['subject']) && !empty($data['subject'])) {
                                             $data['body'] = $out;
                                             toC_Reports_Admin::sendEmail($data);
                                         }
+                                    } else {
+                                        $detail = array('task_id' => $data['task_id'], 'status' => 'error', 'comments' => "Impossible de creer le fichier de rapport");
+                                        toC_Reports_Admin::addJobDetail($detail);
                                     }
-                                    else
-                                    {
-                                        $detail = array('task_id' => $data['task_id'], 'status' => 'error','comments' => "Impossible de creer le fichier de rapport");
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        echo $toC_Json->encode($response);
+    }
+
+    function sqlRep()
+    {
+        error_reporting(E_ALL);
+        global $toC_Json;
+
+        $db_user = $_REQUEST['db_user'];
+        $db_pass = $_REQUEST['db_pass'];
+        $db_host = $_REQUEST['db_host'];
+        $db_sid = $_REQUEST['db_sid'];
+        $sql_id = $_REQUEST['sql_id'];
+        $data = $_REQUEST;
+
+        $detail = array('task_id' => $data['task_id'], 'status' => 'run', 'comments' => 'Connexion à la base ...');
+        toC_Reports_Admin::addJobDetail($detail);
+
+        $c = oci_pconnect($db_user, $db_pass, $db_host . "/" . $db_sid);
+        if (!$c) {
+            $e = oci_error();
+            $detail = array('task_id' => $data['task_id'], 'status' => 'error', 'comments' => 'Could not connect to database: ' . htmlentities($e['message']));
+            toC_Reports_Admin::addJobDetail($detail);
+            $response = array('success' => false, 'feedback' => 'Could not connect to database: ' . htmlentities($e['message']));
+        } else {
+            $detail = array('task_id' => $data['task_id'], 'status' => 'run', 'comments' => 'Generation du rapport ...');
+            toC_Reports_Admin::addJobDetail($detail);
+
+            $query = "SELECT DBMS_SQLTUNE.REPORT_SQL_MONITOR(sql_id=> '" . $sql_id . "',type=>'HTML') FROM dual";
+            var_dump($query);
+            $s = oci_parse($c, $query);
+
+            if (!$s) {
+                $e = oci_error($c);
+                $detail = array('task_id' => $data['task_id'], 'status' => 'error', 'comments' => "Impossible de generer le rapport SQL : " . htmlentities($e['message']));
+                toC_Reports_Admin::addJobDetail($detail);
+                $response = array('success' => false, 'feedback' => "Impossible de generer le rapport SQL : " . htmlentities($e['message']));
+            } else {
+                $r = oci_execute($s, OCI_COMMIT_ON_SUCCESS);
+                if (!$r) {
+                    $e = oci_error($s);
+                    $detail = array('task_id' => $data['task_id'], 'status' => 'error', 'comments' => 'Erreur : ' . htmlentities($e['message']));
+                    toC_Reports_Admin::addJobDetail($detail);
+                    $response = array('success' => false, 'feedback' => 'Erreur : ' . htmlentities($e['message']));
+                } else {
+                    oci_fetch_all($s, $output);
+
+                    //var_dump($output);
+
+                    oci_free_statement($s);
+                    oci_close($c);
+
+                    $out = '';
+
+                    foreach ($output as $col) {
+                        foreach ($col as $item) {
+                            $out = $out . $item;
+                        }
+                    }
+
+                    $dir = realpath(DIR_WS_REPORTS) . '/';
+                    if (!file_exists($dir)) {
+                        mkdir($dir, 0777, true);
+                    }
+
+                    $report = 'sql_report_' . $data['task_id'] . '.html';
+                    $file_name = $dir . '/' . $report;
+
+                    $b = file_put_contents($file_name, $out);
+
+                    if ($b > 0) {
+                        $detail = array('task_id' => $data['task_id'], 'status' => 'complete', 'comments' => $report);
+                        toC_Reports_Admin::addJobDetail($detail);
+
+                        if (isset($data['to']) && !empty($data['to']) && isset($data['subject']) && !empty($data['subject'])) {
+                            $data['body'] = $out;
+                            toC_Reports_Admin::sendEmail($data);
+                        }
+                    } else {
+                        $detail = array('task_id' => $data['task_id'], 'status' => 'error', 'comments' => "Impossible de creer le fichier de rapport");
+                        toC_Reports_Admin::addJobDetail($detail);
+                    }
+                }
+            }
+        }
+
+        echo $toC_Json->encode($response);
+    }
+
+    function sqlTuning()
+    {
+        error_reporting(E_ALL);
+        global $toC_Json;
+
+        $db_user = $_REQUEST['db_user'];
+        $db_pass = $_REQUEST['db_pass'];
+        $db_host = $_REQUEST['db_host'];
+        $db_sid = $_REQUEST['db_sid'];
+        $sql_id = $_REQUEST['sql_id'];
+        $data = $_REQUEST;
+
+        $detail = array('task_id' => $data['task_id'], 'status' => 'run', 'comments' => 'connexion BD ...');
+        toC_Reports_Admin::addJobDetail($detail);
+
+        $c = oci_pconnect($db_user, $db_pass, $db_host . "/" . $db_sid);
+        if (!$c) {
+            $e = oci_error();
+            $detail = array('task_id' => $data['task_id'], 'status' => 'error', 'comments' => 'Could not connect to database: ' . htmlentities($e['message']));
+            toC_Reports_Admin::addJobDetail($detail);
+            $response = array('success' => false, 'feedback' => 'Could not connect to database: ' . htmlentities($e['message']));
+        } else {
+
+            $detail = array('task_id' => $data['task_id'], 'status' => 'run', 'comments' => 'Creation du Job ...');
+            toC_Reports_Admin::addJobDetail($detail);
+
+            $query = "DECLARE ret_val VARCHAR2 (4000);BEGIN ret_val := DBMS_SQLTUNE.CREATE_TUNING_TASK(sql_id => '" . $sql_id . "'," . " plan_hash_value => NULL,scope => 'COMPREHENSIVE',time_limit  => 1800," . " task_name   => '" . $data['task_id'] . "',description => '" . $data['task_id'] . "');" . "END;";
+
+            $s = oci_parse($c, $query);
+            if (!$s) {
+                $e = oci_error($c);
+                $detail = array('task_id' => $data['task_id'], 'status' => 'error', 'comments' => "Impossible de Creer le Job " . htmlentities($e['message']));
+                toC_Reports_Admin::addJobDetail($detail);
+                $response = array('success' => false, 'feedback' => "Impossible de Creer le Job " . htmlentities($e['message']));
+            } else {
+                $r = oci_execute($s, OCI_COMMIT_ON_SUCCESS);
+                if (!$r) {
+                    $e = oci_error($s);
+                    $detail = array('task_id' => $data['task_id'], 'status' => 'error', 'comments' => 'Erreur : ' . htmlentities($e['message']));
+                    toC_Reports_Admin::addJobDetail($detail);
+                    $response = array('success' => false, 'feedback' => 'Erreur : ' . htmlentities($e['message']));
+                } else {
+
+                    oci_free_statement($s);
+
+                    $detail = array('task_id' => $data['task_id'], 'status' => 'run', 'comments' => 'Analyse de la requete ...');
+                    toC_Reports_Admin::addJobDetail($detail);
+
+                    $query = "Begin Dbms_Sqltune.EXECUTE_TUNING_TASK('" . $data['task_id'] . "'); End;";
+
+                    $s = oci_parse($c, $query);
+                    if (!$s) {
+                        $e = oci_error($c);
+                        $detail = array('task_id' => $data['task_id'], 'status' => 'error', 'comments' => "Impossible d'analyser cette requete " . htmlentities($e['message']));
+                        toC_Reports_Admin::addJobDetail($detail);
+                        $response = array('success' => false, 'feedback' => "Impossible d'analyser cette requete " . htmlentities($e['message']));
+                    } else {
+                        $r = oci_execute($s, OCI_COMMIT_ON_SUCCESS);
+                        if (!$r) {
+                            $e = oci_error($s);
+                            $detail = array('task_id' => $data['task_id'], 'status' => 'error', 'comments' => 'Erreur : ' . htmlentities($e['message']));
+                            toC_Reports_Admin::addJobDetail($detail);
+                            $response = array('success' => false, 'feedback' => 'Erreur : ' . htmlentities($e['message']));
+                        } else {
+
+                            oci_free_statement($s);
+
+                            $detail = array('task_id' => $data['task_id'], 'status' => 'run', 'comments' => 'Generation du rapport ...');
+                            toC_Reports_Admin::addJobDetail($detail);
+
+                            $query = "select Dbms_Sqltune.REPORT_TUNING_TASK('" . $data['task_id'] . "', 'TEXT', 'ALL') report from dual";
+                            $s = oci_parse($c, $query);
+
+                            if (!$s) {
+                                $e = oci_error($c);
+                                $detail = array('task_id' => $data['task_id'], 'status' => 'error', 'comments' => "Impossible de generer le Rapport " . htmlentities($e['message']));
+                                toC_Reports_Admin::addJobDetail($detail);
+                                $response = array('success' => false, 'feedback' => "Impossible de generer le Rapport " . htmlentities($e['message']));
+                            } else {
+                                $r = oci_execute($s, OCI_COMMIT_ON_SUCCESS);
+                                if (!$r) {
+                                    $e = oci_error($s);
+                                    $detail = array('task_id' => $data['task_id'], 'status' => 'error', 'comments' => 'Erreur : ' . htmlentities($e['message']));
+                                    toC_Reports_Admin::addJobDetail($detail);
+                                    $response = array('success' => false, 'feedback' => 'Erreur : ' . htmlentities($e['message']));
+                                } else {
+                                    oci_fetch_all($s, $output);
+
+                                    oci_free_statement($s);
+                                    oci_close($c);
+
+                                    $out = '';
+
+                                    foreach ($output as $col) {
+                                        foreach ($col as $item) {
+                                            $out = $out . $item;
+                                        }
+                                    }
+
+                                    $dir = realpath(DIR_WS_REPORTS) . '/';
+                                    if (!file_exists($dir)) {
+                                        mkdir($dir, 0777, true);
+                                    }
+
+                                    $report = 'sql_tuning_' . $data['task_id'] . '.txt';
+                                    $file_name = $dir . '/' . $report;
+
+                                    $b = file_put_contents($file_name, $out);
+
+                                    if ($b > 0) {
+                                        $detail = array('task_id' => $data['task_id'], 'status' => 'complete', 'comments' => $report);
+                                        toC_Reports_Admin::addJobDetail($detail);
+
+                                        if (isset($data['to']) && !empty($data['to']) && isset($data['subject']) && !empty($data['subject'])) {
+                                            $data['body'] = $out;
+                                            toC_Reports_Admin::sendEmail($data);
+                                        }
+                                    } else {
+                                        $detail = array('task_id' => $data['task_id'], 'status' => 'error', 'comments' => "Impossible de creer le fichier de rapport");
                                         toC_Reports_Admin::addJobDetail($detail);
                                     }
                                 }
@@ -3901,6 +4691,62 @@ GROUP BY component, oper_type, status";
                 }
             }
         }
+
+        echo $toC_Json->encode($response);
+    }
+
+    function listTablespacecombo()
+    {
+        global $toC_Json;
+
+        $query = "select tablespace_name from dba_tablespaces order by 1";
+
+        $db_user = $_REQUEST['db_user'];
+        $db_pass = $_REQUEST['db_pass'];
+        $db_host = $_REQUEST['db_host'];
+        $db_sid = $_REQUEST['db_sid'];
+        $records = array();
+        $total = 0;
+
+        $c = oci_pconnect($db_user, $db_pass, $db_host . "/" . $db_sid);
+        if (!$c) {
+            $e = oci_error();
+
+            $records [] = array('tablespace_name' => 'err', 'label' => 'Could not connect to database: ' . htmlentities($e['message']));
+
+            //$response = array('success' => false, 'feedback' => 'Could not connect to database: ' . htmlentities($e['message']));
+        } else {
+            $s = oci_parse($c, $query);
+            if (!$s) {
+                $e = oci_error($c);
+                $records [] = array('tablespace_name' => 'err', 'label' => "Impossible d'executer cette requete " . htmlentities($e['message']));
+
+                //$response = array('success' => false, 'feedback' => "Impossible d'executer cette requete " . htmlentities($e['message']));
+            } else {
+                $r = oci_execute($s, OCI_COMMIT_ON_SUCCESS);
+                if (!$r) {
+                    $e = oci_error($s);
+                    $records [] = array('tablespace_name' => 'err', 'label' => 'Impossible de lister les espaces logiques de cette base ' . htmlentities($e['message']));
+
+                    //$response = array('success' => false, 'feedback' => 'Impossible de lister les espaces logiques de cette base ' . htmlentities($e['message']));
+                } else {
+
+                    $records [] = array('tablespace_name' => 'all', 'label' => "Tous les Tablespaces");
+
+                    while (($row = oci_fetch_array($s, OCI_ASSOC))) {
+                        $total++;
+
+                        $records [] = array('tablespace_name' => $row['TABLESPACE_NAME'], 'label' => $row['TABLESPACE_NAME']);
+                    }
+                }
+            }
+
+            oci_free_statement($s);
+        }
+
+        oci_close($c);
+
+        $response = array(EXT_JSON_READER_ROOT => $records);
 
         echo $toC_Json->encode($response);
     }
@@ -5255,122 +6101,6 @@ FROM
         echo $toC_Json->encode($response);
     }
 
-    function listSessions()
-    {
-        global $toC_Json;
-
-        $db_user = $_REQUEST['db_user'];
-        $db_pass = $_REQUEST['db_pass'];
-        $db_host = $_REQUEST['db_host'];
-        $db_sid = $_REQUEST['db_sid'];
-        $status = $_REQUEST['status'];
-
-        $c = oci_pconnect($db_user, $db_pass, $db_host . "/" . $db_sid);
-        if (!$c) {
-            $e = oci_error();
-            trigger_error('Could not connect to database: ' . $e['message'], E_USER_ERROR);
-        }
-
-        $status = strtoupper($status);
-
-        $query = "SELECT *
-FROM
-  (SELECT s.sid,
-    s.serial#             AS serial,
-    s.saddr,
-    lower(s.username) AS username,
-    s.status,
-    s.type,
-    s.command,
-    sw.state,
-    sw.event,
-    sw.wait_time,
-    sw.seconds_in_wait,
-    s.logon_time,
-    s.schemaname,
-    s.osuser,
-    s.machine,
-    s.terminal,
-    s.action,
-    sql_text,
-    case
-    when s.module != s.program then s.module || ' ' || s.program || ' ' || s.client_info
-    else s.module || ' ' || s.client_info
-    end info,
-    100       *NVL(slo.sofar,0)/NVL(slo.totalwork,1) pct,
-    ROUND(100 * p.PGA_USED_MEM / p.pga_max_mem) pct_pga
-  FROM v\$session s,
-    v\$px_session px,
-    v\$session_wait sw,
-    v\$process p,
-    v\$sqlarea sqlarea,
-    (SELECT * FROM v\$session_longops WHERE time_remaining <> 0
-    ) slo
-  WHERE s.sql_hash_value = sqlarea.hash_value
-  AND s.sql_address      = sqlarea.address
-  AND s.sid              = sw.sid(+)
-  and s.sid != USERENV ('SID')
-  AND s.paddr            = p.addr
-  AND (s.sid             = slo.sid(+)
-  AND s.serial#          = slo.serial#(+))
-  AND (s.sid             = px.sid(+)
-  AND s.serial#          = px.serial#(+))
-  )
-WHERE STATUS = '" . $status . "'
-AND TYPE    != 'BACKGROUND'
-ORDER BY seconds_in_wait DESC";
-
-        $s = oci_parse($c, $query);
-        if (!$s) {
-            $e = oci_error($c);
-            trigger_error('Could not parse statement: ' . $e['message'], E_USER_ERROR);
-            var_dump($s);
-        }
-
-        $r = oci_execute($s);
-        if (!$r) {
-            $e = oci_error($s);
-            trigger_error('Could not execute statement: ' . $e['message'], E_USER_ERROR);
-            var_dump($r);
-        }
-
-        $records = array();
-        //$sum = 0;
-        $count = 0;
-
-        while (($row = oci_fetch_array($s, OCI_ASSOC))) {
-            $records [] = array('sid' => $row['SID'],
-                'sql_text' => $row['SQL_TEXT'],
-                'serial' => $row['SERIAL'],
-                'username' => $row['USERNAME'],
-                'command' => $row['COMMAND'],
-                'state' => $row['STATE'],
-                'client_info' => $row['INFO'],
-                'event' => $row['EVENT'],
-                'wait_time' => $row['WAIT_TIME'],
-                'seconds_in_wait' => $row['SECONDS_IN_WAIT'],
-                'logon_time' => $row['LOGON_TIME'],
-                'schemaname' => $row['SCHEMANAME'],
-                'osuser' => $row['OSUSER'],
-                'machine' => $row['MACHINE'],
-                'terminal' => $row['TERMINAL'],
-                'action' => $row['ACTION'],
-                'pct' => $row['PCT'],
-                'pct_pga' => $row['PCT_PGA']
-            );
-
-            $count++;
-        }
-
-        oci_free_statement($s);
-        oci_close($c);
-
-        $response = array(EXT_JSON_READER_TOTAL => $count,
-            EXT_JSON_READER_ROOT => $records);
-
-        echo $toC_Json->encode($response);
-    }
-
     function lockTree()
     {
         global $toC_Json;
@@ -5596,42 +6326,163 @@ where 1 = 1 ";
         $db_pass = $_REQUEST['db_pass'];
         $db_host = $_REQUEST['db_host'];
         $db_sid = $_REQUEST['db_sid'];
+        $records = array();
 
         $c = oci_pconnect($db_user, $db_pass, $db_host . "/" . $db_sid);
         if (!$c) {
             $e = oci_error();
-            trigger_error('Could not connect to database: ' . $e['message'], E_USER_ERROR);
+            $records [] = array('namespace' => $e['message'],
+                'reloads' => '',
+                'gethits' => '',
+                'pins' => '',
+                'pinhits' => '',
+                'invalidations' => '',
+                'gets' => '',
+                'get' => '',
+                'pin' => '');
+        }
+        else
+        {
+            $query = "SELECT gets,gethits,pins,pinhits,namespace,reloads,invalidations,round(gethitratio * 100) get,round(pinhitratio * 100) pin FROM V\$LIBRARYCACHE ORDER BY namespace";
+
+            $s = oci_parse($c, $query);
+            if (!$s) {
+                $e = oci_error($c);
+                $records [] = array('namespace' => $e['message'],
+                    'reloads' => '',
+                    'gethits' => '',
+                    'pins' => '',
+                    'pinhits' => '',
+                    'invalidations' => '',
+                    'gets' => '',
+                    'get' => '',
+                    'pin' => '');
+            }
+            else
+            {
+                $r = oci_execute($s);
+                if (!$r) {
+                    $e = oci_error($s);
+                    $records [] = array('namespace' => $e['message'],
+                        'reloads' => '',
+                        'gethits' => '',
+                        'pins' => '',
+                        'pinhits' => '',
+                        'invalidations' => '',
+                        'gets' => '',
+                        'get' => '',
+                        'pin' => '');
+                }
+                else
+                {
+                    while (($row = oci_fetch_array($s, OCI_ASSOC))) {
+                        $records [] = array('namespace' => $row['NAMESPACE'],
+                            'reloads' => $row['RELOADS'],
+                            'invalidations' => $row['INVALIDATIONS'],
+                            'gethits' => $row['GETHITS'],
+                            'pins' => $row['PINS'],
+                            'pinhits' => $row['PINHITS'],
+                            'gets' => $row['GETS'],
+                            'get' => $row['GET'],
+                            'pin' => $row['PIN']);
+                    }
+                }
+            }
+
+            oci_free_statement($s);
         }
 
-        $query = "SELECT namespace,reloads,invalidations,gethitratio * 100 get,pinhitratio * 100 pin FROM V\$LIBRARYCACHE WHERE gethitratio * 100 < 80 OR pinhitratio * 100 < 80 ORDER BY namespace";
-
-        $s = oci_parse($c, $query);
-        if (!$s) {
-            $e = oci_error($c);
-            trigger_error('Could not parse statement: ' . $e['message'], E_USER_ERROR);
-        }
-
-        $r = oci_execute($s);
-        if (!$r) {
-            $e = oci_error($s);
-            trigger_error('Could not execute statement: ' . $e['message'], E_USER_ERROR);
-        }
-
-        $records = array();
-        //$sum = 0;
-        $count = 0;
-
-        while (($row = oci_fetch_array($s, OCI_ASSOC))) {
-            $records [] = array('namespace' => $row['NAMESPACE'],
-                'reloads' => $row['RELOADS'], 'invalidations' => $row['INVALIDATIONS'], 'get' => $row['GET'], 'pin' => $row['PIN']);
-
-            $count++;
-        }
-
-        oci_free_statement($s);
         oci_close($c);
 
-        $response = array(EXT_JSON_READER_TOTAL => $count,
+        $response = array(EXT_JSON_READER_TOTAL => count($records),
+            EXT_JSON_READER_ROOT => $records);
+
+        echo $toC_Json->encode($response);
+    }
+
+    function listLatch()
+    {
+        global $toC_Json;
+
+        $db_user = $_REQUEST['db_user'];
+        $db_pass = $_REQUEST['db_pass'];
+        $db_host = $_REQUEST['db_host'];
+        $db_sid = $_REQUEST['db_sid'];
+        $records = array();
+
+        $c = oci_pconnect($db_user, $db_pass, $db_host . "/" . $db_sid);
+        if (!$c) {
+            $e = oci_error();
+            $records [] = array('name' => $e['message'],
+                'ind' => '',
+                'misses' => '',
+                'immediate_gets' => '',
+                'immediate_misses' => '',
+                'misses_ratio' => '',
+                'gets' => '');
+        }
+        else
+        {
+            $query = "SELECT LATCH# ind,
+         name,
+         gets,
+         misses,
+         immediate_gets,
+         round(wait_time/1000000) wait_time,
+         immediate_misses,
+         DECODE (gets, 0, 0, ROUND (misses / gets * 100)) misses_ratio
+    FROM v\$latch
+   WHERE misses > 0
+ORDER BY misses_ratio DESC";
+
+            $s = oci_parse($c, $query);
+            if (!$s) {
+                $e = oci_error($c);
+                $records [] = array('name' => $e['message'],
+                    'ind' => '',
+                    'misses' => '',
+                    'wait_time' => '',
+                    'immediate_gets' => '',
+                    'immediate_misses' => '',
+                    'misses_ratio' => '',
+                    'gets' => '');
+            }
+            else
+            {
+                $r = oci_execute($s);
+                if (!$r) {
+                    $e = oci_error($s);
+
+                    $records [] = array('name' => $e['message'],
+                        'ind' => '',
+                        'misses' => '',
+                        'wait_time' => '',
+                        'immediate_gets' => '',
+                        'immediate_misses' => '',
+                        'misses_ratio' => '',
+                        'gets' => '');
+                }
+                else
+                {
+                    while (($row = oci_fetch_array($s, OCI_ASSOC))) {
+                        $records [] = array('name' => $row['NAME'],
+                            'ind' => $row['IND'],
+                            'misses' => $row['MISSES'],
+                            'wait_time' => $row['WAIT_TIME'],
+                            'immediate_gets' => $row['IMMEDIATE_GETS'],
+                            'immediate_misses' => $row['IMMEDIATE_MISSES'],
+                            'misses_ratio' => $row['MISSES_RATIO'],
+                            'gets' => $row['GETS']);
+                    }
+                }
+            }
+
+            oci_free_statement($s);
+        }
+
+        oci_close($c);
+
+        $response = array(EXT_JSON_READER_TOTAL => count($records),
             EXT_JSON_READER_ROOT => $records);
 
         echo $toC_Json->encode($response);
@@ -5889,6 +6740,166 @@ order by tablespace_name";
                 }
             }
         }
+
+        echo $toC_Json->encode($response);
+    }
+
+    function listParameters()
+    {
+        global $toC_Json;
+
+        $db_user = $_REQUEST['db_user'];
+        $db_pass = $_REQUEST['db_pass'];
+        $db_host = $_REQUEST['db_host'];
+        $db_sid = $_REQUEST['db_sid'];
+        $scope = $_REQUEST['scope'];
+        $records = array();
+
+        $c = oci_pconnect($db_user, $db_pass, $db_host . "/" . $db_sid);
+        if (!$c) {
+            $e = oci_error();
+            $records [] = array('num' => 0,
+                'name' => 'error',
+                'display_value' => '',
+                'description' => $e['message']);
+        } else {
+            switch($scope)
+            {
+                case "instance":
+                $query = "select num,name,display_value,description from v\$parameter where 1 = 1 ";
+                    break;
+
+                case "shared_pool":
+                    $query = "SELECT n.indx num,
+         n.ksppinm name,
+         n.ksppdesc description,
+         v.KSPPSTVL display_value
+    FROM x\$ksppi n, x\$ksppsv v
+   WHERE     n.indx = v.indx
+         AND (   n.ksppinm LIKE '%shared_pool%'
+              OR n.ksppinm IN ('_kghdsidx_count',
+                               '_ksmg_granule_size',
+                               '_memory_imm_mode_without_autosga'))";
+                    break;
+
+                default:
+                    $query = "select num,name,display_value,description from v\$parameter where 1 = 1 ";
+                    break;
+            }
+
+            if (!empty($_REQUEST['search'])) {
+                $search = strtolower($_REQUEST['search']);
+                $query = $query . " and (lower(name) like '%" . $search . "%' or lower(display_value) like '%" . $search . "%' or lower(description) like '%" . $search . "%')";
+            }
+
+            $query = $query . " order by 2";
+
+            $s = oci_parse($c, $query);
+            if (!$s) {
+                $e = oci_error($c);
+                $records [] = array('num' => 0,
+                    'name' => 'error',
+                    'display_value' => '',
+                    'description' => $e['message']);
+            } else {
+                $r = oci_execute($s, OCI_COMMIT_ON_SUCCESS);
+                if (!$r) {
+                    $e = oci_error($s);
+                    $records [] = array('num' => 0,
+                        'name' => 'error',
+                        'display_value' => '',
+                        'description' => $e['message']);
+                } else {
+                    while (($row = oci_fetch_array($s, OCI_ASSOC))) {
+                        $records [] = array('num' => $row['NUM'], 'name' => $row['NAME'], 'display_value' => $row['DISPLAY_VALUE'], 'description' => $row['DESCRIPTION']);
+                    }
+                }
+            }
+
+            oci_free_statement($s);
+        }
+
+        oci_close($c);
+
+        $response = array(EXT_JSON_READER_TOTAL => count($records),
+            EXT_JSON_READER_ROOT => $records);
+
+        echo $toC_Json->encode($response);
+    }
+
+    function sqlareaUsage()
+    {
+        global $toC_Json;
+
+        $db_user = $_REQUEST['db_user'];
+        $db_pass = $_REQUEST['db_pass'];
+        $db_host = $_REQUEST['db_host'];
+        $db_sid = $_REQUEST['db_sid'];
+        $records = array();
+
+        $c = oci_pconnect($db_user, $db_pass, $db_host . "/" . $db_sid);
+        if (!$c) {
+            $e = oci_error();
+            $records [] = array('username' => $e['message'],
+                'user_id' => '',
+                'sharable' => '',
+                'persistent' => '',
+                'runtime' => '',
+                'areas' => '',
+                'mem_sum' => '');
+        } else {
+            $query = "SELECT username,user_id,
+         round(SUM (sharable_mem)/1024/1024) sharable,
+         round(SUM (persistent_mem)/1024/1024) persistent,
+         round(SUM (runtime_mem)/1024/1024) runtime,
+         COUNT (*) areas,
+         round(SUM (sharable_mem + persistent_mem + runtime_mem)/1024/1024) mem_sum
+    FROM (SELECT username,user_id,
+                 sharable_mem,
+                 persistent_mem,
+                 runtime_mem
+            FROM sys.v_\$sqlarea a, dba_users b
+           WHERE a.parsing_user_id = b.user_id) s
+GROUP BY username,user_id
+ORDER BY 7 desc";
+
+            $s = oci_parse($c, $query);
+            if (!$s) {
+                $e = oci_error($c);
+                $records [] = array('username' => $e['message'],
+                    'user_id' => '',
+                    'sharable' => '',
+                    'persistent' => '',
+                    'runtime' => '',
+                    'areas' => '',
+                    'mem_sum' => '');
+            } else {
+                $r = oci_execute($s, OCI_COMMIT_ON_SUCCESS);
+                if (!$r) {
+                    $e = oci_error($s);
+                    $records [] = array('username' => $e['message'],
+                        'user_id' => '',
+                        'sharable' => '',
+                        'persistent' => '',
+                        'runtime' => '',
+                        'areas' => '',
+                        'mem_sum' => '');
+                } else {
+
+                    while (($row = oci_fetch_array($s, OCI_ASSOC))) {
+                        $records [] = array('username' => $row['USERNAME'],
+                            'user_id' => $row['USER_ID'],
+                            'sharable' => $row['SHARABLE'], 'persistent' => $row['PERSISTENT'], 'runtime' => $row['RUNTIME'], 'areas' => $row['AREAS'], 'mem_sum' => $row['MEM_SUM']);
+                    }
+                }
+            }
+            oci_free_statement($s);
+        }
+
+        oci_close($c);
+
+        $response = array(EXT_JSON_READER_TOTAL => count($records),
+            EXT_JSON_READER_ROOT => $records);
 
         echo $toC_Json->encode($response);
     }
@@ -6363,7 +7374,7 @@ ORDER BY 1 DESC NULLS LAST";
         global $toC_Json;
         $search = $_REQUEST['search'];
 
-        $query = "SELECT USERNAME,ACCOUNT_STATUS,EXPIRY_DATE,CREATED,AUTHENTICATION_TYPE FROM SYS.DBA_USERS where 1 = 1 ";
+        $query = "SELECT USERNAME FROM SYS.DBA_USERS where 1 = 1 ";
 
         if (!empty($search)) {
             $query = $query . " and lower(USERNAME) like '%" . strtolower($search) . "%'";
@@ -6392,37 +7403,32 @@ ORDER BY 1 DESC NULLS LAST";
                     $response = array('success' => false, 'feedback' => 'Impossible de lister les utilisateurs de cette base ' . htmlentities($e['message']));
                 } else {
                     $records = array();
-                    $total = 0;
+
+                    $records[] = array(
+                        'username' => 'all',
+                        'label' => 'Tous les Schemas'
+                    );
+
+                    $total = 1;
 
                     while (($row = oci_fetch_array($s, OCI_ASSOC))) {
                         $total++;
 
-                        $file = "xxxxxxxxxxx.user_locked";
-
-                        if (trim(strtolower($row['ACCOUNT_STATUS'])) == "open") {
-                            $file = "xxxxxxxxxx.user_open";
-                        }
-
-                        $entry_icon = osc_icon_from_filename($file, $row['ACCOUNT_STATUS']);
-
                         $records[] = array(
-                            'icon' => $entry_icon,
-                            'status' => $row['ACCOUNT_STATUS'],
                             'username' => $row['USERNAME'],
-                            'expiration' => $row['EXPIRY_DATE'],
-                            'creation' => $row['CREATED'],
-                            'authentication_type' => $row['AUTHENTICATION_TYPE'] == 'EXTERNAL' ? 1 : 0
+                            'label' => $row['USERNAME']
                         );
                     }
-
-                    oci_free_statement($s);
-                    oci_close($c);
 
                     $response = array(EXT_JSON_READER_TOTAL => $total,
                         EXT_JSON_READER_ROOT => $records);
                 }
             }
+
+            oci_free_statement($s);
         }
+
+        oci_close($c);
 
         echo $toC_Json->encode($response);
     }
@@ -6654,6 +7660,9 @@ ORDER BY SESSION_KEY desc";
     {
         global $toC_Json;
 
+        $start = empty($_REQUEST['start']) ? 0 : $_REQUEST['start'];
+        $limit = empty($_REQUEST['limit']) ? MAX_DISPLAY_SEARCH_RESULTS : $_REQUEST['limit'];
+
         $search = empty($_REQUEST['search']) ? '' : $_REQUEST['search'];
 
         $db_user = $_REQUEST['db_user'];
@@ -6661,146 +7670,210 @@ ORDER BY SESSION_KEY desc";
         $db_host = $_REQUEST['db_host'];
         $db_sid = $_REQUEST['db_sid'];
 
+        $schema = strtolower($_REQUEST['schema']);
+        $tbs = strtolower($_REQUEST['tbs']);
+        $records = array();
+        $total = 0;
+
+        $query = "SELECT *
+  FROM (SELECT a.*, ROWNUM rnum
+          FROM (SELECT DECODE (PARTITION_NAME,
+                               NULL, SEGMENT_NAME,
+                               SEGMENT_NAME || ':' || PARTITION_NAME)
+                          SEGMENT_NAME,
+                       DBA_SEGMENTS.OWNER,
+                       DBA_SEGMENTS.TABLESPACE_NAME,
+                       DBA_SEGMENTS.INITIAL_EXTENT,
+                       DBA_SEGMENTS.NEXT_EXTENT,
+                       EXTENTS,
+                       round(BYTES) TAILLE,
+                       DBA_SEGMENTS.PCT_INCREASE,
+                       TABLE_NAME,
+                       UNIQUENESS,
+                       CLUSTERING_FACTOR,
+                       (SELECT blocks
+                          FROM dba_tables d
+                         WHERE     d.table_name = DBA_INDEXES.TABLE_NAME
+                               AND d.owner = DBA_SEGMENTS.OWNER)
+                          table_blocks,
+                       (SELECT num_rows
+                          FROM dba_tables t
+                         WHERE     t.table_name = DBA_INDEXES.TABLE_NAME
+                               AND t.owner = DBA_SEGMENTS.OWNER)
+                          table_rows,
+                       COMPRESSION,
+                       BLEVEL,
+                       LEAF_BLOCKS,
+                       DISTINCT_KEYS,
+                       STATUS,
+                       LAST_ANALYZED,
+                       LOGGING
+                  FROM DBA_SEGMENTS
+                       INNER JOIN SYS.DBA_INDEXES
+                          ON (SEGMENT_NAME = INDEX_NAME)
+                 WHERE SEGMENT_TYPE = 'INDEX' ";
+
+        if (!empty($schema) && isset($schema) && $schema != 'all') {
+            $query = $query . " AND lower(DBA_SEGMENTS.owner) = '" . $schema . "'";
+        }
+
+        if (!empty($tbs) && isset($tbs) && $tbs != 'all') {
+            $query = $query . " AND lower(DBA_SEGMENTS.tablespace_name) = '" . $tbs . "'";
+        }
+
+        if (!empty($search)) {
+            $query = $query . " and lower(DBA_SEGMENTS.segment_name) like :seg_name ";
+        }
+
+        $query = $query . " ) a WHERE ROWNUM <= :MAX_ROW_TO_FETCH) WHERE rnum >= :MIN_ROW_TO_FETCH ";
+
         $c = oci_pconnect($db_user, $db_pass, $db_host . "/" . $db_sid);
         if (!$c) {
             $e = oci_error();
-            trigger_error('Could not connect to database: ' . $e['message'], E_USER_ERROR);
-        }
-
-        if (!empty($search)) {
-            $query = "SELECT DECODE (PARTITION_NAME," .
-                "NULL, SEGMENT_NAME," .
-                "SEGMENT_NAME || ':' || PARTITION_NAME)" .
-                "SEGMENT_NAME," .
-                "DBA_SEGMENTS.OWNER," .
-                "DBA_SEGMENTS.TABLESPACE_NAME," .
-                "DBA_SEGMENTS.INITIAL_EXTENT," .
-                "DBA_SEGMENTS.NEXT_EXTENT," .
-                "EXTENTS," .
-                "BYTES TAILLE," .
-                "DBA_SEGMENTS.PCT_INCREASE," .
-                "TABLE_NAME," .
-                "UNIQUENESS," .
-                "CLUSTERING_FACTOR," .
-                "(SELECT blocks FROM dba_tables d WHERE d.table_name = DBA_INDEXES.TABLE_NAME AND d.owner = DBA_SEGMENTS.OWNER) table_blocks," .
-                "(SELECT num_rows FROM dba_tables t WHERE t.table_name = DBA_INDEXES.TABLE_NAME AND t.owner = DBA_SEGMENTS.OWNER) table_rows," .
-                "COMPRESSION," .
-                "BLEVEL," .
-                "LEAF_BLOCKS," .
-                "DISTINCT_KEYS," .
-                "STATUS," .
-                "LAST_ANALYZED," .
-                "LOGGING " .
-                "FROM DBA_SEGMENTS INNER JOIN SYS.DBA_INDEXES ON (SEGMENT_NAME = INDEX_NAME) " .
-                "WHERE SEGMENT_TYPE = 'INDEX' AND LOWER (segment_name) LIKE :seg_name " .
-                "ORDER BY DBA_SEGMENTS.SEGMENT_NAME";
+            $records [] = array('pct_increase' => '',
+                'segment_name' => $e['message'],
+                'owner' => '',
+                'tablespace_name' => '',
+                'initial_extent' => '',
+                'next_extent' => '',
+                'extents' => '',
+                'size' => 0,
+                'uniqueness' => '',
+                'clustering_factor' => '',
+                'table_blocks' => '',
+                'table_rows' => '',
+                'compression' => '',
+                'blevel' => '',
+                'leaf_blocks' => '',
+                'distinct_keys' => '',
+                'status' => '',
+                'last_analyzed' => '',
+                'logging' => '',
+                'table_name' => '');
         } else {
-            if (!empty($_REQUEST['tbs'])) {
-                $tbs = strtolower($_REQUEST['tbs']);
-
-                $query = "SELECT DECODE (PARTITION_NAME," .
-                    "NULL, SEGMENT_NAME," .
-                    "SEGMENT_NAME || ':' || PARTITION_NAME)" .
-                    "SEGMENT_NAME," .
-                    "DBA_SEGMENTS.OWNER," .
-                    "DBA_SEGMENTS.TABLESPACE_NAME," .
-                    "DBA_SEGMENTS.INITIAL_EXTENT," .
-                    "DBA_SEGMENTS.NEXT_EXTENT," .
-                    "EXTENTS," .
-                    "BYTES TAILLE," .
-                    "DBA_SEGMENTS.PCT_INCREASE," .
-                    "TABLE_NAME," .
-                    "UNIQUENESS," .
-                    "CLUSTERING_FACTOR," .
-                    "(SELECT blocks FROM dba_tables d WHERE d.table_name = DBA_INDEXES.TABLE_NAME AND d.owner = DBA_SEGMENTS.OWNER) table_blocks," .
-                    "(SELECT num_rows FROM dba_tables t WHERE t.table_name = DBA_INDEXES.TABLE_NAME AND t.owner = DBA_SEGMENTS.OWNER) table_rows," .
-                    "COMPRESSION," .
-                    "BLEVEL," .
-                    "LEAF_BLOCKS," .
-                    "DISTINCT_KEYS," .
-                    "STATUS," .
-                    "LAST_ANALYZED," .
-                    "LOGGING " .
-                    "FROM DBA_SEGMENTS INNER JOIN SYS.DBA_INDEXES ON (SEGMENT_NAME = INDEX_NAME)" .
-                    "WHERE SEGMENT_TYPE = 'INDEX' and lower(DBA_SEGMENTS.tablespace_name) = '" . $tbs . "'" .
-                    "ORDER BY DBA_SEGMENTS.SEGMENT_NAME";
+            $s = oci_parse($c, $query);
+            if (!$s) {
+                $e = oci_error($c);
+                $records [] = array('pct_increase' => '',
+                    'segment_name' => $e['message'],
+                    'owner' => '',
+                    'tablespace_name' => '',
+                    'initial_extent' => '',
+                    'next_extent' => '',
+                    'extents' => '',
+                    'size' => 0,
+                    'uniqueness' => '',
+                    'clustering_factor' => '',
+                    'table_blocks' => '',
+                    'table_rows' => '',
+                    'compression' => '',
+                    'blevel' => '',
+                    'leaf_blocks' => '',
+                    'distinct_keys' => '',
+                    'status' => '',
+                    'last_analyzed' => '',
+                    'logging' => '',
+                    'table_name' => '');
             } else {
-                $query = "SELECT DECODE (PARTITION_NAME," .
-                    "NULL, SEGMENT_NAME," .
-                    "SEGMENT_NAME || ':' || PARTITION_NAME)" .
-                    "SEGMENT_NAME," .
-                    "DBA_SEGMENTS.OWNER," .
-                    "DBA_SEGMENTS.TABLESPACE_NAME," .
-                    "DBA_SEGMENTS.INITIAL_EXTENT," .
-                    "DBA_SEGMENTS.NEXT_EXTENT," .
-                    "EXTENTS," .
-                    "BYTES TAILLE," .
-                    "DBA_SEGMENTS.PCT_INCREASE," .
-                    "TABLE_NAME," .
-                    "UNIQUENESS," .
-                    "CLUSTERING_FACTOR," .
-                    "(SELECT blocks FROM dba_tables d WHERE d.table_name = DBA_INDEXES.TABLE_NAME AND d.owner = DBA_SEGMENTS.OWNER) table_blocks," .
-                    "(SELECT num_rows FROM dba_tables t WHERE t.table_name = DBA_INDEXES.TABLE_NAME AND t.owner = DBA_SEGMENTS.OWNER) table_rows," .
-                    "COMPRESSION," .
-                    "BLEVEL," .
-                    "LEAF_BLOCKS," .
-                    "DISTINCT_KEYS," .
-                    "STATUS," .
-                    "LAST_ANALYZED," .
-                    "LOGGING " .
-                    "FROM DBA_SEGMENTS INNER JOIN SYS.DBA_INDEXES ON (SEGMENT_NAME = INDEX_NAME)" .
-                    "WHERE SEGMENT_TYPE = 'INDEX'" .
-                    "ORDER BY DBA_SEGMENTS.SEGMENT_NAME";
+                $search = '%' . strtolower($search) . '%';
+                oci_bind_by_name($s, ":seg_name", $search);
+                $fin = $start + $limit;
+                oci_bind_by_name($s, ":MAX_ROW_TO_FETCH", $fin);
+                oci_bind_by_name($s, ":MIN_ROW_TO_FETCH", $start);
+
+                $r = oci_execute($s);
+                if (!$r) {
+                    $e = oci_error($s);
+                    $records [] = array('pct_increase' => '',
+                        'segment_name' => $e['message'],
+                        'owner' => '',
+                        'tablespace_name' => '',
+                        'initial_extent' => '',
+                        'next_extent' => '',
+                        'extents' => '',
+                        'size' => 0,
+                        'uniqueness' => '',
+                        'clustering_factor' => '',
+                        'table_blocks' => '',
+                        'table_rows' => '',
+                        'compression' => '',
+                        'blevel' => '',
+                        'leaf_blocks' => '',
+                        'distinct_keys' => '',
+                        'status' => '',
+                        'last_analyzed' => '',
+                        'logging' => '',
+                        'table_name' => '');
+                } else {
+
+                    while (($row = oci_fetch_array($s, OCI_ASSOC))) {
+                        $size = toC_Servers_Admin::formatSizeUnits($row['TAILLE']);
+                        $records [] = array('pct_increase' => $row['PCT_INCREASE'],
+                            'segment_name' => $row['SEGMENT_NAME'],
+                            'owner' => $row['OWNER'],
+                            'tablespace_name' => $row['TABLESPACE_NAME'],
+                            'initial_extent' => $row['INITIAL_EXTENT'],
+                            'next_extent' => $row['NEXT_EXTENT'],
+                            'extents' => $row['EXTENTS'],
+                            'size' => $size,
+                            'uniqueness' => $row['UNIQUENESS'],
+                            'clustering_factor' => $row['CLUSTERING_FACTOR'],
+                            'table_blocks' => $row['TABLE_BLOCKS'],
+                            'table_rows' => $row['TABLE_ROWS'],
+                            'compression' => $row['COMPRESSION'],
+                            'blevel' => $row['BLEVEL'],
+                            'leaf_blocks' => $row['LEAF_BLOCKS'],
+                            'distinct_keys' => $row['DISTINCT_KEYS'],
+                            'status' => $row['STATUS'],
+                            'last_analyzed' => $row['LAST_ANALYZED'],
+                            'logging' => $row['LOGGING'],
+                            'table_name' => $row['TABLE_NAME']);
+                    }
+                }
             }
+
+            oci_free_statement($s);
+
+            $query = "SELECT count(*) nbre FROM DBA_SEGMENTS INNER JOIN SYS.DBA_INDEXES ON (SEGMENT_NAME = INDEX_NAME) WHERE SEGMENT_TYPE = 'INDEX' ";
+
+            if (!empty($schema) && isset($schema) && $schema != 'all') {
+                $query = $query . " AND lower(DBA_SEGMENTS.owner) = '" . $schema . "'";
+            }
+
+            if (!empty($tbs) && isset($tbs) && $tbs != 'all') {
+                $query = $query . " AND lower(DBA_SEGMENTS.tablespace_name) = '" . $tbs . "'";
+            }
+
+            if (!empty($search)) {
+                $query = $query . " and lower(DBA_SEGMENTS.segment_name) like :seg_name ";
+            }
+
+            $s = oci_parse($c, $query);
+            if (!$s) {
+                $e = oci_error($c);
+                $total = null;
+            } else {
+                $search = '%' . strtolower($search) . '%';
+                oci_bind_by_name($s, ":seg_name", $search);
+
+                $r = oci_execute($s);
+                if (!$r) {
+                    $e = oci_error($s);
+                    $total = null;
+                } else {
+
+                    while (($row = oci_fetch_array($s, OCI_ASSOC))) {
+                        $total = $row['NBRE'];
+                    }
+                }
+            }
+
+            oci_free_statement($s);
         }
 
-        $s = oci_parse($c, $query);
-        if (!$s) {
-            $e = oci_error($c);
-            trigger_error('Could not parse statement: ' . $e['message'], E_USER_ERROR);
-        }
-
-        if (!empty($search)) {
-            $search = '%' . strtolower($search) . '%';
-            oci_bind_by_name($s, ":seg_name", $search);
-        }
-
-        $r = oci_execute($s);
-        if (!$r) {
-            $e = oci_error($s);
-            trigger_error('Could not execute statement: ' . $e['message'], E_USER_ERROR);
-        }
-
-        $records = array();
-
-        while (($row = oci_fetch_array($s, OCI_ASSOC))) {
-            $size = toC_Servers_Admin::formatSizeUnits($row['TAILLE']);
-            $records [] = array('pct_increase' => $row['PCT_INCREASE'],
-                'segment_name' => $row['SEGMENT_NAME'],
-                'owner' => $row['OWNER'],
-                'tablespace_name' => $row['TABLESPACE_NAME'],
-                'initial_extent' => $row['INITIAL_EXTENT'],
-                'next_extent' => $row['NEXT_EXTENT'],
-                'extents' => $row['EXTENTS'],
-                'size' => $size,
-                'uniqueness' => $row['UNIQUENESS'],
-                'clustering_factor' => $row['CLUSTERING_FACTOR'],
-                'table_blocks' => $row['TABLE_BLOCKS'],
-                'table_rows' => $row['TABLE_ROWS'],
-                'compression' => $row['COMPRESSION'],
-                'blevel' => $row['BLEVEL'],
-                'leaf_blocks' => $row['LEAF_BLOCKS'],
-                'distinct_keys' => $row['DISTINCT_KEYS'],
-                'status' => $row['STATUS'],
-                'last_analyzed' => $row['LAST_ANALYZED'],
-                'logging' => $row['LOGGING'],
-                'table_name' => $row['TABLE_NAME']);
-        }
-
-        oci_free_statement($s);
         oci_close($c);
 
-        $response = array(EXT_JSON_READER_TOTAL => count($records),
+        $response = array(EXT_JSON_READER_TOTAL => $total,
             EXT_JSON_READER_ROOT => $records);
 
         echo $toC_Json->encode($response);
@@ -6911,6 +7984,9 @@ ORDER BY SESSION_KEY desc";
     {
         global $toC_Json;
 
+        $start = empty($_REQUEST['start']) ? 0 : $_REQUEST['start'];
+        $limit = empty($_REQUEST['limit']) ? MAX_DISPLAY_SEARCH_RESULTS : $_REQUEST['limit'];
+
         $search = empty($_REQUEST['search']) ? '' : $_REQUEST['search'];
 
         $db_user = $_REQUEST['db_user'];
@@ -6918,30 +7994,64 @@ ORDER BY SESSION_KEY desc";
         $db_host = $_REQUEST['db_host'];
         $db_sid = $_REQUEST['db_sid'];
         $schema = strtolower($_REQUEST['schema']);
+        $tbs = strtolower($_REQUEST['tbs']);
         $records = array();
+        $total = 0;
 
         $c = oci_pconnect($db_user, $db_pass, $db_host . "/" . $db_sid);
         if (!$c) {
             $e = oci_error();
             $records [] = array('pct_increase' => '', 'segment_name' => $e['message'], 'owner' => $schema, 'tablespace_name' => $e['message'], 'initial_extent' => '', 'next_extent' => '', 'extents' => '', 'size' => '', 'max_extents' => '');
         } else {
-            $query = "SELECT s.segment_type,s.segment_name,DECODE (s.partition_name,NULL, '',s.partition_name) partition_name,s.owner,s.tablespace_name,s.segment_type,s.initial_extent,s.next_extent,s.extents,s.bytes / 1024 / 1024 taille,s.PCT_INCREASE,t.logging,t.blocks,t.num_rows,t.empty_blocks,t.avg_space,t.chain_cnt,t.avg_row_len,t.last_analyzed,t.monitoring,t.compression FROM dba_segments s,dba_tables t where (s.segment_name = t.table_name and s.owner = t.owner) and s.segment_type in ('TABLE','TABLE SUBPARTITION','TABLE PARTITION') AND lower(s.owner) = '" . $schema . "' ";
+
+            //$query = "SELECT * FROM (SELECT a.*, ROWNUM rnum FROM (SELECT snap_id,TO_CHAR (begin_interval_time, 'yyyy/mm/dd hh24:mi:ss') begin_interval_time,TO_CHAR (end_interval_time, 'yyyy/mm/dd hh24:mi:ss') end_interval_time,TO_CHAR (startup_time, 'yyyy/mm/dd hh24:mi:ss') startup_time FROM DBA_HIST_SNAPSHOT WHERE     dbid = (SELECT DISTINCT dbid FROM DBA_HIST_DATABASE_INSTANCE) AND snap_id > " . $start_id . " AND startup_time <= (SELECT MIN (startup_time) FROM DBA_HIST_SNAPSHOT WHERE snap_id > " . $start_id . ") ORDER BY 1) a WHERE ROWNUM <= :MAX_ROW_TO_FETCH) WHERE rnum >= :MIN_ROW_TO_FETCH";
+            //$query = "SELECT s.segment_type,s.segment_name,DECODE (s.partition_name,NULL, '',s.partition_name) partition_name,s.owner,s.tablespace_name,s.segment_type,s.initial_extent,s.next_extent,s.extents,s.bytes / 1024 / 1024 taille,s.PCT_INCREASE,t.logging,t.blocks,t.num_rows,t.empty_blocks,t.avg_space,t.chain_cnt,t.avg_row_len,t.last_analyzed,t.monitoring,t.compression FROM dba_segments s,dba_tables t where (s.segment_name = t.table_name and s.owner = t.owner) and s.segment_type in ('TABLE','TABLE SUBPARTITION','TABLE PARTITION') ";
+
+            $query = "SELECT *
+  FROM (SELECT a.*, ROWNUM rnum
+          FROM (SELECT s.segment_type,
+                       s.segment_name,
+                       DECODE (s.partition_name, NULL, '', s.partition_name)
+                          partition_name,
+                       s.owner,
+                       s.tablespace_name,
+                       s.initial_extent,
+                       s.next_extent,
+                       s.extents,
+                       round(s.bytes / 1024 / 1024) taille,
+                       s.PCT_INCREASE,
+                       t.logging,
+                       t.blocks,
+                       t.num_rows,
+                       t.empty_blocks,
+                       t.avg_space,
+                       t.chain_cnt,
+                       t.avg_row_len,
+                       t.last_analyzed,
+                       t.monitoring,
+                       t.compression
+                  FROM dba_segments s, dba_tables t
+                 WHERE     (    s.segment_name = t.table_name
+                            AND s.owner = t.owner)
+                       AND s.segment_type IN ('TABLE',
+                                              'TABLE SUBPARTITION',
+                                              'TABLE PARTITION') ";
+
+            if (!empty($schema) && isset($schema) && $schema != 'all') {
+                $query = $query . " AND lower(s.owner) = '" . $schema . "'";
+            }
+
+            if (!empty($tbs) && isset($tbs) && $tbs != 'all') {
+                $query = $query . " AND lower(s.tablespace_name) = '" . $tbs . "'";
+            }
 
             if (!empty($search)) {
-                if (!empty($_REQUEST['tbs'])) {
-                    $tbs = strtolower($_REQUEST['tbs']);
-
-                    $query = $query . " and lower(s.segment_name) like :seg_name and lower(s.tablespace_name) = '" . $tbs . "' ";
-                } else {
-                    $query = $query . " and lower(s.segment_name) like :seg_name ";
-                }
-            } else {
-                if (!empty($_REQUEST['tbs'])) {
-                    $tbs = strtolower($_REQUEST['tbs']);
-
-                    $query = $query . " and lower(s.tablespace_name) = '" . $tbs . "' ";
-                }
+                $query = $query . " and lower(s.segment_name) like :seg_name ";
             }
+
+            $query = $query . " ) a WHERE ROWNUM <= :MAX_ROW_TO_FETCH) WHERE rnum >= :MIN_ROW_TO_FETCH ";
+
+            //var_dump($query);
 
             $s = oci_parse($c, $query);
             if (!$s) {
@@ -6950,14 +8060,52 @@ ORDER BY SESSION_KEY desc";
             } else {
                 $search = '%' . strtolower($search) . '%';
                 oci_bind_by_name($s, ":seg_name", $search);
+                $fin = $start + $limit;
+                oci_bind_by_name($s, ":MAX_ROW_TO_FETCH", $fin);
+                oci_bind_by_name($s, ":MIN_ROW_TO_FETCH", $start);
 
                 $r = oci_execute($s);
                 if (!$r) {
                     $e = oci_error($s);
                     $records [] = array('compression' => '', 'monitoring' => '', 'last_analyzed' => '', 'avg_row_len' => '', 'chain_cnt' => '', 'avg_space' => '', 'empty_blocks' => '', 'num_rows' => '', 'blocks' => '', 'logging' => '', 'pct_increase' => '', 'segment_name' => $e['message'], 'segment_type' => '', 'partition_name' => '', 'owner' => $schema, 'tablespace_name' => $e['message'], 'initial_extent' => '', 'next_extent' => '', 'extents' => '', 'size' => '', 'max_extents' => '');
                 } else {
+
                     while (($row = oci_fetch_array($s, OCI_ASSOC))) {
                         $records [] = array('compression' => $row['COMPRESSION'], 'monitoring' => $row['MONITORING'], 'last_analyzed' => $row['LAST_ANALYZED'], 'avg_row_len' => $row['AVG_ROW_LEN'], 'chain_cnt' => $row['CHAIN_CNT'], 'avg_space' => $row['AVG_SPACE'], 'empty_blocks' => $row['EMPTY_BLOCKS'], 'num_rows' => $row['NUM_ROWS'], 'blocks' => $row['BLOCKS'], 'logging' => $row['LOGGING'], 'pct_increase' => $row['PCT_INCREASE'], 'segment_name' => $row['SEGMENT_NAME'], 'segment_type' => $row['SEGMENT_TYPE'], 'partition_name' => $row['PARTITION_NAME'], 'owner' => $row['OWNER'], 'tablespace_name' => $row['TABLESPACE_NAME'], 'initial_extent' => $row['INITIAL_EXTENT'], 'next_extent' => $row['NEXT_EXTENT'], 'extents' => $row['EXTENTS'], 'size' => $row['TAILLE'], 'max_extents' => $row['MAX_EXTENTS']);
+                    }
+                }
+            }
+
+            $query = "SELECT count(*) nbre FROM dba_segments s,dba_tables t where (s.segment_name = t.table_name and s.owner = t.owner) and s.segment_type in ('TABLE','TABLE SUBPARTITION','TABLE PARTITION') ";
+
+            if (!empty($schema) && isset($schema) && $schema != 'all') {
+                $query = $query . " AND lower(s.owner) = '" . $schema . "'";
+            }
+
+            if (!empty($tbs) && isset($tbs) && $tbs != 'all') {
+                $query = $query . " AND lower(s.tablespace_name) = '" . $tbs . "'";
+            }
+
+            if (!empty($search)) {
+                $query = $query . " and lower(s.segment_name) like :seg_name ";
+            }
+
+            $s = oci_parse($c, $query);
+            if (!$s) {
+                $e = oci_error($c);
+                $total = null;
+            } else {
+                $search = '%' . strtolower($search) . '%';
+                oci_bind_by_name($s, ":seg_name", $search);
+
+                $r = oci_execute($s);
+                if (!$r) {
+                    $e = oci_error($s);
+                    $total = null;
+                } else {
+
+                    while (($row = oci_fetch_array($s, OCI_ASSOC))) {
+                        $total = $row['NBRE'];
                     }
                 }
             }
@@ -6967,7 +8115,7 @@ ORDER BY SESSION_KEY desc";
 
         oci_close($c);
 
-        $response = array(EXT_JSON_READER_TOTAL => count($records),
+        $response = array(EXT_JSON_READER_TOTAL => $total,
             EXT_JSON_READER_ROOT => $records);
 
         echo $toC_Json->encode($response);

@@ -6,13 +6,14 @@ Toc.content.logfileGrid = function (config) {
     config.border = true;
     config.header = false;
     config.hideHeaders = true;
-    config.viewConfig = {emptyText: TocLanguage.gridNoRecords};
+    config.viewConfig = {emptyText: TocLanguage.gridNoRecords,forceFit : true};
 
     config.ds = new Ext.data.Store({
         url: Toc.CONF.CONN_URL,
         baseParams: {
             module: 'servers',
-            action: 'list_logcontent'
+            action: 'list_logcontent',
+            typ : config.typ || null
         },
         reader: new Ext.data.JsonReader({
             root: Toc.CONF.JSON_READER_ROOT,
@@ -38,7 +39,7 @@ Toc.content.logfileGrid = function (config) {
                     store.baseParams['start'] = 0;
                     var params = {};
                     params['start'] = 0;
-                    params['limit'] = 1000;
+                    params['limit'] = 10000;
                     params['count'] = null;
                 }
             },scope: this
@@ -51,7 +52,7 @@ Toc.content.logfileGrid = function (config) {
     };
 
     config.cm = new Ext.grid.ColumnModel([
-        { id: 'line', header: '', align: 'left', dataIndex: 'row',css : "white-space: normal;",renderer: renderRow}
+        { id: 'line', header: '', align: 'left', dataIndex: 'row',css : "white-space: normal;",renderer: renderRow,width : 100}
     ]);
     config.autoExpandColumn = 'line';
 
@@ -105,7 +106,15 @@ Toc.content.logfileGrid = function (config) {
 
 Ext.extend(Toc.content.logfileGrid, Ext.grid.GridPanel, {
     onRefresh: function () {
-        this.mainPanel.getCategoriesTree().refresh();
+        if(this.mainPanel.getCategoriesTree)
+        {
+            this.mainPanel.getCategoriesTree().refresh();
+        }
+        else
+        {
+            var store = this.getStore();
+            store.reload();
+        }
     },
 
     refreshGrid: function (json) {
@@ -133,7 +142,7 @@ Ext.extend(Toc.content.logfileGrid, Ext.grid.GridPanel, {
     refreshFileGrid: function (json) {
         var params = {};
         params['start'] = 0;
-        params['limit'] = 1000;
+        params['limit'] = 10000;
 
         var store = this.getStore();
 

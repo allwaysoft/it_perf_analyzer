@@ -371,6 +371,1626 @@ class toC_Json_Users
 
         echo $toC_Json->encode($response);
     }
+
+    function listCartes()
+    {
+        global $toC_Json;
+
+        $start = empty($_REQUEST['start']) ? 0 : $_REQUEST['start'];
+        $limit = empty($_REQUEST['limit']) ? MAX_DISPLAY_SEARCH_RESULTS : $_REQUEST['limit'];
+        $total = empty($_REQUEST['count']) ? 0 : $_REQUEST['count'];
+        $search = empty($_REQUEST['search']) ? '' : $_REQUEST['search'];
+
+        $roles_id = empty($_REQUEST['categories_id']) ? 0 : $_REQUEST['categories_id'];
+
+        $db_user = empty($_REQUEST['db_user']) ? DB_USER : $_REQUEST['db_user'];
+        $db_pass = empty($_REQUEST['db_pass']) ? DB_PASS : $_REQUEST['db_pass'];
+        $db_host = empty($_REQUEST['db_host']) ? DB_HOST : $_REQUEST['db_host'];
+        $db_sid = empty($_REQUEST['db_sid']) ? DB_SID : $_REQUEST['db_sid'];
+
+        $c = oci_pconnect($db_user, $db_pass, $db_host . "/" . $db_sid);
+        if (!$c) {
+            $e = oci_error();
+            trigger_error('Could not connect to database: ' . $e['message'], E_USER_ERROR);
+        }
+
+        if (!empty($search)) {
+            $start = 0;
+            $limit = 10000;
+            $query = "SELECT *
+  FROM (SELECT a.*, ROWNUM rnum
+          FROM (  SELECT c.age,
+                         c.ncart,
+                         c.eta,
+                         c.dfv,
+                         c.nom,
+                         c.ncpbc,
+                         m.nctr,
+                         m.cli,
+                         m.ncp,
+                         m.idansc,
+                         m.sit
+                    FROM bank.bkcadab c, bank.moctr m
+                   WHERE c.nctr = m.nctr and (LOWER (m.cli) LIKE :cli
+                          OR LOWER (c.nom) LIKE :nom
+                          OR LOWER (c.ncart) LIKE :ncart)
+                ORDER BY TRIM (nom)) a
+         WHERE ROWNUM <= :MAX_ROW_TO_FETCH)
+ WHERE rnum >= :MIN_ROW_TO_FETCH";
+        } else {
+            if ($roles_id == "-1") {
+                $query = "SELECT *
+  FROM (SELECT a.*, ROWNUM rnum
+          FROM (  SELECT c.age,
+                         c.ncart,
+                         c.eta,
+                         c.dfv,
+                         c.nom,
+                         c.ncpbc,
+                         m.nctr,
+                         m.cli,
+                         m.ncp,
+                         m.idansc,
+                         m.sit
+                    FROM bank.bkcadab c, bank.moctr m
+                   WHERE c.nctr = m.nctr
+                ORDER BY TRIM (nom)) a
+         WHERE ROWNUM <= :MAX_ROW_TO_FETCH)
+ WHERE rnum >= :MIN_ROW_TO_FETCH";
+            } else {
+                $query = "SELECT *
+  FROM (SELECT a.*, ROWNUM rnum
+          FROM (SELECT c.age,
+                         c.ncart,
+                         c.eta,
+                         c.dfv,
+                         c.nom,
+                         c.ncpbc,
+                         m.nctr,
+                         m.cli,
+                         m.ncp,
+                         m.idansc,
+                         m.sit
+                    FROM bank.bkcadab c, bank.moctr m
+                   WHERE c.nctr = m.nctr and c.age = :age
+                ORDER BY TRIM (nom)) a
+         WHERE ROWNUM <= :MAX_ROW_TO_FETCH)
+ WHERE rnum >= :MIN_ROW_TO_FETCH";
+            }
+        }
+
+        $fin = $start + $limit;
+        $s = oci_parse($c, $query);
+        if (!$s) {
+            $e = oci_error($c);
+            trigger_error('Could not parse statement: ' . $e['message'], E_USER_ERROR);
+        }
+
+        $search = '%' . strtolower($search) . '%';
+        oci_bind_by_name($s, ":MAX_ROW_TO_FETCH", $fin);
+        oci_bind_by_name($s, ":MIN_ROW_TO_FETCH", $start);
+        oci_bind_by_name($s, ":cli", $search);
+        oci_bind_by_name($s, ":nom", $search);
+        oci_bind_by_name($s, ":ncart", $search);
+
+        if ($roles_id != '0' && $roles_id != '-1') {
+            oci_bind_by_name($s, ":age", $roles_id);
+        }
+
+        $r = oci_execute($s);
+        if (!$r) {
+            $e = oci_error($s);
+            trigger_error('Could not execute statement: ' . $e['message'], E_USER_ERROR);
+        }
+
+        $records = array();
+
+        while (($row = oci_fetch_array($s, OCI_ASSOC))) {
+            $entry_icon = osc_icon_from_filename('.' . strtolower($row['SIT']));
+            //$status = trim($row['ECRAN']);
+            $records [] = array(
+                'icon' => $entry_icon,
+                'age' => $row['AGE'],
+                'ncart' => $row['NCART'],
+                'eta' => $row['ETA'],
+                'dfv' => $row['DFV'],
+                'nom' => $row['NOM'],
+                'ncpbc' => $row['NCPBC'],
+                'nctr' => $row['NCTR'],
+                'cli' => $row['CLI'],
+                'ncp' => $row['NCP'],
+                'sit' => $row['SIT'],
+                'idansc' => $row['IDANSC']);
+        }
+
+        oci_free_statement($s);
+        oci_close($c);
+
+        $response = array(EXT_JSON_READER_TOTAL => $total,
+            EXT_JSON_READER_ROOT => $records);
+
+        echo $toC_Json->encode($response);
+    }
+
+    function listAmplitudeCtx()
+    {
+        global $toC_Json;
+
+        $start = empty($_REQUEST['start']) ? 0 : $_REQUEST['start'];
+        $limit = empty($_REQUEST['limit']) ? MAX_DISPLAY_SEARCH_RESULTS : $_REQUEST['limit'];
+        $total = empty($_REQUEST['count']) ? 0 : $_REQUEST['count'];
+        $search = empty($_REQUEST['search']) ? '' : $_REQUEST['search'];
+
+        $roles_id = empty($_REQUEST['categories_id']) ? 0 : $_REQUEST['categories_id'];
+
+        $db_user = empty($_REQUEST['db_user']) ? DB_USER : $_REQUEST['db_user'];
+        $db_pass = empty($_REQUEST['db_pass']) ? DB_PASS : $_REQUEST['db_pass'];
+        $db_host = empty($_REQUEST['db_host']) ? DB_HOST : $_REQUEST['db_host'];
+        $db_sid = empty($_REQUEST['db_sid']) ? DB_SID : $_REQUEST['db_sid'];
+
+        $c = oci_pconnect($db_user, $db_pass, $db_host . "/" . $db_sid);
+        if (!$c) {
+            $e = oci_error();
+            trigger_error('Could not connect to database: ' . $e['message'], E_USER_ERROR);
+        }
+
+        if (!empty($search) && isset($search)) {
+            $start = 0;
+            $limit = 10000;
+            $query = "SELECT * FROM (SELECT a.*, ROWNUM rnum FROM (SELECT trim(cx.cli) cli,cx.dctx,trim(cx.uti) uti,ltrim(rtrim(c.nomrest)) nomrest FROM bank.bkctxcli cx INNER JOIN bank.bkcli c ON cx.cli = c.cli INNER JOIN bank.bkage ag ON c.age = ag.age WHERE (   LOWER (cx.cli) LIKE :search OR LOWER (c.nomrest) LIKE :search )) a WHERE ROWNUM <= :MAX_ROW_TO_FETCH) WHERE rnum >= :MIN_ROW_TO_FETCH";
+        } else {
+            if ($roles_id == "-1" || $roles_id == "0") {
+                $query = "select * from ( select a.*, ROWNUM rnum from (SELECT trim(cx.cli) cli,cx.dctx,trim(cx.uti) uti,ltrim(rtrim(c.nomrest)) nomrest FROM bank.bkctxcli cx INNER JOIN bank.bkcli c ON cx.cli = c.cli INNER JOIN bank.bkage ag ON c.age = ag.age) a)  where ROWNUM <= :MAX_ROW_TO_FETCH AND rnum  > :MIN_ROW_TO_FETCH";
+            } else {
+                $query = "select * from ( select a.*, ROWNUM rnum from (SELECT trim(cx.cli) cli,cx.dctx,trim(cx.uti) uti,ltrim(rtrim(c.nomrest)) nomrest FROM bank.bkctxcli cx INNER JOIN bank.bkcli c ON cx.cli = c.cli INNER JOIN bank.bkage ag ON c.age = ag.age WHERE c.age = :age) a where ROWNUM <= :MAX_ROW_TO_FETCH ) where rnum  > :MIN_ROW_TO_FETCH";
+            }
+        }
+
+        $fin = $start + $limit;
+        $s = oci_parse($c, $query);
+        if (!$s) {
+            $e = oci_error($c);
+            trigger_error('Could not parse statement: ' . $e['message'], E_USER_ERROR);
+        }
+
+        oci_bind_by_name($s, ":MAX_ROW_TO_FETCH", $fin);
+        oci_bind_by_name($s, ":MIN_ROW_TO_FETCH", $start);
+
+        if (!empty($search) && isset($search)) {
+            $search = '%' . strtolower($search) . '%';
+            oci_bind_by_name($s, ":search", $search);
+        }
+
+        if ($roles_id != '0' && $roles_id != '-1') {
+            oci_bind_by_name($s, ":age", $roles_id);
+        }
+
+        $r = oci_execute($s);
+        if (!$r) {
+            $e = oci_error($s);
+            trigger_error('Could not execute statement: ' . $e['message'], E_USER_ERROR);
+        }
+
+        $records = array();
+
+        if (!empty($search) && isset($search)) {
+            $total = 0;
+        }
+
+        while (($row = oci_fetch_array($s, OCI_ASSOC))) {
+            if (!empty($search) && isset($search)) {
+                $total = $total + 1;
+            }
+
+            $records [] = array('cli' => $row['CLI'], 'dctx' => $row['DCTX'], 'uti' => $row['UTI'], 'nomrest' => $row['NOMREST']);
+        }
+
+        oci_free_statement($s);
+        oci_close($c);
+
+        $response = array(EXT_JSON_READER_TOTAL => $total,
+            EXT_JSON_READER_ROOT => $records);
+
+        echo $toC_Json->encode($response);
+    }
+
+    function listAmplitudeNcp()
+    {
+        global $toC_Json;
+
+        $start = empty($_REQUEST['start']) ? 0 : $_REQUEST['start'];
+        $limit = empty($_REQUEST['limit']) ? MAX_DISPLAY_SEARCH_RESULTS : $_REQUEST['limit'];
+        $total = empty($_REQUEST['count']) ? 0 : $_REQUEST['count'];
+        $search = empty($_REQUEST['search']) ? '' : $_REQUEST['search'];
+
+        $roles_id = empty($_REQUEST['categories_id']) ? 0 : $_REQUEST['categories_id'];
+
+        $db_user = empty($_REQUEST['db_user']) ? DB_USER : $_REQUEST['db_user'];
+        $db_pass = empty($_REQUEST['db_pass']) ? DB_PASS : $_REQUEST['db_pass'];
+        $db_host = empty($_REQUEST['db_host']) ? DB_HOST : $_REQUEST['db_host'];
+        $db_sid = empty($_REQUEST['db_sid']) ? DB_SID : $_REQUEST['db_sid'];
+
+        $c = oci_pconnect($db_user, $db_pass, $db_host . "/" . $db_sid);
+        if (!$c) {
+            $e = oci_error();
+            trigger_error('Could not connect to database: ' . $e['message'], E_USER_ERROR);
+        }
+
+        if (!empty($search) && isset($search)) {
+            $start = 0;
+            $limit = 1000000;
+            $query = "SELECT * FROM (SELECT a.*, ROWNUM rnum FROM (SELECT c.age,TRIM (cx.cli) cli,LTRIM (RTRIM (cx.nomrest)) nomrest,c.ncp,c.clc FROM bank.bkcli cx INNER JOIN bank.bkcom c ON cx.cli = c.cli INNER JOIN bank.bkage ag ON c.age = ag.age WHERE (   LOWER (c.ncp) LIKE :search OR LOWER (cx.cli) LIKE :search OR LOWER (cx.nomrest) LIKE :search)) a WHERE ROWNUM <= :MAX_ROW_TO_FETCH) WHERE rnum >= :MIN_ROW_TO_FETCH";
+        } else {
+            if ($roles_id == "-1" || $roles_id == "0") {
+                $query = "SELECT * FROM (SELECT a.*, ROWNUM rnum FROM (SELECT c.age,TRIM (cx.cli) cli,LTRIM (RTRIM (cx.nomrest)) nomrest,c.ncp,c.clc FROM bank.bkcli cx INNER JOIN bank.bkcom c ON cx.cli = c.cli INNER JOIN bank.bkage ag ON c.age = ag.age) a) WHERE ROWNUM <= :MAX_ROW_TO_FETCH AND rnum > :MIN_ROW_TO_FETCH";
+            } else {
+                $query = "SELECT * FROM (SELECT a.*, ROWNUM rnum FROM (SELECT c.age,TRIM (cx.cli) cli,LTRIM (RTRIM (cx.nomrest)) nomrest,c.ncp,c.clc FROM bank.bkcli cx INNER JOIN bank.bkcom c ON cx.cli = c.cli INNER JOIN bank.bkage ag ON c.age = ag.age WHERE c.age = :age) a WHERE ROWNUM <= :MAX_ROW_TO_FETCH) WHERE rnum > :MIN_ROW_TO_FETCH";
+            }
+        }
+
+        $fin = $start + $limit;
+        $s = oci_parse($c, $query);
+        if (!$s) {
+            $e = oci_error($c);
+            trigger_error('Could not parse statement: ' . $e['message'], E_USER_ERROR);
+        }
+
+        oci_bind_by_name($s, ":MAX_ROW_TO_FETCH", $fin);
+        oci_bind_by_name($s, ":MIN_ROW_TO_FETCH", $start);
+
+        if (!empty($search) && isset($search)) {
+            $search = '%' . strtolower($search) . '%';
+            oci_bind_by_name($s, ":search", $search);
+        }
+
+        if ($roles_id != '0' && $roles_id != '-1') {
+            oci_bind_by_name($s, ":age", $roles_id);
+        }
+
+        $r = oci_execute($s);
+        if (!$r) {
+            $e = oci_error($s);
+            trigger_error('Could not execute statement: ' . $e['message'], E_USER_ERROR);
+        }
+
+        $records = array();
+
+        if (!empty($search) && isset($search)) {
+            $total = 0;
+        }
+
+        while (($row = oci_fetch_array($s, OCI_ASSOC))) {
+            if (!empty($search) && isset($search)) {
+                $total = $total + 1;
+            }
+
+            $records [] = array('age' => $row['AGE'], 'cli' => $row['CLI'], 'ncp' => $row['NCP'], 'nomrest' => $row['NOMREST'], 'clc' => $row['CLC']);
+        }
+
+        oci_free_statement($s);
+        oci_close($c);
+
+        $response = array(EXT_JSON_READER_TOTAL => $total,
+            EXT_JSON_READER_ROOT => $records);
+
+        echo $toC_Json->encode($response);
+    }
+
+    function listCtx()
+    {
+        global $toC_Json;
+
+        $start = empty($_REQUEST['start']) ? 0 : $_REQUEST['start'];
+        $limit = empty($_REQUEST['limit']) ? MAX_DISPLAY_SEARCH_RESULTS : $_REQUEST['limit'];
+        $total = empty($_REQUEST['count']) ? 0 : $_REQUEST['count'];
+        $search = empty($_REQUEST['search']) ? '' : $_REQUEST['search'];
+
+        $roles_id = empty($_REQUEST['categories_id']) ? 0 : $_REQUEST['categories_id'];
+
+        $db_user = empty($_REQUEST['db_user']) ? DB_USER : $_REQUEST['db_user'];
+        $db_pass = empty($_REQUEST['db_pass']) ? DB_PASS : $_REQUEST['db_pass'];
+        $db_host = empty($_REQUEST['db_host']) ? DB_HOST : $_REQUEST['db_host'];
+        $db_sid = empty($_REQUEST['db_sid']) ? DB_SID : $_REQUEST['db_sid'];
+
+        $c = oci_pconnect($db_user, $db_pass, $db_host . "/" . $db_sid);
+        if (!$c) {
+            $e = oci_error();
+            trigger_error('Could not connect to database: ' . $e['message'], E_USER_ERROR);
+        }
+
+        if (!empty($search) && isset($search)) {
+            $start = 0;
+            $limit = 10000;
+            $query = "SELECT * FROM (SELECT a.*, ROWNUM rnum FROM (SELECT NUMERO_DOSSIER no_dossier,CXDOSSIER.NUMERO_CLIENT no_client,DATE_ENTREE_CONTENTI date_ctx,PRENOM_CLIENT || ' ' || NOM_CLIENT nom FROM CONTENT.CXCLIENTS INNER JOIN CONTENT.CXDOSSIER ON (CXCLIENTS.CDOS = CXDOSSIER.CDOS) AND (CXCLIENTS.NUMERO_CLIENT = CXDOSSIER.NUMERO_CLIENT) WHERE (LOWER (CXDOSSIER.NUMERO_CLIENT) LIKE :search OR LOWER (PRENOM_CLIENT) LIKE :search OR LOWER (NOM_CLIENT) LIKE :search) order by 4) a WHERE ROWNUM <= :MAX_ROW_TO_FETCH) WHERE rnum >= :MIN_ROW_TO_FETCH";
+        } else {
+            if ($roles_id == "-1" || $roles_id == "0") {
+                $query = "select * from ( select a.*, ROWNUM rnum from (SELECT NUMERO_DOSSIER no_dossier,CXDOSSIER.NUMERO_CLIENT no_client,DATE_ENTREE_CONTENTI date_ctx,PRENOM_CLIENT || ' ' || NOM_CLIENT nom FROM CONTENT.CXCLIENTS INNER JOIN CONTENT.CXDOSSIER ON (CXCLIENTS.CDOS = CXDOSSIER.CDOS) AND (CXCLIENTS.NUMERO_CLIENT = CXDOSSIER.NUMERO_CLIENT) order by 4) a)  where ROWNUM <= :MAX_ROW_TO_FETCH AND rnum  > :MIN_ROW_TO_FETCH";
+            } else {
+                $query = "select * from ( select a.*, ROWNUM rnum from (SELECT NUMERO_DOSSIER no_dossier,CXDOSSIER.NUMERO_CLIENT no_client,DATE_ENTREE_CONTENTI date_ctx,PRENOM_CLIENT || ' ' || NOM_CLIENT nom FROM CONTENT.CXCLIENTS INNER JOIN CONTENT.CXDOSSIER ON (CXCLIENTS.CDOS = CXDOSSIER.CDOS) AND (CXCLIENTS.NUMERO_CLIENT = CXDOSSIER.NUMERO_CLIENT) WHERE code_agence = :age order by 4) a where ROWNUM <= :MAX_ROW_TO_FETCH ) where rnum  > :MIN_ROW_TO_FETCH";
+            }
+        }
+
+        $fin = $start + $limit;
+        $s = oci_parse($c, $query);
+        if (!$s) {
+            $e = oci_error($c);
+            trigger_error('Could not parse statement: ' . $e['message'], E_USER_ERROR);
+        }
+
+        oci_bind_by_name($s, ":MAX_ROW_TO_FETCH", $fin);
+        oci_bind_by_name($s, ":MIN_ROW_TO_FETCH", $start);
+
+        if (!empty($search) && isset($search)) {
+            $search = '%' . strtolower($search) . '%';
+            oci_bind_by_name($s, ":search", $search);
+        }
+
+        if ($roles_id != '0' && $roles_id != '-1') {
+            oci_bind_by_name($s, ":age", $roles_id);
+        }
+
+        $r = oci_execute($s);
+        if (!$r) {
+            $e = oci_error($s);
+            trigger_error('Could not execute statement: ' . $e['message'], E_USER_ERROR);
+        }
+
+        $records = array();
+
+        if (!empty($search) && isset($search)) {
+            $total = 0;
+        }
+
+        while (($row = oci_fetch_array($s, OCI_ASSOC))) {
+            if (!empty($search) && isset($search)) {
+                $total = $total + 1;
+            }
+
+            $records [] = array('no_dossier' => $row['NO_DOSSIER'], 'no_client' => $row['NO_CLIENT'], 'date_ctx' => $row['DATE_CTX'], 'nom' => $row['NOM']);
+        }
+
+        oci_free_statement($s);
+        oci_close($c);
+
+        $response = array(EXT_JSON_READER_TOTAL => $total,
+            EXT_JSON_READER_ROOT => $records);
+
+        echo $toC_Json->encode($response);
+    }
+
+    function listOnlineusers()
+    {
+        global $toC_Json;
+
+        $search = empty($_REQUEST['search']) ? '' : $_REQUEST['search'];
+
+        $roles_id = empty($_REQUEST['categories_id']) ? 0 : $_REQUEST['categories_id'];
+
+        $db_user = empty($_REQUEST['db_user']) ? DB_USER : $_REQUEST['db_user'];
+        $db_pass = empty($_REQUEST['db_pass']) ? DB_PASS : $_REQUEST['db_pass'];
+        $db_host = empty($_REQUEST['db_host']) ? DB_HOST : $_REQUEST['db_host'];
+        $db_sid = empty($_REQUEST['db_sid']) ? DB_SID : $_REQUEST['db_sid'];
+
+        $c = oci_pconnect($db_user, $db_pass, $db_host . "/" . $db_sid);
+        if (!$c) {
+            $e = oci_error();
+            trigger_error('Could not connect to database: ' . $e['message'], E_USER_ERROR);
+        }
+
+        if (!empty($search)) {
+            $query = "select * from ( select a.*, ROWNUM rnum from (SELECT TRIM (EVUTI.CUTI) CUTI,LTRIM (RTRIM (LIB)) LIB,SUS,ECRAN,UNIX FROM EVUTI LEFT OUTER JOIN EVUTAUT ON (EVUTI.CUTI = EVUTAUT.CUTI) where LENGTH (TRIM (ecran)) = 15 and (lower(evuti.cuti) like :cuti or lower(unix) like :unix or lower(lib) like :lib) ORDER BY LTRIM (LIB)) a where ROWNUM <= :MAX_ROW_TO_FETCH ) where rnum  >= :MIN_ROW_TO_FETCH";
+        } else {
+            if ($roles_id == "-1") {
+                $query = "select * from ( select a.*, ROWNUM rnum from (SELECT TRIM (EVUTI.CUTI) CUTI,LTRIM (RTRIM (LIB)) LIB,SUS,ECRAN,UNIX FROM EVUTI LEFT OUTER JOIN EVUTAUT ON (EVUTI.CUTI = EVUTAUT.CUTI) where LENGTH (TRIM (ecran)) = 15 ORDER BY LTRIM (LIB)) a where ROWNUM <= :MAX_ROW_TO_FETCH ) where rnum  >= :MIN_ROW_TO_FETCH";
+            } else {
+                $query = "select * from ( select a.*, ROWNUM rnum from (SELECT TRIM (EVUTI.CUTI) CUTI,LTRIM (RTRIM (LIB)) LIB,SUS,ECRAN,UNIX FROM EVUTI LEFT OUTER JOIN EVUTAUT ON (EVUTI.CUTI = EVUTAUT.CUTI) where LENGTH (TRIM (ecran)) = 15 and puti = :puti ORDER BY LTRIM (LIB)) a where ROWNUM <= :MAX_ROW_TO_FETCH ) where rnum  >= :MIN_ROW_TO_FETCH";
+            }
+        }
+
+        $start = 0;
+        $limit = 10000;
+        $fin = $start + $limit;
+        $s = oci_parse($c, $query);
+        if (!$s) {
+            $e = oci_error($c);
+            trigger_error('Could not parse statement: ' . $e['message'], E_USER_ERROR);
+        }
+
+        $search = '%' . strtolower($search) . '%';
+        oci_bind_by_name($s, ":MAX_ROW_TO_FETCH", $fin);
+        oci_bind_by_name($s, ":MIN_ROW_TO_FETCH", $start);
+
+        if (!empty($search)) {
+            oci_bind_by_name($s, ":cuti", $search);
+            oci_bind_by_name($s, ":unix", $search);
+            oci_bind_by_name($s, ":lib", $search);
+        }
+
+        if ($roles_id != '0' && $roles_id != '-1') {
+            oci_bind_by_name($s, ":puti", $roles_id);
+        }
+
+        $r = oci_execute($s);
+        if (!$r) {
+            $e = oci_error($s);
+            trigger_error('Could not execute statement: ' . $e['message'], E_USER_ERROR);
+        }
+
+        $records = array();
+        $count = 0;
+
+        while (($row = oci_fetch_array($s, OCI_ASSOC))) {
+            $count++;
+            $status = trim($row['ECRAN']);
+            $records [] = array('cuti' => $row['CUTI'], 'unix' => $row['UNIX'], 'lib' => $row['LIB'], 'status' => !empty($status) ? '1' : '0');
+        }
+
+        oci_free_statement($s);
+        oci_close($c);
+
+        $response = array(EXT_JSON_READER_TOTAL => $count,
+            EXT_JSON_READER_ROOT => $records);
+
+        echo $toC_Json->encode($response);
+    }
+
+    function listLettrage()
+    {
+        global $toC_Json;
+
+        $roles_id = empty($_REQUEST['categories_id']) ? 0 : $_REQUEST['categories_id'];
+
+        $db_user = empty($_REQUEST['db_user']) ? DB_USER : $_REQUEST['db_user'];
+        $db_pass = empty($_REQUEST['db_pass']) ? DB_PASS : $_REQUEST['db_pass'];
+        $db_host = empty($_REQUEST['db_host']) ? DB_HOST : $_REQUEST['db_host'];
+        $db_sid = empty($_REQUEST['db_sid']) ? DB_SID : $_REQUEST['db_sid'];
+
+        $c = oci_pconnect($db_user, $db_pass, $db_host . "/" . $db_sid);
+        if (!$c) {
+            $e = oci_error();
+            trigger_error('Could not connect to database: ' . $e['message'], E_USER_ERROR);
+        }
+
+        $query = "SELECT BKINTRALETBLK.NCP," .
+            "BKINTRALETBLK.UTI," .
+            "EVUTI.LIB," .
+            "EVUTAUT.UNIX " .
+            "FROM BKINTRALETBLK, EVUTI, EVUTAUT " .
+            "WHERE (BKINTRALETBLK.UTI = EVUTI.CUTI) " .
+            "AND (BKINTRALETBLK.UTI = EVUTAUT.CUTI) " .
+            "UNION ALL " .
+            "SELECT BKLETBLK.NCP," .
+            "BKLETBLK.UTI," .
+            "EVUTI.LIB," .
+            "EVUTAUT.UNIX " .
+            "FROM BKLETBLK, EVUTI, EVUTAUT " .
+            "WHERE (BKLETBLK.UTI = EVUTI.CUTI) " .
+            "AND (BKLETBLK.UTI = EVUTAUT.CUTI)";
+
+        $start = 0;
+        $limit = 10000;
+        $fin = $start + $limit;
+        $s = oci_parse($c, $query);
+        if (!$s) {
+            $e = oci_error($c);
+            trigger_error('Could not parse statement: ' . $e['message'], E_USER_ERROR);
+        }
+
+        $r = oci_execute($s);
+        if (!$r) {
+            $e = oci_error($s);
+            trigger_error('Could not execute statement: ' . $e['message'], E_USER_ERROR);
+        }
+
+        $records = array();
+        $count = 0;
+
+        while (($row = oci_fetch_array($s, OCI_ASSOC))) {
+            $count++;
+            $records [] = array('cuti' => $row['UTI'], 'unix' => $row['UNIX'], 'lib' => $row['LIB'], 'ncp' => $row['NCP']);
+        }
+
+        oci_free_statement($s);
+        oci_close($c);
+
+        $response = array(EXT_JSON_READER_TOTAL => $count,
+            EXT_JSON_READER_ROOT => $records);
+
+        echo $toC_Json->encode($response);
+    }
+
+    function listProgrammes()
+    {
+        global $toC_Json;
+
+        $search = empty($_REQUEST['search']) ? '' : $_REQUEST['search'];
+
+        $db_user = empty($_REQUEST['db_user']) ? DB_USER : $_REQUEST['db_user'];
+        $db_pass = empty($_REQUEST['db_pass']) ? DB_PASS : $_REQUEST['db_pass'];
+        $db_host = empty($_REQUEST['db_host']) ? DB_HOST : $_REQUEST['db_host'];
+        $db_sid = empty($_REQUEST['db_sid']) ? DB_SID : $_REQUEST['db_sid'];
+
+        $c = oci_pconnect($db_user, $db_pass, $db_host . "/" . $db_sid);
+        if (!$c) {
+            $e = oci_error();
+            trigger_error('Could not connect to database: ' . $e['message'], E_USER_ERROR);
+        }
+
+        if (!empty($search)) {
+            $query = "select * from ( select a.*, ROWNUM rnum from (select * from EVPRG where mprg is not null and lang = '001' and (lower(mprg) like :mprg or lower(lprg) like :mprg)) a where ROWNUM <= :MAX_ROW_TO_FETCH ) where rnum  >= :MIN_ROW_TO_FETCH";
+        } else {
+            $query = "select * from ( select a.*, ROWNUM rnum from (select * from EVPRG where mprg is not null and lang = '001') a where ROWNUM <= :MAX_ROW_TO_FETCH ) where rnum  >= :MIN_ROW_TO_FETCH";
+        }
+
+        $start = 0;
+        $limit = 10000;
+        $fin = $start + $limit;
+        $s = oci_parse($c, $query);
+        if (!$s) {
+            $e = oci_error($c);
+            trigger_error('Could not parse statement: ' . $e['message'], E_USER_ERROR);
+        }
+
+        $search = '%' . strtolower($search) . '%';
+        oci_bind_by_name($s, ":MAX_ROW_TO_FETCH", $fin);
+        oci_bind_by_name($s, ":MIN_ROW_TO_FETCH", $start);
+        oci_bind_by_name($s, ":mprg", $search);
+
+        $r = oci_execute($s);
+        if (!$r) {
+            $e = oci_error($s);
+            trigger_error('Could not execute statement: ' . $e['message'], E_USER_ERROR);
+        }
+
+        $records = array();
+        $count = 0;
+
+        while (($row = oci_fetch_array($s, OCI_ASSOC))) {
+            $count++;
+            $records [] = array('nprg' => $row['NPRG'], 'lprg' => $row['LPRG'], 'mprg' => $row['MPRG']);
+        }
+
+        oci_free_statement($s);
+        oci_close($c);
+
+        $response = array(EXT_JSON_READER_TOTAL => $count,
+            EXT_JSON_READER_ROOT => $records);
+
+        echo $toC_Json->encode($response);
+    }
+
+    function deconnectUser()
+    {
+        global $toC_Json;
+
+        $unix = empty($_REQUEST['unix']) ? '' : $_REQUEST['unix'];
+        $cuti = empty($_REQUEST['cuti']) ? '' : $_REQUEST['cuti'];
+
+        $db_user = empty($_REQUEST['db_user']) ? DB_USER : $_REQUEST['db_user'];
+        $db_pass = empty($_REQUEST['db_pass']) ? DB_PASS : $_REQUEST['db_pass'];
+        $db_host = empty($_REQUEST['db_host']) ? DB_HOST : $_REQUEST['db_host'];
+        $db_sid = empty($_REQUEST['db_sid']) ? DB_SID : $_REQUEST['db_sid'];
+
+        $cuti = strtolower($cuti);
+
+        $c = oci_pconnect($db_user, $db_pass, $db_host . "/" . $db_sid);
+        if (!$c) {
+            $e = oci_error();
+            $response = array('success' => false, 'feedback' => 'Could not connect to database: ' . htmlentities($e['message']));
+        } else {
+            $unix = strtolower(trim($unix));
+            $query = "BEGIN update bank.EVUTI set ECRAN = '' where lower(CUTI) = '$cuti'; commit; FOR x IN (SELECT Sid,Serial#,machine,program FROM v\$session WHERE LOWER (osuser) in ('$unix','$cuti')) LOOP EXECUTE IMMEDIATE 'Alter System Kill Session ''' || x.Sid || ','|| x.Serial# || ''' IMMEDIATE'; END LOOP; END;";
+
+            $s = oci_parse($c, $query);
+            if (!$s) {
+                $e = oci_error($c);
+                $response = array('success' => false, 'feedback' => 'Impossible de deconnecter cet utilisateur ' . htmlentities($e['message']));
+            } else {
+                $r = oci_execute($s, OCI_COMMIT_ON_SUCCESS);
+                if (!$r) {
+                    $e = oci_error($s);
+                    $response = array('success' => false, 'feedback' => 'Impossible de deconnecter cet utilisateur ' . htmlentities($e['message']));
+                } else {
+                    $app_user = empty($_REQUEST['app_user']) ? APP_USER : $_REQUEST['app_user'];
+                    $app_pass = empty($_REQUEST['app_pass']) ? APP_PASS : $_REQUEST['app_pass'];
+                    $app_host = empty($_REQUEST['app_host']) ? APP_HOST : $_REQUEST['app_host'];
+
+                    $ssh = new Net_SSH2($app_host);
+                    if (!$ssh->login($app_user, $app_pass)) {
+                        $response = array('success' => false, 'feedback' => 'Impossible d etablir une connexion SSH');
+                    } else {
+                        $ssh->disableQuietMode();
+//                            $cmd = "ps -ef|grep $unix|grep -v grep|awk '{print $2}'| sudo xargs kill -9";
+                        $cmd = "ps -ef|grep -i $unix|grep -v grep|awk '{print $2}'";
+                        $resp = $ssh->exec($cmd);
+                        $pids = explode("\n", $resp);
+                        $feedback = '';
+
+                        foreach ($pids as &$pid) {
+                            if (!empty($pid)) {
+                                $cmd = "echo $app_pass|sudo kill -9 $pid";
+                                $resp = $ssh->exec($cmd);
+                                $feedback = $feedback . $resp;
+                            }
+                        }
+
+                        $cmd = "ps -ef|grep -i $cuti|grep -v grep|awk '{print $2}'";
+                        $resp = $ssh->exec($cmd);
+                        $pids = explode("\n", $resp);
+
+                        foreach ($pids as &$pid) {
+                            if (!empty($pid)) {
+                                $cmd = "echo $app_pass|sudo kill -9 $pid";
+                                $resp = $ssh->exec($cmd);
+                                $feedback = $feedback . $resp;
+                            }
+                        }
+
+                        $response = array('success' => true, 'feedback' => $feedback);
+
+                        $ssh->disconnect();
+                    }
+                }
+            }
+
+            oci_free_statement($s);
+        }
+
+        oci_close($c);
+
+        echo $toC_Json->encode($response);
+    }
+
+    function cancelCarte()
+    {
+        global $toC_Json;
+
+        $ncart = $_REQUEST['ncart'];
+        $nctr = $_REQUEST['nctr'];
+        $age = $_REQUEST['age'];
+
+        if(empty($ncart) || !isset($ncart))
+        {
+            $response = array('success' => false, 'feedback' => 'Veuillez renseigner le No de Carte');
+        }
+        else
+        {
+            $db_user = empty($_REQUEST['db_user']) ? DB_USER : $_REQUEST['db_user'];
+            $db_pass = empty($_REQUEST['db_pass']) ? DB_PASS : $_REQUEST['db_pass'];
+            $db_host = empty($_REQUEST['db_host']) ? DB_HOST : $_REQUEST['db_host'];
+            $db_sid = empty($_REQUEST['db_sid']) ? DB_SID : $_REQUEST['db_sid'];
+
+            $c = oci_pconnect($db_user, $db_pass, $db_host . "/" . $db_sid);
+            if (!$c) {
+                $e = oci_error();
+                $response = array('success' => false, 'feedback' => 'Could not connect to database: ' . htmlentities($e['message']));
+            } else {
+                $ncart = trim($ncart);
+                $nctr = trim($nctr);
+                $age = trim($age);
+
+                $query = "BEGIN update bank.moctr set sit = 'A' where trim(nctr) = '" . $nctr . "';update bank.bkcadab set eta = '20' where trim(ncart) = '" . $ncart . "' and trim(age) = '" . $age . "' and trim(nctr) = '" . $nctr . "'; commit; END;";
+                //var_dump($query);
+
+                $s = oci_parse($c, $query);
+                if (!$s) {
+                    $e = oci_error($c);
+                    $response = array('success' => false, 'feedback' => "Impossible d'annuler cette carte " . htmlentities($e['message']));
+                } else {
+                    $r = oci_execute($s, OCI_COMMIT_ON_SUCCESS);
+                    if (!$r) {
+                        $e = oci_error($s);
+                        $response = array('success' => false, 'feedback' => "Impossible d'annuler cette carte " . htmlentities($e['message']));
+                    } else {
+                        $response = array('success' => true, 'feedback' => "Carte annulee avec succes !!!");
+                    }
+                }
+
+                oci_free_statement($s);
+            }
+
+            oci_close($c);
+        }
+
+        echo $toC_Json->encode($response);
+    }
+
+    function sortieCtx()
+    {
+        global $toC_Json;
+
+        $response = array('success' => false, 'feedback' => 'Un probleme est survenu ... veuillez contacter votre administrateur !!!');
+
+        if (empty($_REQUEST['cli'])) {
+            $response = array('success' => false, 'feedback' => 'Veuillez renseigner le code du client SVP !!!');
+        } else {
+            $cli = $_REQUEST['cli'];
+
+            $db_user = empty($_REQUEST['db_user']) ? DB_USER : $_REQUEST['db_user'];
+            $db_pass = empty($_REQUEST['db_pass']) ? DB_PASS : $_REQUEST['db_pass'];
+            $db_host = empty($_REQUEST['db_host']) ? DB_HOST : $_REQUEST['db_host'];
+            $db_sid = empty($_REQUEST['db_sid']) ? DB_SID : $_REQUEST['db_sid'];
+
+            $c = oci_pconnect($db_user, $db_pass, $db_host . "/" . $db_sid);
+            if (!$c) {
+                $e = oci_error();
+                $response = array('success' => false, 'feedback' => 'Impossible de se connecter à la base : ' . htmlentities($e['message']));
+            } else {
+                $cli = strtolower($cli);
+
+                $query = "BEGIN DELETE FROM bank.bkctxcli WHERE cli = '" . $cli . "'; DELETE FROM bank.bkctxcpt WHERE cli = '" . $cli . "'; DELETE FROM bank.bkctxcre WHERE cli = '" . $cli . "'; DELETE FROM bank.bkctxcpth WHERE EXISTS (SELECT * FROM bank.bkcom WHERE cli = '" . $cli . "' AND bank.bkctxcpth.age = bank.bkcom.age AND bank.bkctxcpth.dev = bank.bkcom.dev AND bank.bkctxcpth.ncp = bank.bkcom.ncp AND bank.bkctxcpth.suf = bank.bkcom.suf); UPDATE bank.bkcli SET ges = '000' WHERE cli = '" . $cli . "'; UPDATE bank.bkcom SET ctx = ' ' WHERE cli = '" . $cli . "'; UPDATE bank.bkcli SET qua = '01' WHERE cli = '" . $cli . "'; DELETE FROM bank.bkadcli WHERE bank.bkadcli.cli = '" . $cli . "' AND bank.bkadcli.typ = 'C'; UPDATE bank.bkadcli SET typ = 'C' WHERE bank.bkadcli.cli = '" . $cli . "' AND bank.bkadcli.typ = 'X'; COMMIT; END;";
+
+                $s = oci_parse($c, $query);
+                if (!$s) {
+                    $e = oci_error($c);
+                    $response = array('success' => false, 'feedback' => 'Impossible de sortir ce client du Contentieux ' . htmlentities($e['message']));
+                } else {
+                    $r = oci_execute($s, OCI_COMMIT_ON_SUCCESS);
+                    if (!$r) {
+                        $e = oci_error($s);
+                        $response = array('success' => false, 'feedback' => 'Impossible de sortir ce client du Contentieux ' . htmlentities($e['message']));
+                    } else {
+                        $response = array('success' => true, 'feedback' => 'Operation effectuée');
+                    }
+
+                    oci_free_statement($s);
+                }
+            }
+
+            oci_close($c);
+        }
+
+        echo $toC_Json->encode($response);
+    }
+
+    function deblocageIgc()
+    {
+        global $toC_Json;
+
+        $response = array('success' => false, 'feedback' => 'Un probleme est survenu ... veuillez contacter votre administrateur !!!');
+
+        if (empty($_REQUEST['cli'])) {
+            $response = array('success' => false, 'feedback' => 'Veuillez renseigner le code du client SVP !!!');
+        } else {
+            $cli = $_REQUEST['cli'];
+
+            //$db_user = empty($_REQUEST['db_user']) ? DB_USER : $_REQUEST['db_user'];
+            //$db_pass = empty($_REQUEST['db_pass']) ? DB_PASS : $_REQUEST['db_pass'];
+            //$db_host = empty($_REQUEST['db_host']) ? DB_HOST : $_REQUEST['db_host'];
+            //$db_sid = empty($_REQUEST['db_sid']) ? DB_SID : $_REQUEST['db_sid'];
+
+            $db_user = 'gm_fomi';
+            $db_pass = 'Kouepe3073';
+            $db_host = '10.100.1.51';
+            $db_sid = 'DRSTOCKV10';
+
+            $age = $_REQUEST['age'];
+            $ncp = $_REQUEST['ncp'];
+
+            $c = oci_pconnect($db_user, $db_pass, $db_host . "/" . $db_sid);
+            if (!$c) {
+                $e = oci_error();
+                $response = array('success' => false, 'feedback' => 'Impossible de se connecter à la base : ' . htmlentities($e['message']));
+            } else {
+                //$query = "BEGIN DELETE FROM bank.bkctxcli WHERE cli = '" . $cli . "'; DELETE FROM bank.bkctxcpt WHERE cli = '" . $cli . "'; DELETE FROM bank.bkctxcre WHERE cli = '" . $cli . "'; DELETE FROM bank.bkctxcpth WHERE EXISTS (SELECT * FROM bank.bkcom WHERE cli = '" . $cli . "' AND bank.bkctxcpth.age = bank.bkcom.age AND bank.bkctxcpth.dev = bank.bkcom.dev AND bank.bkctxcpth.ncp = bank.bkcom.ncp AND bank.bkctxcpth.suf = bank.bkcom.suf); UPDATE bank.bkcli SET ges = '000' WHERE cli = '" . $cli . "'; UPDATE bank.bkcom SET ctx = ' ' WHERE cli = '" . $cli . "'; UPDATE bank.bkcli SET qua = '01' WHERE cli = '" . $cli . "'; DELETE FROM bank.bkadcli WHERE bank.bkadcli.cli = '" . $cli . "' AND bank.bkadcli.typ = 'C'; UPDATE bank.bkadcli SET typ = 'C' WHERE bank.bkadcli.cli = '" . $cli . "' AND bank.bkadcli.typ = 'X'; COMMIT; END;";
+
+                $query = "BEGIN update bank.bkcptdos set bank.bkcptdos.ctr = '9' where bank.bkcptdos.age ='" . $age . "' AND bank.bkcptdos.ncp ='" . $ncp . "'; COMMIT; END;";
+
+                $s = oci_parse($c, $query);
+                if (!$s) {
+                    $e = oci_error($c);
+                    $response = array('success' => false, 'feedback' => 'Impossible de debloquer ce compte ' . htmlentities($e['message']));
+                } else {
+                    $r = oci_execute($s, OCI_COMMIT_ON_SUCCESS);
+                    if (!$r) {
+                        $e = oci_error($s);
+                        $response = array('success' => false, 'feedback' => 'Impossible de debloquer ce compte ' . htmlentities($e['message']));
+                    } else {
+                        $response = array('success' => true, 'feedback' => 'Operation effectuée');
+                    }
+
+                    oci_free_statement($s);
+                }
+            }
+
+            oci_close($c);
+        }
+
+        echo $toC_Json->encode($response);
+    }
+
+    function lockUser()
+    {
+        global $toC_Json;
+
+        $username = $_SESSION[admin][username];
+
+        if (empty($username)) {
+            $response = array('success' => false, 'feedback' => 'Votre session est expirée ... vous devez vous reconnecter');
+        }
+        else
+        {
+            $db_user = $_REQUEST['db_user'];
+            $label = $_REQUEST['label'];
+            $databases_id = $_REQUEST['databases_id'];
+            $db_pass = $_REQUEST['db_pass'];
+            $db_host = $_REQUEST['db_host'];
+            $db_sid = $_REQUEST['db_sid'];
+            $account = $_REQUEST['account'];
+
+            $c = oci_pconnect($db_user, $db_pass, $db_host . "/" . $db_sid);
+            if (!$c) {
+                $e = oci_error();
+                $response = array('success' => false, 'feedback' => 'Could not connect to database: ' . htmlentities($e['message']));
+            } else {
+                $query = "BEGIN EXECUTE IMMEDIATE 'alter user " . $account . " account lock'; END;";
+                $s = oci_parse($c, $query);
+                if (!$s) {
+                    $e = oci_error($c);
+                    $response = array('success' => false, 'feedback' => "Impossible d'executer cette requete " . htmlentities($e['message']));
+                } else {
+                    $r = oci_execute($s, OCI_COMMIT_ON_SUCCESS);
+                    if (!$r) {
+                        $e = oci_error($s);
+                        $response = array('success' => false, 'feedback' => 'Impossible de desactiver ce compte ' . htmlentities($e['message']));
+                    } else {
+
+                        $response = array('success' => true, 'feedback' => "Compte " . $account . " desactivé avec succes");
+
+                        $subscribers = osC_Users_Admin::getSubscribers($databases_id,'disable_account');
+
+                        $to = array();
+                        $emails = explode(';',$subscribers);
+                        foreach ($emails as $email) {
+                            if (!empty($email)) {
+                                $to[] = osC_Mail::parseEmail($email);
+                            }
+                        }
+
+                        $body = "<p>Bonjour,</p><p>Le compte " . $account . " a été desactivé par " . $username . " sur la base " . $label . "</p>";
+
+                        $toC_Email_Account = new toC_Email_Account(4);
+
+                        $mail = array('accounts_id' => $toC_Email_Account->getAccountId(),
+                            'id' => 222,
+                            'to' => $to,
+                            'from' => $toC_Email_Account->getAccountName(),
+                            'sender' => $toC_Email_Account->getAccountEmail(),
+                            'subject' => "Le compte " . $account . " a été desactivé par " . $username . " sur la base " . $label,
+                            'reply_to' => $toC_Email_Account->getAccountEmail(),
+                            'full_from' => $toC_Email_Account->getAccountName() . ' <' . $toC_Email_Account->getAccountEmail() . '>',
+                            'body' => $body,
+                            'priority' => 1,
+                            'content_type' => 'html',
+                            'notification' => false,
+                            'udate' => time(),
+                            'date' => date('m/d/Y H:i:s'),
+                            'fetch_timestamp' => time(),
+                            'messages_flag' => EMAIL_MESSAGE_DRAFT,
+                            'attachments' => null);
+
+                        if($toC_Email_Account->sendMailJob($mail))
+                        {
+                            $msg = "OK";
+                        }
+                        else
+                        {
+                            $msg = "NOK";
+                        }
+                    }
+
+                    oci_free_statement($s);
+                }
+            }
+
+            oci_close($c);
+        }
+
+        echo $toC_Json->encode($response);
+    }
+
+    function unlockUser()
+    {
+        global $toC_Json;
+
+        $username = $_SESSION[admin][username];
+        //$username = 'xxxx';
+
+        if (empty($username)) {
+            $response = array('success' => false, 'feedback' => 'Votre session est expirée ... vous devez vous reconnecter');
+        }
+        else
+        {
+            $db_user = $_REQUEST['db_user'];
+            $label = $_REQUEST['label'];
+            $databases_id = $_REQUEST['databases_id'];
+            $db_pass = $_REQUEST['db_pass'];
+            $db_host = $_REQUEST['db_host'];
+            $db_sid = $_REQUEST['db_sid'];
+            $account = $_REQUEST['account'];
+
+            $c = oci_pconnect($db_user, $db_pass, $db_host . "/" . $db_sid);
+            if (!$c) {
+                $e = oci_error();
+                $response = array('success' => false, 'feedback' => 'Could not connect to database: ' . htmlentities($e['message']));
+            } else {
+                $query = "BEGIN EXECUTE IMMEDIATE 'alter user " . $account . " account unlock'; END;";
+                $s = oci_parse($c, $query);
+                if (!$s) {
+                    $e = oci_error($c);
+                    $response = array('success' => false, 'feedback' => "Impossible d'executer cette requete " . htmlentities($e['message']));
+                } else {
+                    $r = oci_execute($s, OCI_COMMIT_ON_SUCCESS);
+                    if (!$r) {
+                        $e = oci_error($s);
+                        $response = array('success' => false, 'feedback' => 'Impossible d activer ce compte ' . htmlentities($e['message']));
+                    } else {
+
+                        $response = array('success' => true, 'feedback' => "Compte " . $account . " activé avec succes");
+
+                        $subscribers = osC_Users_Admin::getSubscribers($databases_id,'enable_account');
+
+                        $to = array();
+                        $emails = explode(';',$subscribers);
+                        foreach ($emails as $email) {
+                            if (!empty($email)) {
+                                $to[] = osC_Mail::parseEmail($email);
+                            }
+                        }
+
+                        $body = "<p>Bonjour,</p><p>Le compte " . $account . " a été activé par " . $username . " sur la base " . $label . "</p>";
+
+                        $toC_Email_Account = new toC_Email_Account(4);
+
+                        $mail = array('accounts_id' => $toC_Email_Account->getAccountId(),
+                            'id' => 222,
+                            'to' => $to,
+                            'from' => $toC_Email_Account->getAccountName(),
+                            'sender' => $toC_Email_Account->getAccountEmail(),
+                            'subject' => "Le compte " . $account . " a été activé par " . $username . " sur la base " . $label,
+                            'reply_to' => $toC_Email_Account->getAccountEmail(),
+                            'full_from' => $toC_Email_Account->getAccountName() . ' <' . $toC_Email_Account->getAccountEmail() . '>',
+                            'body' => $body,
+                            'priority' => 1,
+                            'content_type' => 'html',
+                            'notification' => false,
+                            'udate' => time(),
+                            'date' => date('m/d/Y H:i:s'),
+                            'fetch_timestamp' => time(),
+                            'messages_flag' => EMAIL_MESSAGE_DRAFT,
+                            'attachments' => null);
+
+                        if($toC_Email_Account->sendMailJob($mail))
+                        {
+                            $msg = "OK";
+                        }
+                        else
+                        {
+                            $msg = "NOK";
+                        }
+                    }
+
+                    oci_free_statement($s);
+                }
+            }
+
+            oci_close($c);
+        }
+
+        echo $toC_Json->encode($response);
+    }
+
+    function debloqueCompte()
+    {
+        global $toC_Json;
+
+        $cuti = empty($_REQUEST['cuti']) ? '' : $_REQUEST['cuti'];
+
+        $db_user = empty($_REQUEST['db_user']) ? DB_USER : $_REQUEST['db_user'];
+        $db_pass = empty($_REQUEST['db_pass']) ? DB_PASS : $_REQUEST['db_pass'];
+        $db_host = empty($_REQUEST['db_host']) ? DB_HOST : $_REQUEST['db_host'];
+        $db_sid = empty($_REQUEST['db_sid']) ? DB_SID : $_REQUEST['db_sid'];
+
+        $cuti = trim(strtolower($cuti));
+
+        $c = oci_pconnect($db_user, $db_pass, $db_host . "/" . $db_sid);
+        if (!$c) {
+            $e = oci_error();
+            trigger_error('Could not connect to database: ' . $e['message'], E_USER_ERROR);
+        } else {
+            $query = "BEGIN delete from BKINTRALETBLK where trim(lower(UTI)) = '$cuti'; commit; delete from BKLETBLK where trim(lower(UTI)) = '$cuti'; commit; END;";
+
+            $s = oci_parse($c, $query);
+            if (!$s) {
+                $e = oci_error($c);
+                $response = array('success' => false, 'feedback' => 'Impossible de debloquer ce Compte ' . htmlentities($e['message']));
+            } else {
+                $r = oci_execute($s, OCI_COMMIT_ON_SUCCESS);
+                if (!$r) {
+                    $e = oci_error($s);
+                    $response = array('success' => false, 'feedback' => 'Impossible de debloquer ce Compte ' . htmlentities($e['message']));
+                } else {
+                    $response = array('success' => true, 'feedback' => "Compte debloqué avec succes");
+                }
+            }
+        }
+
+        oci_free_statement($s);
+        oci_close($c);
+
+        echo $toC_Json->encode($response);
+    }
+
+    function changePwd()
+    {
+        global $toC_Json;
+
+        $username = $_SESSION[admin][username];
+        //$username = 'xxxx';
+
+        if (empty($username)) {
+            $response = array('success' => false, 'feedback' => 'Votre session est expirée ... vous devez vous reconnecter');
+        }
+        else
+        {
+            $db_user = $_REQUEST['db_user'];
+            $label = $_REQUEST['label'];
+            $databases_id = $_REQUEST['databases_id'];
+            $db_pass = $_REQUEST['db_pass'];
+            $db_host = $_REQUEST['db_host'];
+            $db_sid = $_REQUEST['db_sid'];
+            $account = $_REQUEST['account'];
+
+            $c = oci_pconnect($db_user, $db_pass, $db_host . "/" . $db_sid);
+            if (!$c) {
+                $e = oci_error();
+                $response = array('success' => false, 'feedback' => 'Could not connect to database: ' . htmlentities($e['message']));
+            } else {
+                $characters = '0123456789';
+                $charactersLength = strlen($characters);
+                $randomString = '';
+                for ($i = 0; $i < 5; $i++) {
+                    $randomString .= $characters[rand(0, $charactersLength - 1)];
+                }
+
+                $pass = ucfirst(strtolower($account)) . $randomString;
+
+                $query = "BEGIN EXECUTE IMMEDIATE 'alter user " . $account . " identified by " . $pass . "'; EXECUTE IMMEDIATE 'alter user " . $account . " account unlock'; END;";
+                $s = oci_parse($c, $query);
+                if (!$s) {
+                    $e = oci_error($c);
+                    $response = array('success' => false, 'feedback' => "Impossible de reinitialiser le mot de ce compte " . htmlentities($e['message']));
+                } else {
+                    $r = oci_execute($s, OCI_COMMIT_ON_SUCCESS);
+                    if (!$r) {
+                        $e = oci_error($s);
+                        $response = array('success' => false, 'feedback' => 'Impossible de reinitialiser le mot de ce compte ' . htmlentities($e['message']));
+                    } else {
+
+                        osC_Users_Admin::saveUsermail($account, $_REQUEST['name'], $_REQUEST['email']);
+
+                        $to = array();
+                        $emails = explode(';', $_REQUEST['email']);
+                        foreach ($emails as $email) {
+                            if (!empty($email)) {
+                                $to[] = osC_Mail::parseEmail($email);
+                            }
+                        }
+
+                        $cc = array();
+                        if (isset($_REQUEST['cc']) && !empty($_REQUEST['cc'])) {
+                            $emails = explode(';', $_REQUEST['cc']);
+
+                            foreach ($emails as $email) {
+                                if (!empty($email)) {
+                                    $cc[] = osC_Mail::parseEmail($email);
+                                }
+                            }
+                        }
+
+                        $bcc = array();
+                        if (isset($_REQUEST['bcc']) && !empty($_REQUEST['bcc'])) {
+                            $emails = explode(';', $_REQUEST['bcc']);
+
+                            foreach ($emails as $email) {
+                                if (!empty($email)) {
+                                    $bcc[] = osC_Mail::parseEmail($email);
+                                }
+                            }
+                        }
+
+                        $toC_Email_Account = new toC_Email_Account(4);
+
+                        $body = "<p>Bonjour <strong>" . $_REQUEST['name'] . "</strong>,</p><p>Ci dessous vos parametres de connexion &agrave; la base <strong>" . $label . " </strong>:</p><table border='0' cellpadding='1' cellspacing='1' style='width: 300px;'><tbody><tr><td>Compte</td><td style='text-align: center;'>:</td><td><strong>" . $account . "</strong></td></tr><tr><td>Mot de passe</td><td style='text-align: center;'>:</td><td><strong>" . $pass . "</strong></td></tr></tbody></table><p>Cdt</p>";
+
+                        $mail = array('accounts_id' => $toC_Email_Account->getAccountId(),
+                            'id' => 111,
+                            'to' => $to,
+                            'cc' => $cc,
+                            'bcc' => $bcc,
+                            'from' => $toC_Email_Account->getAccountName(),
+                            'sender' => $toC_Email_Account->getAccountEmail(),
+                            'subject' => "Votre compte " . $account . " sur la base " . $label,
+                            'reply_to' => $toC_Email_Account->getAccountEmail(),
+                            'full_from' => $toC_Email_Account->getAccountName() . ' <' . $toC_Email_Account->getAccountEmail() . '>',
+                            'body' => $body,
+                            'priority' => 1,
+                            'content_type' => 'html',
+                            'notification' => false,
+                            'udate' => time(),
+                            'date' => date('m/d/Y H:i:s'),
+                            'fetch_timestamp' => time(),
+                            'messages_flag' => EMAIL_MESSAGE_DRAFT,
+                            'attachments' => null);
+
+                        if ($toC_Email_Account->sendMailJob($mail)) {
+                            $response = array('success' => true, 'feedback' => "Compte " . $account . " reinitialisé avec succes");
+                        } else {
+                            $response = array('success' => false, 'feedback' => "Compte " . $account . " a ete reinitialisé avec succes, mais le message n'a pu etre envoye, veuillez contacter votre administrateur");
+                        }
+
+                        $subscribers = osC_Users_Admin::getSubscribers($databases_id,'reset_password');
+
+                        $to = array();
+                        $emails = explode(';',$subscribers);
+                        foreach ($emails as $email) {
+                            if (!empty($email)) {
+                                $to[] = osC_Mail::parseEmail($email);
+                            }
+                        }
+
+                        $body = "<p>Bonjour,</p><p>Le mot de passe du compte " . $account . " a été reinitialisé par " . $username . " sur la base " . $label . "</p>";
+
+                        $toC_Email_Account = new toC_Email_Account(4);
+
+                        $mail = array('accounts_id' => $toC_Email_Account->getAccountId(),
+                            'id' => 222,
+                            'to' => $to,
+                            'from' => $toC_Email_Account->getAccountName(),
+                            'sender' => $toC_Email_Account->getAccountEmail(),
+                            'subject' => "Le mot de passe du compte " . $account . " a été reinitialisé par " . $username . " sur la base " . $label,
+                            'reply_to' => $toC_Email_Account->getAccountEmail(),
+                            'full_from' => $toC_Email_Account->getAccountName() . ' <' . $toC_Email_Account->getAccountEmail() . '>',
+                            'body' => $body,
+                            'priority' => 1,
+                            'content_type' => 'html',
+                            'notification' => false,
+                            'udate' => time(),
+                            'date' => date('m/d/Y H:i:s'),
+                            'fetch_timestamp' => time(),
+                            'messages_flag' => EMAIL_MESSAGE_DRAFT,
+                            'attachments' => null);
+
+                        if($toC_Email_Account->sendMailJob($mail))
+                        {
+                            $msg = "OK";
+                        }
+                        else
+                        {
+                            $msg = "NOK";
+                        }
+                    }
+
+                    oci_free_statement($s);
+                }
+            }
+
+            oci_close($c);
+        }
+
+        echo $toC_Json->encode($response);
+    }
+
+    function createUser()
+    {
+        global $toC_Json;
+        $username = $_SESSION[admin][username];
+
+        if (empty($username)) {
+            $response = array('success' => false, 'feedback' => 'Votre session est expirée ... vous devez vous reconnecter');
+        }
+        else
+        {
+            $db_user = $_REQUEST['db_user'];
+            $label = $_REQUEST['label'];
+            $databases_id = $_REQUEST['databases_id'];
+            $db_pass = $_REQUEST['db_pass'];
+            $db_host = $_REQUEST['db_host'];
+            $db_sid = $_REQUEST['db_sid'];
+            $account = $_REQUEST['account'];
+            $tbs = $_REQUEST['tbs'];
+            $temp = $_REQUEST['temp'];
+            $profile = $_REQUEST['profile'];
+            $roles = $_REQUEST['roles'];
+
+            $c = oci_pconnect($db_user, $db_pass, $db_host . "/" . $db_sid);
+            if (!$c) {
+                $e = oci_error();
+                $response = array('success' => false, 'feedback' => 'Could not connect to database: ' . htmlentities($e['message']));
+            } else {
+                $characters = '0123456789';
+                $charactersLength = strlen($characters);
+                $randomString = '';
+                for ($i = 0; $i < 5; $i++) {
+                    $randomString .= $characters[rand(0, $charactersLength - 1)];
+                }
+
+                $pass = ucfirst(strtolower($account)) . $randomString;
+
+                $query = "BEGIN EXECUTE IMMEDIATE 'create user " . $account . " identified by " . $pass . " DEFAULT TABLESPACE " . $tbs . " TEMPORARY TABLESPACE " . $temp . " PROFILE " . $profile . " QUOTA UNLIMITED ON " . $tbs . "';EXECUTE IMMEDIATE 'grant " . $roles . ",CONNECT,RESOURCE to " . $account . "'; END;";
+                $s = oci_parse($c, $query);
+                if (!$s) {
+                    $e = oci_error($c);
+                    $response = array('success' => false, 'feedback' => "Impossible de creer ce compte " . htmlentities($e['message']));
+                } else {
+                    $r = oci_execute($s, OCI_COMMIT_ON_SUCCESS);
+                    if (!$r) {
+                        $e = oci_error($s);
+                        $response = array('success' => false, 'feedback' => 'Impossible de creer ce compte ' . $e['message']);
+                    } else {
+
+                        osC_Users_Admin::saveUsermail($account, $_REQUEST['name'], $_REQUEST['email']);
+
+                        $to = array();
+                        $emails = explode(';', $_REQUEST['email']);
+                        foreach ($emails as $email) {
+                            if (!empty($email)) {
+                                $to[] = osC_Mail::parseEmail($email);
+                            }
+                        }
+
+                        $cc = array();
+                        if (isset($_REQUEST['cc']) && !empty($_REQUEST['cc'])) {
+                            $emails = explode(';', $_REQUEST['cc']);
+
+                            foreach ($emails as $email) {
+                                if (!empty($email)) {
+                                    $cc[] = osC_Mail::parseEmail($email);
+                                }
+                            }
+                        }
+
+                        $bcc = array();
+                        if (isset($_REQUEST['bcc']) && !empty($_REQUEST['bcc'])) {
+                            $emails = explode(';', $_REQUEST['bcc']);
+
+                            foreach ($emails as $email) {
+                                if (!empty($email)) {
+                                    $bcc[] = osC_Mail::parseEmail($email);
+                                }
+                            }
+                        }
+
+                        $toC_Email_Account = new toC_Email_Account(4);
+
+                        $body = "<p>Bonjour " . $_REQUEST['name'] . ",</p><p>Ci dessous vos parametres de connexion à la base " . $label . " :</p><ul><li>Compte&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : " . $account . "</li><li>Mot de passe : " . $pass . "</li></ul><p>Cdt</p>";
+
+                        $mail = array('accounts_id' => $toC_Email_Account->getAccountId(),
+                            'id' => $randomString . '111',
+                            'to' => $to,
+                            'cc' => $cc,
+                            'bcc' => $bcc,
+                            'from' => $toC_Email_Account->getAccountName(),
+                            'sender' => $toC_Email_Account->getAccountEmail(),
+                            'subject' => "Votre compte " . $account . " sur la base " . $label,
+                            'reply_to' => $toC_Email_Account->getAccountEmail(),
+                            'full_from' => $toC_Email_Account->getAccountName() . ' <' . $toC_Email_Account->getAccountEmail() . '>',
+                            'body' => $body,
+                            'priority' => 1,
+                            'content_type' => 'html',
+                            'notification' => false,
+                            'udate' => time(),
+                            'date' => date('m/d/Y H:i:s'),
+                            'fetch_timestamp' => time(),
+                            'messages_flag' => EMAIL_MESSAGE_DRAFT,
+                            'attachments' => null);
+
+                        if ($toC_Email_Account->sendMailJob($mail)) {
+                            $response = array('success' => true, 'feedback' => "Compte " . $account . " cree avec succes");
+                        } else {
+                            $response = array('success' => false, 'feedback' => "Compte " . $account . " a ete cree avec succes, mais le message n'a pu etre envoye, veuillez contacter votre administrateur");
+                        }
+
+                        $subscribers = osC_Users_Admin::getSubscribers($databases_id,'create_account');
+
+                        $to = array();
+                        $emails = explode(';',$subscribers);
+                        foreach ($emails as $email) {
+                            if (!empty($email)) {
+                                $to[] = osC_Mail::parseEmail($email);
+                            }
+                        }
+
+                        $body = "<p>Bonjour,</p><p>Le compte " . $account . " a été créé par " . $username . " sur la base " . $label . "</p>";
+
+                        $mail = array('accounts_id' => $toC_Email_Account->getAccountId(),
+                            'id' => $randomString . '222',
+                            'to' => $to,
+                            'from' => $toC_Email_Account->getAccountName(),
+                            'sender' => $toC_Email_Account->getAccountEmail(),
+                            'subject' => "Le compte " . $account . " a été créé par " . $username . " sur la base " . $label,
+                            'reply_to' => $toC_Email_Account->getAccountEmail(),
+                            'full_from' => $toC_Email_Account->getAccountName() . ' <' . $toC_Email_Account->getAccountEmail() . '>',
+                            'body' => $body,
+                            'priority' => 1,
+                            'content_type' => 'html',
+                            'notification' => false,
+                            'udate' => time(),
+                            'date' => date('m/d/Y H:i:s'),
+                            'fetch_timestamp' => time(),
+                            'messages_flag' => EMAIL_MESSAGE_DRAFT,
+                            'attachments' => null);
+
+                        if($toC_Email_Account->sendMailJob($mail))
+                        {
+                            $msg = "OK";
+                        }
+                        else
+                        {
+                            $msg = "NOK";
+                        }
+                    }
+
+                    oci_free_statement($s);
+                }
+            }
+
+            oci_close($c);
+        }
+
+        echo $toC_Json->encode($response);
+    }
+
+    function createUserinfoc()
+    {
+        global $toC_Json;
+        $username = $_SESSION[admin][username];
+
+        if (empty($username)) {
+            $response = array('success' => false, 'feedback' => 'Votre session est expirée ... vous devez vous reconnecter');
+        }
+        else
+        {
+            $db_user = $_REQUEST['db_user'];
+            $label = $_REQUEST['label'];
+            $databases_id = $_REQUEST['databases_id'];
+            $db_pass = $_REQUEST['db_pass'];
+            $db_host = $_REQUEST['db_host'];
+            $db_sid = $_REQUEST['db_sid'];
+            $account = $_REQUEST['account'];
+            $tbs = 'CLIENTTBSN';
+            $temp = 'TEMP';
+            $profile = 'DEFAULT';
+            $roles = $_REQUEST['roles'];
+
+            $c = oci_pconnect($db_user, $db_pass, $db_host . "/" . $db_sid);
+            if (!$c) {
+                $e = oci_error();
+                $response = array('success' => false, 'feedback' => 'Could not connect to database: ' . htmlentities($e['message']));
+            } else {
+                $characters = '0123456789';
+                $charactersLength = strlen($characters);
+                $randomString = '';
+                for ($i = 0; $i < 5; $i++) {
+                    $randomString .= $characters[rand(0, $charactersLength - 1)];
+                }
+
+                $pass = ucfirst(strtolower($account)) . $randomString;
+
+                $query = "BEGIN EXECUTE IMMEDIATE 'create user " . $account . " identified by " . $pass . " DEFAULT TABLESPACE " . $tbs . " TEMPORARY TABLESPACE " . $temp . " PROFILE " . $profile . " QUOTA UNLIMITED ON " . $tbs . "';EXECUTE IMMEDIATE 'grant " . $roles . ",CONNECT,RESOURCE to " . $account . "'; END;";
+                $s = oci_parse($c, $query);
+                if (!$s) {
+                    $e = oci_error($c);
+                    $response = array('success' => false, 'feedback' => "Impossible de creer ce compte " . htmlentities($e['message']));
+                } else {
+                    $r = oci_execute($s, OCI_COMMIT_ON_SUCCESS);
+                    if (!$r) {
+                        $e = oci_error($s);
+                        $response = array('success' => false, 'feedback' => 'Impossible de creer ce compte ' . $e['message']);
+                    } else {
+
+                        osC_Users_Admin::saveUsermail($account, $_REQUEST['name'], $_REQUEST['email']);
+
+                        $to = array();
+                        $emails = explode(';', $_REQUEST['email']);
+                        foreach ($emails as $email) {
+                            if (!empty($email)) {
+                                $to[] = osC_Mail::parseEmail($email);
+                            }
+                        }
+
+                        $cc = array();
+                        if (isset($_REQUEST['cc']) && !empty($_REQUEST['cc'])) {
+                            $emails = explode(';', $_REQUEST['cc']);
+
+                            foreach ($emails as $email) {
+                                if (!empty($email)) {
+                                    $cc[] = osC_Mail::parseEmail($email);
+                                }
+                            }
+                        }
+
+                        $bcc = array();
+                        if (isset($_REQUEST['bcc']) && !empty($_REQUEST['bcc'])) {
+                            $emails = explode(';', $_REQUEST['bcc']);
+
+                            foreach ($emails as $email) {
+                                if (!empty($email)) {
+                                    $bcc[] = osC_Mail::parseEmail($email);
+                                }
+                            }
+                        }
+
+                        $toC_Email_Account = new toC_Email_Account(4);
+
+                        $body = "<p>Bonjour " . $_REQUEST['name'] . ",</p><p>Ci dessous vos parametres de connexion à la base " . $label . " :</p><ul><li>Compte&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : " . $account . "</li><li>Mot de passe : " . $pass . "</li></ul><p>Cdt</p>";
+
+                        $mail = array('accounts_id' => $toC_Email_Account->getAccountId(),
+                            'id' => $randomString . '111',
+                            'to' => $to,
+                            'cc' => $cc,
+                            'bcc' => $bcc,
+                            'from' => $toC_Email_Account->getAccountName(),
+                            'sender' => $toC_Email_Account->getAccountEmail(),
+                            'subject' => "Votre compte " . $account . " sur la base " . $label,
+                            'reply_to' => $toC_Email_Account->getAccountEmail(),
+                            'full_from' => $toC_Email_Account->getAccountName() . ' <' . $toC_Email_Account->getAccountEmail() . '>',
+                            'body' => $body,
+                            'priority' => 1,
+                            'content_type' => 'html',
+                            'notification' => false,
+                            'udate' => time(),
+                            'date' => date('m/d/Y H:i:s'),
+                            'fetch_timestamp' => time(),
+                            'messages_flag' => EMAIL_MESSAGE_DRAFT,
+                            'attachments' => null);
+
+                        if ($toC_Email_Account->sendMailJob($mail)) {
+                            $response = array('success' => true, 'feedback' => "Compte " . $account . " cree avec succes");
+                        } else {
+                            $response = array('success' => false, 'feedback' => "Compte " . $account . " a ete cree avec succes, mais le message n'a pu etre envoye, veuillez contacter votre administrateur");
+                        }
+
+                        $subscribers = osC_Users_Admin::getSubscribers($databases_id,'create_account');
+
+                        $to = array();
+                        $emails = explode(';',$subscribers);
+                        foreach ($emails as $email) {
+                            if (!empty($email)) {
+                                $to[] = osC_Mail::parseEmail($email);
+                            }
+                        }
+
+                        $body = "<p>Bonjour,</p><p>Le compte " . $account . " a été créé par " . $username . " sur la base " . $label . "</p>";
+
+                        $mail = array('accounts_id' => $toC_Email_Account->getAccountId(),
+                            'id' => $randomString . '222',
+                            'to' => $to,
+                            'from' => $toC_Email_Account->getAccountName(),
+                            'sender' => $toC_Email_Account->getAccountEmail(),
+                            'subject' => "Le compte " . $account . " a été créé par " . $username . " sur la base " . $label,
+                            'reply_to' => $toC_Email_Account->getAccountEmail(),
+                            'full_from' => $toC_Email_Account->getAccountName() . ' <' . $toC_Email_Account->getAccountEmail() . '>',
+                            'body' => $body,
+                            'priority' => 1,
+                            'content_type' => 'html',
+                            'notification' => false,
+                            'udate' => time(),
+                            'date' => date('m/d/Y H:i:s'),
+                            'fetch_timestamp' => time(),
+                            'messages_flag' => EMAIL_MESSAGE_DRAFT,
+                            'attachments' => null);
+
+                        if($toC_Email_Account->sendMailJob($mail))
+                        {
+                            $msg = "OK";
+                        }
+                        else
+                        {
+                            $msg = "NOK";
+                        }
+                    }
+
+                    oci_free_statement($s);
+                }
+            }
+
+            oci_close($c);
+        }
+
+        echo $toC_Json->encode($response);
+    }
+
+    function debugProgram()
+    {
+        global $toC_Json;
+
+        $nprg = empty($_REQUEST['nprg']) ? '' : $_REQUEST['nprg'];
+        $mprg = empty($_REQUEST['mprg']) ? '' : $_REQUEST['mprg'];
+        //$cuti = empty($_REQUEST['cuti']) ? $_SESSION['admin']['id'] : $_REQUEST['cuti'];
+        $cuti = empty($_REQUEST['cuti']) ? '3820' : $_REQUEST['cuti'];
+
+        $db_user = empty($_REQUEST['db_user']) ? DB_USER : $_REQUEST['db_user'];
+        $db_pass = empty($_REQUEST['db_pass']) ? DB_PASS : $_REQUEST['db_pass'];
+        $db_host = empty($_REQUEST['db_host']) ? DB_HOST : $_REQUEST['db_host'];
+        $db_sid = empty($_REQUEST['db_sid']) ? DB_SID : $_REQUEST['db_sid'];
+
+        $nprg = strtolower($nprg);
+        $mprg = trim(strtolower($mprg)) . '.42r';
+
+        $app_user = DEBUG_USER;
+        $app_pass = DEBUG_PASS;
+        $app_host = empty($_REQUEST['app_host']) ? APP_HOST : $_REQUEST['app_host'];
+
+        $ssh = new Net_SSH2($app_host);
+        if (!$ssh->login($app_user, $app_pass)) {
+            $response = array('success' => false, 'feedback' => 'Impossible d etablir une connexion SSH');
+        } else {
+            $ssh->disableQuietMode();
+
+            $cmd = 'echo cd ' . PROFILE_PATH . ' > /tmp/run.sh';
+            $resp = $ssh->exec($cmd);
+
+            $cmd = 'echo sh ' . PROFILE_SCRIPT . ' >> /tmp/run.sh';
+            $resp = $ssh->exec($cmd);
+
+            $cmd = 'echo export FGLSERVER=10.100.120.32:0 >> /tmp/run.sh';
+            $resp = $ssh->exec($cmd);
+
+            $cmd = 'echo export FGLSQLDEBUG=3 >> /tmp/run.sh';
+            $resp = $ssh->exec($cmd);
+
+//                $cmd = 'echo export FGLGUIDEBUG=0 >> /tmp/run.sh';
+//                $resp = $ssh->exec($cmd);
+
+            $cmd = 'echo export FGLGUI=1 >> /tmp/run.sh';
+            $resp = $ssh->exec($cmd);
+
+            $cmd = 'echo export FGLLDPATH=' . FGLLDPATH . ' >> /tmp/run.sh';
+            $resp = $ssh->exec($cmd);
+
+            $cmd = 'echo export DBPATH=' . DBPATH . ' >> /tmp/run.sh';
+            $resp = $ssh->exec($cmd);
+
+            $cmd = 'echo export LIBPATH=' . LIBPATH . ' >> /tmp/run.sh';
+            $resp = $ssh->exec($cmd);
+
+            $cmd = 'echo export ORACLE_HOME=' . ORACLE_HOME . ' >> /tmp/run.sh';
+            $resp = $ssh->exec($cmd);
+
+            $cmd = 'echo export LD_LIBRARY_PATH=' . LD_LIBRARY_PATH . ' >> /tmp/run.sh';
+            $resp = $ssh->exec($cmd);
+
+            $cmd = 'echo export DATABASE=' . GENERO_DATABASE . ' >> /tmp/run.sh';
+            $resp = $ssh->exec($cmd);
+
+            $cmd = 'echo export FGLDIR=' . FGLDIR . ' >> /tmp/run.sh';
+            $resp = $ssh->exec($cmd);
+
+            $cmd = 'echo export FGLPROFILE=' . FGLPROFILE . ' >> /tmp/run.sh';
+            $resp = $ssh->exec($cmd);
+
+            $cmd = 'echo export BANK=' . BANK . ' >> /tmp/run.sh';
+            $resp = $ssh->exec($cmd);
+
+            $cmd = "find " . BANK . " -name " . $mprg;
+            $fgl = $ssh->exec($cmd);
+            $fgl = explode("\n", $fgl);
+            $fgl = $fgl[0];
+
+            $cmd = 'echo "' . PATH . '/fglrun ' . $fgl . ' ' . $cuti . ' ' . $nprg . '" >> /tmp/run.sh';
+            $resp = $ssh->exec($cmd);
+
+            $cmd = "sh /tmp/run.sh 2>/tmp/run.debug";
+            $resp = $ssh->exec($cmd);
+
+            $response = array('success' => true, 'feedback' => $resp);
+
+            $ssh->disconnect();
+        }
+
+        echo $toC_Json->encode($response);
+    }
 }
 
 ?>

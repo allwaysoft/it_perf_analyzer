@@ -2,10 +2,12 @@ Toc.SessionsGrid = function (config) {
     var that = this;
     config = config || {};
     config.started = false;
-    config.region = 'center';
+    //config.region = 'center';
     config.loadMask = true;
+    config.border = true;
     config.title = 'Sessions';
     config.count = 0;
+    //config.height = '100%';
     config.reqs = 0;
     config.viewConfig = {emptyText: TocLanguage.gridNoRecords, forceFit: true};
 
@@ -56,6 +58,7 @@ Toc.SessionsGrid = function (config) {
         }, [
             'sid',
             'sql_text',
+            'sql_id',
             'serial',
             'username',
             'command',
@@ -70,11 +73,17 @@ Toc.SessionsGrid = function (config) {
             'machine',
             'terminal',
             'action',
-            'pct_pga'
+            'pct'
         ]),
         listeners: {
             load: function (store, records, opt) {
-                this.lblInfos.setText(store.data.length + ' Sessions actives ...');
+                if (that.inAshPanel) {
+                    that.setTitle('Sessions (' + store.data.length + ' active(s) ... )');
+                }
+                else {
+                    that.lblInfos.setText(store.data.length + ' Sessions actives ...');
+                }
+
                 that.reqs--;
 
                 if (that.count == 0) {
@@ -94,7 +103,9 @@ Toc.SessionsGrid = function (config) {
 
     config.rowActions = new Ext.ux.grid.RowActions({
         actions: [
-            {iconCls: 'icon-delete-record', qtip: 'Deconnecter'}
+            {iconCls: 'icon-delete-record', qtip: 'Deconnecter'},
+            {iconCls: 'icon-tune-record', qtip: 'Recommendations'},
+            {iconCls: 'icon-gather-record', qtip: 'Rapport SQL'}
         ],
         widthIntercept: Ext.isSafari ? 4 : 2
     });
@@ -113,102 +124,91 @@ Toc.SessionsGrid = function (config) {
         { id: 'machine', header: 'Machine', dataIndex: 'machine', width: 10},
         { id: 'sql', header: 'SQL', dataIndex: 'sql_text', width: 25, renderer: render},
         { id: 'client_info', header: 'Info', dataIndex: 'client_info', width: 20, renderer: render},
-        { id: 'state', header: 'Status', dataIndex: 'state', width: 10, renderer: render},
+        { id: 'state', header: 'Status', dataIndex: 'state', width: 8, renderer: render},
         { id: 'event', header: 'Event', dataIndex: 'event', width: 10, renderer: render},
-        { id: 'seconds_in_wait', header: 'Duree (S)', dataIndex: 'seconds_in_wait', width: 5, align: 'center'},
-        { id: 'pga', header: '% PGA', dataIndex: 'pct_pga', width: 5, renderer: Toc.content.ContentManager.renderProgress},
+        { id: 'seconds_in_wait', header: 'Duree (S)', dataIndex: 'seconds_in_wait', width: 4, align: 'center'},
+        { id: 'pct', header: '%', dataIndex: 'pct', width: 8, renderer: Toc.content.ContentManager.renderProgress, align: 'center'},
         config.rowActions
     ]);
     //config.autoExpandColumn = 'username';
 
     var thisObj = this;
 
-    config.combo_freq = Toc.content.ContentManager.getFrequenceCombo();
+    if (that.inAshPanel) {
+        config.txtSearch = new Ext.form.TextField({
+            width: 100,
+            hideLabel: true
+        });
 
-    config.txtSearch = new Ext.form.TextField({
-        width: 100,
-        hideLabel: true
-    });
+        config.lblInfos = new Ext.form.Label({
+            width: 200,
+            text: 'O Sessions actives',
+            autoShow: true
+        });
 
-    config.lblInfos = new Ext.form.Label({
-        width: 200,
-        text:'O Sessions actives',
-        autoShow:true
-    });
+        config.pBar = new Ext.ProgressBar({
+            hidden: true,
+            width: 300,
+            hideLabel: true
+        });
 
-    config.pBar = new Ext.ProgressBar({
-        hidden: true,
-        width: 300,
-        hideLabel: true
-    });
-
-    config.tbar = [
-        {
-            text: '',
-            iconCls: 'remove',
-            handler: this.onBatchKill,
-            scope: this
-        },
-        '-',
-        {
-            text: '',
-            iconCls: 'refresh',
-            handler: this.onRefresh,
-            scope: this
-        },
-        '-',
-        {
-            text: '',
-            iconCls: this.started ? 'stop' : 'play',
-            handler: this.started ? this.onStop : this.onStart,
-            scope: this
-        },
-        '-',
-        {
-            text: 'ASH',
-            iconCls: 'report',
-            handler: this.onAsh,
-            scope: this
-        },
-        '-',
-        {
-            text: 'ADDM',
-            iconCls: 'report',
-            handler: this.onAddm,
-            scope: this
-        },
-        '-',
-        {
-            text: 'AWR',
-            iconCls: 'awr',
-            handler: this.onAwr,
-            scope: this
-        },
-        '-',
-        config.lblInfos,
-        '-',
-        config.pBar,
-        '-',
-        config.combo_freq,
-        '->',
-        config.txtSearch,
-        ' ',
-        {
-            text: '',
-            iconCls: 'search',
-            handler: this.onSearch,
-            scope: this
-        }
-    ];
-
-    config.combo_freq.getStore().load();
-
-    config.combo_freq.on('select', function (combo, record, index) {
-        thisObj.onStop();
-        var category = thisObj.categoryCombo.getValue();
-        var freq = thisObj.combo_freq.getValue();
-        thisObj.buildItems(category, freq);
-    });
+        config.tbar = [
+            {
+                text: '',
+                iconCls: 'remove',
+                handler: this.onBatchKill,
+                scope: this
+            },
+            '-',
+            {
+                text: '',
+                iconCls: 'refresh',
+                handler: this.onRefresh,
+                scope: this
+            },
+            '-',
+            {
+                text: '',
+                iconCls: this.started ? 'stop' : 'play',
+                handler: this.started ? this.onStop : this.onStart,
+                scope: this
+            },
+            '-',
+            {
+                text: 'ASH',
+                iconCls: 'report',
+                handler: this.onAsh,
+                scope: this
+            },
+            '-',
+            {
+                text: 'ADDM',
+                iconCls: 'report',
+                handler: this.onAddm,
+                scope: this
+            },
+            '-',
+            {
+                text: 'AWR',
+                iconCls: 'awr',
+                handler: this.onAwr,
+                scope: this
+            },
+            '-',
+            config.lblInfos,
+            '-',
+            config.pBar,
+            '->',
+            config.txtSearch,
+            ' ',
+            {
+                text: '',
+                iconCls: 'search',
+                handler: this.onSearch,
+                scope: this
+            }
+        ];
+    }
 
     Toc.SessionsGrid.superclass.constructor.call(this, config);
 };
@@ -240,7 +240,7 @@ Ext.extend(Toc.SessionsGrid, Ext.grid.GridPanel, {
                             comment: result.comment
                         };
 
-                        this.downloadReport(request);
+                        Toc.downloadJobReport(request, this);
 
                     }
                     else {
@@ -279,7 +279,7 @@ Ext.extend(Toc.SessionsGrid, Ext.grid.GridPanel, {
                             comment: result.comment
                         };
 
-                        this.downloadReport(request);
+                        Toc.downloadJobReport(request, this);
 
                     }
                     else {
@@ -307,71 +307,6 @@ Ext.extend(Toc.SessionsGrid, Ext.grid.GridPanel, {
         var dialog = new Toc.AWRDialog(params);
         dialog.show();
     },
-    downloadReport: function (request) {
-        var status = request.status;
-        var action = "get_jobStatus";
-
-        switch (status) {
-            case "run":
-                action = "get_jobStatus";
-                break;
-
-            case "error":
-                Ext.MessageBox.alert(TocLanguage.msgErrTitle, request.comments);
-                return;
-                break;
-            case "complete":
-                action = "download_report";
-                break;
-            default:
-                action = "get_jobStatus";
-                break;
-        }
-
-        this.getEl().mask(request.comments);
-
-        Ext.Ajax.request({
-            url: Toc.CONF.CONN_URL,
-            params: {
-                module: 'databases',
-                action: action,
-                task_id: request.task_id,
-                comments : request.comments
-            },
-            callback: function (options, success, response) {
-                if (response.responseText) {
-                    result = Ext.decode(response.responseText);
-                    switch (action) {
-                        case 'download_report':
-                            this.getEl().unmask();
-                            url = result.file_name;
-                            params = "height=300px,width=340px,top=50px,left=165px,status=yes,toolbar=no,menubar=no,location=no,scrollbars=yes";
-                            window.open(url, "", params);
-                            this.buttons[0].enable();
-                            break;
-                        default:
-                            var req = result.records[0];
-                            //console.debug(req);
-                            if(req.task_id)
-                            {
-                                this.task_id = req.task_id;
-                                this.getEl().unmask();
-                                this.downloadReport(req);
-                            }
-                            else {
-                                Ext.MessageBox.alert(TocLanguage.msgErrTitle, "No task id specified !!!");
-                            }
-
-                            break;
-                    }
-                }
-                else {
-                    this.downloadReport(request)
-                }
-            },
-            scope: this
-        });
-    },
     refreshData: function (scope) {
         if (scope && scope.started) {
             if (scope.reqs == 0) {
@@ -381,7 +316,7 @@ Ext.extend(Toc.SessionsGrid, Ext.grid.GridPanel, {
             }
         }
     },
-    killUser: function (sid, serial,pbar,step,max) {
+    killUser: function (sid, serial, pbar, step, max) {
         Ext.Ajax.request({
             url: Toc.CONF.CONN_URL,
             params: {
@@ -400,10 +335,9 @@ Ext.extend(Toc.SessionsGrid, Ext.grid.GridPanel, {
 
                 pbar.val = pbar.val + step;
                 pbar.count = pbar.count + 1;
-                pbar.updateProgress(pbar.val,sid + " deconnecte ...",true);
+                pbar.updateProgress(pbar.val, sid + " deconnecte ...", true);
 
-                if(pbar.count >= max)
-                {
+                if (pbar.count >= max) {
                     pbar.reset();
                     pbar.hide();
                     this.onRefresh();
@@ -418,23 +352,21 @@ Ext.extend(Toc.SessionsGrid, Ext.grid.GridPanel, {
             scope: this
         });
     },
-    onBatchKill : function() {
+    onBatchKill: function () {
         var count = this.selModel.getCount();
-        if(count > 0)
-        {
+        if (count > 0) {
             this.pBar.reset();
-            this.pBar.updateProgress(0,"",true);
+            this.pBar.updateProgress(0, "", true);
             this.pBar.val = 0;
             this.pBar.count = 0;
             this.pBar.show();
-            var step = 1/count;
+            var step = 1 / count;
 
-            for (var i=0;i<count;i++)
-            {
+            for (var i = 0; i < count; i++) {
                 var sid = this.selModel.selections.items[i].data.sid;
                 var serial = this.selModel.selections.items[i].data.serial;
 
-                this.killUser(sid, serial,this.pBar,step,count);
+                this.killUser(sid, serial, this.pBar, step, count);
             }
         }
         else {
@@ -442,15 +374,20 @@ Ext.extend(Toc.SessionsGrid, Ext.grid.GridPanel, {
         }
     },
     onKill: function (record) {
-        Toc.KillUser(record,this);
+        Toc.KillUser(record, this);
     },
     onStart: function () {
         this.started = true;
         this.count = 0;
         this.reqs = 0;
+        var store = this.getStore();
+        store.baseParams['start_time'] = null;
+        store.baseParams['end_time'] = null;
         this.refreshData(this);
-        this.topToolbar.items.items[4].setHandler(this.onStop, this);
-        this.topToolbar.items.items[4].setIconClass('stop');
+        if (!this.inAshPanel) {
+            this.topToolbar.items.items[4].setHandler(this.onStop, this);
+            this.topToolbar.items.items[4].setIconClass('stop');
+        }
     },
     onStop: function () {
         this.started = false;
@@ -458,13 +395,14 @@ Ext.extend(Toc.SessionsGrid, Ext.grid.GridPanel, {
         this.reqs = 10;
         this.refreshData(this);
 
-        if(this.interval)
-        {
+        if (this.interval) {
             clearInterval(this.interval);
         }
 
-        this.topToolbar.items.items[4].setHandler(this.onStart, this);
-        this.topToolbar.items.items[4].setIconClass('play');
+        if (!this.inAshPanel) {
+            this.topToolbar.items.items[4].setHandler(this.onStart, this);
+            this.topToolbar.items.items[4].setIconClass('play');
+        }
     },
     onRefresh: function () {
         this.onStart();
@@ -484,6 +422,16 @@ Ext.extend(Toc.SessionsGrid, Ext.grid.GridPanel, {
         switch (action) {
             case 'icon-delete-record':
                 this.onKill(record);
+                break;
+
+            case 'icon-gather-record':
+                //this.onSqlReport(record);
+                Toc.SqlReport(record, this);
+                break;
+
+            case 'icon-tune-record':
+                //this.onSqlReport(record);
+                Toc.SqlTune(record, this);
                 break;
         }
     }
@@ -505,25 +453,36 @@ Toc.LockedObjGrid = function (config) {
 
     config.listeners = {
         activate: function (comp) {
+            comp.activated = true;
         },
         show: function (comp) {
         },
         enable: function (panel) {
         },
         deactivate: function (panel) {
-            this.onStop();
+            if (panel.activated) {
+                panel.onStop();
+            }
         },
         destroy: function (panel) {
-            this.onStop();
+            if (panel.activated) {
+                panel.onStop();
+            }
         },
         disable: function (panel) {
-            this.onStop();
+            if (panel.activated) {
+                panel.onStop();
+            }
         },
         remove: function (container, panel) {
-            this.onStop();
+            if (panel.activated) {
+                panel.onStop();
+            }
         },
         removed: function (container, panel) {
-            this.onStop();
+            if (container.activated) {
+                container.onStop();
+            }
         },
         render: function (comp) {
         },
@@ -596,7 +555,7 @@ Toc.LockedObjGrid = function (config) {
         { id: 'osuser', header: 'OS User', dataIndex: 'osuser', width: 10},
         { id: 'duree', header: 'Duree (Min)', dataIndex: 'duree', width: 10},
         { id: 'locked_object', header: 'Objet', dataIndex: 'locked_object', width: 20},
-        { id: 'description', header: 'SQL', dataIndex: 'description', width: 45,renderer : render},
+        { id: 'description', header: 'SQL', dataIndex: 'description', width: 45, renderer: render},
         config.rowActions
     ]);
     config.autoExpandColumn = 'username';
@@ -610,8 +569,8 @@ Toc.LockedObjGrid = function (config) {
 
     config.lblInfos = new Ext.form.Label({
         width: 200,
-        text:'O Verrous',
-        autoShow:true
+        text: 'O Verrous',
+        autoShow: true
     });
 
     config.pBar = new Ext.ProgressBar({
@@ -669,7 +628,7 @@ Ext.extend(Toc.LockedObjGrid, Ext.grid.GridPanel, {
             }
         }
     },
-    killUser: function (sid, serial,pbar,step,max) {
+    killUser: function (sid, serial, pbar, step, max) {
         Ext.Ajax.request({
             url: Toc.CONF.CONN_URL,
             params: {
@@ -688,10 +647,9 @@ Ext.extend(Toc.LockedObjGrid, Ext.grid.GridPanel, {
 
                 pbar.val = pbar.val + step;
                 pbar.count = pbar.count + 1;
-                pbar.updateProgress(pbar.val,sid + " deconnecte ...",true);
+                pbar.updateProgress(pbar.val, sid + " deconnecte ...", true);
 
-                if(pbar.count >= max)
-                {
+                if (pbar.count >= max) {
                     pbar.reset();
                     pbar.hide();
                     this.onRefresh();
@@ -706,23 +664,21 @@ Ext.extend(Toc.LockedObjGrid, Ext.grid.GridPanel, {
             scope: this
         });
     },
-    onBatchKill : function() {
+    onBatchKill: function () {
         var count = this.selModel.getCount();
-        if(count > 0)
-        {
+        if (count > 0) {
             this.pBar.reset();
-            this.pBar.updateProgress(0,"",true);
+            this.pBar.updateProgress(0, "", true);
             this.pBar.val = 0;
             this.pBar.count = 0;
             this.pBar.show();
-            var step = 1/count;
+            var step = 1 / count;
 
-            for (var i=0;i<count;i++)
-            {
+            for (var i = 0; i < count; i++) {
                 var sid = this.selModel.selections.items[i].data.sid;
                 var serial = this.selModel.selections.items[i].data.serial;
 
-                this.killUser(sid, serial,this.pBar,step,count);
+                this.killUser(sid, serial, this.pBar, step, count);
             }
         }
         else {
@@ -730,7 +686,7 @@ Ext.extend(Toc.LockedObjGrid, Ext.grid.GridPanel, {
         }
     },
     onKill: function (record) {
-        Toc.KillUser(record,this);
+        Toc.KillUser(record, this);
     },
     onStart: function () {
         var that = this;
@@ -747,8 +703,7 @@ Ext.extend(Toc.LockedObjGrid, Ext.grid.GridPanel, {
         this.count = 10;
         this.reqs = 10;
         this.refreshData(this);
-        if(this.interval)
-        {
+        if (this.interval) {
             clearInterval(this.interval);
         }
 
@@ -952,7 +907,7 @@ Ext.extend(Toc.LockTreeGrid, Ext.grid.GridPanel, {
     },
 
     onKill: function (record) {
-        Toc.KillUser(record,this);
+        Toc.KillUser(record, this);
     },
     onStart: function () {
         this.started = true;
@@ -967,8 +922,7 @@ Ext.extend(Toc.LockTreeGrid, Ext.grid.GridPanel, {
         this.count = 10;
         this.reqs = 10;
         this.refreshData(this);
-        if(this.interval)
-        {
+        if (this.interval) {
             clearInterval(this.interval);
         }
 
@@ -995,13 +949,19 @@ Toc.LibrayCachePanel = function (config) {
     config.started = false;
     config.region = 'center';
     config.loadMask = true;
-    config.width = '25%';
+    config.width = '100%';
     //config.border = true;
-    config.autoHeight = true;
+    //config.autoHeight = true;
     config.title = 'Library Cache';
-    config.columnLines = false;
-    config.hideHeaders = true;
-    config.viewConfig = {emptyText: TocLanguage.gridNoRecords};
+    //config.columnLines = false;
+    //config.hideHeaders = true;
+    config.viewConfig = {emptyText: TocLanguage.gridNoRecords, forceFit: true};
+
+    config.listeners = {
+        activate: function (panel) {
+            panel.getStore().load();
+        }
+    };
 
     config.ds = new Ext.data.Store({
         url: Toc.CONF.CONN_URL,
@@ -1022,18 +982,17 @@ Toc.LibrayCachePanel = function (config) {
         }, [
             'namespace',
             'reloads',
+            'gets',
+            'gethits',
+            'pins',
+            'pinhits',
             'invalidations',
             'get',
             'pin'
         ]),
         listeners: {
-            load: function (store, records, opt) {
-
-            },
-            beforeload: function (store, opt) {
-            }, scope: this
         },
-        autoLoad: false
+        autoLoad: true
     });
 
     config.rowActions = new Ext.ux.grid.RowActions({
@@ -1050,38 +1009,25 @@ Toc.LibrayCachePanel = function (config) {
     };
 
     config.cm = new Ext.grid.ColumnModel([
-        { id: 'namespace', header: 'Namespace', dataIndex: 'namespace', width: 100},
-        { id: 'reloads', header: 'Reloads', dataIndex: 'reloads', width: 20},
-        { id: 'invalidations', header: 'Inv', dataIndex: 'invalidations', width: 20},
-        { id: 'get', header: '% Gets', dataIndex: 'get', width: 50, renderer: Toc.content.ContentManager.renderProgress},
-        { id: 'pin', header: '% Pin', dataIndex: 'pin', width: 50, renderer: Toc.content.ContentManager.renderProgress}
+        { id: 'namespace', header: 'Namespace', dataIndex: 'namespace', width: 25, align: 'left'},
+        { id: 'reloads', header: 'Reloads', dataIndex: 'reloads', width: 5, align: 'center'},
+        { id: 'gets', header: 'Gets', dataIndex: 'gets', width: 5, align: 'center'},
+        { id: 'gethits', header: 'Gethits', dataIndex: 'gethits', width: 5, align: 'center'},
+        { id: 'pins', header: 'Pins', dataIndex: 'pins', width: 5, align: 'center'},
+        { id: 'pinhits', header: 'Pinhits', dataIndex: 'pinhits', width: 5, align: 'center'},
+        { id: 'invalidations', header: 'Invalidations', dataIndex: 'invalidations', width: 10, align: 'center'},
+        { id: 'get', header: '% Gets', dataIndex: 'get', width: 15, renderer: Toc.content.ContentManager.renderPct, align: 'center'},
+        { id: 'pin', header: '% Pin', dataIndex: 'pin', width: 15, renderer: Toc.content.ContentManager.renderPct, align: 'center'}
     ]);
 
-    var thisObj = this;
-
-    config.task = {
-        run: function () {
-            thisObj.getStore().load();
-        },
-        interval: 10000 //2 second
-    };
-
-    config.runner = new Ext.util.TaskRunner();
-
-    config.tools = [
+    config.tbar = [
         {
-            id: 'refresh',
-            qtip: 'Refresh',
-            handler: function (event, toolEl, panel) {
-                panel.started = !panel.started;
-
-                if (panel.started) {
-                    panel.runner.start(panel.task);
-                }
-                else {
-                    panel.runner.stop(panel.task);
-                }
-            }
+            text: '',
+            iconCls: 'refresh',
+            handler: function (panel) {
+                that.getStore().reload();
+            },
+            scope: this
         }
     ];
 
@@ -1089,43 +1035,6 @@ Toc.LibrayCachePanel = function (config) {
 };
 
 Ext.extend(Toc.LibrayCachePanel, Ext.grid.GridPanel, {
-
-    onEdit: function (record) {
-        var params = {
-            server_user: this.server_user,
-            server_pass: this.server_pass,
-            server_port: this.server_port,
-            host: this.host,
-            db_port: this.port,
-            db_user: this.db_user,
-            db_pass: this.db_pass,
-            db_host: this.host,
-            db_sid: this.sid,
-            tbs: record.get("name")
-        };
-
-        //console.debug(params);
-        var dlg = new Toc.TbsBrowser(params);
-        dlg.setTitle(this.label + ' : ' + record.get("name"));
-
-        dlg.on('saveSuccess', function () {
-            this.onRefresh();
-        }, this);
-
-        dlg.show(params, this.owner);
-    },
-
-    onRefresh: function () {
-        this.getStore().reload();
-    },
-
-    onRowAction: function (grid, record, action, row, col) {
-        switch (action) {
-            case 'icon-edit-record':
-                this.onEdit(record);
-                break;
-        }
-    }
 });
 
 Toc.DatabasesPerfDashboard = function (config) {
@@ -1325,9 +1234,6 @@ Toc.MemoryDashboardPanel = function (params) {
         scope: this
     };
 
-    config.combo_freq = Toc.content.ContentManager.getFrequenceCombo();
-    //config.categoryCombo = Toc.content.ContentManager.getDatabasesCategoryCombo();
-
     config.tbar = [
         {
             text: TocLanguage.btnRefresh,
@@ -1348,20 +1254,8 @@ Toc.MemoryDashboardPanel = function (params) {
             iconCls: 'stop',
             handler: this.onStop,
             scope: this
-        },
-        '-',
-        config.combo_freq
+        }
     ];
-
-    config.combo_freq.getStore().load();
-
-    var thisObj = this;
-
-    config.combo_freq.on('select', function (combo, record, index) {
-        thisObj.onStop();
-        var freq = thisObj.combo_freq.getValue();
-        thisObj.buildItems(freq);
-    });
 
     Toc.MemoryDashboardPanel.superclass.constructor.call(this, config);
 };
@@ -1536,7 +1430,7 @@ Toc.DatabasePerfDashboard = function (config) {
             });
 
             config.combo_freq.on('select', function (combo, record, index) {
-                if(thisObj.started)
+                if (thisObj.started)
                     thisObj.onStop();
                 var category = thisObj.categoryCombo.getValue();
                 var freq = thisObj.combo_freq.getValue();
@@ -1859,10 +1753,11 @@ Toc.TopEventsPanelCharts = function (config) {
     this.params = config;
     var that = this;
     config = config || {};
-    config.region = 'center';
+    //config.region = 'center';
     config.width = this.params.width || '25%';
     config.count = 0;
     config.reqs = 0;
+    config.try = 0;
     //config.bodyStyle = 'height:150px';
     //config.height = '20%';
     //config.layout = 'fit';
@@ -1879,8 +1774,9 @@ Toc.TopEventsPanelCharts = function (config) {
                 var chart;
                 chart = new AmCharts.AmSerialChart();
                 chart.width = '100%';
-                //chart.height = 150;
+                //chart.height = '100%';
                 //chart.autoResize = true;
+                //chart.autoDisplay = true;
 
                 var type = "line";
                 chart.dataProvider = thisObj.data;
@@ -1896,7 +1792,8 @@ Toc.TopEventsPanelCharts = function (config) {
                 var categoryAxis = chart.categoryAxis;
                 categoryAxis.gridAlpha = 0.07;
                 categoryAxis.axisColor = "#DADADA";
-                categoryAxis.labelsEnabled = false;
+                categoryAxis.labelsEnabled = config.showLegend;
+
                 categoryAxis.startOnAxis = true;
 
                 // Value
@@ -1911,150 +1808,190 @@ Toc.TopEventsPanelCharts = function (config) {
                 // GRAPHS
                 // first graph
                 var graph = new AmCharts.AmGraph();
-                graph.type = type; // it's simple line graph
-                graph.title = "other";
-                graph.valueField = "other";
-                graph.lineColor = "#F06EAA";
+                graph = new AmCharts.AmGraph();
+                graph.type = type;
+                graph.title = "CPU";
+                graph.valueField = "cpu";
+                graph.lineColor = "green";
                 graph.lineAlpha = 0;
-                graph.fillAlphas = 0.6; // setting fillAlphas to > 0 value makes it area graph
-                //graph.balloonText = "<span style='font-size:14px; color:#000000;'><b>[[value]]</b></span>";
+                graph.fillAlphas = 0.6;
+                graph.showBalloon = false;
+                if (config.showLegend) {
+                    //graph.balloonText = "Queueing : [[value]]";
+                }
                 chart.addGraph(graph);
 
                 // second graph
                 graph = new AmCharts.AmGraph();
                 graph.type = type;
-                graph.title = "application";
+                graph.title = "Application";
                 graph.valueField = "application";
                 graph.lineAlpha = 0;
                 graph.lineColor = "#C02800";
                 graph.fillAlphas = 0.6;
-                //graph.balloonText = "<span style='font-size:14px; color:#000000;'><b>[[value]]</b></span>";
+                graph.showBalloon = false;
+                if (config.showLegend) {
+                    //graph.balloonText = "Application : [[value]]";
+                }
                 chart.addGraph(graph);
 
                 // third graph
                 graph = new AmCharts.AmGraph();
                 graph.type = type;
-                graph.title = "configuration";
+                graph.title = "Configuration";
                 graph.valueField = "configuration";
                 graph.lineAlpha = 0;
                 graph.lineColor = "#5C440B";
                 graph.fillAlphas = 0.6;
-                //graph.balloonText = "<span style='font-size:14px; color:#000000;'><b>[[value]]</b></span>";
+                graph.showBalloon = false;
+                if (config.showLegend) {
+                    //graph.balloonText = "Configuration : [[value]]";
+                }
                 chart.addGraph(graph);
 
                 graph = new AmCharts.AmGraph();
                 graph.type = type;
-                graph.title = "administrative";
+                graph.title = "Administrative";
                 graph.valueField = "administrative";
                 graph.lineAlpha = 0;
                 graph.fillAlphas = 0.6;
                 graph.lineColor = "#717354";
-                //graph.balloonText = "<span style='font-size:14px; color:#000000;'><b>[[value]]</b></span>";
+                graph.showBalloon = false;
+                if (config.showLegend) {
+                    //graph.balloonText = "Administrative : [[value]]";
+                }
                 chart.addGraph(graph);
 
                 graph = new AmCharts.AmGraph();
                 graph.type = type;
-                graph.title = "concurrency";
+                graph.title = "Concurrency";
                 graph.valueField = "concurrency";
                 graph.lineAlpha = 0;
                 graph.fillAlphas = 0.6;
                 graph.lineColor = "#8B1A00";
-                //graph.balloonText = "<span style='font-size:14px; color:#000000;'><b>[[value]]</b></span>";
+                graph.showBalloon = false;
+                if (config.showLegend) {
+                    //graph.balloonText = "Concurrency : [[value]]";
+                }
                 chart.addGraph(graph);
 
                 graph = new AmCharts.AmGraph();
                 graph.type = type;
-                graph.title = "commit";
+                graph.title = "Commit";
                 graph.valueField = "commit";
                 graph.lineColor = "#E46800";
                 graph.lineAlpha = 0;
                 graph.fillAlphas = 0.6;
-                //graph.balloonText = "<span style='font-size:14px; color:#000000;'><b>[[value]]</b></span>";
+                graph.showBalloon = false;
+                if (config.showLegend) {
+                    //graph.balloonText = "Commit : [[value]]";
+                }
                 chart.addGraph(graph);
 
                 graph = new AmCharts.AmGraph();
                 graph.type = type;
-                graph.title = "network";
-                graph.valueField = "network";
-                graph.lineAlpha = 0;
-                graph.fillAlphas = 0.6;
-                graph.lineColor = "#9F9371";
-                //graph.balloonText = "<span style='font-size:14px; color:#000000;'><b>[[value]]</b></span>";
-                chart.addGraph(graph);
-
-                graph = new AmCharts.AmGraph();
-                graph.type = type;
-                graph.title = "userio";
+                graph.title = "User I/O";
                 graph.valueField = "userio";
                 graph.lineAlpha = 0;
                 graph.fillAlphas = 0.6;
                 graph.lineColor = "#004AE7";
-                //graph.balloonText = "<span style='font-size:14px; color:#000000;'><b>[[value]]</b></span>";
+                graph.showBalloon = false;
+                if (config.showLegend) {
+                    //graph.balloonText = "User I/O : [[value]]";
+                }
                 chart.addGraph(graph);
 
                 graph = new AmCharts.AmGraph();
                 graph.type = type;
-                graph.title = "systemio";
+                graph.title = "System I/O";
                 graph.valueField = "systemio";
                 graph.lineColor = "#0094E7";
                 graph.lineAlpha = 0;
                 graph.fillAlphas = 0.6;
-                //graph.balloonText = "<span style='font-size:14px; color:#000000;'><b>[[value]]</b></span>";
+                graph.showBalloon = false;
+                if (config.showLegend) {
+                    //graph.balloonText = "System I/O : [[value]]";
+                }
                 chart.addGraph(graph);
 
                 graph = new AmCharts.AmGraph();
                 graph.type = type;
-                graph.title = "scheduler";
+                graph.title = "Network";
+                graph.valueField = "network";
+                graph.lineAlpha = 0;
+                graph.fillAlphas = 0.6;
+                graph.lineColor = "#9F9371";
+                graph.showBalloon = false;
+                if (config.showLegend) {
+                    //graph.balloonText = "Network : [[value]]";
+                }
+                chart.addGraph(graph);
+
+                graph = new AmCharts.AmGraph();
+                graph.type = type; // it's simple line graph
+                graph.title = "Other";
+                graph.valueField = "other";
+                graph.lineColor = "#F06EAA";
+                graph.lineAlpha = 0;
+                graph.showBalloon = false;
+                graph.fillAlphas = 0.6; // setting fillAlphas to > 0 value makes it area graph
+                if (config.showLegend) {
+                    //graph.balloonText = "Other : [[value]]";
+                }
+                chart.addGraph(graph);
+
+                graph = new AmCharts.AmGraph();
+                graph.type = type;
+                graph.title = "Scheduler";
                 graph.valueField = "scheduler";
                 graph.lineColor = "#86FF86";
                 graph.lineAlpha = 0;
                 graph.fillAlphas = 0.6;
-                //graph.balloonText = "<span style='font-size:14px; color:#000000;'><b>[[value]]</b></span>";
+                graph.showBalloon = false;
+                if (config.showLegend) {
+                    //graph.balloonText = "Scheduler : [[value]]";
+                }
                 chart.addGraph(graph);
 
                 graph = new AmCharts.AmGraph();
                 graph.type = type;
-                graph.title = "clustering";
-                graph.valueField = "clustering";
-                graph.lineColor = "#C9C2AF";
-                graph.lineAlpha = 0;
-                graph.fillAlphas = 0.6;
-                //graph.balloonText = "<span style='font-size:14px; color:#000000;'><b>[[value]]</b></span>";
-                chart.addGraph(graph);
-
-                graph = new AmCharts.AmGraph();
-                graph.type = type;
-                graph.title = "queueing";
+                graph.title = "Queueing";
                 graph.valueField = "queueing";
                 graph.lineColor = "#C2B79B";
                 graph.lineAlpha = 0;
                 graph.fillAlphas = 0.6;
-                //graph.balloonText = "<span style='font-size:14px; color:#000000;'><b>[[value]]</b></span>";
+                graph.showBalloon = false;
+                if (config.showLegend) {
+                    //graph.balloonText = "Queueing : [[value]]";
+                }
                 chart.addGraph(graph);
 
-                // LEGEND
-                //var legend = new AmCharts.AmLegend();
-                //legend.position = "top";
-                //legend.valueText = "[[value]]";
-                //legend.valueWidth = 100;
-                //legend.valueAlign = "left";
-                //legend.equalWidths = false;
-                //legend.periodValueText = "total: [[value.sum]]"; // this is displayed when mouse is not over the chart.
-                //chart.addLegend(legend);
-
                 // CURSOR
-                //var chartCursor = new AmCharts.ChartCursor();
-                //chartCursor.cursorAlpha = 0;
-                //chart.addChartCursor(chartCursor);
+                if (config.showLegend) {
+                    var legend = new AmCharts.AmLegend();
+                    legend.position = "right";
+                    //legend.periodValueText = "total: [[value.sum]]"; // this is displayed when mouse is not over the chart.
+                    chart.addLegend(legend);
 
-                // SCROLLBAR
-                //var chartScrollbar = new AmCharts.ChartScrollbar();
-                //chartScrollbar.color = "#FFFFFF";
+                    var chartCursor = new AmCharts.ChartCursor();
+                    chartCursor.cursorAlpha = 0;
+                    chart.addChartCursor(chartCursor);
 
+                    // SCROLLBAR
+                    chart.chartScrollbar = new AmCharts.ChartScrollbar();
+                    //chartScrollbar.color = "#FFFFFF";
+
+                    chart.listeners = [
+                        {"event": "zoomed", "method": thisObj.onZoomed}
+                    ];
+                }
 
                 // WRITE
-                chart.write(thisObj.body.id);
-                thisObj.chart = chart;
+                chart.write(comp.body.id);
+                chart.panel = comp;
+                comp.chart = chart;
+                //console.log('configChart');
+                //console.debug(comp);
             };
             if (AmCharts.isReady) {
                 configChart();
@@ -2071,9 +2008,10 @@ Toc.TopEventsPanelCharts = function (config) {
             //console.log('adjHeight ==> ' + adjHeight);
             //console.log('rawWidth ==> ' + rawWidth);
             //console.log('rawHeight ==> ' + rawHeight);
-            //console.debug(comp);
-
-            Component.body.dom.style.height = config.body_height;
+            if(config.body_height)
+            {
+                Component.body.dom.style.height = config.body_height;
+            }
         },
         scope: this
     };
@@ -2089,106 +2027,135 @@ Toc.TopEventsPanelCharts = function (config) {
         }
     ];
 
+    this.addEvents('zoomed');
+
     Toc.TopEventsPanelCharts.superclass.constructor.call(this, config);
 };
 
 Ext.extend(Toc.TopEventsPanelCharts, Ext.Panel, {
+    onZoomed: function (chart)  {
+        //console.log('onZoomed');
+        chart.chart.panel.startValue = chart.startValue;
+        chart.chart.panel.endValue = chart.endValue;
+        //console.debug(chart);
+        this.fireEvent('zoomed',chart.startValue,chart.endValue);
 
-    onEdit: function (record) {
-        var event = record.data.event;
-
-        var params = {
-            label: this.label,
-            servers_id: this.servers_id,
-            databases_id: this.databases_id,
-            server_user: this.server_user,
-            server_pass: this.server_pass,
-            server_port: this.server_port,
-            host: this.host,
-            db_port: this.port,
-            db_user: this.db_user,
-            db_pass: this.db_pass,
-            db_host: this.host,
-            db_sid: this.sid,
-            sid: this.sid,
-            typ: this.typ
-        };
-
-        var dlg = this.owner.createDatabasesDialog();
-        var path = this.owner.getCategoryPath();
-        dlg.setTitle(record.get("content_name"));
-
-        dlg.on('saveSuccess', function () {
-            this.onRefresh();
-        }, this);
-
-        var panels = [];
-        panels[0] = 'sessions';
-
-        dlg.show(params, path, this.owner, panels);
+        //console.log('endIndex ===> ' + chart.endIndex);
+        //console.log('endValue ===> ' + chart.endValue);
+        //console.log('startIndex ===> ' + chart.startIndex);
+        //console.log('startValue ===> ' + chart.startValue);
+        //console.log('type ===> ' + chart.type);
     },
-
     refreshData: function (scope) {
         scope.setTitle(scope.title + '.');
+        scope.try++;
         if (scope && scope.started) {
-            if(scope.reqs == 0)
-            {
+            if (scope.reqs == 0) {
                 scope.reqs++;
-                scope.setTitle(scope.label + ' .');
 
                 scope.transactionId = Ext.Ajax.request({
                     url: Toc.CONF.ORACLE_URL,
                     params: {
                         module: 'databases',
-                        action: 'list_waits',
+                        action: this.action || 'list_waits',
                         db_user: this.db_user,
                         db_pass: this.db_pass,
                         db_port: this.port,
+                        sample_time: this.sample_time,
                         db_host: this.host,
                         db_sid: this.sid,
                         databases_id: this.databases_id
                     },
                     callback: function (options, success, response) {
                         scope.reqs--;
+                        scope.try = 0;
                         scope.setTitle(scope.label);
 
-                        if(scope.chart)
-                        {
+                        if (scope.chart) {
                             var chart = scope.chart;
                             var valueAxis = chart.valueAxes[0];
 
                             if (success) {
                                 var json = Ext.decode(response.responseText);
-
+                                var data = null;
                                 //console.debug(json);
-                                var data = json ? json.records[0] : [];
+                                if (!this.showLegend) {
+                                    data = json ? json.records[0] : [];
+                                    //var data = json ? json.records : [];
 
-                                if (this.data.length > 200) {
-                                    this.data.shift();
-                                }
-
-                                chart.dataProvider = this.data;
-                                if (chart.chartData.length > 200) {
-                                    chart.chartData.shift();
-                                }
-
-                                if (valueAxis) {
-                                    valueAxis.titleColor = "green";
-                                    valueAxis.labelsEnabled = true;
-                                    valueAxis.title = "";
-                                    if (data) {
-                                        this.data.push(data);
-                                    }
-                                    else {
-                                        valueAxis.labelsEnabled = false;
-                                        valueAxis.titleColor = "red";
-                                        valueAxis.title = "No Data";
+                                    if (this.data.length > 200) {
+                                        this.data.shift();
                                     }
 
-                                    if (data && data.comments) {
-                                        valueAxis.labelsEnabled = false;
-                                        valueAxis.titleColor = "red";
-                                        valueAxis.title = data.comments;
+                                    chart.dataProvider = this.data;
+                                    if (chart.chartData.length > 200) {
+                                        chart.chartData.shift();
+                                    }
+
+                                    if (valueAxis) {
+                                        valueAxis.titleColor = "green";
+                                        valueAxis.labelsEnabled = true;
+                                        valueAxis.title = "";
+                                        if (data) {
+                                            this.data.push(data);
+                                        }
+                                        else {
+                                            valueAxis.labelsEnabled = false;
+                                            valueAxis.titleColor = "red";
+                                            valueAxis.title = "No Data";
+                                        }
+
+                                        if (data && data.comments) {
+                                            valueAxis.labelsEnabled = false;
+                                            valueAxis.titleColor = "red";
+                                            valueAxis.title = data.comments;
+                                        }
+                                    }
+                                }
+                                else {
+                                    //var data = json ? json.records[0] : [];
+                                    data = json ? json.records : [];
+
+                                    scope.setTitle(scope.label + ' (' + data.length + ')');
+
+                                    if (this.data.length > 200) {
+                                        //this.data.shift();
+                                    }
+
+                                    //chart.dataProvider = this.data;
+                                    if(!scope.sample_time)
+                                    {
+                                        chart.dataProvider = data;
+                                    }
+                                    else
+                                    {
+                                        chart.dataProvider.push(data);
+                                    }
+
+                                    scope.sample_time = json.sample_time;
+
+                                    if (chart.chartData.length > 200) {
+                                        //chart.chartData.shift();
+                                    }
+
+                                    if (valueAxis) {
+                                        valueAxis.titleColor = "green";
+                                        valueAxis.labelsEnabled = true;
+                                        valueAxis.title = "";
+                                        if (data) {
+                                            //this.data.push(data);
+                                        }
+                                        else {
+                                            valueAxis.labelsEnabled = false;
+                                            valueAxis.titleColor = "red";
+                                            valueAxis.title = "No Data";
+                                        }
+
+                                        if (data && data.comments) {
+                                            valueAxis.labelsEnabled = false;
+                                            valueAxis.titleColor = "red";
+                                            valueAxis.title = data.comments;
+                                        }
                                     }
                                 }
                             }
@@ -2203,23 +2170,27 @@ Ext.extend(Toc.TopEventsPanelCharts, Ext.Panel, {
 
                             chart.validateNow();
 
-                            if(json.records.length > 0)
-                            {
-                                chart.validateData();
+                            if (json && json.records) {
+                                if (json.records.length > 0) {
+                                    chart.validateData();
+                                }
                             }
                         }
                     },
                     scope: this
                 });
             }
-            else
-            {
+            else {
                 scope.setTitle(scope.title + '.');
             }
 
-            if(scope.count == 0)
-            {
-                var interval = setInterval(function(){
+            if (scope.try > 10) {
+                scope.setTitle(scope.label);
+                scope.try = 0;
+            }
+
+            if (scope.count == 0) {
+                var interval = setInterval(function () {
                     scope.refreshData(scope)
                 }, scope.freq || 5000);
                 scope.count++;
@@ -2244,6 +2215,7 @@ Ext.extend(Toc.TopEventsPanelCharts, Ext.Panel, {
         this.started = true;
         this.count = 0;
         this.reqs = 0;
+        this.try = 0;
         this.refreshData(this);
     },
     stop: function () {
@@ -2252,8 +2224,7 @@ Ext.extend(Toc.TopEventsPanelCharts, Ext.Panel, {
         this.reqs = 10;
         this.refreshData(this);
 
-        if(this.interval)
-        {
+        if (this.interval) {
             clearInterval(this.interval);
         }
 
@@ -2261,45 +2232,45 @@ Ext.extend(Toc.TopEventsPanelCharts, Ext.Panel, {
     }
 });
 
-Toc.AWRDialog = function(config) {
+Toc.AWRDialog = function (config) {
     config = config || {};
 
     config.title = 'Generer un Rapport AWR';
     config.layout = 'fit';
     config.width = 600;
-    config.height = 100;
+    config.height = 200;
     config.resizable = false;
     config.minimizable = true,
-    config.modal = true;
+        config.modal = true;
     config.iconCls = 'icon-reports-win';
     config.items = this.buildForm(config);
 
     config.buttons = [
         {
-            text:'Executer',
-            handler: function(){
+            text: 'Executer',
+            handler: function () {
                 this.submitForm();
             },
-            scope:this
+            scope: this
         },
         {
             text: TocLanguage.btnClose,
-            handler: function(){
+            handler: function () {
                 this.close();
             },
-            scope:this
+            scope: this
         }
     ];
 
-    this.addEvents({'saveSuccess' : true});
+    this.addEvents({'saveSuccess': true});
 
     Toc.AWRDialog.superclass.constructor.call(this, config);
 };
 
 Ext.extend(Toc.AWRDialog, Ext.Window, {
 
-    show: function() {
-        var browser = new Toc.SnapshotBrowser({parent : this,capture : 'snap_id',db_user: this.db_user,
+    show: function () {
+        var browser = new Toc.SnapshotBrowser({parent: this, capture: 'snap_id', db_user: this.db_user,
             db_pass: this.db_pass,
             db_port: this.db_port,
             db_host: this.db_host,
@@ -2310,7 +2281,7 @@ Ext.extend(Toc.AWRDialog, Ext.Window, {
 
         Toc.AWRDialog.superclass.show.call(this);
     },
-    buildParams : function (form, action,panel) {
+    buildParams: function (form, action, panel) {
         if (action.result.msg == '1') {
             var params = action.result.params;
             if (!this.pnlParameters.buildControls(params)) {
@@ -2323,18 +2294,17 @@ Ext.extend(Toc.AWRDialog, Ext.Window, {
             }
         }
 
-        if(panel)
-        {
+        if (panel) {
             panel.getEl().unmask();
         }
     },
-    getContentPanel: function() {
+    getContentPanel: function () {
         this.tabreports = new Ext.Panel({
             region: 'center',
-            layout : 'form',
-            border:false,
-            defaults:{
-                hideMode:'offsets'
+            layout: 'form',
+            border: false,
+            defaults: {
+                hideMode: 'offsets'
             },
             deferredRender: false,
             items: [
@@ -2344,14 +2314,14 @@ Ext.extend(Toc.AWRDialog, Ext.Window, {
         return this.tabreports;
     },
 
-    buildForm: function(config) {
+    buildForm: function (config) {
         this.frmReport = new Ext.form.FormPanel({
             //fileUpload: true,
             layout: 'border',
             url: Toc.CONF.CONN_URL,
             baseParams: {
                 action: 'run_awr',
-                module : 'databases',
+                module: 'databases',
                 db_user: config.db_user,
                 db_pass: config.db_pass,
                 db_port: config.db_port,
@@ -2364,78 +2334,13 @@ Ext.extend(Toc.AWRDialog, Ext.Window, {
 
         return this.frmReport;
     },
-    downloadReport: function (request) {
-        var status = request.status;
-        var action = "get_jobStatus";
-
-        switch (status) {
-            case "run":
-                action = "get_jobStatus";
-                break;
-
-            case "error":
-                Ext.MessageBox.alert(TocLanguage.msgErrTitle, request.comments);
-                return;
-                break;
-            case "complete":
-                action = "download_report";
-                break;
-            default:
-                action = "get_jobStatus";
-                break;
-        }
-
-        this.getEl().mask(request.comments);
-
-        Ext.Ajax.request({
-            url: Toc.CONF.CONN_URL,
-            params: {
-                module: 'databases',
-                action: action,
-                task_id: request.task_id,
-                comments : request.comments
-            },
-            callback: function (options, success, response) {
-                if (response.responseText) {
-                    result = Ext.decode(response.responseText);
-                    switch (action) {
-                        case 'download_report':
-                            this.getEl().unmask();
-                            url = result.file_name;
-                            params = "height=300px,width=340px,top=50px,left=165px,status=yes,toolbar=no,menubar=no,location=no,scrollbars=yes";
-                            window.open(url, "", params);
-                            this.buttons[0].enable();
-                            break;
-                        default:
-                            var req = result.records[0];
-                            //console.debug(req);
-                            if(req.task_id)
-                            {
-                                this.task_id = req.task_id;
-                                this.getEl().unmask();
-                                this.downloadReport(req);
-                            }
-                            else {
-                                Ext.MessageBox.alert(TocLanguage.msgErrTitle, "No task id specified !!!");
-                            }
-
-                            break;
-                    }
-                }
-                else {
-                    this.downloadReport(request);
-                }
-            },
-            scope: this
-        });
-    },
-    submitForm : function() {
+    submitForm: function () {
         this.buttons[0].disable();
 
         this.frmReport.form.submit({
             waitMsg: 'Creation du job, veuillez patienter SVP ...',
-            timeout:0,
-            success: function(form, action){
+            timeout: 0,
+            success: function (form, action) {
                 result = action.result;
                 if (result.task_id) {
                     var request = {
@@ -2444,13 +2349,13 @@ Ext.extend(Toc.AWRDialog, Ext.Window, {
                         comment: result.comment
                     };
 
-                    this.downloadReport(request);
+                    Toc.downloadJobReport(request, this);
                 }
                 else {
                     Ext.MessageBox.alert(TocLanguage.msgErrTitle, "No task_id !!!");
                 }
             },
-            failure: function(form, action) {
+            failure: function (form, action) {
                 Ext.Msg.alert(TocLanguage.msgErrTitle, action.result.feedback);
             },
             scope: this
@@ -2460,12 +2365,18 @@ Ext.extend(Toc.AWRDialog, Ext.Window, {
 
 Toc.SgaResizePanel = function (config) {
     config = config || {};
-    config.loadMask = false;
+    config.loadMask = true;
     config.border = true;
     config.title = 'SGA resize OPS';
-    config.autoHeight = true;
+    //config.autoHeight = true;
     config.viewConfig = {
         emptyText: TocLanguage.gridNoRecords, forceFit: true
+    };
+
+    config.listeners = {
+        activate: function (panel) {
+            panel.getStore().load();
+        }
     };
 
     config.ds = new Ext.data.Store({
@@ -2487,23 +2398,31 @@ Toc.SgaResizePanel = function (config) {
             'index',
             'icon',
             'component',
-            'oper_type',
+            'parameter',
             'status',
-            'nbre'
+            'initial_size',
+            'target_size',
+            'final_size',
+            'start_time',
+            'end_time',
+            'duree'
         ]),
         autoLoad: false
     });
 
     config.cm = new Ext.grid.ColumnModel([
         {header: '', dataIndex: 'icon', width: 5},
-        {id: 'component', header: 'Component', dataIndex: 'component', width: 40},
-        {header: 'Oeration', dataIndex: 'oper_type', width: 25},
-        {header: 'Status', align: 'center', dataIndex: 'status', width: 20},
-        {header: 'Nbre', align: 'center', dataIndex: 'nbre', width: 10}
+        {id: 'component', header: 'Component', dataIndex: 'component', width: 25},
+        {header: 'Parameter', dataIndex: 'parameter', width: 10},
+        {header: 'Status', align: 'center', dataIndex: 'status', width: 5},
+        {header: 'Initial Size', align: 'center', dataIndex: 'initial_size', width: 10},
+        {header: 'Target Size', align: 'center', dataIndex: 'target_size', width: 10},
+        {header: 'Final Size', align: 'center', dataIndex: 'final_size', width: 10},
+        {header: 'Start Time', align: 'center', dataIndex: 'start_time', width: 10},
+        {header: 'End Time', align: 'center', dataIndex: 'end_time', width: 10},
+        {header: 'Duree', align: 'center', dataIndex: 'duree', width: 5}
     ]);
-    config.autoExpandColumn = 'component';
-
-    var thisObj = this;
+    //config.autoExpandColumn = 'component';
 
     Toc.SgaResizePanel.superclass.constructor.call(this, config);
 };
@@ -2514,12 +2433,10 @@ Ext.extend(Toc.SgaResizePanel, Ext.grid.GridPanel, {
 Toc.exploreDatabase = function (node, panel) {
     panel.removeAll();
 
-    if(node.id == 0)
-    {
+    if (node.id == 0) {
         panel.removeAll();
     }
-    else
-    {
+    else {
         if (node) {
 
             if (node) {
@@ -2530,26 +2447,80 @@ Toc.exploreDatabase = function (node, panel) {
                 return false;
             }
 
-            var pnlDashboard = new Toc.DatabaseDashboardPanel({label: "Dashboard", databases_id: node.attributes.databases_id, sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port,port: node.attributes.db_port,db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner,server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, typ: node.attributes.typ});
+            var pnlAsh = new Toc.AshPanel({node: node, label: "ASH", databases_id: node.attributes.databases_id, sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner, server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, typ: node.attributes.typ});
 
             var tab = new Ext.TabPanel({
-                activeTab: 0,
+                //activeTab: 0,
                 defaults: {
                     hideMode: 'offsets'
                 },
-                deferredRender: false,
-                items: [pnlDashboard]
+                deferredRender: true,
+                listeners: {
+                    beforetabchange: function (tabPanel, newTab, currentTab) {
+                        //console.log('tab beforetabchange');
+                    },
+                    tabchange: function (tabPanel, tab) {
+                        //console.log('tab tabchange');
+                    },
+                    beforeshow: function (comp) {
+                        //console.log('tab beforeshow');
+                    },
+                    show: function (comp) {
+                        //console.log('tab show');
+                    },
+                    added: function (index) {
+                        //console.log('tab added');
+                    },
+                    add: function (container, component, index) {
+                        //console.log('tab add');
+                    },
+                    beforeadd: function (container, component, index) {
+                        //console.log('tab beforeadd');
+                        //console.debug(component);
+                        //panel.getEl().mask('adding ' + component.title + ' ...');
+                    },
+                    enable: function (comp) {
+                        //console.log('tab enable');
+                    },
+                    beforerender: function (comp) {
+                        //console.log('tab beforerender');
+                        //panel.getEl().mask('rendering ...');
+                    },
+                    render: function (comp) {
+                        //console.log('tab render');
+                        //panel.getEl().unmask();
+                    },
+                    afterrender: function (comp) {
+                        //console.log('tab afterrender');
+                    },
+                    afterlayout: function (container, layout) {
+                        //console.log('tab afterlayout');
+                    },
+                    activate: function (panel) {
+                        //console.log('tab activate');
+                    },
+                    deactivate: function (panel) {
+                        //console.log('tab deactivate');
+                    },
+                    destroy: function (panel) {
+                        //console.log('tab destroy');
+                    },
+                    disable: function (panel) {
+                        //console.log('tab disable');
+                    },
+                    remove: function (container, panel) {
+                        //console.log('tab remove');
+                    },
+                    removed: function (container, panel) {
+                        //console.log('tab removed');
+                    },
+                    scope: this
+                }
             });
 
-            //tab.add(pnlDashboard);
-
             panel.add(tab);
-            panel.doLayout();
 
-            var pnlSessions = new Toc.SessionsGrid({label: node.attributes.label, databases_id: node.attributes.databases_id, sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
-            var pnlVerrous = new Toc.LockTreeGrid({label: node.attributes.label, databases_id: node.attributes.databases_id, sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
-            var pnlLockedObj = new Toc.LockedObjGrid({label: node.attributes.label, databases_id: node.attributes.databases_id, sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
-            var pnlMemory = new Toc.MemoryDashboardPanel({sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner, server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, typ: node.attributes.typ});
+            tab.add(pnlAsh);
 
             var tab_perf = new Ext.TabPanel({
                 activeTab: 0,
@@ -2559,23 +2530,113 @@ Toc.exploreDatabase = function (node, panel) {
                 defaults: {
                     hideMode: 'offsets'
                 },
-                deferredRender: false,
-                items: [
-                    pnlSessions,pnlVerrous,pnlLockedObj,pnlMemory
-                ]
+                deferredRender: true,
+                listeners: {
+                    activate: function (pnl) {
+                        //console.log('tab_perf activate');
+                        pnl.removeAll();
+                        //var pnlSessions = new Toc.SessionsGrid({label: node.attributes.label, databases_id: node.attributes.databases_id, sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
+                        var pnlSql = new Toc.SqlGrid({label: node.attributes.label, databases_id: node.attributes.databases_id, sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
+                        var pnlVerrous = new Toc.LockTreeGrid({label: node.attributes.label, databases_id: node.attributes.databases_id, sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
+                        var pnlLockedObj = new Toc.LockedObjGrid({label: node.attributes.label, databases_id: node.attributes.databases_id, sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
+
+                        //var pnlMemory = new Toc.MemoryDashboardPanel({sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner, server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, typ: node.attributes.typ});
+
+                        var pnlUserIO = new Toc.DatabaseHistogramPanel({lineColor: '#004AE7', class: 'User I/O', label: 'User I/O', sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner, server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, typ: node.attributes.typ});
+                        var pnlSystemIO = new Toc.DatabaseHistogramPanel({lineColor: '#0094E7', class: 'System I/O', label: 'System I/O', sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner, server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, typ: node.attributes.typ});
+                        var pnlConcurrency = new Toc.DatabaseHistogramPanel({lineColor: '#8B1A00', class: 'Concurrency', label: 'Concurrency', sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner, server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, typ: node.attributes.typ});
+                        var pnlAdministrative = new Toc.DatabaseHistogramPanel({lineColor: '#717354', class: 'Administrative', label: 'Administrative', sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner, server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, typ: node.attributes.typ});
+                        var pnlApplication = new Toc.DatabaseHistogramPanel({lineColor: '#C02800', class: 'Application', label: 'Application', sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner, server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, typ: node.attributes.typ});
+                        var pnlCluster = new Toc.DatabaseHistogramPanel({lineColor: '#C9C2AF', class: 'Cluster', label: 'Cluster', sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner, server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, typ: node.attributes.typ});
+                        var pnlCommit = new Toc.DatabaseHistogramPanel({lineColor: '#E46800', class: 'Commit', label: 'Commit', sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner, server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, typ: node.attributes.typ});
+                        var pnlConfiguration = new Toc.DatabaseHistogramPanel({lineColor: '#5C440B', class: 'Configuration', label: 'Configuration', sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner, server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, typ: node.attributes.typ});
+                        var pnlNetwork = new Toc.DatabaseHistogramPanel({lineColor: '#9F9371', class: 'Network', label: 'Network', sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner, server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, typ: node.attributes.typ});
+                        var pnlOther = new Toc.DatabaseHistogramPanel({lineColor: '#F06EAA', class: 'Other', label: 'Other', sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner, server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, typ: node.attributes.typ});
+
+                        //pnl.add(pnlSessions);
+                        pnl.add(pnlSql);
+                        pnl.doLayout(true, true);
+                        pnl.add(pnlVerrous);
+                        pnl.doLayout(true, true);
+                        pnl.add(pnlLockedObj);
+                        pnl.doLayout(true, true);
+                        pnl.add(pnlUserIO);
+                        pnl.doLayout(true, true);
+                        pnl.add(pnlSystemIO);
+                        pnl.doLayout(true, true);
+                        pnl.add(pnlCommit);
+                        pnl.doLayout(true, true);
+                        pnl.add(pnlConcurrency);
+                        pnl.doLayout(true, true);
+                        pnl.add(pnlAdministrative);
+                        pnl.doLayout(true, true);
+                        pnl.add(pnlApplication);
+                        pnl.doLayout(true, true);
+                        pnl.add(pnlCluster);
+                        pnl.doLayout(true, true);
+                        pnl.add(pnlConfiguration);
+                        pnl.doLayout(true, true);
+                        pnl.add(pnlNetwork);
+                        pnl.doLayout(true, true);
+                        pnl.add(pnlOther);
+                        pnl.doLayout(true, true);
+
+                        pnl.activate(pnlSql);
+                    },
+                    deactivate: function (pnl) {
+                        //console.log('tab_perf deactivate');
+                        //pnl.removeAll();
+                    }
+                },
+                items: []
             });
 
             tab.add(tab_perf);
-            tab.doLayout();
+            //tab.doLayout(true,true);
+
+            var tabMemory = new Ext.TabPanel({
+                activeTab: 0,
+                hideParent: false,
+                title: 'Memory',
+                region: 'center',
+                defaults: {
+                    hideMode: 'offsets'
+                },
+                deferredRender: true,
+                listeners: {
+                    activate: function (pnl) {
+                        //console.log('Memory activate');
+                        pnl.removeAll();
+                        var pnlMemoryResize = new Toc.MemoryResizePanel({sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
+                        var pnlLibrayCache = new Toc.LibrayCachePanel({sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
+                        var pnlLatch = new Toc.LatchPanel({sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
+                        var pnlPga = new Toc.PgaStatGrid({sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
+                        var pnlMemoryAllocation = new Toc.MemoryAllocationPanel({label : 'Allocation',node : node,sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
+                        var pnlSharedPool = new Toc.SharedPoolPanel({label : 'Shared Pool',node : node,sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
+
+                        pnl.add(pnlMemoryResize);
+                        pnl.add(pnlMemoryAllocation);
+                        pnl.add(pnlPga);
+                        pnl.add(pnlLatch);
+                        pnl.add(pnlLibrayCache);
+                        pnl.add(pnlSharedPool);
+                        pnl.doLayout(true, true);
+                        pnl.activate(pnlMemoryResize);
+                    },
+                    deactivate: function (pnl) {
+                        //console.log('Memory deactivate');
+                        pnl.removeAll();
+                    }
+                },
+                items: []
+            });
+
+            tab.add(tabMemory);
 
             var pnlUsers = new Toc.usersGrid({label: node.attributes.label, databases_id: node.attributes.databasesId, sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
 
             tab.add(pnlUsers);
-            tab.doLayout();
-
-            var pnlTbs = new Toc.tbsGrid({sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
-            var pnlDatafiles = new Toc.datafilesGrid({sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: node.attributes.owner, server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, typ: node.attributes.typ});
-            var pnlFS = new Toc.fsGrid({host: node.attributes.host, server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, owner: this.owner, typ: node.attributes.typ});
+            //tab.doLayout(true,true);
 
             var tab_storage = new Ext.TabPanel({
                 activeTab: 0,
@@ -2585,17 +2646,32 @@ Toc.exploreDatabase = function (node, panel) {
                 defaults: {
                     hideMode: 'offsets'
                 },
-                deferredRender: false,
-                items: [
-                    pnlFS,pnlTbs,pnlDatafiles
-                ]
+                deferredRender: true,
+                listeners: {
+                    activate: function (pnl) {
+                        console.log('tab_storage activate');
+                        pnl.removeAll();
+                        var pnlTbs = new Toc.tbsGrid({sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
+                        var pnlDatafiles = new Toc.datafilesGrid({sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: node.attributes.owner, server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, typ: node.attributes.typ});
+                        var pnlFS = new Toc.fsGrid({host: node.attributes.host, server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, owner: this.owner, typ: node.attributes.typ});
+
+                        pnl.add(pnlTbs);
+                        pnl.add(pnlDatafiles);
+                        pnl.add(pnlFS);
+
+                        pnl.doLayout(true, true);
+                        pnl.activate(pnlTbs);
+                    },
+                    deactivate: function (pnl) {
+                        console.log('tab_storage deactivate');
+                        pnl.removeAll();
+                    }
+                },
+                items: []
             });
 
             tab.add(tab_storage);
-            tab.doLayout();
-
-            var pnlTables = new Toc.tablesGrid({sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
-            var pnlIndexes = new Toc.indexesGrid({sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
+            //tab.doLayout(true,true);
 
             var tab_schema = new Ext.TabPanel({
                 activeTab: 0,
@@ -2605,21 +2681,34 @@ Toc.exploreDatabase = function (node, panel) {
                 defaults: {
                     hideMode: 'offsets'
                 },
-                deferredRender: false,
-                items: [
-                    pnlTables,pnlIndexes
-                ]
+                deferredRender: true,
+                listeners: {
+                    activate: function (pnl) {
+                        console.log('tab_schema activate');
+                        pnl.removeAll();
+                        var pnlTables = new Toc.tablesGrid({sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
+                        var pnlIndexes = new Toc.indexesGrid({sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
+
+                        pnl.add(pnlTables);
+                        pnl.add(pnlIndexes);
+
+                        pnl.doLayout(true, true);
+                        pnl.activate(pnlTables);
+                    },
+                    deactivate: function (pnl) {
+                        console.log('tab_schema deactivate');
+                        pnl.removeAll();
+                    }
+                },
+                items: []
             });
 
             tab.add(tab_schema);
-            tab.doLayout();
+            //tab.doLayout(true,true);
 
             //this.pnlDocuments = new Toc.content.DocumentsPanel({content_id: this.databasesId, content_type: 'databases', owner: this.owner});
             //this.pnlLinks = new Toc.content.LinksPanel({content_id: this.databasesId, content_type: 'databases', owner: this.owner});
             //this.pnlComments = new Toc.content.CommentsPanel({content_id: this.databasesId, content_type: 'databases', owner: this.owner});
-
-            var pnlRmanConfig = new Toc.RmanConfigGrid({sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner, server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, typ: node.attributes.typ});
-            var pnlRmanBackup = new Toc.RmanBackupGrid({sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner, server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, typ: node.attributes.typ});
 
             var tab_rman = new Ext.TabPanel({
                 activeTab: 0,
@@ -2629,24 +2718,52 @@ Toc.exploreDatabase = function (node, panel) {
                 defaults: {
                     hideMode: 'offsets'
                 },
-                deferredRender: false,
-                items: [
-                    pnlRmanConfig,pnlRmanBackup
-                ]
+                deferredRender: true,
+                listeners: {
+                    activate: function (pnl) {
+                        console.log('tab_rman activate');
+                        pnl.removeAll();
+                        var pnlRmanConfig = new Toc.RmanConfigGrid({sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner, server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, typ: node.attributes.typ});
+                        var pnlRmanBackup = new Toc.RmanBackupGrid({sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner, server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, typ: node.attributes.typ});
+
+                        pnl.add(pnlRmanConfig);
+                        pnl.add(pnlRmanBackup);
+
+                        pnl.doLayout(true, true);
+                        pnl.activate(pnlRmanConfig);
+                    },
+                    deactivate: function (pnl) {
+                        console.log('tab_rman deactivate');
+                        pnl.removeAll();
+                    }
+                },
+                items: []
             });
 
             tab.add(tab_rman);
-            tab.doLayout();
+            //tab.doLayout(true,true);
 
             var pnlLogs = new Toc.logPanel({host: node.attributes.host, server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, content_id: node.attributes.databases_id, content_type: 'databases', owner: this.owner});
-            var pnlNotifications = new Toc.notificationsGrid({databases_id: node.attributes.databasesId, owner: this.owner});
-
             tab.add(pnlLogs);
+            //tab.doLayout(true,true);
+
+            var pnlNotifications = new Toc.notificationsGrid({databases_id: node.attributes.databasesId, owner: this.owner});
             tab.add(pnlNotifications);
-            tab.doLayout();
+            //tab.doLayout(true,true);
+
+            var pnlParameters = new Toc.ParameterGrid({scope : 'instance',sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner, server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, typ: node.attributes.typ});
+            tab.add(pnlParameters);
+            //tab.doLayout(true,true);
+
+            var pnlAlertLog = new Toc.AlertLogPanel({host: node.attributes.host, server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, owner: this.owner, typ: node.attributes.typ, sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
+            tab.add(pnlAlertLog);
+
+            tab.doLayout(true, true);
+            panel.doLayout(true, true);
+
+            tab.activate(pnlAsh);
         }
-        else
-        {
+        else {
             Ext.Msg.alert(TocLanguage.msgErrTitle, "Aucune Database selectionnee !!!");
         }
     }
@@ -2656,7 +2773,7 @@ Toc.exploreDatabase = function (node, panel) {
     return true;
 };
 
-Toc.KillUser = function (record,scope) {
+Toc.KillUser = function (record, scope) {
     var sid = record.get('sid');
     var serial = record.get('serial');
 
@@ -2708,3 +2825,1434 @@ Toc.KillUser = function (record,scope) {
         scope
     );
 };
+
+Toc.SqlReport = function (record, scope) {
+    scope.getEl().mask('Creation du job ...');
+    Ext.Ajax.request({
+        url: Toc.CONF.CONN_URL,
+        params: {
+            module: 'databases',
+            action: 'sql_report',
+            db_user: scope.db_user,
+            db_pass: scope.db_pass,
+            db_port: scope.db_port,
+            db_host: scope.host,
+            db_sid: scope.sid,
+            sql_id: record.get('sql_id')
+        },
+        callback: function (options, success, response) {
+            scope.getEl().unmask();
+            var result = Ext.decode(response.responseText);
+
+            if (result.success == true) {
+                if (result.task_id) {
+                    var request = {
+                        status: "run",
+                        task_id: result.task_id,
+                        comment: result.comment
+                    };
+
+                    Toc.downloadJobReport(request, scope);
+                }
+                else {
+                    Ext.MessageBox.alert(TocLanguage.msgErrTitle, "No task_id !!!");
+                }
+            }
+            else {
+                Ext.MessageBox.alert(TocLanguage.msgErrTitle, result.feedback);
+            }
+        },
+        scope: scope
+    });
+};
+
+Toc.SqlTune = function (record, scope) {
+    scope.getEl().mask('Creation du job ...');
+    Ext.Ajax.request({
+        url: Toc.CONF.CONN_URL,
+        params: {
+            module: 'databases',
+            action: 'sql_tune',
+            db_user: scope.db_user,
+            db_pass: scope.db_pass,
+            db_port: scope.db_port,
+            db_host: scope.host,
+            db_sid: scope.sid,
+            sql_id: record.get('sql_id')
+        },
+        callback: function (options, success, response) {
+            scope.getEl().unmask();
+            var result = Ext.decode(response.responseText);
+
+            if (result.success == true) {
+                if (result.task_id) {
+                    var request = {
+                        status: "run",
+                        task_id: result.task_id,
+                        comment: result.comment
+                    };
+
+                    Toc.downloadJobReport(request, scope);
+                }
+                else {
+                    Ext.MessageBox.alert(TocLanguage.msgErrTitle, "No task_id !!!");
+                }
+            }
+            else {
+                Ext.MessageBox.alert(TocLanguage.msgErrTitle, result.feedback);
+            }
+        },
+        scope: this
+    });
+};
+
+Toc.EventHistoChart = function (config) {
+    //console.debug(config);
+    this.params = config;
+    var that = this;
+    config = config || {};
+    config.region = 'center';
+    config.width = this.params.width || '25%';
+    config.count = 0;
+    config.reqs = 0;
+    config.try = 0;
+    //config.bodyStyle = 'height:150px';
+    //config.height = '20%';
+    //config.layout = 'fit';
+    config.title = config.label;
+
+    var thisObj = this;
+
+    config.listeners = {
+        render: function (comp) {
+
+            var configChart = function () {
+                thisObj.data = [];
+
+                var chart;
+                chart = new AmCharts.AmSerialChart();
+                chart.width = '100%';
+                //chart.height = 150;
+                //chart.autoResize = true;
+
+                var type = "line";
+                chart.dataProvider = thisObj.data;
+
+                chart.marginBottom = 1;
+                chart.marginLeft = 1;
+                chart.marginRight = 1;
+                chart.marginTop = 1;
+                //chart.categoryField = "date";
+                chart.categoryField = "wait_count";
+
+                // AXES
+                // Category
+                var categoryAxis = chart.categoryAxis;
+                categoryAxis.gridAlpha = 0.07;
+                categoryAxis.axisColor = "#DADADA";
+                categoryAxis.labelsEnabled = true;
+                //categoryAxis.labelRotation = 90;
+                categoryAxis.startOnAxis = true;
+
+                // Value
+                var valueAxis = new AmCharts.ValueAxis();
+                //valueAxis.stackType = "regular"; // this line makes the chart "stacked"
+                //valueAxis.gridAlpha = 0.07;
+                valueAxis.title = "Time";
+                //valueAxis.titleColor = "green";
+                valueAxis.labelsEnabled = true;
+                chart.addValueAxis(valueAxis);
+
+                // GRAPHS
+                // first graph
+                var graph = new AmCharts.AmGraph();
+                graph.type = type; // it's simple line graph
+                graph.title = config.event;
+                graph.bullet = "round";
+                graph.valueField = "wait_time";
+                graph.lineColor = config.lineColor;
+                //graph.lineAlpha = 0;
+                //graph.bulletSizeField = 'wait_count';
+                //graph.fillAlphas = 0.6; // setting fillAlphas to > 0 value makes it area graph
+                graph.balloonText = "<b>[[category]] waits de [[value]] secondes ==> [[last_update_time]]</b>";
+                chart.addGraph(graph);
+
+                // WRITE
+                chart.write(thisObj.body.id);
+                thisObj.chart = chart;
+            };
+            if (AmCharts.isReady) {
+                configChart();
+            } else {
+                AmCharts.ready(configChart);
+            }
+        },
+        resize: function (Component, adjWidth, adjHeight, rawWidth, rawHeight) {
+            Component.body.dom.style.height = config.body_height;
+        },
+        scope: this
+    };
+
+    config.tools = [
+        {
+            id: 'refresh',
+            qtip: 'Refresh',
+            handler: function (event, toolEl, panel) {
+                thisObj.stop();
+                thisObj.start();
+            }
+        }
+    ];
+
+    Toc.EventHistoChart.superclass.constructor.call(this, config);
+};
+
+Ext.extend(Toc.EventHistoChart, Ext.Panel, {
+
+    onEdit: function (record) {
+    },
+
+    refreshData: function (scope) {
+        scope.setTitle(scope.title + '.');
+        scope.try++;
+        if (scope && scope.started) {
+            if (scope.reqs == 0) {
+                scope.reqs++;
+
+                scope.transactionId = Ext.Ajax.request({
+                    url: Toc.CONF.ORACLE_URL,
+                    params: {
+                        module: 'databases',
+                        action: 'list_histo',
+                        db_user: this.db_user,
+                        db_pass: this.db_pass,
+                        db_port: this.port,
+                        db_host: this.host,
+                        db_sid: this.sid,
+                        databases_id: this.databases_id,
+                        event: this.event
+                    },
+                    callback: function (options, success, response) {
+                        scope.reqs--;
+                        scope.try = 0;
+                        scope.setTitle(scope.label);
+
+                        if (scope.chart) {
+                            var chart = scope.chart;
+                            var valueAxis = chart.valueAxes[0];
+
+                            if (success) {
+                                var json = Ext.decode(response.responseText);
+
+                                this.data = json ? json.records : [];
+
+                                if (valueAxis) {
+                                    valueAxis.titleColor = "green";
+                                    valueAxis.title = "";
+                                    valueAxis.labelsEnabled = true;
+                                    if (!json) {
+                                        valueAxis.titleColor = "red";
+                                        valueAxis.title = "No Data";
+                                    }
+                                    else {
+                                        chart.dataProvider = this.data;
+
+                                        if (json.comment || !json.records) {
+                                            valueAxis.titleColor = "red";
+                                            valueAxis.title = json.comment;
+                                            valueAxis.labelsEnabled = false;
+                                        }
+                                    }
+
+                                    chart.validateNow();
+                                }
+
+                                if (json && json.records) {
+                                    if (json.records.length > 0) {
+                                        chart.validateData();
+                                    }
+                                }
+                            }
+                            else {
+                                if (valueAxis) {
+                                    valueAxis.labelsEnabled = false;
+                                    valueAxis.titleColor = "red";
+                                    valueAxis.title = "Time out";
+
+                                    chart.validateNow();
+                                }
+                            }
+                        }
+                    },
+                    scope: this
+                });
+            }
+            else {
+                scope.setTitle(scope.title + '.');
+            }
+
+            if (scope.try > 10) {
+                scope.setTitle(scope.label);
+                scope.try = 0;
+            }
+
+            if (scope.count == 0) {
+                var interval = setInterval(function () {
+                    scope.refreshData(scope)
+                }, scope.freq || 5000);
+                scope.count++;
+                scope.interval = interval;
+            }
+        }
+    },
+
+    onRefresh: function () {
+        this.getStore().reload();
+    },
+
+    onRowAction: function (grid, record, action, row, col) {
+        switch (action) {
+            case 'icon-search-record':
+                this.onEdit(record);
+                break;
+        }
+    },
+
+    start: function () {
+        this.started = true;
+        this.count = 0;
+        this.reqs = 0;
+        this.try = 0;
+        this.refreshData(this);
+    },
+    stop: function () {
+        this.started = false;
+        this.count = 10;
+        this.reqs = 10;
+        this.refreshData(this);
+
+        if (this.interval) {
+            clearInterval(this.interval);
+        }
+
+        this.interval = null;
+    }
+});
+
+Toc.DatabaseHistogramPanel = function (params) {
+    var that = this;
+    config = {};
+    config.params = params;
+    config.region = 'center';
+    config.border = true;
+    config.width = config.params.width || '50%';
+    config.layout = 'column';
+    //config.cls = params.classs;
+    config.title = params.label;
+    //config.header = false;
+    //config.autoHeight = true;
+    config.listeners = {
+        show: function (comp) {
+        },
+        added: function (index) {
+        },
+        enable: function (comp) {
+        },
+        render: function (comp) {
+            console.log('render');
+        },
+        afterrender: function (comp) {
+            //console.log('afterrender');
+        },
+        activate: function (panel) {
+            //console.log('activate');
+            panel.buildItems(this.params);
+            //panel.start();
+        },
+        deactivate: function (panel) {
+            //console.log('deactivate');
+            panel.stop();
+            panel.removeAll(true);
+        },
+        destroy: function (panel) {
+            console.log('destroy');
+            panel.stop();
+        },
+        disable: function (panel) {
+            console.log('disable');
+            panel.stop();
+        },
+        remove: function (container, panel) {
+            console.log('remove');
+            panel.stop();
+        },
+        removed: function (container, panel) {
+            console.log('removed');
+            panel.stop();
+        },
+        scope: this
+    };
+
+    Toc.DatabaseHistogramPanel.superclass.constructor.call(this, config);
+};
+
+Ext.extend(Toc.DatabaseHistogramPanel, Ext.Panel, {
+    buildItems: function (params) {
+        this.panels = [];
+
+        var frequence = 60000;
+
+        this.getEl().mask('Chargement');
+        Ext.Ajax.request({
+            url: Toc.CONF.CONN_URL,
+            params: {
+                module: 'databases',
+                action: 'list_ioevents',
+                class: params.class,
+                databases_id: params.databases_id,
+                server_user: params.server_user,
+                server_pass: params.server_pass,
+                server_port: params.server_port,
+                servers_id: params.servers_id,
+                db_user: params.db_user,
+                db_pass: params.db_pass,
+                db_port: params.db_port,
+                db_host: params.host,
+                db_sid: params.sid,
+                port: params.port,
+                host: params.host,
+                sid: params.sid
+            },
+            callback: function (options, success, response) {
+                this.getEl().unmask();
+                var result = Ext.decode(response.responseText);
+
+                if (result.total > 0) {
+                    var i = 0;
+                    while (i < result.total) {
+                        var conf = result.records[i];
+                        conf.owner = this.owner;
+                        conf.freq = frequence;
+                        conf.width = result.total <= 6 ? '100%' : '25%';
+                        conf.classs = (i % 2 == 0) ? 'blue' : 'gray';
+                        conf.label = conf.event;
+                        conf.body_height = '100px';
+                        conf.freq = params.freq * 10;
+
+                        conf.databases_id = params.databases_id;
+                        conf.lineColor = params.lineColor;
+                        conf.server_user = params.server_user;
+                        conf.server_pass = params.server_pass;
+                        conf.server_port = params.server_port;
+                        conf.servers_id = params.servers_id;
+                        conf.db_user = params.db_user;
+                        conf.db_pass = params.db_pass;
+                        conf.db_port = params.port;
+                        conf.db_host = params.host;
+                        conf.db_sid = params.sid;
+                        conf.port = params.port;
+                        conf.host = params.host;
+                        conf.sid = params.sid;
+
+                        var panel = new Toc.EventHistoChart(conf);
+                        this.add(panel);
+                        this.panels[i] = panel;
+                        //panel.buildItems(db);
+                        this.doLayout();
+                        //panel.start();
+                        i++;
+                    }
+
+                    this.start();
+                }
+            },
+            scope: this
+        });
+    },
+
+    stop: function () {
+        if (this.panels) {
+            var i = 0;
+            while (i < this.panels.length) {
+                var panel = this.panels[i];
+                //console.debug(panel);
+                if (panel && panel.stop) {
+                    panel.stop();
+                }
+                i++;
+            }
+        }
+
+        this.started = false;
+    },
+
+    start: function () {
+        if (this.panels) {
+            var i = 0;
+            while (i < this.panels.length) {
+                var panel = this.panels[i];
+                //console.debug(panel);
+                if (panel && panel.start) {
+                    panel.start();
+                }
+                i++;
+            }
+        }
+
+        this.started = true;
+    }
+});
+
+Toc.SqlGrid = function (config) {
+    var that = this;
+    config = config || {};
+    //config.region = 'center';
+    config.border = true;
+    config.loadMask = true;
+    config.title = 'SQL';
+    config.viewConfig = {emptyText: TocLanguage.gridNoRecords, forceFit: true};
+
+    config.listeners = {
+        activate: function (comp) {
+            comp.activated = true;
+        },
+        show: function (comp) {
+        },
+        enable: function (panel) {
+        },
+        deactivate: function (panel) {
+        },
+        destroy: function (panel) {
+        },
+        disable: function (panel) {
+        },
+        remove: function (container, panel) {
+        },
+        removed: function (container, panel) {
+        },
+        render: function (comp) {
+        },
+        scope: this
+    };
+
+    config.ds = new Ext.data.Store({
+        url: Toc.CONF.ORACLE_URL,
+        baseParams: {
+            module: 'databases',
+            action: 'list_sql',
+            db_user: config.db_user,
+            db_pass: config.db_pass,
+            db_port: config.db_port,
+            db_host: config.host,
+            db_sid: config.sid,
+            user_id: config.user_id || '',
+            tbs: config.tbs
+        },
+        reader: new Ext.data.JsonReader({
+            root: Toc.CONF.JSON_READER_ROOT,
+            totalProperty: Toc.CONF.JSON_READER_TOTAL_PROPERTY,
+            id: 'sql_id'
+        }, [
+            {name: 'buffer_gets', type: 'float'},
+            {name: 'sorts', type: 'float'},
+            {name: 'elapsed_time', type: 'float'},
+            {name: 'cpu_time', type: 'float'},
+            {name: 'version_count', type: 'float'},
+            {name: 'parse_calls', type: 'float'},
+            {name: 'rows_exec', type: 'float'},
+            {name: 'rows_processed', type: 'float'},
+            {name: 'gets_exec', type: 'float'},
+            {name: 'reads_exec', type: 'float'},
+            {name: 'disk_reads', type: 'float'},
+            {name: 'executions', type: 'float'},
+            'sql_text',
+            'sql_id'
+        ]),
+        listeners: {
+            load: function (store, records, opt) {
+                this.lblInfos.setText(store.data.length + ' Requetes ...');
+            },
+            scope: that
+        },
+        autoLoad: false
+    });
+
+    config.rowActions = new Ext.ux.grid.RowActions({
+        actions: [
+            {iconCls: 'icon-tune-record', qtip: 'Recommendations'},
+            {iconCls: 'icon-gather-record', qtip: 'Rapport SQL'}
+        ],
+        widthIntercept: Ext.isSafari ? 4 : 2
+    });
+    config.rowActions.on('action', this.onRowAction, this);
+    config.plugins = config.rowActions;
+
+    render = function (row) {
+        return '<div style = "white-space : normal">' + row + '</div>';
+    };
+
+    config.cm = new Ext.grid.ColumnModel([
+        { id: 'sql', header: 'SQL', dataIndex: 'sql_text', width: 25, renderer: render, align: 'left'},
+        { id: 'buffer_gets', header: 'Buffer Gets', dataIndex: 'buffer_gets', width: 8, align: 'center',sortable : true,xtype : 'numbercolumn'},
+        { id: 'gets_exec', header: 'Gets/Exec', dataIndex: 'gets_exec', width: 6, align: 'center',sortable : true,xtype : 'numbercolumn'},
+        { id: 'executions', header: 'Execs', dataIndex: 'executions', width: 4, align: 'center',sortable : true,xtype : 'numbercolumn'},
+        { id: 'disk_reads', header: 'Disk Reads', dataIndex: 'disk_reads', width: 7, align: 'center',sortable : true,xtype : 'numbercolumn'},
+        { id: 'reads_exec', header: 'Reads/Exec', dataIndex: 'reads_exec', width: 8, align: 'center',sortable : true,xtype : 'numbercolumn'},
+        { id: 'rows_processed', header: 'Rows', dataIndex: 'rows_processed', width: 5, align: 'center',sortable : true,xtype : 'numbercolumn'},
+        { id: 'rows_exec', header: 'Rows/Exec', dataIndex: 'rows_exec', width: 4, align: 'center',sortable : true,xtype : 'numbercolumn'},
+        { id: 'parse_calls', header: 'Parses', dataIndex: 'parse_calls', width: 5, align: 'center',sortable : true,xtype : 'numbercolumn'},
+        { id: 'version_count', header: 'Versions', dataIndex: 'version_count', width: 5, align: 'center',sortable : true,xtype : 'numbercolumn'},
+        { id: 'cpu_time', header: 'CPU Time', dataIndex: 'cpu_time', width: 6, align: 'center',sortable : true,xtype : 'numbercolumn'},
+        { id: 'elapsed_time', header: 'Elapsed Time', dataIndex: 'elapsed_time', width: 8, align: 'center',sortable : true,xtype : 'numbercolumn'},
+        { id: 'sorts', header: 'Sorts', dataIndex: 'sorts', width: 4, align: 'center',sortable : true,xtype : 'numbercolumn'},
+        config.rowActions
+    ]);
+
+    config.txtSearch = new Ext.form.TextField({
+        width: 100,
+        hideLabel: true
+    });
+
+    config.lblInfos = new Ext.form.Label({
+        width: 200,
+        text: 'O Requetes',
+        autoShow: true
+    });
+
+    config.tbar = [
+        {
+            text: '',
+            iconCls: 'refresh',
+            handler: this.onRefresh,
+            scope: this
+        },
+        '-',
+        config.lblInfos,
+        '->',
+        config.txtSearch,
+        ' ',
+        {
+            text: '',
+            iconCls: 'search',
+            handler: this.onSearch,
+            scope: this
+        }
+    ];
+
+    Toc.SqlGrid.superclass.constructor.call(this, config);
+};
+
+Ext.extend(Toc.SqlGrid, Ext.grid.GridPanel, {
+    onSearch: function () {
+        var filter;
+
+        filter = this.txtSearch.getValue() || null;
+        var store = this.getStore();
+        store.baseParams['search'] = filter;
+
+        store.reload();
+    },
+    onRowAction: function (grid, record, action, row, col) {
+        switch (action) {
+            case 'icon-gather-record':
+                Toc.SqlReport(record, this);
+                break;
+
+            case 'icon-tune-record':
+                Toc.SqlTune(record, this);
+                break;
+        }
+    }
+});
+
+Toc.PgaStatGrid = function (config) {
+    config = config || {};
+    config.loadMask = false;
+    config.border = true;
+    config.title = 'PGA Stats';
+    config.autoHeight = true;
+    config.viewConfig = {
+        emptyText: TocLanguage.gridNoRecords, forceFit: true
+    };
+
+    config.listeners = {
+        activate: function (panel) {
+            panel.getStore().load();
+        }
+    };
+
+    config.ds = new Ext.data.Store({
+        url: Toc.CONF.CONN_URL,
+        baseParams: {
+            module: 'databases',
+            action: 'pga_stats',
+            db_port: config.port,
+            db_user: config.db_user,
+            db_pass: config.db_pass,
+            db_host: config.host,
+            db_sid: config.sid
+        },
+        reader: new Ext.data.JsonReader({
+            root: Toc.CONF.JSON_READER_ROOT,
+            totalProperty: Toc.CONF.JSON_READER_TOTAL_PROPERTY,
+            id: 'index'
+        }, [
+            'index',
+            'name',
+            'val'
+        ]),
+        autoLoad: false
+    });
+
+    config.cm = new Ext.grid.ColumnModel([
+        {id: 'name', header: 'Component', dataIndex: 'name', width: 80},
+        {header: 'Valeur', dataIndex: 'val', width: 20}
+    ]);
+    //config.autoExpandColumn = 'component';
+
+    config.tbar = [
+        {
+            text: '',
+            iconCls: 'refresh',
+            handler: function (panel) {
+                panel.getStore().load();
+            },
+            scope: this
+        }
+    ];
+
+    Toc.PgaStatGrid.superclass.constructor.call(this, config);
+};
+
+Ext.extend(Toc.PgaStatGrid, Ext.grid.GridPanel, {
+});
+
+Toc.MemoryAllocationChart = function (config) {
+    //console.debug(config);
+    this.params = config;
+    var that = this;
+    config = config || {};
+    config.region = 'center';
+    //config.width = this.params.width;
+    config.header = true;
+    config.layout = 'fit';
+    config.title = config.label;
+
+    var thisObj = this;
+
+    config.listeners = {
+        activate: function (panel) {
+            //console.debug('MemoryAllocationChart activate');
+            panel.refreshData();
+        },
+        render: function (comp) {
+            //console.debug('MemoryAllocationChart render');
+            var configChart = function () {
+                thisObj.data = [];
+
+                var chart = AmCharts.makeChart(thisObj.body.id, {
+                    "type": "serial",
+                    "theme": "light",
+                    marginTop: 5,
+                    marginBottom: 5,
+                    marginLeft: 5,
+                    marginRight: 5,
+                    "legend": {
+                        "useGraphSettings": true,
+                        //"markerType": "circle",
+                        //marginLeft: 10,
+                        //marginRight: 10,
+                        //spacing: 100,
+                        //valueWidth: 50,
+                        "position": "right"
+                    },
+                    "dataProvider": [],
+                    "synchronizeGrid": true,
+                    //dataDateFormat: "DD/MM/YY HH:NN:SS",
+                    "valueAxes": [
+                        {
+                            "id": "v_small",
+                            "axisColor": "#FF6600",
+                            "axisThickness": 2,
+                            "axisAlpha": 1,
+                            "position": "left"
+                        }
+                    ],
+                    "graphs": [
+                        {
+                            "valueAxis": "v_small",
+                            "bullet": "none",
+                            bulletSize: 0,
+                            "bulletBorderThickness": 0,
+                            balloonText: 'SGA : ' + "[[value]]",
+                            "title": "SGA",
+                            type: "line",
+                            "valueField": "sga",
+                            "fillAlphas": 0.6
+                        },
+                        {
+                            "valueAxis": "v_small",
+                            "bullet": "none",
+                            bulletSize: 0,
+                            "bulletBorderThickness": 1,
+                            balloonText: 'PGA : ' + "[[value]]",
+                            "title": "PGA",
+                            type: "line",
+                            "valueField": "pga",
+                            "fillAlphas": 0.6
+                        }
+                    ],
+                    "chartScrollbar": {},
+                    "chartCursor": {
+                        "cursorPosition": "mouse",
+                        scrollbarHeight: 10
+                    },
+                    "categoryField": "time",
+                    "categoryAxis": {
+                        //"parseDates": true,
+                        //minPeriod: "mm",
+                        "axisColor": "#DADADA",
+                        "minorGridEnabled": true
+                    },
+                    "export": {
+                        "enabled": false,
+                        "position": "bottom-right"
+                    }
+                });
+
+                thisObj.chart = chart;
+
+                chart.validateData();
+
+                thisObj.getEl().unmask();
+            };
+            if (AmCharts.isReady) {
+                configChart();
+            } else {
+                AmCharts.ready(configChart);
+            }
+        },
+        resize: function (Component, adjWidth, adjHeight, rawWidth, rawHeight) {
+            //console.debug('MemoryAllocationChart resize');
+            //Component.body.dom.style.height = config.body_height;
+        },
+        scope: this
+    };
+
+    config.tools = [
+    ];
+
+    Toc.MemoryAllocationChart.superclass.constructor.call(this, config);
+};
+
+Ext.extend(Toc.MemoryAllocationChart, Ext.Panel, {
+
+    refreshData: function () {
+        var chart = this.chart;
+        this.getEl().mask('Chargement donnees');
+
+        Ext.Ajax.request({
+            url: Toc.CONF.ORACLE_URL,
+            params: {
+                module: 'databases',
+                action: 'list_memhisto',
+                db_user: this.db_user,
+                db_pass: this.db_pass,
+                db_port: this.port,
+                db_host: this.host,
+                db_sid: this.sid,
+                databases_id: this.databases_id
+            },
+            callback: function (options, success, response) {
+
+                var valueAxis = chart.valueAxes[0];
+
+                if (success) {
+                    var json = Ext.decode(response.responseText);
+
+                    this.data = json ? json.records : [];
+
+                    if (valueAxis) {
+                        valueAxis.titleColor = "green";
+                        valueAxis.title = "";
+                        valueAxis.labelsEnabled = true;
+                        if (!json) {
+                            valueAxis.titleColor = "red";
+                            valueAxis.title = "No Data";
+                        }
+                        else {
+                            chart.dataProvider = this.data;
+
+                            if (json.comment || !json.records) {
+                                valueAxis.titleColor = "red";
+                                valueAxis.title = json.comment;
+                                valueAxis.labelsEnabled = false;
+                            }
+                        }
+
+                        chart.validateNow();
+                    }
+
+                    if (json && json.records) {
+                        if (json.records.length > 0) {
+                            chart.validateData();
+                        }
+                    }
+                }
+                else {
+                    if (valueAxis) {
+                        valueAxis.labelsEnabled = false;
+                        valueAxis.titleColor = "red";
+                        valueAxis.title = "Time out";
+
+                        chart.validateNow();
+                    }
+                }
+
+                this.getEl().unmask();
+            },
+            scope: this
+        });
+    },
+
+    onRefresh: function () {
+        this.refreshData();
+    }
+});
+
+Toc.SgaAllocationChart = function (config) {
+    //console.debug(config);
+    this.params = config;
+    var that = this;
+    config = config || {};
+    //config.region = 'center';
+    //config.width = this.params.width;
+    config.header = true;
+    //config.layout = 'fit';
+    config.title = config.label;
+
+    var thisObj = this;
+
+    config.listeners = {
+        activate: function (panel) {
+            panel.refreshData();
+        },
+        render: function (comp) {
+            var configChart = function () {
+                thisObj.data = [];
+
+                var chart = AmCharts.makeChart(thisObj.body.id, {
+                    "type": "serial",
+                    "theme": "light",
+                    marginTop: 5,
+                    marginBottom: 5,
+                    marginLeft: 5,
+                    marginRight: 5,
+                    "legend": {
+                        "useGraphSettings": true,
+                        "position": "right"
+                    },
+                    "dataProvider": [],
+                    "synchronizeGrid": true,
+                    "valueAxes": [
+                        {
+                            "id": "v_small",
+                            "axisColor": "#FF6600",
+                            "axisThickness": 2,
+                            "axisAlpha": 1,
+                            "position": "left"
+                        }
+                    ],
+                    "graphs": [
+                        {
+                            "valueAxis": "v_small",
+                            "bullet": "none",
+                            bulletSize: 0,
+                            "bulletBorderThickness": 0,
+                            balloonText: 'Buffer Cache : ' + "[[value]]",
+                            "title": "Buffer Cache",
+                            type: "line",
+                            "valueField": "other",
+                            "fillAlphas": 0.6
+                        },
+                        {
+                            "valueAxis": "v_small",
+                            "bullet": "none",
+                            bulletSize: 0,
+                            "bulletBorderThickness": 1,
+                            balloonText: 'Java Pool : ' + "[[value]]",
+                            "title": "Java Pool",
+                            type: "line",
+                            "valueField": "java",
+                            "fillAlphas": 0.6
+                        },
+                        {
+                            "valueAxis": "v_small",
+                            "bullet": "none",
+                            bulletSize: 0,
+                            "bulletBorderThickness": 1,
+                            balloonText: 'Streams Pool : ' + "[[value]]",
+                            "title": "Streams Pool",
+                            type: "line",
+                            "valueField": "streams",
+                            "fillAlphas": 0.6
+                        },
+                        {
+                            "valueAxis": "v_small",
+                            "bullet": "none",
+                            bulletSize: 0,
+                            "bulletBorderThickness": 1,
+                            balloonText: 'Shared Pool : ' + "[[value]]",
+                            "title": "Shared Pool",
+                            type: "line",
+                            "valueField": "shared",
+                            "fillAlphas": 0.6
+                        },
+                        {
+                            "valueAxis": "v_small",
+                            "bullet": "none",
+                            bulletSize: 0,
+                            "bulletBorderThickness": 1,
+                            balloonText: 'Large Pool : ' + "[[value]]",
+                            "title": "Large Pool",
+                            type: "line",
+                            "valueField": "large",
+                            "fillAlphas": 0.6
+                        }
+                    ],
+                    "chartScrollbar": {},
+                    "chartCursor": {
+                        "cursorPosition": "mouse",
+                        scrollbarHeight: 10
+                    },
+                    "categoryField": "time",
+                    "categoryAxis": {
+                        //"parseDates": true,
+                        //minPeriod: "mm",
+                        "axisColor": "#DADADA",
+                        "minorGridEnabled": true
+                    },
+                    "export": {
+                        "enabled": false,
+                        "position": "bottom-right"
+                    }
+                });
+
+                thisObj.chart = chart;
+
+                chart.validateData();
+
+                thisObj.getEl().unmask();
+            };
+            if (AmCharts.isReady) {
+                configChart();
+            } else {
+                AmCharts.ready(configChart);
+            }
+        },
+        resize: function (Component, adjWidth, adjHeight, rawWidth, rawHeight) {
+    //        Component.body.dom.style.height = config.body_height;
+        },
+        scope: this
+    };
+
+    config.tools = [
+    ];
+
+    Toc.SgaAllocationChart.superclass.constructor.call(this, config);
+};
+
+Ext.extend(Toc.SgaAllocationChart, Ext.Panel, {
+
+    refreshData: function () {
+        var chart = this.chart;
+        this.getEl().mask('Chargement donnees');
+
+        Ext.Ajax.request({
+            url: Toc.CONF.ORACLE_URL,
+            params: {
+                module: 'databases',
+                action: 'list_sgahisto',
+                db_user: this.db_user,
+                db_pass: this.db_pass,
+                db_port: this.port,
+                db_host: this.host,
+                db_sid: this.sid,
+                databases_id: this.databases_id
+            },
+            callback: function (options, success, response) {
+
+                var valueAxis = chart.valueAxes[0];
+
+                if (success) {
+                    var json = Ext.decode(response.responseText);
+
+                    this.data = json ? json.records : [];
+
+                    if (valueAxis) {
+                        valueAxis.titleColor = "green";
+                        valueAxis.title = "";
+                        valueAxis.labelsEnabled = true;
+                        if (!json) {
+                            valueAxis.titleColor = "red";
+                            valueAxis.title = "No Data";
+                        }
+                        else {
+                            chart.dataProvider = this.data;
+
+                            if (json.comment || !json.records) {
+                                valueAxis.titleColor = "red";
+                                valueAxis.title = json.comment;
+                                valueAxis.labelsEnabled = false;
+                            }
+                        }
+
+                        chart.validateNow();
+                    }
+
+                    if (json && json.records) {
+                        if (json.records.length > 0) {
+                            chart.validateData();
+                        }
+                    }
+                }
+                else {
+                    if (valueAxis) {
+                        valueAxis.labelsEnabled = false;
+                        valueAxis.titleColor = "red";
+                        valueAxis.title = "Time out";
+
+                        chart.validateNow();
+                    }
+                }
+
+                this.getEl().unmask();
+            },
+            scope: this
+        });
+    },
+
+    onRefresh: function () {
+        this.refreshData();
+    }
+});
+
+Toc.MemoryResizePanel = function (config) {
+    config = config || {};
+    config.loadMask = true;
+    config.border = true;
+    config.title = 'Memory resize OPS';
+    //config.autoHeight = true;
+    config.viewConfig = {
+        emptyText: TocLanguage.gridNoRecords, forceFit: true
+    };
+
+    config.listeners = {
+        activate: function (panel) {
+            panel.getStore().load();
+        }
+    };
+
+    config.ds = new Ext.data.Store({
+        url: Toc.CONF.CONN_URL,
+        baseParams: {
+            module: 'databases',
+            action: 'memory_resize',
+            db_port: config.port,
+            db_user: config.db_user,
+            db_pass: config.db_pass,
+            db_host: config.host,
+            db_sid: config.sid
+        },
+        reader: new Ext.data.JsonReader({
+            root: Toc.CONF.JSON_READER_ROOT,
+            totalProperty: Toc.CONF.JSON_READER_TOTAL_PROPERTY,
+            id: 'index'
+        }, [
+            'index',
+            'icon',
+            'component',
+            'parameter',
+            'status',
+            'initial_size',
+            'target_size',
+            'final_size',
+            'start_time',
+            'end_time',
+            'duree'
+        ]),
+        autoLoad: false
+    });
+
+    config.cm = new Ext.grid.ColumnModel([
+        {header: '', dataIndex: 'icon', width: 5},
+        {id: 'component', header: 'Component', dataIndex: 'component', width: 25},
+        {header: 'Parameter', dataIndex: 'parameter', width: 10},
+        {header: 'Status', align: 'center', dataIndex: 'status', width: 5},
+        {header: 'Initial Size', align: 'center', dataIndex: 'initial_size', width: 10},
+        {header: 'Target Size', align: 'center', dataIndex: 'target_size', width: 10},
+        {header: 'Final Size', align: 'center', dataIndex: 'final_size', width: 10},
+        {header: 'Start Time', align: 'center', dataIndex: 'start_time', width: 10},
+        {header: 'End Time', align: 'center', dataIndex: 'end_time', width: 10},
+        {header: 'Duree', align: 'center', dataIndex: 'duree', width: 5}
+    ]);
+
+    Toc.MemoryResizePanel.superclass.constructor.call(this, config);
+};
+
+Ext.extend(Toc.MemoryResizePanel, Ext.grid.GridPanel, {
+});
+
+Toc.LatchPanel = function (config) {
+    //console.debug(config);
+    var that = this;
+    config = config || {};
+    config.started = false;
+    config.region = 'center';
+    config.loadMask = true;
+    config.width = '100%';
+    //config.border = true;
+    //config.autoHeight = true;
+    config.title = 'Latch';
+    //config.columnLines = false;
+    //config.hideHeaders = true;
+    config.viewConfig = {emptyText: TocLanguage.gridNoRecords, forceFit: true};
+
+    config.listeners = {
+        activate: function (panel) {
+            panel.getStore().load();
+        }
+    };
+
+    config.ds = new Ext.data.Store({
+        url: Toc.CONF.CONN_URL,
+        baseParams: {
+            module: 'databases',
+            action: 'list_latch',
+            db_user: config.db_user,
+            db_pass: config.db_pass,
+            db_port: config.port,
+            db_host: config.host,
+            db_sid: config.sid,
+            tbs: config.tbs
+        },
+        reader: new Ext.data.JsonReader({
+            root: Toc.CONF.JSON_READER_ROOT,
+            totalProperty: Toc.CONF.JSON_READER_TOTAL_PROPERTY,
+            id: 'ind'
+        }, [
+            'ind',
+            'name',
+            'gets',
+            'wait_time',
+            'misses',
+            'immediate_gets',
+            'immediate_misses',
+            'misses_ratio'
+        ]),
+        listeners: {
+        },
+        autoLoad: true
+    });
+
+    config.cm = new Ext.grid.ColumnModel([
+        { id: 'ind', header: 'Latch #', dataIndex: 'ind', width: 5, align: 'center',sortable : true,xtype : 'numbercolumn'},
+        { id: 'name', header: 'Name', dataIndex: 'name', width: 30, align: 'left'},
+        { id: 'gets', header: 'Gets', dataIndex: 'gets', width: 10, align: 'center',sortable : true,xtype : 'numbercolumn'},
+        { id: 'misses', header: 'Misses', dataIndex: 'misses', width: 10, align: 'center',sortable : true,xtype : 'numbercolumn'},
+        { id: 'immediate_gets', header: 'Immediate Gets', dataIndex: 'immediate_gets', width: 10, align: 'center',sortable : true,xtype : 'numbercolumn'},
+        { id: 'immediate_misses', header: 'Immediate Misses', dataIndex: 'immediate_misses', width: 10, align: 'center',sortable : true,xtype : 'numbercolumn'},
+        { id: 'wait_time', header: 'Wait Time', dataIndex: 'wait_time', width: 10, align: 'center',sortable : true,xtype : 'numbercolumn'},
+        { id: 'misses_ratio', header: '% Misses', dataIndex: 'misses_ratio', width: 15, renderer: Toc.content.ContentManager.renderPct, align: 'center',sortable : true,xtype : 'numbercolumn'}
+    ]);
+
+    config.tbar = [
+        {
+            text: '',
+            iconCls: 'refresh',
+            handler: function (panel) {
+                that.getStore().reload();
+            },
+            scope: this
+        }
+    ];
+
+    Toc.LatchPanel.superclass.constructor.call(this, config);
+};
+
+Ext.extend(Toc.LatchPanel, Ext.grid.GridPanel, {
+});
+
+Toc.SqlAreaUsageGrid = function (config) {
+    var that = this;
+    config = config || {};
+    //config.region = 'center';
+    config.loadMask = true;
+    config.title = 'SqlArea Usage';
+    config.border = true;
+    config.viewConfig = {emptyText: TocLanguage.gridNoRecords, forceFit: true};
+    config.listeners = {
+        activate: function (panel) {
+            that.getStore().load();
+        },
+        scope: this
+    };
+
+    config.ds = new Ext.data.Store({
+        url: Toc.CONF.CONN_URL,
+        baseParams: {
+            module: 'databases',
+            action: 'sqlarea_usage',
+            db_user: config.db_user,
+            db_pass: config.db_pass,
+            db_port: config.db_port,
+            db_host: config.host,
+            db_sid: config.sid
+        },
+        reader: new Ext.data.JsonReader({
+            root: Toc.CONF.JSON_READER_ROOT,
+            totalProperty: Toc.CONF.JSON_READER_TOTAL_PROPERTY,
+            id: 'user_id'
+        }, [
+            {name: 'sharable', type: 'float'},
+            {name: 'persistent', type: 'float'},
+            {name: 'runtime', type: 'float'},
+            {name: 'areas', type: 'float'},
+            {name: 'mem_sum', type: 'float'},
+            'user_id',
+            'username'
+        ]),
+        autoLoad: false
+    });
+
+    config.cm = new Ext.grid.ColumnModel([
+        { id: 'username', header: 'Username', dataIndex: 'username', sortable: true, align: 'left', width: 40},
+        { id: 'sharable', header: 'Sharable', dataIndex: 'sharable', sortable: true, align: 'center', width: 10,xtype : 'numbercolumn'},
+        { id: 'persistent', header: 'Persistent', dataIndex: 'persistent', align: 'center', width: 10, sortable: true,xtype : 'numbercolumn'},
+        { id: 'runtime', header: 'Runtime', dataIndex: 'runtime', align: 'center', width: 10, sortable: true,xtype : 'numbercolumn'},
+        { id: 'areas', header: 'Areas', dataIndex: 'areas', align: 'center', width: 10, sortable: true,xtype : 'numbercolumn'},
+        { id: 'mem_sum', header: 'Total', dataIndex: 'mem_sum', align: 'center', width: 10, sortable: true,xtype : 'numbercolumn'}
+    ]);
+
+    config.tbar = [
+        {
+            text: '',
+            iconCls: 'refresh',
+            handler: this.onRefresh,
+            scope: this
+        }
+    ];
+
+    var thisObj = this;
+
+    this.addEvents({'selectchange': true});
+    Toc.SqlAreaUsageGrid.superclass.constructor.call(this, config);
+};
+
+Ext.extend(Toc.SqlAreaUsageGrid, Ext.grid.GridPanel, {
+    onRefresh: function () {
+        this.getStore().load();
+    }
+});
+
+Toc.MemoryAllocationPanel = function (params) {
+    var that = this;
+    config = {};
+    config.params = params;
+    config.region = 'center';
+    config.border = true;
+    config.layout = 'column';
+    config.title = params.label;
+    config.started = false;
+    //config.header = false;
+    //config.autoHeight = true;
+    config.listeners = {
+        show: function (comp) {
+            //console.log('pnlSqlAreaUsage show');
+        },
+        added: function (index) {
+        },
+        enable: function (comp) {
+            //console.log('pnlSqlAreaUsage enable');
+        },
+        render: function (comp) {
+            //console.log('pnlSqlAreaUsage render');
+        },
+        afterrender: function (comp) {
+            //console.log('afterrender');
+            //console.log('pnlSqlAreaUsage afterrender');
+        },
+        activate: function (panel) {
+            //console.log('pnlSqlAreaUsage activate');
+            if (!that.activated) {
+                that.buildItems(that.params);
+            }
+
+            that.activated = true;
+        },
+        deactivate: function (panel) {
+            //console.log('ash deactivate');
+            //panel.removeAll(true);
+        },
+        destroy: function (panel) {
+            //console.log('destroy');
+        },
+        disable: function (panel) {
+            //console.log('disable');
+        },
+        remove: function (container, panel) {
+            //console.log('remove');
+        },
+        removed: function (container, panel) {
+            //console.log('removed');
+        },
+        resize: function (Component, adjWidth, adjHeight, rawWidth, rawHeight) {
+            if(that.pnlAlloc && that.pnlSgaAlloc)
+            {
+                that.pnlAlloc.setHeight(that.getInnerHeight()/2);
+                that.doLayout(true, true);
+                that.pnlSgaAlloc.setHeight(that.getInnerHeight()/2);
+                that.doLayout(true, true);
+            }
+        },
+        scope: this
+    };
+
+    config.tbar = [
+        {
+            text: '',
+            iconCls: 'refresh',
+            handler: function (panel) {
+                that.pnlAlloc.refreshData();
+                that.pnlSgaAlloc.refreshData();
+            },
+            scope: this
+        }
+    ];
+
+    Toc.MemoryAllocationPanel.superclass.constructor.call(this, config);
+};
+
+Ext.extend(Toc.MemoryAllocationPanel, Ext.Panel, {
+    buildItems: function (params) {
+        var that = this;
+
+        var node = params.node;
+
+        that.pnlAlloc = new Toc.MemoryAllocationChart({columnWidth: 1,label: 'Memory Allocation', sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner, server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, typ: node.attributes.typ});
+        that.pnlSgaAlloc = new Toc.SgaAllocationChart({columnWidth: 1,label: 'SGA Allocation', sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner, server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, typ: node.attributes.typ});
+        //that.pnlSgaResize = new Toc.SgaResizePanel({width : '100%',sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
+        //that.pnlMemoryResize = new Toc.MemoryResizePanel({width : '100%',sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
+
+        that.add(that.pnlAlloc);
+        that.pnlAlloc.setHeight(that.getInnerHeight()/2);
+        that.doLayout(true, true);
+
+        that.add(that.pnlSgaAlloc);
+        that.pnlSgaAlloc.setHeight(that.getInnerHeight()/2);
+        that.doLayout(true, true);
+
+        that.pnlAlloc.refreshData();
+        that.pnlSgaAlloc.refreshData();
+    }
+});

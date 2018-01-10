@@ -111,7 +111,7 @@ define('TABLE_LOGS', DB_TABLE_PREFIX . 'logs');
 define('TABLE_REPORTS_EXECUTIONS', DB_TABLE_PREFIX . 'reports_executions');
 define('TABLE_REPORTS_RESOURCES', DB_TABLE_PREFIX . 'reports_resources');
 define('TABLE_SERVERS', DB_TABLE_PREFIX . 'servers');
-define('TABLE_LOGS', DB_TABLE_PREFIX . 'log');
+define('TABLE_LOG', DB_TABLE_PREFIX . 'log');
 define('TABLE_SERVER_STATE', DB_TABLE_PREFIX . 'server_state');
 define('TABLE_CONTENT_DESCRIPTION', DB_TABLE_PREFIX . 'content_description');
 define('TABLE_PRODUCTS_ATTACHMENTS_DESCRIPTION', DB_TABLE_PREFIX . 'products_attachments_description');

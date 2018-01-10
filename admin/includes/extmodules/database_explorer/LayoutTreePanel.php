@@ -125,8 +125,8 @@ Ext.extend(Toc.database_explorer.TreePanel, Ext.tree.TreePanel, {
 
     onCategoryNodeClick: function (node) {
         if (node) {
-            console.log('onCategoryNodeClick');
-            console.debug(node);
+            //console.log('onCategoryNodeClick');
+            //console.debug(node);
 
             this.currentCategoryId = node.id;
             this.currentNode = node;

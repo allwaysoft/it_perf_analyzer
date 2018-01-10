@@ -18,6 +18,10 @@ Toc.content.ContentManager.createDocumentsDialog = function () {
 };
 
 Toc.content.ContentManager.renderProgress = function (percent) {
+    if (percent == 0) {
+        return "";
+    }
+
     if (percent >= 90) {
         return "<div id='my-progressbar' style='width: 100%; height: 15px;' class='progressbar-control'><div style='opacity: 1; float: left; position: relative; width: " + percent + "%;' class='item-bar red'></div></div>";
     }
@@ -27,6 +31,24 @@ Toc.content.ContentManager.renderProgress = function (percent) {
         }
         else {
             return "<div id='my-progressbar' style='width: 100%; height: 15px;' class='progressbar-control'><div style='opacity: 1; float: left; position: relative; width: " + percent + "%;' class='item-bar green'></div></div>";
+        }
+    }
+};
+
+Toc.content.ContentManager.renderPct = function (percent) {
+    if (percent == 0) {
+        return "";
+    }
+
+    if (percent >= 90) {
+        return "<div id='my-progressbar' style='width: 100%; height: 15px;' class='progressbar-control'><div style='opacity: 1; float: left; position: relative; width: " + percent + "%;' class='item-bar green'></div></div>";
+    }
+    else {
+        if (percent < 90 && percent >= 70) {
+            return "<div id='my-progressbar' style='width: 100%; height: 15px;' class='progressbar-control'><div style='opacity: 1; float: left; position: relative; width: " + percent + "%;' class='item-bar yellow'></div></div>";
+        }
+        else {
+            return "<div id='my-progressbar' style='width: 100%; height: 15px;' class='progressbar-control'><div style='opacity: 1; float: left; position: relative; width: " + percent + "%;' class='item-bar red'></div></div>";
         }
     }
 };

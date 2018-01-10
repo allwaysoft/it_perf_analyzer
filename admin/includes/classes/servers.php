@@ -613,12 +613,12 @@ class toC_Servers_Admin
                     $Qserver = $osC_Database->query('insert into :table_logs (servers_id,url,content_type,content_id) values (:servers_id,:url,:content_type,:content_id)');
                 }
 
-                $Qserver->bindTable(':table_logs', TABLE_LOGS);
+                $Qserver->bindTable(':table_logs', 'delta_log');
                 $Qserver->bindValue(':url', $data['url']);
                 $Qserver->bindValue(':content_type', $data['content_type']);
                 $Qserver->bindInt(':servers_id', $data['servers_id']);
                 $Qserver->bindInt(':content_id', $data['content_id']);
-                $Qserver->setLogging($_SESSION['module'], $id);
+                //$Qserver->setLogging($_SESSION['module'], $id);
                 $Qserver->execute();
 
                 if ($osC_Database->isError()) {

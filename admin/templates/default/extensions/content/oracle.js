@@ -1,4 +1,3 @@
-
 Toc.content.ContentManager.getOracleConnexionsCombo = function (config) {
     var dsOracleConnexionsCombo = new Ext.data.Store({
         url: Toc.CONF.CONN_URL,
@@ -86,7 +85,8 @@ Toc.content.ContentManager.getDatabaseSchemasCombo = function (config) {
             totalProperty: Toc.CONF.JSON_READER_TOTAL_PROPERTY,
             id: 'username'
         }, [
-            'username'
+            'username',
+            'label'
         ]),
         autoLoad: false
     });
@@ -94,12 +94,12 @@ Toc.content.ContentManager.getDatabaseSchemasCombo = function (config) {
     return new Ext.form.ComboBox({
         fieldLabel: 'Categorie',
         store: dsSchemas,
-        displayField: 'username',
+        displayField: 'label',
         valueField: 'username',
         hiddenName: 'category',
         name: 'schema',
         mode: 'local',
-        width: 250,
+        width: 100,
         readOnly: true,
         triggerAction: 'all',
         forceSelection: true,
@@ -180,6 +180,57 @@ Toc.content.ContentManager.getArchDestCombo = function () {
         triggerAction: 'all',
         forceSelection: true,
         allowBlank: false
+    });
+};
+
+Toc.TbsCombo = function (config) {
+    var tbsStore = new Ext.data.Store({
+        url: Toc.CONF.CONN_URL,
+        baseParams: {
+            module: 'databases',
+            action: 'list_tablespacecombo',
+            db_user: config.db_user,
+            db_pass: config.db_pass,
+            db_port: config.db_port,
+            db_host: config.db_host,
+            db_sid: config.db_sid
+        },
+        reader: new Ext.data.JsonReader({
+            root: Toc.CONF.JSON_READER_ROOT,
+            id: 'tablespace_name',
+            fields: ['tablespace_name', 'label']
+        }),
+        listeners: {
+            load: function (store, records, opt) {
+                if (config.panel) {
+                    config.panel.getEl().unmask();
+                }
+            },
+            beforeload: function (store, opt) {
+                if (config.panel) {
+                    config.panel.getEl().mask('Chargement des espaces logiques ....');
+                }
+            }, scope: this
+        },
+        autoLoad: config.autoLoad
+    });
+
+    return new Ext.form.ComboBox({
+        typeAhead: true,
+        name: 'tbs',
+        autoSelect: true,
+        width: 100,
+        listWidth: 100,
+        hiddenName: "tbs",
+        allowBlank: false,
+        //id: 'tbs',
+        fieldLabel: 'Espace logique',
+        triggerAction: 'all',
+        mode: 'local',
+        //emptyText: 'Selectionner un espace logique',
+        store: tbsStore,
+        valueField: 'tablespace_name',
+        displayField: 'label'
     });
 };
 
@@ -524,9 +575,10 @@ Toc.TopTbsPanel = function (config) {
     //config.autoHeight = true;
     config.count = 0;
     config.reqs = 0;
+    config.try = 0;
     config.title = 'TBS';
     config.label = 'TBS';
-    config.height  = 110;
+    config.height = 110;
     config.hideHeaders = true;
     config.border = true;
     config.viewConfig = {emptyText: TocLanguage.gridNoRecords, forceFit: true};
@@ -554,12 +606,14 @@ Toc.TopTbsPanel = function (config) {
             'rest'
         ]),
         listeners: {
-            exception : function(misc){
+            exception: function (misc) {
                 that.reqs--;
+                that.try = 0;
                 that.setTitle(that.label + (' error !!! ') + that.reqs);
             },
             load: function (store, records, opt) {
                 that.reqs--;
+                that.try = 0;
                 that.setTitle(that.label);
             },
             beforeload: function (store, opt) {
@@ -623,12 +677,18 @@ Toc.TopTbsPanel = function (config) {
 Ext.extend(Toc.TopTbsPanel, Ext.grid.GridPanel, {
     refreshData: function (scope) {
         if (scope && scope.started) {
+            scope.try++;
             scope.setTitle(scope.title + '.');
+
             if (scope.reqs == 0) {
                 var store = this.getStore();
                 scope.reqs++;
-                scope.setTitle(scope.label + ' .');
                 store.load();
+            }
+
+            if (scope.try > 10) {
+                scope.setTitle(scope.label);
+                scope.try = 0;
             }
         }
     },
@@ -673,6 +733,7 @@ Ext.extend(Toc.TopTbsPanel, Ext.grid.GridPanel, {
     start: function () {
         this.started = true;
         this.count = 0;
+        this.try = 0;
         this.reqs = 0;
         this.refreshData(this);
     },
@@ -682,8 +743,7 @@ Ext.extend(Toc.TopTbsPanel, Ext.grid.GridPanel, {
         this.reqs = 10;
         this.refreshData(this);
 
-        if(this.interval)
-        {
+        if (this.interval) {
             clearInterval(this.interval);
         }
     }
@@ -2052,288 +2112,6 @@ Toc.DropProcedure = function (panel) {
     });
 };
 
-Toc.tbsGrid = function (config) {
-    var that = this;
-    config = config || {};
-    //config.region = 'center';
-    config.loadMask = true;
-    config.title = 'Tablespaces';
-    config.border = true;
-    config.viewConfig = {emptyText: TocLanguage.gridNoRecords};
-
-    config.listeners = {
-        activate: function (panel) {
-            if (!this.activated) {
-                this.activated = true;
-                this.getStore().load();
-            }
-        },
-        'rowclick': this.onRowClick
-        ,
-        scope: this
-    };
-
-    config.ds = new Ext.data.Store({
-        url: Toc.CONF.CONN_URL,
-        baseParams: {
-            module: 'databases',
-            action: 'list_tbs',
-            db_user: config.db_user,
-            db_pass: config.db_pass,
-            db_port: config.db_port,
-            db_host: config.host,
-            db_sid: config.sid
-        },
-        reader: new Ext.data.JsonReader({
-            root: Toc.CONF.JSON_READER_ROOT,
-            totalProperty: Toc.CONF.JSON_READER_TOTAL_PROPERTY,
-            id: 'tablespace_name'
-        }, [
-            'tablespace_name',
-            'status',
-            'contents',
-            'extent_management',
-            'bigfile',
-            {name: 'megs_alloc', type: 'int'},
-            {name: 'free', type: 'int'},
-            {name: 'megs_used', type: 'int'},
-            {name: 'pct_free', type: 'int'},
-            {name: 'pct_used', type: 'int'},
-            {name: 'total_pct_used', type: 'int'},
-            {name: 'max', type: 'int'}
-        ]),
-        autoLoad: false
-    });
-
-    renderStatus = function (status) {
-        if (status == 'ONLINE') {
-            return '<img class="img-button" src="images/icon_status_green.gif" />&nbsp;<img class="img-button btn-status-off" style="cursor: pointer" src="images/icon_status_red_light.gif" />';
-        } else {
-            return '<img class="img-button btn-status-on" style="cursor: pointer" src="images/icon_status_green_light.gif" />&nbsp;<img class="img-button" src= "images/icon_status_red.gif" />';
-        }
-    };
-
-    config.rowActions = new Ext.ux.grid.RowActions({
-        actions: [
-            {iconCls: 'icon-edit-record', qtip: TocLanguage.tipEdit},
-            {iconCls: 'icon-delete-record', qtip: TocLanguage.tipDelete}
-        ],
-        widthIntercept: Ext.isSafari ? 4 : 2
-    });
-    config.rowActions.on('action', this.onRowAction, this);
-    config.plugins = config.rowActions;
-
-    config.sm = new Ext.grid.CheckboxSelectionModel();
-    config.cm = new Ext.grid.ColumnModel([
-        config.sm,
-        { id: 'tablespace_name', header: 'Nom', dataIndex: 'tablespace_name', sortable: true},
-        { header: '% Utilisation', align: 'center', dataIndex: 'total_pct_used', renderer: Toc.content.ContentManager.renderProgress, sortable: true},
-        { header: 'Taille (MB)', align: 'center', dataIndex: 'max', sortable: true, renderer: Toc.content.ContentManager.FormatNumber},
-        { header: 'Libre (MB)', align: 'center', dataIndex: 'free', sortable: true, renderer: Toc.content.ContentManager.FormatNumber},
-        { header: 'Utilise (MB)', align: 'center', dataIndex: 'megs_used', sortable: true, renderer: Toc.content.ContentManager.FormatNumber},
-        { id: 'status', header: 'Status', align: 'center', dataIndex: 'status', renderer: renderStatus},
-        config.rowActions
-    ]);
-    config.autoExpandColumn = 'tablespace_name';
-    config.stripeRows = true;
-
-    config.txtSearch = new Ext.form.TextField({
-        width: 100,
-        hideLabel: true
-    });
-
-    config.tbar = [
-        {
-            text: '',
-            iconCls: 'refresh',
-            handler: this.onRefresh,
-            scope: this
-        },
-        '->',
-        config.txtSearch,
-        ' ',
-        {
-            text: '',
-            iconCls: 'search',
-            handler: this.onSearch,
-            scope: this
-        }
-    ];
-
-    var thisObj = this;
-
-    this.addEvents({'selectchange': true});
-    Toc.tbsGrid.superclass.constructor.call(this, config);
-};
-
-Ext.extend(Toc.tbsGrid, Ext.grid.GridPanel, {
-
-    onAdd: function () {
-
-    },
-
-    onDelete: function (record) {
-        var tbs = record.get('tablespace_name');
-
-        Ext.MessageBox.confirm(
-            TocLanguage.msgWarningTitle,
-            'Voulez-vous vraiment supprimer cet espace logique ? Cette action est irreversible !!!',
-            function (btn) {
-                if (btn == 'yes') {
-                    Ext.Ajax.request({
-                        url: Toc.CONF.CONN_URL,
-                        params: {
-                            module: 'databases',
-                            action: 'drop_tablespace',
-                            db_user: this.db_user,
-                            db_pass: this.db_pass,
-                            db_port: this.db_port,
-                            db_host: this.host,
-                            db_sid: this.sid,
-                            tablespace_name: tbs
-                        },
-                        callback: function (options, success, response) {
-                            var result = Ext.decode(response.responseText);
-
-                            if (result.success == true) {
-                                this.owner.app.showNotification({title: TocLanguage.msgSuccessTitle, html: result.feedback});
-                                this.onRefresh();
-                            } else {
-                                Ext.MessageBox.alert(TocLanguage.msgErrTitle, result.feedback);
-                            }
-                        },
-                        scope: this
-                    });
-                }
-            }, this);
-    },
-
-    setPermissions: function (permissions) {
-        this.bottomToolbar.items.items[0].disable();
-        this.bottomToolbar.items.items[2].disable();
-
-        this.topToolbar.items.items[0].disable();
-        this.topToolbar.items.items[2].disable();
-        if (permissions) {
-            if (permissions.can_write == 1 || permissions.can_modify == '') {
-                this.bottomToolbar.items.items[0].enable();
-                this.topToolbar.items.items[0].enable();
-            }
-            if (permissions.can_modify == '') {
-                this.bottomToolbar.items.items[2].enable();
-                this.topToolbar.items.items[2].enable();
-            }
-        }
-    },
-
-    onEdit: function (record) {
-        var params = {
-            server_user: this.server_user,
-            server_pass: this.server_pass,
-            server_port: this.server_port,
-            server_typ: this.server_typ,
-            host: this.host,
-            db_port: this.port,
-            db_user: this.db_user,
-            db_pass: this.db_pass,
-            db_host: this.host,
-            db_sid: this.sid,
-            file_id: -1,
-            tbs: record.get("tablespace_name")
-        };
-
-        var dlg = new Toc.TbsBrowser(params);
-        dlg.setTitle(this.label + ' : ' + record.get("tablespace_name"));
-
-        dlg.on('close', function () {
-            this.onRefresh();
-        }, this);
-
-        dlg.show(params, this.owner);
-    },
-
-    onRefresh: function () {
-        this.getStore().reload();
-    },
-
-    refreshGrid: function (categoriesId) {
-        var permissions = this.mainPanel.getCategoryPermissions();
-        var store = this.getStore();
-
-        store.baseParams['permissions'] = permissions.can_read + ',' + permissions.can_write + ',' + permissions.can_modify + ',' + permissions.can_publish;
-        store.baseParams['categories_id'] = categoriesId;
-        this.categoriesId = categoriesId;
-        store.reload();
-    },
-
-    onSearch: function () {
-        var categoriesId = this.cboCategories.getValue() || null;
-        var filter = this.txtSearch.getValue() || null;
-        var store = this.getStore();
-
-        store.baseParams['current_category_id'] = categoriesId;
-        store.baseParams['search'] = filter;
-        store.reload();
-    },
-
-    onRowAction: function (grid, record, action, row, col) {
-        switch (action) {
-
-            case 'icon-edit-record':
-                this.onEdit(record);
-                break;
-            case 'icon-delete-record':
-                this.onDelete(record);
-                break;
-        }
-    },
-
-    setTbs: function (tablespace_name) {
-        this.fireEvent('selectchange', tablespace_name);
-    },
-
-    onClick: function (e, target) {
-        var t = e.getTarget();
-        var v = this.view;
-        var row = v.findRowIndex(t);
-        var action = false;
-
-        if (row !== false) {
-            var btn = e.getTarget(".img-button");
-
-            if (btn) {
-                action = btn.className.replace(/img-button btn-/, '').trim();
-            }
-            else {
-                var sel = this.getStore().getAt(row);
-                this.setTbs(sel.json.tablespace_name);
-            }
-
-            if (action != 'img-button') {
-                var tbs = this.getStore().getAt(row).get('tablespace_name');
-                var module = 'setTbstatus';
-
-                switch (action) {
-                    case 'status-off':
-                    case 'status-on':
-                        flag = (action == 'status-on') ? 'ONLINE' : 'OFFLINE';
-                        this.onAction(module, tbs, flag);
-                        break;
-                }
-            }
-        }
-    },
-
-    onRowClick: function (grid, index, obj) {
-        var item = grid.getStore().getAt(index);
-        this.fireEvent('selectchange', item);
-    },
-
-    onAction: function (module, tbs, flag) {
-        Toc.setTbsStatus(this, flag, tbs);
-    }
-});
-
 Toc.setTbsStatus = function (panel, flag, tbs) {
     var msg = 'hors ligne';
 
@@ -2605,7 +2383,7 @@ Ext.extend(Toc.SnapshotBrowser, Ext.Panel, {
         var showDialog = function (start_or_end, start_field, end_field, start_id) {
             var dlg = new Toc.SnaphotsDialog();
             var params = {
-                capture : config.capture,
+                capture: config.capture,
                 db_user: config.db_user,
                 db_pass: config.db_pass,
                 db_port: config.db_port,
@@ -2718,7 +2496,7 @@ Toc.datafilesGrid = function (config) {
     config = config || {};
     config.loadMask = true;
     config.title = 'Datafiles';
-    config.viewConfig = {emptyText: TocLanguage.gridNoRecords,forceFit : true};
+    config.viewConfig = {emptyText: TocLanguage.gridNoRecords, forceFit: true};
     config.listeners = {
         activate: function (panel) {
             if (!this.activated) {
@@ -2794,17 +2572,17 @@ Toc.datafilesGrid = function (config) {
     config.sm = new Ext.grid.CheckboxSelectionModel();
     config.cm = new Ext.grid.ColumnModel([
         config.sm,
-        { id: 'file_id', header: 'ID', dataIndex: 'file_id', sortable: true,width:2},
-        { id: 'file_name', header: 'Nom', dataIndex: 'file_name', sortable: true,width:28},
-        { id: 'tablespace_name', header: 'Tablespace', dataIndex: 'tablespace_name', sortable: true,width:10},
-        { header: '% Used', align: 'center', dataIndex: 'pct_used', renderer: Toc.content.ContentManager.renderProgress, sortable: true,width:7},
-        { header: '% Total', align: 'center', dataIndex: 'total_pct_used', renderer: Toc.content.ContentManager.renderProgress, sortable: true,width:7},
-        { header: 'Size (MB)', align: 'center', dataIndex: 'size', sortable: true, renderer: Toc.content.ContentManager.FormatNumber,width:9},
-        { header: 'Free (MB)', align: 'center', dataIndex: 'free_mb', sortable: true, renderer: Toc.content.ContentManager.FormatNumber,width:9},
-        { header: 'Max (MB)', align: 'center', dataIndex: 'maxsize', sortable: true, renderer: Toc.content.ContentManager.FormatNumber,width:9},
-        { header: 'Inc (MB)', align: 'center', dataIndex: 'increment_by', sortable: true, renderer: Toc.content.ContentManager.FormatNumber,width:9},
-        { header: 'Auto Ext', align: 'center', dataIndex: 'autoextensible', sortable: true, renderer: renderAuto,width:5},
-        { id: 'status', header: 'Status', align: 'center', dataIndex: 'status', renderer: renderStatus,width:5},
+        { id: 'file_id', header: 'ID', dataIndex: 'file_id', sortable: true, width: 2},
+        { id: 'file_name', header: 'Nom', dataIndex: 'file_name', sortable: true, width: 28},
+        { id: 'tablespace_name', header: 'Tablespace', dataIndex: 'tablespace_name', sortable: true, width: 10},
+        { header: '% Used', align: 'center', dataIndex: 'pct_used', renderer: Toc.content.ContentManager.renderProgress, sortable: true, width: 7},
+        { header: '% Total', align: 'center', dataIndex: 'total_pct_used', renderer: Toc.content.ContentManager.renderProgress, sortable: true, width: 7},
+        { header: 'Size (MB)', align: 'center', dataIndex: 'size', sortable: true, renderer: Toc.content.ContentManager.FormatNumber, width: 9},
+        { header: 'Free (MB)', align: 'center', dataIndex: 'free_mb', sortable: true, renderer: Toc.content.ContentManager.FormatNumber, width: 9},
+        { header: 'Max (MB)', align: 'center', dataIndex: 'maxsize', sortable: true, renderer: Toc.content.ContentManager.FormatNumber, width: 9},
+        { header: 'Inc (MB)', align: 'center', dataIndex: 'increment_by', sortable: true, renderer: Toc.content.ContentManager.FormatNumber, width: 9},
+        { header: 'Auto Ext', align: 'center', dataIndex: 'autoextensible', sortable: true, renderer: renderAuto, width: 5},
+        { id: 'status', header: 'Status', align: 'center', dataIndex: 'status', renderer: renderStatus, width: 5},
         config.rowActions
     ]);
     config.autoExpandColumn = 'file_name';
@@ -3484,7 +3262,7 @@ Ext.extend(Toc.DatabaseEditDialog, Ext.Window, {
             },
             deferredRender: false,
             items: [
-                this.pnlData,this.pnlGroupes
+                this.pnlData, this.pnlGroupes
             ]
         });
 
@@ -3515,13 +3293,11 @@ Ext.extend(Toc.DatabaseEditDialog, Ext.Window, {
             host: data.json.host
         };
 
-        if(params.group_id.toString() == '')
-        {
-            Ext.MessageBox.alert(TocLanguage.msgErrTitle,'Vous devez selectionner au moins un Groupe pour cette base !!!');
+        if (params.group_id.toString() == '') {
+            Ext.MessageBox.alert(TocLanguage.msgErrTitle, 'Vous devez selectionner au moins un Groupe pour cette base !!!');
             this.tabDatabases.activate(this.pnlGroupes);
         }
-        else
-        {
+        else {
             this.frmDatabase.form.submit({
                 waitMsg: TocLanguage.formSubmitWaitMsg,
                 params: params,
@@ -3699,13 +3475,11 @@ Ext.extend(Toc.DatabasesGrid, Ext.grid.GridPanel, {
         var dlg = new Toc.DatabaseEditDialog();
         //var path = this.owner.getCategoryPath();
         dlg.on('saveSuccess', function () {
-            if(this.mainPanel)
-            {
+            if (this.mainPanel) {
                 this.mainPanel.refreshTree();
             }
-            else
-            {
-                Ext.MessageBox.alert(TocLanguage.msgErrTitle,"No mainPanel defined !!!");
+            else {
+                Ext.MessageBox.alert(TocLanguage.msgErrTitle, "No mainPanel defined !!!");
             }
         }, this);
 
@@ -3736,13 +3510,11 @@ Ext.extend(Toc.DatabasesGrid, Ext.grid.GridPanel, {
         dlg.setTitle(record.get("content_name"));
 
         dlg.on('saveSuccess', function () {
-            if(this.mainPanel)
-            {
+            if (this.mainPanel) {
                 this.mainPanel.refreshTree();
             }
-            else
-            {
-                Ext.MessageBox.alert(TocLanguage.msgErrTitle,"No mainPanel defined !!!");
+            else {
+                Ext.MessageBox.alert(TocLanguage.msgErrTitle, "No mainPanel defined !!!");
             }
         }, this);
 
@@ -4170,8 +3942,7 @@ Toc.usersGrid = function (config) {
                 this.getStore().load();
             }
         },
-        'rowclick': this.onRowClick
-        ,scope:this
+        'rowclick': this.onRowClick, scope: this
     };
 
     config.ds = new Ext.data.Store({
@@ -4920,14 +4691,65 @@ Toc.indexesGrid = function (config) {
     //config.autoHeight = true;
     config.title = 'Indexes';
     //config.border = true;
-    config.viewConfig = {emptyText: TocLanguage.gridNoRecords};
+    config.viewConfig = {emptyText: TocLanguage.gridNoRecords, forceFit: true};
 
     config.listeners = {
         activate: function (panel) {
+            console.log('indexesGrid activate ...');
+            that.schemasCombo.getStore().on('beforeload', function (store, records, options) {
+                that.getEl().mask('Chargement Schemas ....');
+            });
+
+            that.tbsCombo.getStore().on('beforeload', function (store, records, options) {
+                that.getEl().mask('Chargement Tablespaces ....');
+            });
+
+            that.schemasCombo.getStore().on('load', function (store, records, options) {
+                if (records.length > 1) {
+                    that.schema = 'all';
+                    that.schemasCombo.setValue(thisObj.schema);
+                }
+                else {
+                    that.schemasCombo.disable();
+                    Ext.Msg.alert(TocLanguage.msgErrTitle, "Probleme chargement Schemas !!!");
+                }
+
+                that.getEl().unmask();
+            });
+
+            that.tbsCombo.getStore().on('load', function (store, records, options) {
+                if (records.length > 1) {
+                    that.tbs = 'all';
+                    that.tbsCombo.setValue(thisObj.tbs);
+                }
+                else {
+                    that.schemasCombo.disable();
+                    Ext.Msg.alert(TocLanguage.msgErrTitle, "Probleme chargement tablespaces !!!");
+                }
+
+                that.getEl().unmask();
+            });
+
+            that.schemasCombo.on('select', function (combo, record, index) {
+                var schema = record.data.username;
+                that.schema = schema;
+            });
+
+            that.tbsCombo.on('select', function (combo, record, index) {
+                var tbs = record.data.tablespace_name;
+                panel.tbs = tbs;
+            });
+
+            that.tbsCombo.getStore().load();
+            that.schemasCombo.getStore().load();
+
             if (!this.activated) {
                 this.activated = true;
-                this.getStore().load();
+                //this.getStore().load();
             }
+        },
+        show: function (panel) {
+
         },
         'rowclick': this.onRowClick,
         scope: this
@@ -5002,6 +4824,7 @@ Toc.indexesGrid = function (config) {
     config.rowActions = new Ext.ux.grid.RowActions({
         actions: [
             {iconCls: 'icon-edit-record', qtip: TocLanguage.tipEdit},
+            {iconCls: 'icon-gather-record', qtip: 'Collecter les Stats'},
             {iconCls: 'icon-delete-record', qtip: TocLanguage.tipDelete}
         ],
         widthIntercept: Ext.isSafari ? 4 : 2
@@ -5012,22 +4835,22 @@ Toc.indexesGrid = function (config) {
     config.sm = new Ext.grid.CheckboxSelectionModel();
     config.cm = new Ext.grid.ColumnModel([
         config.sm,
-        { id: 'owner', header: 'Proprietaire', dataIndex: 'owner', sortable: true, align: 'center', width: 70},
-        { id: 'tablespace_name', header: 'Tablespace', dataIndex: 'tablespace_name', sortable: true, width: 100, align: 'center'},
-        { id: 'table_name', header: 'Table', dataIndex: 'table_name', sortable: true, align: 'center', width: 100},
-        { id: 'segment_name', header: 'Index', dataIndex: 'segment_name', sortable: true, align: 'center', width: 100},
-        { id: 'table_blocks', header: 'Table Blocks', dataIndex: 'table_blocks', sortable: true, align: 'center', width: 100, renderer: Toc.content.ContentManager.FormatNumber},
-        { id: 'clustering_factor', header: 'CFactor', dataIndex: 'clustering_factor', sortable: true, align: 'center', width: 100, renderer: Toc.content.ContentManager.FormatNumber},
-        { id: 'table_rows', header: 'Table Rows', dataIndex: 'table_rows', sortable: true, align: 'center', width: 100, renderer: Toc.content.ContentManager.FormatNumber},
-        { header: 'Taille', align: 'center', dataIndex: 'size', sortable: true, width: 80},
-        { header: 'Uniqueness', dataIndex: 'uniqueness', sortable: true, align: 'center', width: 90},
-        { header: 'Comp', dataIndex: 'compression', sortable: true, align: 'center', width: 50, renderer: renderCompression},
-        { header: 'Status', dataIndex: 'status', sortable: true, align: 'center', width: 50, renderer: renderStatus},
-        { header: 'Logging', dataIndex: 'logging', sortable: true, align: 'center', width: 50, renderer: renderLogging},
-        { header: 'Blevel', dataIndex: 'blevel', sortable: true, align: 'center', width: 50},
-        { header: 'Lblocks', dataIndex: 'leaf_blocks', sortable: true, align: 'center', width: 80, renderer: Toc.content.ContentManager.FormatNumber},
-        { header: 'Dkeys', dataIndex: 'distinct_keys', sortable: true, align: 'center', width: 90, renderer: Toc.content.ContentManager.FormatNumber},
-        { header: 'Analyzed', dataIndex: 'last_analyzed', sortable: true, align: 'center', width: 70},
+        { id: 'owner', header: 'owner', dataIndex: 'owner', sortable: true, align: 'center', width: 5},
+        { id: 'tablespace_name', header: 'Tablespace', dataIndex: 'tablespace_name', sortable: true, width: 5, align: 'center'},
+        { id: 'table_name', header: 'Table', dataIndex: 'table_name', sortable: true, align: 'center', width: 10},
+        { id: 'segment_name', header: 'Index', dataIndex: 'segment_name', sortable: true, align: 'center', width: 10},
+        { id: 'table_blocks', header: 'Table Blocks', dataIndex: 'table_blocks', sortable: true, align: 'center', width: 7, renderer: Toc.content.ContentManager.FormatNumber},
+        { id: 'clustering_factor', header: 'CFactor', dataIndex: 'clustering_factor', sortable: true, align: 'center', width: 5, renderer: Toc.content.ContentManager.FormatNumber},
+        { id: 'table_rows', header: 'Table Rows', dataIndex: 'table_rows', sortable: true, align: 'center', width: 8, renderer: Toc.content.ContentManager.FormatNumber},
+        { header: 'Taille', align: 'center', dataIndex: 'size', sortable: true, width: 6},
+        { header: 'Unique', dataIndex: 'uniqueness', sortable: true, align: 'center', width: 7},
+        { header: 'Comp', dataIndex: 'compression', sortable: true, align: 'center', width: 5, renderer: renderCompression},
+        { header: 'Status', dataIndex: 'status', sortable: true, align: 'center', width: 5, renderer: renderStatus},
+        { header: 'Logging', dataIndex: 'logging', sortable: true, align: 'center', width: 5, renderer: renderLogging},
+        { header: 'Blevel', dataIndex: 'blevel', sortable: true, align: 'center', width: 4},
+        { header: 'Lblocks', dataIndex: 'leaf_blocks', sortable: true, align: 'center', width: 5, renderer: Toc.content.ContentManager.FormatNumber},
+        { header: 'Dkeys', dataIndex: 'distinct_keys', sortable: true, align: 'center', width: 5, renderer: Toc.content.ContentManager.FormatNumber},
+        { header: 'Analyzed', dataIndex: 'last_analyzed', sortable: true, align: 'center', width: 8},
         config.rowActions
     ]);
     //config.autoExpandColumn = 'segment_name';
@@ -5088,6 +4911,13 @@ Toc.indexesGrid = function (config) {
         hideLabel: true
     });
 
+    config.autoLoad = false;
+    config.db_host = config.host;
+    config.db_sid = config.sid;
+
+    config.tbsCombo = Toc.TbsCombo(config);
+    config.schemasCombo = Toc.content.ContentManager.getDatabaseSchemasCombo(config);
+
     config.tbar = [
         {
             text: '',
@@ -5098,14 +4928,7 @@ Toc.indexesGrid = function (config) {
         '-',
         {
             text: '',
-            iconCls: 'refresh',
-            handler: this.onRefresh,
-            scope: this
-        },
-        '-',
-        {
-            text: '',
-            iconCls: 'mobe',
+            iconCls: 'move',
             handler: this.onBatchMove,
             scope: this
         },
@@ -5129,6 +4952,10 @@ Toc.indexesGrid = function (config) {
         config.chkVisible,
         '-',
         config.chkInVisible,
+        '-',
+        config.tbsCombo,
+        '-',
+        config.schemasCombo,
         '->',
         config.txtSearch,
         ' ',
@@ -5142,11 +4969,94 @@ Toc.indexesGrid = function (config) {
 
     var thisObj = this;
 
+    config.bbar = new Ext.PageToolbar({
+        pageSize: Toc.CONF.GRID_PAGE_SIZE,
+        store: config.ds,
+        steps: Toc.CONF.GRID_STEPS,
+        beforePageText: TocLanguage.beforePageText,
+        firstText: TocLanguage.firstText,
+        lastText: TocLanguage.lastText,
+        nextText: TocLanguage.nextText,
+        prevText: TocLanguage.prevText,
+        afterPageText: TocLanguage.afterPageText,
+        refreshText: TocLanguage.refreshText,
+        displayInfo: true,
+        displayMsg: TocLanguage.displayMsg,
+        emptyMsg: TocLanguage.emptyMsg,
+        prevStepText: TocLanguage.prevStepText,
+        nextStepText: TocLanguage.nextStepText
+    });
+
     this.addEvents({'selectchange': true});
     Toc.indexesGrid.superclass.constructor.call(this, config);
 };
 
 Ext.extend(Toc.indexesGrid, Ext.grid.GridPanel, {
+    onSearch: function () {
+        var filter = this.txtSearch.getValue() || null;
+        var store = this.getStore();
+
+        store.baseParams['schema'] = this.schema || 'all';
+        store.baseParams['tbs'] = this.tbs || 'all';
+        store.baseParams['unique'] = this.chkUnique.getValue();
+        store.baseParams['non_unique'] = this.chkNonUnique.getValue();
+        store.baseParams['comp'] = this.chkComp.getValue();
+        store.baseParams['non_comp'] = this.chkNonComp.getValue();
+        store.baseParams['monitoring'] = this.chkMonitoring.getValue();
+        store.baseParams['no_monitoring'] = this.chkNoMonitoring.getValue();
+        store.baseParams['logging'] = this.chkLogging.getValue();
+        store.baseParams['visible'] = this.chkVisible.getValue();
+        store.baseParams['invisible'] = this.chkInVisible.getValue();
+        store.baseParams['search'] = filter;
+        store.reload();
+    },
+
+    onGather: function (record) {
+        var action = 'gather_indexstats';
+
+        Ext.Ajax.request({
+            url: Toc.CONF.CONN_URL,
+            params: {
+                module: 'databases',
+                action: action,
+                db_user: this.db_user,
+                db_pass: this.db_pass,
+                db_port: this.db_port,
+                db_host: this.host,
+                db_sid: this.sid,
+                owner: record.get('owner'),
+                tbs: this.tbs,
+                segment_type: 'INDEX',
+                segment_name: record.get('segment_name')
+            },
+            callback: function (options, success, response) {
+                this.getEl().unmask();
+                var result = Ext.decode(response.responseText);
+
+                if (result.success == true) {
+                    var params = {
+                        db_user: this.db_user,
+                        db_pass: this.db_pass,
+                        db_port: this.db_port,
+                        db_host: this.host,
+                        db_sid: this.sid,
+                        job_name: result.job_name,
+                        panel: this,
+                        description: 'Collecte des Stats sur index ' + record.get('segment_name')
+                    };
+
+                    this.proc_name = result.proc_name;
+                    Toc.watchJob(params);
+                    //this.fireEvent('saveSuccess', action.result.feedback);
+                    //this.close();
+                }
+                else {
+                    Ext.MessageBox.alert(TocLanguage.msgErrTitle, action.result.feedback);
+                }
+            },
+            scope: this
+        });
+    },
 
     onAdd: function () {
 
@@ -5331,16 +5241,6 @@ Ext.extend(Toc.indexesGrid, Ext.grid.GridPanel, {
         store.reload();
     },
 
-    onSearch: function () {
-        var categoriesId = this.cboCategories.getValue() || null;
-        var filter = this.txtSearch.getValue() || null;
-        var store = this.getStore();
-
-        store.baseParams['current_category_id'] = categoriesId;
-        store.baseParams['search'] = filter;
-        store.reload();
-    },
-
     onRowAction: function (grid, record, action, row, col) {
         switch (action) {
             case 'icon-delete-record':
@@ -5349,6 +5249,10 @@ Ext.extend(Toc.indexesGrid, Ext.grid.GridPanel, {
 
             case 'icon-edit-record':
                 this.onEdit(record);
+                break;
+
+            case 'icon-gather-record':
+                this.onGather(record);
                 break;
         }
     },
@@ -5429,15 +5333,66 @@ Toc.tablesGrid = function (config) {
     config.loadMask = true;
     config.title = 'Tables';
     //config.border = true;
-    config.viewConfig = {emptyText: TocLanguage.gridNoRecords};
+    config.viewConfig = {emptyText: TocLanguage.gridNoRecords, forceFit: true};
     config.listeners = {
         activate: function (panel) {
+            console.log('tablesGrid activate');
+            that.schemasCombo.getStore().on('beforeload', function (store, records, options) {
+                that.getEl().mask('Chargement Schemas ....');
+            });
+
+            that.tbsCombo.getStore().on('beforeload', function (store, records, options) {
+                that.getEl().mask('Chargement Tablespaces ....');
+            });
+
+            that.schemasCombo.getStore().on('load', function (store, records, options) {
+                if (records.length > 1) {
+                    that.schema = 'all';
+                    that.schemasCombo.setValue(thisObj.schema);
+                }
+                else {
+                    that.schemasCombo.disable();
+                    Ext.Msg.alert(TocLanguage.msgErrTitle, "Probleme chargement Schemas !!!");
+                }
+
+                that.getEl().unmask();
+            });
+
+            that.tbsCombo.getStore().on('load', function (store, records, options) {
+                if (records.length > 1) {
+                    that.tbs = 'all';
+                    that.tbsCombo.setValue(thisObj.tbs);
+                }
+                else {
+                    that.schemasCombo.disable();
+                    Ext.Msg.alert(TocLanguage.msgErrTitle, "Probleme chargement tablespaces !!!");
+                }
+
+                that.getEl().unmask();
+            });
+
+            that.schemasCombo.on('select', function (combo, record, index) {
+                var schema = record.data.username;
+                that.schema = schema;
+            });
+
+            that.tbsCombo.on('select', function (combo, record, index) {
+                var tbs = record.data.tablespace_name;
+                that.tbs = tbs;
+            });
+
+            that.tbsCombo.getStore().load();
+            that.schemasCombo.getStore().load();
+
             if (!this.activated) {
                 this.activated = true;
                 if (this.schema) {
-                    this.getStore().load();
+                    //this.getStore().load();
                 }
             }
+        },
+        show: function (panel) {
+
         },
         'rowclick': this.onRowClick,
         scope: this
@@ -5513,18 +5468,18 @@ Toc.tablesGrid = function (config) {
     config.sm = new Ext.grid.CheckboxSelectionModel();
     config.cm = new Ext.grid.ColumnModel([
         config.sm,
-        { id: 'segment_type', header: 'Type', dataIndex: 'segment_type', sortable: true, align: 'center'},
-        { id: 'tablespace_name', header: 'Tablespace', dataIndex: 'tablespace_name', sortable: true, align: 'center'},
-        { id: 'segment_name', header: 'Table', dataIndex: 'segment_name', sortable: true, align: 'center'},
-        { id: 'partition_name', header: 'Partition', dataIndex: 'partition_name', sortable: true, align: 'center'},
-        { header: 'Taille (MB)', align: 'center', dataIndex: 'size', sortable: true, renderer: Toc.content.ContentManager.FormatNumber},
-        { header: 'Blocks', align: 'center', dataIndex: 'blocks', sortable: true, renderer: Toc.content.ContentManager.FormatNumber},
-        { header: 'Rows', align: 'center', dataIndex: 'num_rows', sortable: true, renderer: Toc.content.ContentManager.FormatNumber},
-        { header: 'Chains', align: 'center', dataIndex: 'chain_cnt', sortable: true, renderer: Toc.content.ContentManager.FormatNumber},
-        { header: 'Compression', dataIndex: 'compression', renderer: renderStatus, align: 'center', sortable: true},
-        { header: 'Monitoring', dataIndex: 'monitoring', renderer: renderStatus, align: 'center', sortable: true},
-        { header: 'Logging', dataIndex: 'logging', renderer: renderStatus, align: 'center', sortable: true},
-        { id: 'last_analyzed', header: 'Last analyzed', dataIndex: 'last_analyzed', sortable: true, align: 'center'},
+        { id: 'owner', header: 'Owner', dataIndex: 'owner', sortable: true, align: 'center', width: 10},
+        { id: 'tablespace_name', header: 'Tablespace', dataIndex: 'tablespace_name', sortable: true, align: 'center', width: 10},
+        { id: 'segment_name', header: 'Table', dataIndex: 'segment_name', sortable: true, align: 'center', width: 15},
+        { id: 'partition_name', header: 'Partition', dataIndex: 'partition_name', sortable: true, align: 'center', width: 15},
+        { header: 'Size (MB)', align: 'center', dataIndex: 'size', sortable: true, renderer: Toc.content.ContentManager.FormatNumber, width: 10},
+        { header: 'Blocks', align: 'center', dataIndex: 'blocks', sortable: true, renderer: Toc.content.ContentManager.FormatNumber, width: 5},
+        { header: 'Rows', align: 'center', dataIndex: 'num_rows', sortable: true, renderer: Toc.content.ContentManager.FormatNumber, width: 5},
+        { header: 'Chains', align: 'center', dataIndex: 'chain_cnt', sortable: true, renderer: Toc.content.ContentManager.FormatNumber, width: 5},
+        { header: 'Compression', dataIndex: 'compression', renderer: renderStatus, align: 'center', sortable: true, width: 5},
+        { header: 'Monitoring', dataIndex: 'monitoring', renderer: renderStatus, align: 'center', sortable: true, width: 5},
+        { header: 'Logging', dataIndex: 'logging', renderer: renderStatus, align: 'center', sortable: true, width: 5},
+        { id: 'last_analyzed', header: 'Last analyzed', dataIndex: 'last_analyzed', sortable: true, align: 'center', width: 10},
         config.rowActions
     ]);
     config.autoExpandColumn = 'segment_name';
@@ -5541,13 +5496,20 @@ Toc.tablesGrid = function (config) {
         hideLabel: true
     });
 
+    var thisObj = this;
+
+    config.autoLoad = false;
+    config.db_host = config.host;
+    config.db_sid = config.sid;
+
+    config.tbsCombo = Toc.TbsCombo(config);
     config.schemasCombo = Toc.content.ContentManager.getDatabaseSchemasCombo(config);
 
     config.tbar = [
         {
             text: '',
             iconCls: 'refresh',
-            handler: this.onRefresh,
+            handler: this.onSearch,
             scope: this
         },
         {
@@ -5559,9 +5521,12 @@ Toc.tablesGrid = function (config) {
         '->',
         config.pBar,
         '->',
+        '-',
+        config.tbsCombo,
+        '-',
         config.schemasCombo
         ,
-        '->',
+        '-',
         config.txtSearch,
         ' ',
         {
@@ -5572,14 +5537,22 @@ Toc.tablesGrid = function (config) {
         }
     ];
 
-    var thisObj = this;
-
-    config.schemasCombo.getStore().load();
-
-    config.schemasCombo.on('select', function (combo, record, index) {
-        var schema = record.data.username;
-        thisObj.schema = schema;
-        //thisObj.refreshGrid(schema);
+    config.bbar = new Ext.PageToolbar({
+        pageSize: Toc.CONF.GRID_PAGE_SIZE,
+        store: config.ds,
+        steps: Toc.CONF.GRID_STEPS,
+        beforePageText: TocLanguage.beforePageText,
+        firstText: TocLanguage.firstText,
+        lastText: TocLanguage.lastText,
+        nextText: TocLanguage.nextText,
+        prevText: TocLanguage.prevText,
+        afterPageText: TocLanguage.afterPageText,
+        refreshText: TocLanguage.refreshText,
+        displayInfo: true,
+        displayMsg: TocLanguage.displayMsg,
+        emptyMsg: TocLanguage.emptyMsg,
+        prevStepText: TocLanguage.prevStepText,
+        nextStepText: TocLanguage.nextStepText
     });
 
     this.addEvents({'selectchange': true});
@@ -5587,6 +5560,15 @@ Toc.tablesGrid = function (config) {
 };
 
 Ext.extend(Toc.tablesGrid, Ext.grid.GridPanel, {
+    onSearch: function () {
+        var filter = this.txtSearch.getValue() || null;
+        var store = this.getStore();
+
+        store.baseParams['schema'] = this.schema || 'all';
+        store.baseParams['tbs'] = this.tbs || 'all';
+        store.baseParams['search'] = filter;
+        store.reload();
+    },
 
     onAdd: function () {
 
@@ -5624,117 +5606,110 @@ Ext.extend(Toc.tablesGrid, Ext.grid.GridPanel, {
                 break;
         }
 
-        Ext.MessageBox.confirm(
-            TocLanguage.msgWarningTitle,
-            'Souhaitez vous vraiment deplacer ce segment ? cette action peut prendre un peu de temps',
-            function (btn) {
-                if (btn == 'yes') {
-                    this.getEl().mask('Chargement des metadonnées ... veuillez patienter');
-                    Ext.Ajax.request({
-                        url: Toc.CONF.CONN_URL,
-                        params: {
-                            module: 'databases',
-                            action: action,
-                            db_user: this.db_user,
-                            db_pass: this.db_pass,
-                            db_port: this.db_port,
-                            db_host: this.host,
-                            db_sid: this.sid,
-                            owner: record.get('owner'),
-                            tbs: this.tbs,
-                            segment_type: 'TABLE',
-                            segment_name: record.get('segment_name'),
-                            partition_name: record.get('partition_name')
-                        },
-                        callback: function (options, success, response) {
-                            this.getEl().unmask();
-                            var result = Ext.decode(response.responseText);
+        this.getEl().mask('Chargement des metadonnées ... veuillez patienter');
+        Ext.Ajax.request({
+            url: Toc.CONF.CONN_URL,
+            params: {
+                module: 'databases',
+                action: action,
+                db_user: this.db_user,
+                db_pass: this.db_pass,
+                db_port: this.db_port,
+                db_host: this.host,
+                db_sid: this.sid,
+                owner: record.get('owner'),
+                tbs: this.tbs,
+                segment_type: 'TABLE',
+                segment_name: record.get('segment_name'),
+                partition_name: record.get('partition_name')
+            },
+            callback: function (options, success, response) {
+                this.getEl().unmask();
+                var result = Ext.decode(response.responseText);
 
-                            if (result.success == true) {
-                                var params = {
-                                    db_user: this.db_user,
-                                    db_pass: this.db_pass,
-                                    db_port: this.db_port,
-                                    db_host: this.host,
-                                    db_sid: this.sid,
-                                    segment_name: record.get('segment_name'),
-                                    segment_type: record.get('segment_type'),
-                                    partition_name: record.get('partition_name'),
-                                    owner: record.get('owner'),
-                                    panel: this,
-                                    tbs: this.tbs,
-                                    indexes: result.indexes,
-                                    description: 'Deplacement du segment ' + record.get('segment_name')
-                                };
+                if (result.success == true) {
+                    var params = {
+                        db_user: this.db_user,
+                        db_pass: this.db_pass,
+                        db_port: this.db_port,
+                        db_host: this.host,
+                        db_sid: this.sid,
+                        segment_name: record.get('segment_name'),
+                        segment_type: record.get('segment_type'),
+                        partition_name: record.get('partition_name'),
+                        owner: record.get('owner'),
+                        panel: this,
+                        tbs: this.tbs,
+                        indexes: result.indexes,
+                        description: 'Deplacement du segment ' + record.get('segment_name')
+                    };
 
-                                switch (record.get('segment_type')) {
-                                    case 'TABLE':
-                                        var dlg = new Toc.MoveSegmentDialog(params);
-                                        dlg.setTitle('Deplacement de la Table ' + record.get('segment_name') + ' du Tablespace ' + this.tbs);
+                    switch (record.get('segment_type')) {
+                        case 'TABLE':
+                            var dlg = new Toc.MoveSegmentDialog(params);
+                            dlg.setTitle('Deplacement de la Table ' + record.get('segment_name') + ' du Tablespace ' + this.tbs);
 
-                                        dlg.on('close', function () {
-                                            this.onRefresh();
-                                        }, this);
+                            dlg.on('close', function () {
+                                this.onRefresh();
+                            }, this);
 
-                                        dlg.show(params);
-                                        break;
+                            dlg.show(params);
+                            break;
 
-                                    case 'TABLE PARTITION':
-                                        var dlg = new Toc.MoveSegmentDialog(params);
-                                        dlg.setTitle('Deplacement de la Partition ' + record.get('partition_name') + ' du Tablespace ' + this.tbs);
+                        case 'TABLE PARTITION':
+                            var dlg = new Toc.MoveSegmentDialog(params);
+                            dlg.setTitle('Deplacement de la Partition ' + record.get('partition_name') + ' du Tablespace ' + this.tbs);
 
-                                        dlg.on('close', function () {
-                                            this.onRefresh();
-                                        }, this);
+                            dlg.on('close', function () {
+                                this.onRefresh();
+                            }, this);
 
-                                        dlg.show(params);
-                                        break;
+                            dlg.show(params);
+                            break;
 
-                                    case 'TABLE SUBPARTITION':
-                                        var dlg = new Toc.MoveSegmentDialog(params);
-                                        dlg.setTitle('Deplacement de la Sous Partition ' + record.get('partition_name') + ' du Tablespace ' + this.tbs);
+                        case 'TABLE SUBPARTITION':
+                            var dlg = new Toc.MoveSegmentDialog(params);
+                            dlg.setTitle('Deplacement de la Sous Partition ' + record.get('partition_name') + ' du Tablespace ' + this.tbs);
 
-                                        dlg.on('close', function () {
-                                            this.onRefresh();
-                                        }, this);
+                            dlg.on('close', function () {
+                                this.onRefresh();
+                            }, this);
 
-                                        dlg.show(params);
-                                        break;
+                            dlg.show(params);
+                            break;
 
-                                    case 'INDEX':
-                                        var dlg = new Toc.MoveSegmentDialog(params);
-                                        dlg.setTitle("Deplacement de l'index " + record.get('segment_name') + " du Tablespace " + this.tbs);
+                        case 'INDEX':
+                            var dlg = new Toc.MoveSegmentDialog(params);
+                            dlg.setTitle("Deplacement de l'index " + record.get('segment_name') + " du Tablespace " + this.tbs);
 
-                                        dlg.on('close', function () {
-                                            this.onRefresh();
-                                        }, this);
+                            dlg.on('close', function () {
+                                this.onRefresh();
+                            }, this);
 
-                                        dlg.show(params);
-                                        break;
+                            dlg.show(params);
+                            break;
 
-                                    case 'LOBSEGMENT':
-                                        var dlg = new Toc.MoveLobSegmentDialog(params);
-                                        dlg.setTitle("Deplacement du LOGSEGMENT " + record.get('segment_name') + " du Tablespace " + this.tbs);
+                        case 'LOBSEGMENT':
+                            var dlg = new Toc.MoveLobSegmentDialog(params);
+                            dlg.setTitle("Deplacement du LOGSEGMENT " + record.get('segment_name') + " du Tablespace " + this.tbs);
 
-                                        dlg.on('close', function () {
-                                            this.onRefresh();
-                                        }, this);
+                            dlg.on('close', function () {
+                                this.onRefresh();
+                            }, this);
 
-                                        dlg.show(params);
-                                        break;
+                            dlg.show(params);
+                            break;
 
-                                    default:
-                                        break;
-                                }
+                        default:
+                            break;
+                    }
 
-                            } else {
-                                Ext.MessageBox.alert(TocLanguage.msgErrTitle, result.feedback);
-                            }
-                        },
-                        scope: this
-                    });
+                } else {
+                    Ext.MessageBox.alert(TocLanguage.msgErrTitle, result.feedback);
                 }
-            }, this);
+            },
+            scope: this
+        });
     },
 
     onGather: function (record) {
@@ -5903,15 +5878,6 @@ Ext.extend(Toc.tablesGrid, Ext.grid.GridPanel, {
         var store = this.getStore();
 
         store.baseParams['schema'] = schema;
-        store.reload();
-    },
-
-    onSearch: function () {
-        var filter = this.txtSearch.getValue() || null;
-        var store = this.getStore();
-
-        store.baseParams['schema'] = this.schema;
-        store.baseParams['search'] = filter;
         store.reload();
     },
 
@@ -6643,16 +6609,17 @@ Ext.extend(Toc.JobGrid, Ext.grid.GridPanel, {
     }
 });
 
-Toc.DatabaseDashboardPanel = function (params) {
+Toc.AshPanel = function (params) {
     var that = this;
     config = {};
     config.params = params;
     config.region = 'center';
     config.border = true;
-    config.width = config.params.width || '50%';
+    //config.width = config.params.width || '50%';
     config.layout = 'column';
     config.cls = params.classs;
     config.title = params.label;
+    config.started = false;
     //config.header = false;
     //config.autoHeight = true;
     config.listeners = {
@@ -6663,52 +6630,103 @@ Toc.DatabaseDashboardPanel = function (params) {
         enable: function (comp) {
         },
         render: function (comp) {
-            this.buildItems(this.params);
+            //console.log('ash render');
         },
         afterrender: function (comp) {
+            //console.log('afterrender');
         },
         activate: function (panel) {
-            this.start();
+            //console.log('ash activate');
+            if (!that.activated) {
+                that.buildItems(that.params);
+            }
+
+            that.activated = true;
+
+            that.dbperf.setHeight(that.getInnerHeight()/2);
+            that.pnlSessions.setHeight(that.getInnerHeight()/2);
+            that.doLayout(true, true);
+
+            panel.start();
         },
         deactivate: function (panel) {
-            //console.log('deactivate');
-            this.stop();
+            //console.log('ash deactivate');
+            panel.stop();
+            //panel.removeAll(true);
         },
         destroy: function (panel) {
             //console.log('destroy');
-            this.stop();
+            panel.stop();
         },
         disable: function (panel) {
             //console.log('disable');
-            this.stop();
+            panel.stop();
         },
         remove: function (container, panel) {
             //console.log('remove');
-            this.stop();
+            that.stop();
         },
         removed: function (container, panel) {
             //console.log('removed');
-            this.stop();
+            that.stop();
+        },
+        resize: function (Component, adjWidth, adjHeight, rawWidth, rawHeight) {
+            if(Component.dbperf && Component.pnlSessions)
+            {
+                //console.debug(Component);
+                Component.dbperf.setHeight(Component.getInnerHeight()/2);
+                Component.pnlSessions.setHeight(Component.getInnerHeight()/2);
+                Component.doLayout(true, true);
+            }
         },
         scope: this
     };
 
-    Toc.DatabaseDashboardPanel.superclass.constructor.call(this, config);
+    config.tbar = [
+        {
+            text: '',
+            iconCls: this.started ? 'stop' : 'play',
+            handler: this.started ? that.stop : that.start,
+            scope: this
+        },
+        '-',
+        {
+            text: 'ASH',
+            iconCls: 'report',
+            handler: this.onAsh,
+            scope: this
+        },
+        '-',
+        {
+            text: 'ADDM',
+            iconCls: 'report',
+            handler: this.onAddm,
+            scope: this
+        },
+        '-',
+        {
+            text: 'AWR',
+            iconCls: 'awr',
+            handler: this.onAwr,
+            scope: this
+        }
+    ];
+
+    Toc.AshPanel.superclass.constructor.call(this, config);
 };
 
-Ext.extend(Toc.DatabaseDashboardPanel, Ext.Panel, {
+Ext.extend(Toc.AshPanel, Ext.Panel, {
     buildItems: function (params) {
+        //console.log('buildItems');
+        //console.debug(this);
         params.owner = this.owner;
-        params.width = '14%';
 
         var conf = {
-            status: 'up',
             width: '100%',
-            autoExpandColumn: 'event',
-            label: 'Waits',
-            body_height: '75px',
+            action: 'ash_waits',
+            label: 'ASH',
             freq: params.freq,
-            //hideHeaders: true,
+            sample_time : '',
             databases_id: params.databases_id,
             server_user: params.server_user,
             server_pass: params.server_pass,
@@ -6721,18 +6739,34 @@ Ext.extend(Toc.DatabaseDashboardPanel, Ext.Panel, {
             db_sid: params.sid,
             port: params.port,
             host: params.host,
-            sid: params.sid
+            sid: params.sid,
+            showLegend: true
         };
 
-        //this.dbperf = new Toc.TopEventsPanel(conf);
         this.dbperf = new Toc.TopEventsPanelCharts(conf);
-        //this.add(this.osperf);
         this.add(this.dbperf);
+
+        var node = params.node;
+        this.pnlSessions = new Toc.SessionsGrid({width: '100%',inAshPanel: true, label: node.attributes.label, databases_id: node.attributes.databases_id, sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
+        this.add(this.pnlSessions);
+        var that = this;
+
+        this.dbperf.on('zoomed',function(start,end){
+            console.log('zoomed ... start = ' start + ' : end = ' +end);
+            that.dbperf.stop();
+            that.pnlSessions.onStop();
+
+            var store = that.pnlSessions.getStore();
+            store.baseParams['start_time'] = start;
+            store.baseParams['end_time'] = end;
+            store.reload();
+        });
 
         var mem = {
             width: '20%',
             label: 'Swap',
             body_height: '75px',
+            //body_height: this.getInnerHeight()/5 + 'px',
             freq: params.freq * 5,
             //hideHeaders:true,
             databases_id: params.databases_id,
@@ -6750,13 +6784,14 @@ Ext.extend(Toc.DatabaseDashboardPanel, Ext.Panel, {
             sid: params.sid
         };
 
-        this.mem_usage = new Toc.MemCharts(mem);
-        this.add(this.mem_usage);
+        //this.mem_usage = new Toc.MemCharts(mem);
+        //this.add(this.mem_usage);
 
         var cpu = {
             width: '40%',
             label: 'CPU',
             body_height: '75px',
+            //body_height: this.getInnerHeight()/5 + 'px',
             freq: params.freq,
             //hideHeaders:true,
             databases_id: params.databases_id,
@@ -6774,13 +6809,14 @@ Ext.extend(Toc.DatabaseDashboardPanel, Ext.Panel, {
             sid: params.sid
         };
 
-        this.cpu_usage = new Toc.CpuCharts(cpu);
-        this.add(this.cpu_usage);
+        //this.cpu_usage = new Toc.CpuCharts(cpu);
+        //this.add(this.cpu_usage);
 
         var disk = {
             width: '40%',
             label: 'Disks (%)',
             body_height: '75px',
+            //body_height: this.getInnerHeight()/5 + 'px',
             freq: params.freq,
             //hideHeaders:true,
             databases_id: params.databases_id,
@@ -6798,13 +6834,14 @@ Ext.extend(Toc.DatabaseDashboardPanel, Ext.Panel, {
             sid: params.sid
         };
 
-        this.disk_usage = new Toc.DiskCharts(disk);
-        this.add(this.disk_usage);
+        //this.disk_usage = new Toc.DiskCharts(disk);
+        //this.add(this.disk_usage);
 
         var net = {
             width: '40%',
             label: 'Net (MB/s)',
             body_height: '75px',
+            //body_height: this.getInnerHeight()/5 + 'px',
             freq: params.freq,
             //hideHeaders:true,
             databases_id: params.databases_id,
@@ -6822,37 +6859,764 @@ Ext.extend(Toc.DatabaseDashboardPanel, Ext.Panel, {
             sid: params.sid
         };
 
-        this.net_usage = new Toc.NetCharts(net);
-        this.add(this.net_usage);
+        //this.net_usage = new Toc.NetCharts(net);
+        //this.add(this.net_usage);
 
         params.freq = params.freq * 5;
         params.width = '30%';
         params.body_height = '75px';
-        this.tbs = new Toc.TopTbsPanel(params);
-        this.add(this.tbs);
+        //params.body_height = this.getInnerHeight()/5 + 'px';
+        //this.tbs = new Toc.TopTbsPanel(params);
+        //this.add(this.tbs);
 
-        this.fs = new Toc.TopFsPanel(params);
-        this.add(this.fs);
-        this.start();
+        //this.fs = new Toc.TopFsPanel(params);
+        //this.add(this.fs);
+
+        this.doLayout(true, true);
+        //this.start();
     },
 
     start: function () {
+        //console.log('starting ...');
         this.dbperf.start();
-        this.tbs.start();
-        this.fs.start();
-        this.mem_usage.start();
-        this.cpu_usage.start();
-        this.disk_usage.start();
-        this.net_usage.start();
+        this.pnlSessions.onStart();
+        this.topToolbar.items.items[0].setHandler(this.stop, this);
+        this.topToolbar.items.items[0].setIconClass('stop');
+        this.started = true;
     },
 
     stop: function () {
+        //console.log('stopping ...');
         this.dbperf.stop();
-        this.tbs.stop();
-        this.fs.stop();
-        this.mem_usage.stop();
-        this.cpu_usage.stop();
-        this.disk_usage.stop();
-        this.net_usage.stop();
+        this.pnlSessions.onStop();
+        this.topToolbar.items.items[0].setHandler(this.start, this);
+        this.topToolbar.items.items[0].setIconClass('play');
+        this.started = false;
+    },
+    onAsh: function () {
+        this.getEl().mask('Creation du job ...');
+        Ext.Ajax.request({
+            url: Toc.CONF.CONN_URL,
+            params: {
+                module: 'databases',
+                action: 'run_ash',
+                db_user: this.params.db_user,
+                db_pass: this.params.db_pass,
+                db_port: this.params.db_port,
+                db_host: this.params.host,
+                startValue: this.dbperf.startValue,
+                endValue: this.dbperf.endValue,
+                db_sid: this.params.sid
+            },
+            callback: function (options, success, response) {
+                this.getEl().unmask();
+                var result = Ext.decode(response.responseText);
+
+                if (result.success == true) {
+                    if (result.task_id) {
+                        var request = {
+                            status: "run",
+                            task_id: result.task_id,
+                            comment: result.comment
+                        };
+
+                        Toc.downloadJobReport(request, this);
+
+                    }
+                    else {
+                        Ext.MessageBox.alert(TocLanguage.msgErrTitle, "No task_id !!!");
+                    }
+                }
+                else {
+                    Ext.MessageBox.alert(TocLanguage.msgErrTitle, result.feedback);
+                }
+            },
+            scope: this
+        });
+    },
+    onAddm: function () {
+        this.getEl().mask('Creation du job ...');
+        Ext.Ajax.request({
+            url: Toc.CONF.CONN_URL,
+            params: {
+                module: 'databases',
+                action: 'run_addm',
+                db_user: this.params.db_user,
+                db_pass: this.params.db_pass,
+                db_port: this.params.db_port,
+                db_host: this.params.host,
+                db_sid: this.params.sid
+            },
+            callback: function (options, success, response) {
+                this.getEl().unmask();
+                var result = Ext.decode(response.responseText);
+
+                if (result.success == true) {
+                    if (result.task_id) {
+                        var request = {
+                            status: "run",
+                            task_id: result.task_id,
+                            comment: result.comment
+                        };
+
+                        Toc.downloadJobReport(request, this);
+
+                    }
+                    else {
+                        Ext.MessageBox.alert(TocLanguage.msgErrTitle, "No task_id !!!");
+                    }
+                }
+                else {
+                    Ext.MessageBox.alert(TocLanguage.msgErrTitle, result.feedback);
+                }
+            },
+            scope: this
+        });
+    },
+    onAwr: function () {
+        var params = {
+            module: 'databases',
+            action: 'run_awr',
+            db_user: this.params.db_user,
+            db_pass: this.params.db_pass,
+            db_port: this.params.db_port,
+            db_host: this.params.host,
+            db_sid: this.params.sid
+        };
+
+        var dialog = new Toc.AWRDialog(params);
+        dialog.show();
+    }
+});
+
+Toc.ParameterGrid = function (config) {
+    var that = this;
+    config = config || {};
+    //config.autoHeight = true;
+    config.loadMask = true;
+    config.title = 'Parametres';
+    config.border = true;
+    config.viewConfig = {emptyText: TocLanguage.gridNoRecords, forceFit: true};
+    config.listeners = {
+        activate: function (panel) {
+            if (!this.activated) {
+                this.getStore().load();
+                this.activated = true;
+            }
+        },
+        scope: this
+    };
+
+    config.ds = new Ext.data.Store({
+        url: Toc.CONF.CONN_URL,
+        baseParams: {
+            module: 'databases',
+            action: 'list_parameters',
+            db_user: config.db_user,
+            db_pass: config.db_pass,
+            db_port: config.db_port,
+            scope: config.scope,
+            db_host: config.host,
+            db_sid: config.sid
+        },
+        reader: new Ext.data.JsonReader({
+            root: Toc.CONF.JSON_READER_ROOT,
+            totalProperty: Toc.CONF.JSON_READER_TOTAL_PROPERTY,
+            id: 'num'
+        }, [
+            'num',
+            'name',
+            'display_value',
+            'description'
+        ]),
+        autoLoad: false
+    });
+
+    config.cm = new Ext.grid.ColumnModel([
+        { id: 'name', header: 'Name', dataIndex: 'name', sortable: true, align: 'left', width: 15},
+        { id: 'display_value', header: 'Value', dataIndex: 'display_value', sortable: false, align: 'left', width: 35},
+        { id: 'description', header: 'Description', dataIndex: 'description', align: 'left', width: 50}
+    ]);
+    config.autoExpandColumn = 'name';
+    config.stripeRows = true;
+
+    config.txtSearch = new Ext.form.TextField({
+        width: 100,
+        hideLabel: true
+    });
+
+    config.tbar = [
+        {
+            text: '',
+            iconCls: 'refresh',
+            handler: this.onRefresh,
+            scope: this
+        },
+        '->',
+        config.txtSearch,
+        ' ',
+        {
+            text: '',
+            iconCls: 'search',
+            handler: this.onSearch,
+            scope: this
+        }
+    ];
+
+    var thisObj = this;
+
+    this.addEvents({'selectchange': true});
+    Toc.ParameterGrid.superclass.constructor.call(this, config);
+};
+
+Ext.extend(Toc.ParameterGrid, Ext.grid.GridPanel, {
+
+    onRefresh: function () {
+        this.refreshGrid();
+    },
+
+    refreshGrid: function (schema) {
+        var store = this.getStore();
+        store.reload();
+    },
+
+    onSearch: function () {
+        var filter = this.txtSearch.getValue() || null;
+        var store = this.getStore();
+        store.baseParams['search'] = filter;
+        store.reload();
+    }
+});
+
+Toc.AlertLogPanel = function (config) {
+    config = config || {};
+
+    config.layout = 'fit';
+    config.border = false;
+    config.title = 'AlertLog';
+    config.listeners = {
+        activate: function (panel) {
+            if (panel.items) {
+                panel.removeAll(true);
+            }
+
+            panel.getEl().mask('Chargement Metadata ...');
+            Ext.Ajax.request({
+                url: Toc.CONF.CONN_URL,
+                params: {
+                    module: 'databases',
+                    action: 'get_alertlog',
+                    db_user: config.db_user,
+                    db_pass: config.db_pass,
+                    db_host: config.host,
+                    db_sid: config.sid,
+                    port: config.server_port,
+                    pass: config.server_pass,
+                    user: config.server_user
+                },
+                callback: function (options, success, response) {
+                    panel.getEl().unmask();
+                    var result = Ext.decode(response.responseText);
+
+                    var rec = result.records[0];
+
+                    if (rec.size > 0) {
+                        var logsGrid = new Toc.content.logfileGrid({typ: 'alert_log', sid: config.sid, host: config.host, db_port: config.db_port, db_pass: config.db_pass, db_user: config.db_user, owner: panel, mainPanel: panel});
+                        panel.add(logsGrid);
+                        panel.doLayout();
+
+                        var json =
+                        {
+                            logs_id: -1,
+                            sid: config.sid,
+                            host: config.host,
+                            db_port: config.db_port,
+                            db_pass: config.db_pass,
+                            db_user: config.db_user,
+                            port: config.server_port,
+                            pass: config.server_pass,
+                            user: config.server_user,
+                            url: rec.url,
+                            lines: rec.lines
+                        };
+
+                        logsGrid.refreshGrid(json);
+                    }
+                    else {
+
+                    }
+                },
+                scope: this
+            });
+        },
+        scope: this
+    };
+
+    //config.pnlFiles = new Toc.content.LogsPanel({host: config.host, server_port: config.server_port, server_pass: config.server_pass, server_user: config.server_user, servers_id: config.servers_id, content_id: config.content_id, content_type: 'servers', owner: Toc.content.ContentManager, mainPanel: this});
+    //config.txtLog = new Ext.form.TextArea({owner: config.owner, mainPanel: this,region:'center'});
+
+    //config.pnlFiles.on('selectchange', this.onNodeSelectChange, this);
+
+    Toc.AlertLogPanel.superclass.constructor.call(this, config);
+};
+
+Ext.extend(Toc.AlertLogPanel, Ext.Panel, {
+});
+
+Toc.downloadJobReport = function (request, scope) {
+    var status = request.status;
+    var action = "get_jobStatus";
+
+    switch (status) {
+        case "run":
+            action = "get_jobStatus";
+            break;
+
+        case "error":
+            Ext.MessageBox.alert(TocLanguage.msgErrTitle, request.comments);
+            return;
+            break;
+        case "complete":
+            action = "download_report";
+            break;
+        default:
+            action = "get_jobStatus";
+            break;
+    }
+
+    scope.getEl().mask(request.comments);
+
+    Ext.Ajax.request({
+        url: Toc.CONF.CONN_URL,
+        params: {
+            module: 'databases',
+            action: action,
+            task_id: request.task_id,
+            comments: request.comments
+        },
+        callback: function (options, success, response) {
+            if (response.responseText) {
+                result = Ext.decode(response.responseText);
+                switch (action) {
+                    case 'download_report':
+                        scope.getEl().unmask();
+                        url = result.file_name;
+                        params = "height=300px,width=340px,top=50px,left=165px,status=yes,toolbar=no,menubar=no,location=no,scrollbars=yes";
+                        window.open(url, "", params);
+                        //scope.buttons[0].enable();
+                        break;
+                    default:
+                        var req = result.records[0];
+                        //console.debug(req);
+                        if (req.task_id) {
+                            scope.task_id = req.task_id;
+                            scope.getEl().unmask();
+                            Toc.downloadJobReport(req, scope);
+                        }
+                        else {
+                            Ext.MessageBox.alert(TocLanguage.msgErrTitle, "No task id specified !!!");
+                        }
+
+                        break;
+                }
+            }
+            else {
+                Toc.downloadJobReport(request, scope);
+            }
+        },
+        scope: scope
+    });
+};
+
+Toc.tbsGrid = function (config) {
+    var that = this;
+    config = config || {};
+    //config.region = 'center';
+    config.loadMask = true;
+    config.title = 'Tablespaces';
+    config.border = true;
+    config.viewConfig = {emptyText: TocLanguage.gridNoRecords};
+
+    config.listeners = {
+        activate: function (panel) {
+            if (!this.activated) {
+                this.activated = true;
+                this.getStore().load();
+            }
+        },
+        'rowclick': this.onRowClick,
+        scope: this
+    };
+
+    config.ds = new Ext.data.Store({
+        url: Toc.CONF.CONN_URL,
+        baseParams: {
+            module: 'databases',
+            action: 'list_tbs',
+            db_user: config.db_user,
+            db_pass: config.db_pass,
+            db_port: config.db_port,
+            db_host: config.host,
+            db_sid: config.sid
+        },
+        reader: new Ext.data.JsonReader({
+            root: Toc.CONF.JSON_READER_ROOT,
+            totalProperty: Toc.CONF.JSON_READER_TOTAL_PROPERTY,
+            id: 'tablespace_name'
+        }, [
+            'tablespace_name',
+            'status',
+            'contents',
+            'extent_management',
+            'bigfile',
+            {name: 'megs_alloc', type: 'int'},
+            {name: 'free', type: 'int'},
+            {name: 'megs_used', type: 'int'},
+            {name: 'pct_free', type: 'int'},
+            {name: 'pct_used', type: 'int'},
+            {name: 'total_pct_used', type: 'int'},
+            {name: 'max', type: 'int'}
+        ]),
+        autoLoad: false
+    });
+
+    renderStatus = function (status) {
+        if (status == 'ONLINE') {
+            return '<img class="img-button" src="images/icon_status_green.gif" />&nbsp;<img class="img-button btn-status-off" style="cursor: pointer" src="images/icon_status_red_light.gif" />';
+        } else {
+            return '<img class="img-button btn-status-on" style="cursor: pointer" src="images/icon_status_green_light.gif" />&nbsp;<img class="img-button" src= "images/icon_status_red.gif" />';
+        }
+    };
+
+    config.rowActions = new Ext.ux.grid.RowActions({
+        actions: [
+            {iconCls: 'icon-edit-record', qtip: TocLanguage.tipEdit},
+            {iconCls: 'icon-delete-record', qtip: TocLanguage.tipDelete}
+        ],
+        widthIntercept: Ext.isSafari ? 4 : 2
+    });
+    config.rowActions.on('action', this.onRowAction, this);
+    config.plugins = config.rowActions;
+
+    config.sm = new Ext.grid.CheckboxSelectionModel();
+    config.cm = new Ext.grid.ColumnModel([
+        config.sm,
+        { id: 'tablespace_name', header: 'Nom', dataIndex: 'tablespace_name', sortable: true},
+        { header: '% Utilisation', align: 'center', dataIndex: 'total_pct_used', renderer: Toc.content.ContentManager.renderProgress, sortable: true},
+        { header: 'Taille (MB)', align: 'center', dataIndex: 'max', sortable: true, renderer: Toc.content.ContentManager.FormatNumber},
+        { header: 'Libre (MB)', align: 'center', dataIndex: 'free', sortable: true, renderer: Toc.content.ContentManager.FormatNumber},
+        { header: 'Utilise (MB)', align: 'center', dataIndex: 'megs_used', sortable: true, renderer: Toc.content.ContentManager.FormatNumber},
+        { id: 'status', header: 'Status', align: 'center', dataIndex: 'status', renderer: renderStatus},
+        config.rowActions
+    ]);
+    config.autoExpandColumn = 'tablespace_name';
+    config.stripeRows = true;
+
+    config.txtSearch = new Ext.form.TextField({
+        width: 100,
+        hideLabel: true
+    });
+
+    config.tbar = [
+        {
+            text: '',
+            iconCls: 'refresh',
+            handler: this.onRefresh,
+            scope: this
+        },
+        '->',
+        config.txtSearch,
+        ' ',
+        {
+            text: '',
+            iconCls: 'search',
+            handler: this.onSearch,
+            scope: this
+        }
+    ];
+
+    var thisObj = this;
+
+    this.addEvents({'selectchange': true});
+    Toc.tbsGrid.superclass.constructor.call(this, config);
+};
+
+Ext.extend(Toc.tbsGrid, Ext.grid.GridPanel, {
+
+    onAdd: function () {
+
+    },
+
+    onDelete: function (record) {
+        var tbs = record.get('tablespace_name');
+
+        Ext.MessageBox.confirm(
+            TocLanguage.msgWarningTitle,
+            'Voulez-vous vraiment supprimer cet espace logique ? Cette action est irreversible !!!',
+            function (btn) {
+                if (btn == 'yes') {
+                    Ext.Ajax.request({
+                        url: Toc.CONF.CONN_URL,
+                        params: {
+                            module: 'databases',
+                            action: 'drop_tablespace',
+                            db_user: this.db_user,
+                            db_pass: this.db_pass,
+                            db_port: this.db_port,
+                            db_host: this.host,
+                            db_sid: this.sid,
+                            tablespace_name: tbs
+                        },
+                        callback: function (options, success, response) {
+                            var result = Ext.decode(response.responseText);
+
+                            if (result.success == true) {
+                                this.owner.app.showNotification({title: TocLanguage.msgSuccessTitle, html: result.feedback});
+                                this.onRefresh();
+                            } else {
+                                Ext.MessageBox.alert(TocLanguage.msgErrTitle, result.feedback);
+                            }
+                        },
+                        scope: this
+                    });
+                }
+            }, this);
+    },
+
+    setPermissions: function (permissions) {
+        this.bottomToolbar.items.items[0].disable();
+        this.bottomToolbar.items.items[2].disable();
+
+        this.topToolbar.items.items[0].disable();
+        this.topToolbar.items.items[2].disable();
+        if (permissions) {
+            if (permissions.can_write == 1 || permissions.can_modify == '') {
+                this.bottomToolbar.items.items[0].enable();
+                this.topToolbar.items.items[0].enable();
+            }
+            if (permissions.can_modify == '') {
+                this.bottomToolbar.items.items[2].enable();
+                this.topToolbar.items.items[2].enable();
+            }
+        }
+    },
+
+    onEdit: function (record) {
+        var params = {
+            server_user: this.server_user,
+            server_pass: this.server_pass,
+            server_port: this.server_port,
+            server_typ: this.server_typ,
+            host: this.host,
+            db_port: this.port,
+            db_user: this.db_user,
+            db_pass: this.db_pass,
+            db_host: this.host,
+            db_sid: this.sid,
+            file_id: -1,
+            tbs: record.get("tablespace_name")
+        };
+
+        var dlg = new Toc.TbsBrowser(params);
+        dlg.setTitle(this.label + ' : ' + record.get("tablespace_name"));
+
+        dlg.on('close', function () {
+            this.onRefresh();
+        }, this);
+
+        dlg.show(params, this.owner);
+    },
+
+    onRefresh: function () {
+        this.getStore().reload();
+    },
+
+    refreshGrid: function (categoriesId) {
+        var permissions = this.mainPanel.getCategoryPermissions();
+        var store = this.getStore();
+
+        store.baseParams['permissions'] = permissions.can_read + ',' + permissions.can_write + ',' + permissions.can_modify + ',' + permissions.can_publish;
+        store.baseParams['categories_id'] = categoriesId;
+        this.categoriesId = categoriesId;
+        store.reload();
+    },
+
+    onSearch: function () {
+        var categoriesId = this.cboCategories.getValue() || null;
+        var filter = this.txtSearch.getValue() || null;
+        var store = this.getStore();
+
+        store.baseParams['current_category_id'] = categoriesId;
+        store.baseParams['search'] = filter;
+        store.reload();
+    },
+
+    onRowAction: function (grid, record, action, row, col) {
+        switch (action) {
+
+            case 'icon-edit-record':
+                this.onEdit(record);
+                break;
+            case 'icon-delete-record':
+                this.onDelete(record);
+                break;
+        }
+    },
+
+    setTbs: function (tablespace_name) {
+        this.fireEvent('selectchange', tablespace_name);
+    },
+
+    onClick: function (e, target) {
+        var t = e.getTarget();
+        var v = this.view;
+        var row = v.findRowIndex(t);
+        var action = false;
+
+        if (row !== false) {
+            var btn = e.getTarget(".img-button");
+
+            if (btn) {
+                action = btn.className.replace(/img-button btn-/, '').trim();
+            }
+            else {
+                var sel = this.getStore().getAt(row);
+                this.setTbs(sel.json.tablespace_name);
+            }
+
+            if (action != 'img-button') {
+                var tbs = this.getStore().getAt(row).get('tablespace_name');
+                var module = 'setTbstatus';
+
+                switch (action) {
+                    case 'status-off':
+                    case 'status-on':
+                        flag = (action == 'status-on') ? 'ONLINE' : 'OFFLINE';
+                        this.onAction(module, tbs, flag);
+                        break;
+                }
+            }
+        }
+    },
+
+    onRowClick: function (grid, index, obj) {
+        var item = grid.getStore().getAt(index);
+        this.fireEvent('selectchange', item);
+    },
+
+    onAction: function (module, tbs, flag) {
+        Toc.setTbsStatus(this, flag, tbs);
+    }
+});
+
+Toc.SharedPoolPanel = function (params) {
+    var that = this;
+    config = {};
+    config.params = params;
+    config.region = 'center';
+    config.border = true;
+    config.layout = 'column';
+    config.title = params.label;
+    config.started = false;
+    //config.header = false;
+    //config.autoHeight = true;
+    config.listeners = {
+        show: function (comp) {
+            //console.log('pnlSqlAreaUsage show');
+        },
+        added: function (index) {
+        },
+        enable: function (comp) {
+            //console.log('pnlSqlAreaUsage enable');
+        },
+        render: function (comp) {
+            //console.log('pnlSqlAreaUsage render');
+        },
+        afterrender: function (comp) {
+            //console.log('afterrender');
+            //console.log('pnlSqlAreaUsage afterrender');
+        },
+        activate: function (panel) {
+            //console.log('pnlSqlAreaUsage activate');
+            if (!that.activated) {
+                that.buildItems(that.params);
+            }
+
+            that.activated = true;
+
+            //that.pnlSqlAreaUsage.setHeight(that.getInnerHeight());
+            //that.pnlParameters.setHeight(that.getInnerHeight());
+            //that.doLayout(true, true);
+            //that.pnlSql.setHeight(that.getInnerHeight()/2);
+
+            that.pnlSqlAreaUsage.getStore().reload();
+        },
+        deactivate: function (panel) {
+            //console.log('ash deactivate');
+            //panel.removeAll(true);
+        },
+        destroy: function (panel) {
+            //console.log('destroy');
+        },
+        disable: function (panel) {
+            //console.log('disable');
+        },
+        remove: function (container, panel) {
+            //console.log('remove');
+        },
+        removed: function (container, panel) {
+            //console.log('removed');
+        },
+        resize: function (Component, adjWidth, adjHeight, rawWidth, rawHeight) {
+            if(that.pnlSql && that.pnlSqlAreaUsage)
+            {
+                that.pnlSqlAreaUsage.setHeight(that.getInnerHeight()/2);
+                that.pnlParameters.setHeight(that.getInnerHeight()/2);
+                that.pnlSql.setHeight(that.getInnerHeight()/2);
+
+                that.doLayout(true, true);
+            }
+        },
+        scope: this
+    };
+
+    //config.items = [config.pnlSqlAreaUsage,config.pnlSql];
+
+    Toc.SharedPoolPanel.superclass.constructor.call(this, config);
+};
+
+Ext.extend(Toc.SharedPoolPanel, Ext.Panel, {
+    buildItems: function (params) {
+        console.log('pnlSqlAreaUsage buildItems');
+        var that = this;
+
+        var node = params.node;
+
+        that.pnlParameters = new Toc.ParameterGrid({columnWidth : 0.4,scope : 'shared_pool',sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner, server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, typ: node.attributes.typ});
+        that.pnlSqlAreaUsage = new Toc.SqlAreaUsageGrid({columnWidth : 0.6,sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
+        that.pnlSql = new Toc.SqlGrid({columnWidth : 1,label: node.attributes.label, databases_id: node.attributes.databases_id, sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
+
+        that.pnlSqlAreaUsage.on('rowclick', function (grid, rowIndex, eventObject) {
+
+                var record = grid.getStore().getAt(rowIndex);
+                //console.debug(record);
+                var store = that.pnlSql.getStore();
+                store.baseParams['user_id'] = record.data.user_id;
+                that.add(that.pnlSql);
+                //that.pnlSqlAreaUsage.setHeight(that.getInnerHeight()/2);
+                //that.pnlParameters.setHeight(that.getInnerHeight()/2);
+                //that.pnlSql.setHeight(that.getInnerHeight()/2);
+                //that.pnlSql.show();
+                //that.doLayout(true, true);
+                store.reload();
+            }
+        );
+
+        that.add(that.pnlSqlAreaUsage);
+        that.add(that.pnlParameters);
+        that.add(that.pnlSql);
+        that.doLayout(true, true);
+        that.pnlSqlAreaUsage.onRefresh();
+        that.pnlParameters.getStore().load();
     }
 });

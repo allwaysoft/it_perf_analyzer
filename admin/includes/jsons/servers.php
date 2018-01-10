@@ -1028,69 +1028,93 @@ class toC_Json_Servers
         $url = $_REQUEST['url'];
         $count = $_REQUEST['count'];
         $search = $_REQUEST['search'];
+        $typ = $_REQUEST['typ'];
 
         $ssh = new Net_SSH2($host, $port);
         $records = array();
 
         if (empty($ssh->server_identifier)) {
-            $_SESSION['LAST_ERROR'] = "Impossible de se connecter au serveur, veuillez contacter votre administrateur systeme";
-            return false;
+            $records[] = array('lines_id' => 0,
+                'row' => "Impossible de se connecter au serveur, veuillez contacter votre administrateur systeme"
+            );
         } else {
             if (!$ssh->login($user, $pass)) {
-                $_SESSION['LAST_ERROR'] = 'Compte ou mot de passe invalide';
+                $records[] = array('lines_id' => 0,
+                    'row' => "Compte ou mot de passe invalide"
+                );
             } else {
                 $ssh->disableQuietMode();
                 $cmd = "ls " . $url;
                 $resp = trim($ssh->exec($cmd));
 
                 if ($resp != $url) {
-                    $_SESSION['LAST_ERROR'] = 'Fichier inexistant sur ce serveur';
-                    return false;
-                }
-
-                $limit = empty($_REQUEST['limit']) ? 1000 : $_REQUEST['limit'];
-                //$start = empty($_REQUEST['start']) ? ($count - $limit) : $_REQUEST['start'];
-                $start = empty($_REQUEST['start']) ? 0 : $_REQUEST['start'];
-
-                $file = '/dev/shm/' . substr(md5(rand()), 0, 7) . '.log';
-                if (!empty($search)) {
-                    $cmd = 'strings ' . $url . ' | grep -i ' . $search . ' > ' . $file;
-                    $resp = $ssh->exec($cmd);
-                    $url = $file;
-                    $start = 0;
-                } else {
-                    $cmd = 'strings ' . $url . ' > ' . $file;
-                    $resp = $ssh->exec($cmd);
-                    $url = $file;
-                }
-
-                $cmd = "wc -l " . $url . " |awk '{print $1'}";
-                $resp = trim($ssh->exec($cmd));
-
-                $count = (int)$resp;
-
-                $end = $start + $limit;
-
-                $out = '/dev/shm/' . substr(md5(rand()), 0, 7) . '.log';
-                $cmd = "awk 'NR >= " . $start . " && NR <= " . $end . "' " . $url . " > " . $out;
-                $resp = $ssh->exec($cmd);
-
-                $cmd = "cat " . $out;
-                $resp = $ssh->exec($cmd);
-
-                $rows = explode("\n", $resp);
-
-                $index = 0;
-                foreach ($rows as $row) {
-                    $records[] = array('lines_id' => $index,
-                        'row' => $row
+                    $records[] = array('lines_id' => 0,
+                        'row' => "Fichier inexistant sur ce serveur"
                     );
+                }
+                else
+                {
+                    $limit = empty($_REQUEST['limit']) ? 1000 : $_REQUEST['limit'];
+                    //$start = empty($_REQUEST['start']) ? ($count - $limit) : $_REQUEST['start'];
+                    $start = empty($_REQUEST['start']) ? 0 : $_REQUEST['start'];
 
-                    $index++;
+                    $file = '/dev/shm/' . substr(md5(rand()), 0, 7) . '.log';
+                    if (!empty($search)) {
+                        $cmd = 'strings ' . $url . ' | grep -i ' . $search . ' > ' . $file;
+                        $ssh->exec($cmd);
+                        $url = $file;
+                        $start = 0;
+                    } else {
+                        $cmd = 'strings ' . $url . ' > ' . $file;
+                        $ssh->exec($cmd);
+                        $url = $file;
+                    }
+
+                    $cmd = "wc -l " . $url . " |awk '{print $1'}";
+                    $resp = trim($ssh->exec($cmd));
+
+                    $count = (int)$resp;
+
+                    if($start >= $count)
+                    {
+                        $start = $count - $limit;
+                    }
+
+                    $end = $start + $limit;
+
+                    $out = '/dev/shm/' . substr(md5(rand()), 0, 7) . '.log';
+                    $cmd = "awk 'NR >= " . $start . " && NR <= " . $end . "' " . $url . " > " . $out;
+                    $ssh->exec($cmd);
+
+                    $cmd = "cat " . $out;
+                    $resp = $ssh->exec($cmd);
+
+                    $rows = explode("\n", $resp);
+
+                    //var_dump($rows);
+
+                    $index = 0;
+                    foreach ($rows as $row) {
+                        if(strpos(strtolower($row), 'unable') !== false || strpos(strtolower($row), 'suspended') !== false || strpos(strtolower($row), 'aborted') !== false || strpos(strtolower($row), 'error') !== false || strpos(strtolower($row), 'ora-') !== false || strpos(strtolower($row), 'failure') !== false || strpos(strtolower($row), 'tns-') !== false || strpos(strtolower($row), 'failed') !== false || strpos(strtolower($row), 'cannot') !== false)
+                        {
+                            $records[] = array('lines_id' => $index,
+                                'row' => "<div style='white-space : normal'><span style='color:#ff0000;'>" . $row . "</span></div>"
+                            );
+                        }
+                        else
+                        {
+                            $records[] = array('lines_id' => $index,
+                                'row' => '</span><div style = "white-space : normal">' . $row . '</div>'
+                            );
+                        }
+
+                        $index++;
+                    }
+
+                    $cmd = "rm -f " . $out . " " . $file;
+                    $ssh->exec($cmd);
                 }
 
-                $cmd = "rm -f " . $out . " " . $file;
-                $ssh->exec($cmd);
                 $ssh->disconnect();
             }
         }
@@ -2863,7 +2887,7 @@ WHERE delta_fs_usage.start_date = (select max(start_date) from delta_fs_usage wh
             } else {
                 $ssh->disableQuietMode();
 
-                $QList = $osC_Database->query('select a.*, cd.*,c.*, atoc.*,s.host,s.user,s.pass,s.port from :table_logs a left join :table_content c on a.logs_id = c.content_id left join :table_servers s on a.servers_id = s.servers_id  left join  :table_content_description cd on a.logs_id = cd.content_id left join :table_content_to_categories atoc on atoc.content_id = a.logs_id  where cd.language_id = :language_id and atoc.content_type = "logs" and c.content_type = "logs" and a.content_id = :content_id and a.content_type = :content_type and cd.content_type = "logs"');
+                $QList = $osC_Database->query("select a.*, cd.*,c.*, atoc.*,s.host,s.user,s.pass,s.port from :table_logs a left join :table_content c on a.logs_id = c.content_id left join :table_servers s on a.servers_id = s.servers_id  left join  :table_content_description cd on a.logs_id = cd.content_id left join :table_content_to_categories atoc on atoc.content_id = a.logs_id  where cd.language_id = :language_id and atoc.content_type = 'logs' and c.content_type = 'logs' and a.content_id = :content_id and a.content_type = :content_type and cd.content_type = 'logs'");
 
                 if ($current_category_id != 0) {
                     $QList->appendQuery('and atoc.categories_id = :categories_id ');
@@ -2878,7 +2902,7 @@ WHERE delta_fs_usage.start_date = (select max(start_date) from delta_fs_usage wh
                 $QList->appendQuery('order by cd.content_name ');
                 $QList->bindValue(':content_type', $_REQUEST['content_type']);
                 $QList->bindInt(':content_id', $_REQUEST['content_id']);
-                $QList->bindTable(':table_logs', TABLE_LOGS);
+                $QList->bindTable(':table_logs', 'delta_log');
                 $QList->bindTable(':table_servers', TABLE_SERVERS);
                 $QList->bindTable(':table_content', TABLE_CONTENT);
                 $QList->bindTable(':table_content_description', TABLE_CONTENT_DESCRIPTION);

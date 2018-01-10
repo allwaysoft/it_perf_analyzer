@@ -580,7 +580,7 @@ Toc.logPanel = function (config) {
         scope: this
     };
 
-    config.pnlFiles = new Toc.content.LogsPanel({host: config.host, server_port: config.server_port, server_pass: config.server_pass, server_user: config.server_user, servers_id: config.servers_id, content_id: config.content_id, content_type: 'databases', owner: Toc.content.ContentManager, mainPanel: this});
+    config.pnlFiles = new Toc.content.LogsPanel({host: config.host, server_port: config.server_port, server_pass: config.server_pass, server_user: config.server_user, servers_id: config.servers_id, content_id: config.content_id, content_type: 'servers', owner: Toc.content.ContentManager, mainPanel: this});
     //config.txtLog = new Ext.form.TextArea({owner: config.owner, mainPanel: this,region:'center'});
     config.logsGrid = new Toc.content.logfileGrid({owner: config.owner, mainPanel: this});
 
@@ -1108,6 +1108,7 @@ Toc.TopFsPanel = function (config) {
     config.region = 'center';
     //config.width = this.params.width ||'50%';
     config.count = 0;
+    config.try = 0;
     config.reqs = 0;
     config.title = 'FS';
     config.label = 'FS';
@@ -1154,6 +1155,7 @@ Toc.TopFsPanel = function (config) {
             },
             load: function (store, records, opt) {
                 that.reqs--;
+                that.try = 0;
                 that.setTitle(that.label);
             },
             beforeload: function (store, opt) {
@@ -1238,13 +1240,20 @@ Toc.TopFsPanel = function (config) {
 
 Ext.extend(Toc.TopFsPanel, Ext.grid.GridPanel, {
     refreshData: function (scope) {
-        scope.setTitle(scope.title + '.');
         if (scope && scope.started) {
+            scope.try++;
+            scope.setTitle(scope.title + '.');
+
             if (scope.reqs == 0) {
                 var store = this.getStore();
                 scope.reqs++;
-                scope.setTitle(scope.label + ' .');
                 store.load();
+            }
+
+            if(scope.try > 10)
+            {
+                scope.setTitle(scope.label);
+                scope.try = 0;
             }
         }
     },
@@ -1302,6 +1311,7 @@ Ext.extend(Toc.TopFsPanel, Ext.grid.GridPanel, {
     start: function () {
         this.started = true;
         this.count = 0;
+        this.try = 0;
         this.reqs = 0;
         this.refreshData(this);
     },
@@ -2362,61 +2372,6 @@ Ext.extend(Toc.FileEditDialog, Ext.Window, {
             },
             scope: this
         });
-    }
-});
-
-Toc.logPanel = function (config) {
-    config = config || {};
-
-    config.layout = 'border';
-    config.border = false;
-    config.title = 'Logs';
-    config.listeners = {
-        activate: function (panel) {
-            if (!this.loaded) {
-                this.pnlFiles.getStore().reload();
-            }
-        },
-        scope: this
-    }
-
-    config.pnlFiles = new Toc.content.LogsPanel({host: config.host, server_port: config.server_port, server_pass: config.server_pass, server_user: config.server_user, servers_id: config.servers_id, content_id: config.content_id, content_type: 'servers', owner: Toc.content.ContentManager, mainPanel: this});
-    //config.txtLog = new Ext.form.TextArea({owner: config.owner, mainPanel: this,region:'center'});
-    config.logsGrid = new Toc.content.logfileGrid({owner: config.owner, mainPanel: this});
-
-    config.pnlFiles.on('selectchange', this.onNodeSelectChange, this);
-
-    config.items = [config.pnlFiles, config.logsGrid];
-
-    Toc.logPanel.superclass.constructor.call(this, config);
-};
-
-Ext.extend(Toc.logPanel, Ext.Panel, {
-
-    onNodeSelectChange: function (json) {
-        if (json) {
-            this.logsGrid.refreshGrid(json);
-        }
-    },
-
-    maskText: function () {
-        this.getEl().mask('Chargement Fichier ....');
-    },
-
-    getCategoriesTree: function () {
-        return this.pnlFiles;
-    },
-
-    getCategoryPath: function () {
-        return this.pnlCategoriesTree.getCategoriesPath();
-    },
-
-    getCategoryPermissions: function () {
-        return this.pnlCategoriesTree.getCategoryPermissions();
-    },
-
-    setLogCount: function (logs_id, count) {
-        this.pnlFiles.setLogCount(logs_id, count);
     }
 });
 
@@ -3567,6 +3522,7 @@ Toc.CpuCharts = function (config) {
     config.region = 'center';
     config.count = 0;
     config.reqs = 0;
+    config.try = 0;
     config.width = this.params.width || '25%';
     config.title = config.label;
 
@@ -3681,6 +3637,14 @@ Toc.CpuCharts = function (config) {
     };
 
     config.tools = [
+        {
+            id: 'refresh',
+            qtip: 'Refresh',
+            handler: function (event, toolEl, panel) {
+                thisObj.stop();
+                thisObj.start();
+            }
+        }
     ];
 
     Toc.CpuCharts.superclass.constructor.call(this, config);
@@ -3690,6 +3654,7 @@ Ext.extend(Toc.CpuCharts, Ext.Panel, {
 
     refreshData: function (scope) {
         scope.setTitle(scope.title + '.');
+        scope.try++;
         if (scope && scope.started) {
             if(scope.chart)
             {
@@ -3711,6 +3676,7 @@ Ext.extend(Toc.CpuCharts, Ext.Panel, {
                         },
                         callback: function (options, success, response) {
                             scope.reqs--;
+                            scope.try = 0;
                             scope.setTitle(scope.label);
 
                             if(success)
@@ -3753,8 +3719,6 @@ Ext.extend(Toc.CpuCharts, Ext.Panel, {
 
                                     chart.validateNow();
                                 }
-
-                                chart.validateData();
                             }
                             else
                             {
@@ -3770,6 +3734,14 @@ Ext.extend(Toc.CpuCharts, Ext.Panel, {
                         scope: this
                     });
                 }
+
+                chart.validateData();
+            }
+
+            if(scope.try > 10)
+            {
+                this.stop();
+                this.start();
             }
 
             if(scope.count == 0)
@@ -3790,6 +3762,7 @@ Ext.extend(Toc.CpuCharts, Ext.Panel, {
         this.started = true;
         this.count = 0;
         this.reqs = 0;
+        this.try = 0;
         this.refreshData(this);
     },
     stop: function () {
@@ -3814,6 +3787,7 @@ Toc.NetCharts = function (config) {
     config.region = 'center';
     config.count = 0;
     config.reqs = 0;
+    config.try = 0;
     config.width = this.params.width || '25%';
     config.title = config.label;
 
@@ -3920,6 +3894,7 @@ Toc.NetCharts = function (config) {
 Ext.extend(Toc.NetCharts, Ext.Panel, {
     refreshData: function (scope) {
         scope.setTitle(scope.title + '.');
+        scope.try++;
         if (scope && scope.started) {
 
             if(scope.chart)
@@ -3930,7 +3905,6 @@ Ext.extend(Toc.NetCharts, Ext.Panel, {
                 if(scope.reqs == 0)
                 {
                     scope.reqs++;
-                    scope.setTitle(scope.label + ' .');
                     scope.transactionId = Ext.Ajax.request({
                         url: Toc.CONF.LINUX_URL,
                         params: {
@@ -3943,6 +3917,7 @@ Ext.extend(Toc.NetCharts, Ext.Panel, {
                         callback: function (options, success, response) {
 
                             scope.reqs--;
+                            scope.try = 0;
                             scope.setTitle(scope.label);
 
                             if(success)
@@ -3991,13 +3966,19 @@ Ext.extend(Toc.NetCharts, Ext.Panel, {
                                     chart.validateNow();
                                 }
                             }
-
-                            chart.validateData();
                         },
                         scope: this
                     });
                 }
+
+                chart.validateData();
             }
+        }
+
+        if(scope.try > 10)
+        {
+            this.stop();
+            this.start();
         }
 
         if(scope.count == 0)
@@ -4014,6 +3995,7 @@ Ext.extend(Toc.NetCharts, Ext.Panel, {
         this.started = true;
         this.count = 0;
         this.reqs = 0;
+        this.try = 0;
         this.refreshData(this);
     },
     stop: function () {
@@ -4042,6 +4024,7 @@ Toc.MemCharts = function (config) {
     config.region = 'center';
     config.count = 0;
     config.reqs = 0;
+    config.try = 0;
     config.width = this.params.width || '25%';
     config.title = config.label;
 
@@ -4143,26 +4126,13 @@ Ext.extend(Toc.MemCharts, Ext.Panel, {
 
     refreshData: function (scope) {
         scope.setTitle(scope.title + '.');
+        scope.try++;
         if (scope && scope.started) {
             var gaugeChart = this.gauge;
-
-            if (gaugeChart) {
-                if (gaugeChart.arrows) {
-                    if (gaugeChart.arrows[ 0 ]) {
-                        if (gaugeChart.arrows[ 0 ].setValue) {
-                            gaugeChart.arrows[ 0 ].setValue(0);
-                            gaugeChart.arrows[ 0 ].color = "black";
-                            gaugeChart.axes[ 0 ].setBottomText("??");
-                            gaugeChart.axes[ 0 ].bottomTextColor = "green";
-                        }
-                    }
-                }
-            }
 
             if(scope.reqs == 0)
             {
                 scope.reqs++;
-                scope.setTitle(scope.label + ' .');
 
                 scope.transactionId = Ext.Ajax.request({
                     url: Toc.CONF.LINUX_URL,
@@ -4176,17 +4146,8 @@ Ext.extend(Toc.MemCharts, Ext.Panel, {
                     callback: function (options, success, response) {
 
                         scope.reqs--;
+                        scope.try = 0;
                         scope.setTitle(scope.label);
-
-                        if (gaugeChart) {
-                            if (gaugeChart.arrows) {
-                                if (gaugeChart.arrows[ 0 ]) {
-                                    if (gaugeChart.arrows[ 0 ].setValue) {
-                                        gaugeChart.axes[ 0 ].bottomTextColor = "green";
-                                    }
-                                }
-                            }
-                        }
 
                         if(success)
                         {
@@ -4234,7 +4195,8 @@ Ext.extend(Toc.MemCharts, Ext.Panel, {
                                     if (gaugeChart.arrows[ 0 ]) {
                                         if (gaugeChart.arrows[ 0 ].setValue) {
                                             gaugeChart.arrows[ 0 ].setValue(0);
-                                            gaugeChart.axes[ 0 ].setBottomText("Time out");
+                                            //gaugeChart.axes[ 0 ].setBottomText("Time out");
+                                            gaugeChart.axes[ 0 ].setBottomText(response.responseText);
                                             gaugeChart.axes[ 0 ].bottomTextColor = "red";
                                         }
                                     }
@@ -4245,10 +4207,12 @@ Ext.extend(Toc.MemCharts, Ext.Panel, {
                     scope: this
                 });
             }
-            else
-            {
-                scope.setTitle(scope.title + '.');
-            }
+        }
+
+        if(scope.try > 10)
+        {
+            scope.setTitle(scope.label);
+            scope.try = 0;
         }
 
         if(scope.count == 0)
@@ -4268,6 +4232,7 @@ Ext.extend(Toc.MemCharts, Ext.Panel, {
         this.started = true;
         this.count = 0;
         this.reqs = 0;
+        this.try = 0;
         this.refreshData(this);
     },
     stop: function () {
@@ -4292,6 +4257,7 @@ Toc.DiskCharts = function (config) {
     config.region = 'center';
     config.count = 0;
     config.reqs = 0;
+    config.try = 0;
     config.width = this.params.width || '25%';
     config.title = config.label;
 
@@ -4392,6 +4358,7 @@ Ext.extend(Toc.DiskCharts, Ext.Panel, {
 
     refreshData: function (scope) {
         scope.setTitle(scope.title + '.');
+        scope.try++;
         if (scope && scope.started) {
             if(scope.chart)
             {
@@ -4401,7 +4368,6 @@ Ext.extend(Toc.DiskCharts, Ext.Panel, {
                 if(scope.reqs == 0)
                 {
                     scope.reqs++;
-                    scope.setTitle(scope.label + ' .');
 
                     scope.transactionId = Ext.Ajax.request({
                         url: Toc.CONF.LINUX_URL,
@@ -4414,6 +4380,7 @@ Ext.extend(Toc.DiskCharts, Ext.Panel, {
                         },
                         callback: function (options, success, response) {
                             scope.reqs--;
+                            scope.try = 0;
                             scope.setTitle(scope.label);
 
                             if(success)
@@ -4443,9 +4410,12 @@ Ext.extend(Toc.DiskCharts, Ext.Panel, {
                                     chart.validateNow();
                                 }
 
-                                if(json.records.length > 0)
+                                if(json && json.records)
                                 {
-                                    chart.validateData();
+                                    if(json.records.length > 0)
+                                    {
+                                        chart.validateData();
+                                    }
                                 }
                             }
                             else
@@ -4464,9 +4434,11 @@ Ext.extend(Toc.DiskCharts, Ext.Panel, {
                 }
             }
         }
-        else
+
+        if(scope.try > 10)
         {
-            scope.setTitle(scope.title + '.');
+            scope.setTitle(scope.label);
+            scope.try = 0;
         }
 
         if(scope.count == 0)
@@ -4487,6 +4459,7 @@ Ext.extend(Toc.DiskCharts, Ext.Panel, {
         this.started = true;
         this.count = 0;
         this.reqs = 0;
+        this.try = 0;
         this.refreshData(this);
     },
     stop: function () {
