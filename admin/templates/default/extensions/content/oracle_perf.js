@@ -376,13 +376,13 @@ Ext.extend(Toc.SessionsGrid, Ext.grid.GridPanel, {
     onKill: function (record) {
         Toc.KillUser(record, this);
     },
-    onStart: function () {
+    onStart: function (start_sample,end_sample) {
         this.started = true;
         this.count = 0;
         this.reqs = 0;
         var store = this.getStore();
-        store.baseParams['start_time'] = null;
-        store.baseParams['end_time'] = null;
+        store.baseParams['start_sample'] = start_sample || null;
+        store.baseParams['end_sample'] = end_sample || null;
         this.refreshData(this);
         if (!this.inAshPanel) {
             this.topToolbar.items.items[4].setHandler(this.onStop, this);
@@ -2027,8 +2027,6 @@ Toc.TopEventsPanelCharts = function (config) {
         }
     ];
 
-    this.addEvents('zoomed');
-
     Toc.TopEventsPanelCharts.superclass.constructor.call(this, config);
 };
 
@@ -2037,8 +2035,34 @@ Ext.extend(Toc.TopEventsPanelCharts, Ext.Panel, {
         //console.log('onZoomed');
         chart.chart.panel.startValue = chart.startValue;
         chart.chart.panel.endValue = chart.endValue;
-        //console.debug(chart);
-        this.fireEvent('zoomed',chart.startValue,chart.endValue);
+        console.debug(chart);
+
+        if(!chart.chart.first_zoom)
+        {
+            console.log('first zoom');
+            chart.chart.first_zoom = true;
+        }
+        else
+        {
+            var startSample = chart.chart.dataProvider[chart.startIndex].sample_id;
+            var endSample = chart.chart.dataProvider[chart.endIndex].sample_id;
+
+            if(startSample && endSample)
+            {
+                if(chart.chart.panel.mainPanel && chart.chart.panel.mainPanel.zoom)
+                {
+                    chart.chart.panel.mainPanel.zoom(startSample,endSample);
+                }
+                else
+                {
+                    console.log('no mainPanel');
+                }
+            }
+            else
+            {
+                console.log('no samples available');
+            }
+        }
 
         //console.log('endIndex ===> ' + chart.endIndex);
         //console.log('endValue ===> ' + chart.endValue);

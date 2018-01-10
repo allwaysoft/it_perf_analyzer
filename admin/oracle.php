@@ -17,6 +17,8 @@ if (isset($_REQUEST['action'])) {
             $db_host = $_REQUEST['db_host'];
             $db_sid = $_REQUEST['db_sid'];
             $status = $_REQUEST['status'];
+            $start_sample = $_REQUEST['start_sample'];
+            $end_sample = $_REQUEST['end_sample'];
 
             $status = strtoupper($status);
 
@@ -64,12 +66,24 @@ FROM
   AND (s.sid             = px.sid(+)
   AND s.serial#          = px.serial#(+))
   )
-WHERE STATUS = '" . $status . "'
-AND TYPE    != 'BACKGROUND'
-ORDER BY seconds_in_wait DESC nulls last,pct desc";
+WHERE STATUS = '" . $status . "' ";
+
+            if(isset($start_sample) && !empty($start_sample) && isset($end_sample) && !empty($end_sample))
+            {
+                $query = $query . " and sql_id IN (select sql_id from v\$active_session_history where sample_id between " . $start_sample . " and " . $end_sample . ")";
+            }
+
+            $query = $query . " AND TYPE != 'BACKGROUND' ORDER BY seconds_in_wait DESC nulls last,pct desc";
+
+            //var_dump($query);
+
+            //$background = 'BACKGROUND';
+            //oci_bind_by_name($s, ":status", $status);
+            //oci_bind_by_name($s, ":start", $start_sample);
+            //oci_bind_by_name($s, ":end", $end_sample);
+            //oci_bind_by_name($s, ":background", $background);
 
             $records = array();
-            $count = 0;
 
             $c = oci_pconnect($db_user, $db_pass, $db_host . "/" . $db_sid);
             if (!$c) {
@@ -102,12 +116,17 @@ ORDER BY seconds_in_wait DESC nulls last,pct desc";
                         'pct' => '',
                         'pct_pga' => ''
                     );
-
-                    $count++;
                 }
                 else
                 {
+                    //$background = 'BACKGROUND';
+                    //oci_bind_by_name($s, ":status", $status);
+                    //oci_bind_by_name($s, ":start", $start_sample);
+                    //oci_bind_by_name($s, ":end", $end_sample);
+                    //oci_bind_by_name($s, ":background", $background);
+
                     $r = oci_execute($s);
+
                     if (!$r) {
                         $e = oci_error($s);
 
@@ -131,8 +150,6 @@ ORDER BY seconds_in_wait DESC nulls last,pct desc";
                             'pct' => '',
                             'pct_pga' => ''
                         );
-
-                        $count++;
                     }
                     else
                     {
@@ -157,8 +174,6 @@ ORDER BY seconds_in_wait DESC nulls last,pct desc";
                                 'pct' => $row['PCT'],
                                 'pct_pga' => $row['PCT_PGA']
                             );
-
-                            $count++;
                         }
                     }
 
@@ -168,7 +183,7 @@ ORDER BY seconds_in_wait DESC nulls last,pct desc";
 
             oci_close($c);
 
-            $response = array(EXT_JSON_READER_TOTAL => $count,
+            $response = array(EXT_JSON_READER_TOTAL => count($records),
                 EXT_JSON_READER_ROOT => $records);
 
             break;
@@ -245,6 +260,7 @@ ORDER BY seconds_in_wait DESC nulls last,pct desc";
                     'date' => $start_date,
                     'other' => 0,
                     'application' => 0,
+                    'sample_id' => '',
                     'configuration' => 0,
                     'administrative' => 0,
                     'concurrency' => 0,
@@ -267,6 +283,7 @@ ORDER BY seconds_in_wait DESC nulls last,pct desc";
                         'other' => 0,
                         'application' => 0,
                         'configuration' => 0,
+                        'sample_id' => '',
                         'administrative' => 0,
                         'concurrency' => 0,
                         'commit' => 0,
@@ -334,6 +351,7 @@ ORDER BY seconds_in_wait DESC nulls last,pct desc";
                             'other' => 0,
                             'application' => 0,
                             'configuration' => 0,
+                            'sample_id' => '',
                             'administrative' => 0,
                             'concurrency' => 0,
                             'commit' => 0,
@@ -346,10 +364,12 @@ ORDER BY seconds_in_wait DESC nulls last,pct desc";
                             'queueing' => 0,
                             'comments' => $e['message']);
                     } else {
+                        $index = 0;
                         while (($row = oci_fetch_array($s, OCI_ASSOC))) {
 
                             $records[] = array(
                                 'date' => $start_date,
+                                'sample_id' => $index,
                                 'other' => $row['OTHER'],
                                 'application' => $row['APPLICATION'],
                                 'configuration' => $row['CONFIGURATION'],
@@ -364,6 +384,8 @@ ORDER BY seconds_in_wait DESC nulls last,pct desc";
                                 'clustering' => $row['CLUSTERING'],
                                 'queueing' => $row['QUEUEING'],
                                 'comments' => '');
+
+                            $index++;
                         }
                     }
                 }
@@ -389,7 +411,7 @@ ORDER BY seconds_in_wait DESC nulls last,pct desc";
 
             $sum = 0;
 
-            $query = "SELECT ash.sample_time,
+            $query = "SELECT ash.sample_id,ash.sample_time,
          NVL (userio.nbre, 0) userio,
          NVL (systemio.nbre, 0) systemio,
          NVL (application.nbre, 0) application,
@@ -467,7 +489,7 @@ ORDER BY seconds_in_wait DESC nulls last,pct desc";
                 $query = $query . " where ash.sample_time >= sysdate - 1/24";
             }
 
-            $query = $query . " GROUP BY ash.sample_time,
+            $query = $query . " GROUP BY ash.sample_time,ash.sample_id,
          userio.nbre,
          systemio.nbre,
          application.nbre,
@@ -494,6 +516,7 @@ ORDER BY ash.sample_time";
                     'other' => 0,
                     'application' => 0,
                     'configuration' => 0,
+                    'sample_id' => '',
                     'administrative' => 0,
                     'concurrency' => 0,
                     'commit' => 0,
@@ -515,6 +538,7 @@ ORDER BY ash.sample_time";
                         'other' => 0,
                         'application' => 0,
                         'configuration' => 0,
+                        'sample_id' => '',
                         'administrative' => 0,
                         'concurrency' => 0,
                         'commit' => 0,
@@ -566,6 +590,7 @@ ORDER BY ash.sample_time";
                         $records[] = array(
                             'date' => $start_date,
                             'other' => 0,
+                            'sample_id' => '',
                             'application' => 0,
                             'configuration' => 0,
                             'administrative' => 0,
@@ -586,6 +611,7 @@ ORDER BY ash.sample_time";
 
                             $records[] = array(
                                 'date' => $row['SAMPLE_TIME'],
+                                'sample_id' => $row['SAMPLE_ID'],
                                 'other' => $row['OTHER'],
                                 'application' => $row['APPLICATION'],
                                 'configuration' => $row['CONFIGURATION'],

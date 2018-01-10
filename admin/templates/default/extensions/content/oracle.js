@@ -6716,6 +6716,13 @@ Toc.AshPanel = function (params) {
 };
 
 Ext.extend(Toc.AshPanel, Ext.Panel, {
+    zoom : function(start,end){
+        console.log('zooming ... start = ' + start + ' : end = ' + end);
+        this.stop();
+
+        this.pnlSessions.onStart(start,end);
+        this.pnlSessions.onStop();
+    },
     buildItems: function (params) {
         //console.log('buildItems');
         //console.debug(this);
@@ -6726,6 +6733,7 @@ Ext.extend(Toc.AshPanel, Ext.Panel, {
             action: 'ash_waits',
             label: 'ASH',
             freq: params.freq,
+            mainPanel: this,
             sample_time : '',
             databases_id: params.databases_id,
             server_user: params.server_user,
@@ -6750,17 +6758,6 @@ Ext.extend(Toc.AshPanel, Ext.Panel, {
         this.pnlSessions = new Toc.SessionsGrid({width: '100%',inAshPanel: true, label: node.attributes.label, databases_id: node.attributes.databases_id, sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
         this.add(this.pnlSessions);
         var that = this;
-
-        this.dbperf.on('zoomed',function(start,end){
-            console.log('zoomed ... start = ' start + ' : end = ' +end);
-            that.dbperf.stop();
-            that.pnlSessions.onStop();
-
-            var store = that.pnlSessions.getStore();
-            store.baseParams['start_time'] = start;
-            store.baseParams['end_time'] = end;
-            store.reload();
-        });
 
         var mem = {
             width: '20%',
@@ -7544,12 +7541,13 @@ Toc.SharedPoolPanel = function (params) {
 
             that.activated = true;
 
-            //that.pnlSqlAreaUsage.setHeight(that.getInnerHeight());
-            //that.pnlParameters.setHeight(that.getInnerHeight());
-            //that.doLayout(true, true);
-            //that.pnlSql.setHeight(that.getInnerHeight()/2);
+            that.pnlSqlAreaUsage.setHeight(that.getInnerHeight()/2);
+            that.pnlParameters.setHeight(that.getInnerHeight()/2);
+            that.pnlSql.setHeight(that.getInnerHeight()/2);
+            that.doLayout(true, true);
 
-            that.pnlSqlAreaUsage.getStore().reload();
+            that.pnlSqlAreaUsage.onRefresh();
+            that.pnlParameters.getStore().load();
         },
         deactivate: function (panel) {
             //console.log('ash deactivate');
@@ -7587,7 +7585,7 @@ Toc.SharedPoolPanel = function (params) {
 
 Ext.extend(Toc.SharedPoolPanel, Ext.Panel, {
     buildItems: function (params) {
-        console.log('pnlSqlAreaUsage buildItems');
+        //console.log('pnlSqlAreaUsage buildItems');
         var that = this;
 
         var node = params.node;
@@ -7616,7 +7614,5 @@ Ext.extend(Toc.SharedPoolPanel, Ext.Panel, {
         that.add(that.pnlParameters);
         that.add(that.pnlSql);
         that.doLayout(true, true);
-        that.pnlSqlAreaUsage.onRefresh();
-        that.pnlParameters.getStore().load();
     }
 });
