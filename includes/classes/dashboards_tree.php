@@ -305,10 +305,11 @@
 
             $totals = array();
 
-            $Qtotals = $osC_Database->query('select p2c.categories_id, count(*) as total from :table_products p, :table_products_to_categories p2c where p2c.products_id = p.products_id and p.products_status = :products_status group by p2c.categories_id');
-            $Qtotals->bindTable(':table_products', TABLE_PRODUCTS);
-            $Qtotals->bindTable(':table_products_to_categories', TABLE_PRODUCTS_TO_CATEGORIES);
+            $Qtotals = $osC_Database->query('select p2c.categories_id, count(*) as total from :table_content p, :table_products_to_categories p2c where p2c.content_id = p.content_id and p.content_status = :products_status and p.content_type = :content_type and p2c.content_type = :content_type group by p2c.categories_id');
+            $Qtotals->bindTable(':table_content', TABLE_CONTENT);
+            $Qtotals->bindTable(':table_products_to_categories', TABLE_CONTENT_TO_CATEGORIES);
             $Qtotals->bindInt(':products_status', 1);
+            $Qtotals->bindInt(':content_type', $_REQUEST['content_type']);
             $Qtotals->execute();
 
             while ($Qtotals->next()) {

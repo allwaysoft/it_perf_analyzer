@@ -1,16 +1,4 @@
 <?php
-/*
-  $Id: access.php $
-  Mefobe Cart Solutions
-  http://www.mefobemarket.com
-
-  Copyright (c) 2009 Wuxi Elootec Technology Co., Ltd;  Copyright (c) 2006 osCommerce
-
-  This program is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License v2 (1991)
-  as published by the Free Software Foundation.
-*/
-
 
     if (!class_exists('content')) {
         include('includes/classes/content.php');
@@ -87,6 +75,8 @@
       $Qaccess->bindTable(':table_users_roles', TABLE_USERS_ROLES);
       $Qaccess->bindInt(':administrators_id', $id);
       $Qaccess->execute();
+
+      $roles[] = '-1';
 
       while ( $Qaccess->next() ) {
         $roles[] = $Qaccess->value('roles_id');

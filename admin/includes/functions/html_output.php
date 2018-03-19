@@ -65,6 +65,10 @@
         {
             case 'doc':
                 return osc_icon("word.png");
+            case 'txt':
+                return osc_icon("word.png");
+            case 'log':
+                return osc_icon("word.png");
             case 'msi':
                 return osc_icon("exe.png");
             case 'docx':

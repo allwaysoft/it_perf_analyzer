@@ -12,7 +12,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html dir="<?php echo $osC_Language->getTextDirection();?>" xml:lang="<?php echo $osC_Language->getCode();?>" lang="<?php echo $osC_Language->getCode();?>">
 <head>
-<title>THIRD Perf Analyzer</title>
+<title>Plateforme Decisionnelle</title>
 
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -54,15 +54,15 @@
   <div id="x-loading-mask" style="width:100%; height:100%; background:#000000; position:absolute; z-index:20000; left:0; top:0;">&#160;</div>
   <div id="x-loading-panel" style="position:absolute;left:40%;top:40%;border:1px solid #9c9f9d;padding:2px;background:#d1d8db;width:300px;text-align:center;z-index:20001;">
     <div class="x-loading-panel-mask-indicator" style="border:1px solid #c1d1d6;color:#666;background:white;padding:10px;margin:0;padding-left: 20px;height:110px;text-align:left;">
-      <img class="x-loading-panel-logo" style="display:block;margin-bottom:15px;" src="images/tomatocart.jpg" />
+<!--      <img class="x-loading-panel-logo" style="display:block;margin-bottom:15px;" src="images/tomatocart.jpg" />-->
       <img src="images/loading.gif" style="width:16px;height:16px;vertical-align:middle" />&#160;
       <span id="load-status"><?php echo $osC_Language->get('init_system'); ?></span>
-      <div style="font-size:10px; font-weight:normal; margin-top:15px;">Copyright &copy; THIRD IT</div>
+      <div style="font-size:10px; font-weight:normal; margin-top:15px;">Copyright &copy;</div>
     </div>
   </div>
 
   <div id="x-desktop">
-    <a id="tomatocart-logo" href="http://www.mefobe.com" target="_blank" style="margin:5px; float:right;"><img src="images/power_by_button.png" /></a>
+<!--    <a id="tomatocart-logo" href="http://www.mefobe.com" target="_blank" style="margin:5px; float:right;"><img src="images/power_by_button.png" /></a>-->
   </div>
   
   <div id="ux-sidebar"></div>
@@ -150,7 +150,6 @@
   <script type="text/javascript" src="templates/default/extensions/content/content_logs_panel.js"></script>
   <script type="text/javascript" src="templates/default/extensions/content/content_meta_info_panel.js"></script>
   <script type="text/javascript" src="templates/default/extensions/content/content_documents_dialog.js"></script>
-  <script type="text/javascript" src="templates/default/extensions/content/logfile_grid.js"></script>
   <script type="text/javascript" src="templates/default/extensions/content/content_logs_dialog.js"></script>
   <script type="text/javascript" src="templates/default/extensions/content/content_links_dialog.js"></script>
   <script type="text/javascript" src="templates/default/extensions/content/content_links_panel.js"></script>
@@ -160,11 +159,14 @@
   <script type="text/javascript" src="templates/default/extensions/content/content_permissions_panel.js"></script>
   <script type="text/javascript" src="templates/default/extensions/content/content_notifications_panel.js"></script>
   <script type="text/javascript" src="templates/default/extensions/content/content_manager.js"></script>
-  <script type="text/javascript" src="templates/default/extensions/content/oracle.js"></script>
-  <script type="text/javascript" src="templates/default/extensions/content/oracle_perf.js"></script>
-  <script type="text/javascript" src="templates/default/extensions/content/ogg.js"></script>
-  <script type="text/javascript" src="templates/default/extensions/content/server.js"></script>
-  <script type="text/javascript" src="templates/default/extensions/content/rman.js"></script>
+  <script type="text/javascript" src="templates/default/extensions/oracle/oracle.js"></script>
+  <script type="text/javascript" src="templates/default/extensions/oracle/perf.js"></script>
+  <script type="text/javascript" src="templates/default/extensions/oracle/security.js"></script>
+  <script type="text/javascript" src="templates/default/extensions/oracle/ogg.js"></script>
+  <script type="text/javascript" src="templates/default/extensions/oracle/server.js"></script>
+  <script type="text/javascript" src="templates/default/extensions/oracle/ha.js"></script>
+  <script type="text/javascript" src="templates/default/extensions/oracle/memory.js"></script>
+  <script type="text/javascript" src="templates/default/extensions/oracle/storage.js"></script>
   <script type="text/javascript" src="templates/default/extensions/content/production.js"></script>
   <script type="text/javascript" src="templates/default/extensions/form/SliderField.js"></script>
 </body>

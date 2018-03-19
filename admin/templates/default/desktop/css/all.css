@@ -1922,6 +1922,26 @@ div.ext-ux-wiz-Header {
     background-image: url(../../images/icons/16x16/reports_web.png) !important;
 }
 
+.icon-datasources-win {
+    background-image: url(../../images/icons/16x16/import_export.png) !important;
+}
+
+.icon-queries-win {
+    background-image: url(../../images/icons/16x16/tabs.gif) !important;
+}
+
+.icon-dashboards_editor-win {
+    background-image: url(../../images/icons/16x16/statistics.png) !important;
+}
+
+.icon-dashboards_editor-win {
+    background-image: url(../../images/icons/16x16/reports_web.png) !important;
+}
+
+.icon-bi-win {
+    background-image: url(../../images/icons/16x16/polls.png) !important;
+}
+
 .icon-infocentre-win {
     background-image: url(../../images/icons/16x16/big_data_analytics.png) !important;
 }
@@ -1986,6 +2006,31 @@ div.ext-ux-wiz-Header {
     filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src = 'templates/default/images/icons/48x48/invoices.png', sizingMethod = 'scale');
 }
 
+.icon-queries-shortcut img {
+    background-image: url(../../images/icons/48x48/receive_purchase_orders.png);
+    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src = 'templates/default/images/icons/48x48/receive_purchase_orders.png', sizingMethod = 'scale');
+}
+
+.icon-infocentre-shortcut img {
+    background-image: url(../../images/icons/48x48/big_data_analytics.png);
+    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src = 'templates/default/images/icons/48x48/big_data_analytics.png', sizingMethod = 'scale');
+}
+
+.icon-bi-shortcut img {
+    background-image: url(../../images/icons/48x48/dashboard.png);
+    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src = 'templates/default/images/icons/48x48/dashboard.png', sizingMethod = 'scale');
+}
+
+.icon-dashboards_editor-shortcut img {
+    background-image: url(../../images/icons/48x48/big_data_analytics.png);
+    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src = 'templates/default/images/icons/48x48/big_data_analytics.png', sizingMethod = 'scale');
+}
+
+.icon-datasources-shortcut img {
+    background-image: url(../../images/icons/48x48/database.png);
+    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src = 'templates/default/images/icons/48x48/database.png', sizingMethod = 'scale');
+}
+
 .icon-articles-shortcut img {
     background-image: url(../../images/icons/48x48/article.png);
     filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src = 'templates/default/images/icons/48x48/article.png', sizingMethod = 'scale');
@@ -1994,11 +2039,6 @@ div.ext-ux-wiz-Header {
 .icon-reports-shortcut img {
     background-image: url(../../images/icons/48x48/report_web.png);
     filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src = 'templates/default/images/icons/48x48/report_web.png', sizingMethod = 'scale');
-}
-
-.icon-infocentre-shortcut img {
-    background-image: url(../../images/icons/48x48/big_data_analytics.png);
-    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src = 'templates/default/images/icons/48x48/big_data_analytics.png', sizingMethod = 'scale');
 }
 
 .icon-ctx-shortcut img {

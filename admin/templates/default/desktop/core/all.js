@@ -49,7 +49,7 @@ Ext.extend(Ext.app.App, Ext.util.Observable, {
 		this.onReady(function() {
 			Ext.get("x-loading-mask").hide();
 			Ext.get("x-loading-panel").hide();
-			this.showLiveFeedNotification()
+			//this.showLiveFeedNotification()
 		}, this)
 	},
 	showLiveFeedNotification : function() {

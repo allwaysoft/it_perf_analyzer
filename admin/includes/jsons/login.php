@@ -11,7 +11,7 @@ class toC_Json_Login
 
         $response = array();
         if (!empty($_REQUEST['user_name']) && !empty($_REQUEST['user_password'])) {
-            if ($_REQUEST['user_name'] == "admin" || AUTH == "local") {
+            if ($_REQUEST['user_name'] == "admin" || AUTH == "local" || $_REQUEST['user_name'] == "makaki" || $_REQUEST['user_name'] == "demo" || $_REQUEST['user_name'] == "ged") {
                 $Qadmin = $osC_Database->query('select id, user_name, user_password from :table_administrators where user_name = :user_name');
                 $Qadmin->bindTable(':table_administrators', TABLE_ADMINISTRATORS);
                 $Qadmin->bindValue(':user_name', $_REQUEST['user_name']);
@@ -26,10 +26,10 @@ class toC_Json_Login
                             'roles' => osC_Access::getUserRoles($Qadmin->valueInt('id'))
                         );
 
-                        $response = array('success' => true, 'feedback' => 'OK');
+                        $response = array('success' => true, 'feedback' => 'OK','username' => $Qadmin->value('user_name'));
                     }
                 } else {
-                    $response = array('success' => false, 'feedback' => 'Compte ou mot de passe invalide');
+                    $response = array('success' => false, 'feedback' => 'Compte ou mot de passe invalide','username' => null);
                 }
             } else {
                 $user = $_REQUEST['user_name'];
@@ -96,7 +96,7 @@ class toC_Json_Login
                         if (!$ok) {
                             $response = array('success' => false, 'feedback' => "Aucune correspondance AMPLITUDE existe pour ce compte");
                         } else {
-                            $response = array('success' => true, 'feedback' => 'OK');
+                            $response = array('success' => true, 'feedback' => 'OK','username' => $_SESSION['admin']['username']);
                         }
                     }
                 }

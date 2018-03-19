@@ -1,15 +1,4 @@
 <?php
-/*
-  $Id: access.php $
-  Mefobe Cart Solutions
-  http://www.mefobemarket.com
-
-  Copyright (c) 2009 Wuxi Elootec Technology Co., Ltd
-
-  This program is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License v2 (1991)
-  as published by the Free Software Foundation.
-*/
 
   class toC_Desktop_Settings {
     var $_settings = null,
@@ -101,8 +90,8 @@
       
       $settings['autorun'] = '["dashboard-win"]';
       $settings['contextmenu'] = '[]';
-      $settings['quickstart'] = '["deltausers-win","roles-win","who_online-win","categories-win","lettrage-win","administrators-win","administrators_log-win","articles-win","documents-win","production-win","email-win","infocentre-win","ctx-win","signatures-win","sms-win"]';
-      $settings['shortcut'] = '["deltausers-win","roles-win","who_online-win","categories-win","lettrage-win","administrators-win","administrators_log-win","articles-win","documents-win","production-win","email-win","infocentre-win","ctx-win","signatures-win","sms-win"]';
+      $settings['quickstart'] = '["deltausers-win","roles-win","who_online-win","categories-win","lettrage-win","administrators-win","administrators_log-win","articles-win","documents-win","production-win","email-win","infocentre-win","ctx-win","signatures-win","sms-win","bi-win","dashboards_editor-win","queries-win","datasources-win"]';
+      $settings['shortcut'] = '["deltausers-win","roles-win","who_online-win","categories-win","lettrage-win","administrators-win","administrators_log-win","articles-win","documents-win","production-win","email-win","infocentre-win","ctx-win","signatures-win","sms-win","bi-win","dashboards_editor-win","queries-win","datasources-win"]';
       $settings['wizard_complete'] = false;
       
       $settings['dashboards'] = 'overview:0,new_orders:1,new_customers:2,new_reviews:0,orders_statistics:1,last_visits:2';

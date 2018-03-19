@@ -105,6 +105,7 @@ define('TABLE_CONTENT_LINKS', DB_TABLE_PREFIX . 'content_links');
 define('TABLE_CONTENT_NOTIFICATIONS', DB_TABLE_PREFIX . 'content_notifications');
 define('TABLE_CONTENT', DB_TABLE_PREFIX . 'content');
 define('TABLE_REPORTS', DB_TABLE_PREFIX . 'reports');
+define('TABLE_DASHBOARS', DB_TABLE_PREFIX . 'dashboards');
 define('TABLE_REPORTS_SUBSCRIPTIONS', DB_TABLE_PREFIX . 'reports_subscriptions');
 define('TABLE_JOB_RUN_DETAILS', DB_TABLE_PREFIX . 'report_executions_details');
 define('TABLE_LOGS', DB_TABLE_PREFIX . 'logs');

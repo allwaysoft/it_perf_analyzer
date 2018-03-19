@@ -2,6 +2,7 @@
 
 define('EXT_JSON_READER_ROOT', 'records');
 define('EXT_JSON_READER_TOTAL', 'total');
+define('APACHE_USER', 'daemon');
 error_reporting(0);
 
 if (isset($_REQUEST['action'])) {
@@ -60,17 +61,19 @@ FROM
   AND s.sql_address      = sqlarea.address
   AND s.sid              = sw.sid(+)
   and s.sid != USERENV ('SID')
+  and s.osuser != '" . APACHE_USER . "'
   AND s.paddr            = p.addr
   AND (s.sid             = slo.sid(+)
   AND s.serial#          = slo.serial#(+))
   AND (s.sid             = px.sid(+)
   AND s.serial#          = px.serial#(+))
   )
-WHERE STATUS = '" . $status . "' ";
+WHERE 1 = 1 ";
 
-            if(isset($start_sample) && !empty($start_sample) && isset($end_sample) && !empty($end_sample))
-            {
+            if (isset($start_sample) && !empty($start_sample) && isset($end_sample) && !empty($end_sample)) {
                 $query = $query . " and sql_id IN (select sql_id from v\$active_session_history where sample_id between " . $start_sample . " and " . $end_sample . ")";
+            } else {
+                $query = $query . " and  status = '" . $status . "'";
             }
 
             $query = $query . " AND TYPE != 'BACKGROUND' ORDER BY seconds_in_wait DESC nulls last,pct desc";
@@ -89,9 +92,7 @@ WHERE STATUS = '" . $status . "' ";
             if (!$c) {
                 $e = oci_error();
                 trigger_error('Could not connect to database: ' . $e['message'], E_USER_ERROR);
-            }
-            else
-            {
+            } else {
                 $s = oci_parse($c, $query);
                 if (!$s) {
                     $e = oci_error($c);
@@ -116,9 +117,7 @@ WHERE STATUS = '" . $status . "' ";
                         'pct' => '',
                         'pct_pga' => ''
                     );
-                }
-                else
-                {
+                } else {
                     //$background = 'BACKGROUND';
                     //oci_bind_by_name($s, ":status", $status);
                     //oci_bind_by_name($s, ":start", $start_sample);
@@ -150,9 +149,7 @@ WHERE STATUS = '" . $status . "' ";
                             'pct' => '',
                             'pct_pga' => ''
                         );
-                    }
-                    else
-                    {
+                    } else {
                         while (($row = oci_fetch_array($s, OCI_ASSOC))) {
                             $records [] = array('sid' => $row['SID'],
                                 'sql_text' => $row['SQL_TEXT'],
@@ -187,7 +184,139 @@ WHERE STATUS = '" . $status . "' ";
                 EXT_JSON_READER_ROOT => $records);
 
             break;
-        case 'list_waits':
+
+        case 'list_active_sessions':
+            $db_user = $_REQUEST['db_user'];
+            $db_pass = $_REQUEST['db_pass'];
+            $db_host = $_REQUEST['db_host'];
+            $db_sid = $_REQUEST['db_sid'];
+            $status = $_REQUEST['status'];
+            $start_sample_id = $_REQUEST['start_sample_id'];
+            $end_sample_id = $_REQUEST['end_sample_id'];
+
+            $total = 0;
+            $records = array();
+
+            $c = oci_pconnect($db_user, $db_pass, $db_host . "/" . $db_sid);
+            if (!$c) {
+                $e = oci_error();
+
+                $records [] = array(
+                    'sql_text' => $e['message'],
+                    'sample_id' => '',
+                    'event' => '',
+                    'sql_id' => '',
+                    'machine' => ''
+                );
+            } else {
+                $query = "SELECT count(*) nbre
+    FROM v\$active_session_history a, v\$sqlarea sqlarea ,dba_users us where a.sql_id = sqlarea.sql_id and us.user_id = a.user_id ";
+
+                if (isset($start_sample_id) && !empty($start_sample_id) && isset($end_sample_id) && !empty($end_sample_id)) {
+                    $query = $query . " and sample_id between " . $start_sample_id . " and " . $end_sample_id . " AND session_type = 'FOREGROUND'";
+                } else {
+                    $query = $query . " and session_type = 'FOREGROUND'";
+                }
+
+                $s = oci_parse($c, $query);
+                if (!$s) {
+                    $e = oci_error($c);
+                    $response = array('success' => false, 'feedback' => "Impossible d'executer cette requete " . htmlentities($e['message']));
+                } else {
+                    $r = oci_execute($s, OCI_COMMIT_ON_SUCCESS);
+                    if (!$r) {
+                        $e = oci_error($s);
+                        $response = array('success' => false, 'feedback' => 'Impossible de lister les captures AWR de cette base ' . htmlentities($e['message']));
+                    } else {
+                        while (($row = oci_fetch_array($s, OCI_ASSOC))) {
+                            $total = $row['NBRE'];
+                        }
+                    }
+
+                    oci_free_statement($s);
+
+                    $query = "SELECT * FROM (SELECT a.*, ROWNUM rnum FROM (SELECT a.sample_id,NVL (a.event, a.session_state) event,
+         a.sql_id,
+         a.machine,
+         us.username,
+         substr(sqlarea.sql_text,0,40) sql_text,
+         count(*) nbre
+    FROM v\$active_session_history a, v\$sqlarea sqlarea ,dba_users us where a.sql_id = sqlarea.sql_id and us.user_id = a.user_id ";
+
+                    if (isset($start_sample_id) && !empty($start_sample_id) && isset($end_sample_id) && !empty($end_sample_id)) {
+                        $query = $query . " and sample_id between " . $start_sample_id . " and " . $end_sample_id . " AND session_type = 'FOREGROUND' group by a.sample_id,NVL (a.event, a.session_state),a.sql_id,a.machine,us.username,substr(sqlarea.sql_text,0,40) order by sample_id desc";
+                    } else {
+                        $query = $query . " and session_type = 'FOREGROUND'  group by a.sample_id,NVL (a.event, a.session_state),a.sql_id,a.machine,us.username,substr(sqlarea.sql_text,0,40) order by sample_id desc";
+                    }
+
+                    $query = $query . ") a WHERE ROWNUM <= :MAX_ROW_TO_FETCH) WHERE rnum >= :MIN_ROW_TO_FETCH";
+
+                    $s = oci_parse($c, $query);
+                    if (!$s) {
+                        $e = oci_error($c);
+
+                        $records [] = array(
+                            'sql_text' => $e['message'],
+                            'sample_id' => '',
+                            'event' => '',
+                            'sql_id' => '',
+                            'username' => '',
+                            'machine' => ''
+                        );
+                    } else {
+                        //$background = 'FOREGROUND';
+                        //oci_bind_by_name($s, ":foreground", $background);
+                        //oci_bind_by_name($s, ":sample_id", $sample_id);
+
+                        $start = empty($_REQUEST['start']) ? 0 : $_REQUEST['start'];
+                        $limit = 25;
+                        $fin = $start + $limit;
+
+                        oci_bind_by_name($s, ":MAX_ROW_TO_FETCH", $fin);
+                        oci_bind_by_name($s, ":MIN_ROW_TO_FETCH", $start);
+
+                        $r = oci_execute($s);
+
+                        if (!$r) {
+                            $e = oci_error($s);
+
+                            $records [] = array(
+                                'sql_text' => $e['message'],
+                                'sample_id' => '',
+                                'event' => '',
+                                'sql_id' => '',
+                                'username' => '',
+                                'machine' => ''
+                            );
+                        } else {
+                            while (($row = oci_fetch_array($s, OCI_ASSOC))) {
+                                $username = $row['NBRE'] > 1 ? $row['USERNAME'] . " (" . $row['NBRE'] . ")" : $row['USERNAME'];
+
+                                $records [] = array(
+                                    'sql_text' => $row['SQL_TEXT'],
+                                    'sample_id' => $row['SAMPLE_ID'],
+                                    'username' => $username,
+                                    'event' => $row['EVENT'],
+                                    'sql_id' => $row['SQL_ID'],
+                                    'machine' => $row['MACHINE']
+                                );
+                            }
+                        }
+                    }
+
+                    oci_free_statement($s);
+                }
+            }
+
+            oci_close($c);
+
+            $response = array('success' => false, EXT_JSON_READER_TOTAL => $total,
+                EXT_JSON_READER_ROOT => $records);
+
+            break;
+
+        case
+            'list_waits':
             $db_user = $_REQUEST['db_user'];
             $db_pass = $_REQUEST['db_pass'];
             $db_host = $_REQUEST['db_host'];
@@ -399,6 +528,68 @@ WHERE STATUS = '" . $status . "' ";
                 EXT_JSON_READER_ROOT => $records);
             break;
 
+        case
+            'stat_pxprocesses':
+            $db_user = $_REQUEST['db_user'];
+            $db_pass = $_REQUEST['db_pass'];
+            $db_host = $_REQUEST['db_host'];
+            $db_sid = $_REQUEST['db_sid'];
+            $databases_id = $_REQUEST['databases_id'];
+
+            $records = array();
+
+            $c = oci_connect($db_user, $db_pass, $db_host . "/" . $db_sid);
+            if (!$c) {
+                $e = oci_error();
+
+                $records[] = array(
+                    "category" => "Usage",
+                    'available' => 0,
+                    'used' => 0,
+                    'comments' => $e['message']);
+            } else {
+                $query = "select (select count(*) from V\$PX_PROCESS where status = 'AVAILABLE') available,(select count(*) from V\$PX_PROCESS where status != 'AVAILABLE') used from dual";
+
+                $s = oci_parse($c, $query);
+                if (!$s) {
+                    $e = oci_error($c);
+
+                    $records[] = array(
+                        "category" => "Usage",
+                        'available' => 0,
+                        'used' => 0,
+                        'comments' => $e['message']);
+                } else {
+                    $r = oci_execute($s);
+                    if (!$r) {
+                        $e = oci_error($s);
+
+                        $records[] = array(
+                            "category" => "Usage",
+                            'available' => 0,
+                            'used' => 0,
+                            'comments' => $e['message']);
+                    } else {
+                        while (($row = oci_fetch_array($s, OCI_ASSOC))) {
+
+                            $records[] = array(
+                                "category" => "Usage",
+                                'available' => $row['AVAILABLE'],
+                                'used' => $row['USED'],
+                                'comments' => '');
+                        }
+                    }
+                }
+
+                oci_free_statement($s);
+            }
+
+            oci_close($c);
+
+            $response = array(EXT_JSON_READER_TOTAL => count($records),
+                EXT_JSON_READER_ROOT => $records);
+            break;
+
         case 'ash_waits':
             $db_user = $_REQUEST['db_user'];
             $db_pass = $_REQUEST['db_pass'];
@@ -480,12 +671,9 @@ WHERE STATUS = '" . $status . "' ";
                           GROUP BY sample_time) sched
             ON (ash.sample_time = sched.sample_time)";
 
-            if(isset($time) && !empty($time))
-            {
+            if (isset($time) && !empty($time)) {
                 $query = $query . " where ash.sample_time >= '" . $time . "'";
-            }
-            else
-            {
+            } else {
                 $query = $query . " where ash.sample_time >= sysdate - 1/24";
             }
 
@@ -506,6 +694,7 @@ ORDER BY ash.sample_time";
             $records = array();
 
             $sample_time = null;
+            $sample_id = null;
 
             $c = oci_connect($db_user, $db_pass, $db_host . "/" . $db_sid);
             if (!$c) {
@@ -628,6 +817,7 @@ ORDER BY ash.sample_time";
                                 'comments' => '');
 
                             $sample_time = $row['SAMPLE_TIME'];
+                            $sample_id = $row['SAMPLE_ID'];
                         }
                     }
                 }
@@ -638,7 +828,7 @@ ORDER BY ash.sample_time";
             oci_close($c);
 
             $response = array(EXT_JSON_READER_TOTAL => count($records),
-                EXT_JSON_READER_ROOT => $records,'sample_time' => $sample_time);
+                EXT_JSON_READER_ROOT => $records, 'sample_time' => $sample_time, 'sample_id' => $sample_id);
             break;
 
         case 'list_sql':
@@ -666,15 +856,12 @@ ORDER BY ash.sample_time";
          sql_text,
          sql_id
     FROM v\$sqlarea where executions > 0 ";
-   //WHERE ROUND (elapsed_time / 1000000/60) >= 5 AND executions > 0
+            //WHERE ROUND (elapsed_time / 1000000/60) >= 5 AND executions > 0
 //ORDER BY elapsed_time DESC";
 
-            if(is_numeric($user_id))
-            {
+            if (is_numeric($user_id)) {
                 $query = $query . " and PARSING_USER_ID = " . $user_id . " order by FIRST_LOAD_TIME";
-            }
-            else
-            {
+            } else {
                 $query = $query . " and ROUND (elapsed_time / 1000000/60) >= 1 AND executions > 0 ORDER BY elapsed_time DESC";
             }
 
@@ -771,6 +958,73 @@ ORDER BY ash.sample_time";
                 EXT_JSON_READER_ROOT => $records);
             break;
 
+        case 'segmentstats_chart':
+            $db_user = $_REQUEST['db_user'];
+            $db_pass = $_REQUEST['db_pass'];
+            $db_host = $_REQUEST['db_host'];
+            $db_sid = $_REQUEST['db_sid'];
+            $user_id = $_REQUEST['user_id'];
+            $segment_type = $_REQUEST['segment_type'];
+            $databases_id = $_REQUEST['databases_id'];
+
+            $records = array();
+
+            $c = oci_connect($db_user, $db_pass, $db_host . "/" . $db_sid);
+            if (!$c) {
+                $e = oci_error();
+
+                $records[] = array(
+                    'last_analyzed' => '',
+                    'nbre' => '',
+                    'comment' => $e['message']);
+            } else {
+                $query = "";
+                switch(strtolower($segment_type))
+                {
+                    case 'table':
+                        $query = "SELECT TRUNC(nvl(last_analyzed,sysdate - 5000), 'DAY') as last_analyzed,count(*) nbre from DBA_TAB_STATISTICS group by TRUNC(nvl(last_analyzed,sysdate - 5000), 'DAY') order by 1";
+                        break;
+                    case 'index':
+                        $query = "SELECT TRUNC(nvl(last_analyzed,sysdate - 5000), 'DAY') as last_analyzed,count(*) nbre from DBA_IND_STATISTICS group by TRUNC(nvl(last_analyzed,sysdate - 5000), 'DAY') order by 1";
+                        break;
+                }
+
+                $s = oci_parse($c, $query);
+                if (!$s) {
+                    $e = oci_error($c);
+
+                    $records[] = array(
+                        'last_analyzed' => '',
+                        'nbre' => '',
+                        'comment' => $e['message']);
+                } else {
+                    $r = oci_execute($s);
+                    if (!$r) {
+                        $e = oci_error($s);
+
+                        $records[] = array(
+                            'last_analyzed' => '',
+                            'nbre' => '',
+                            'comment' => $e['message']);
+                    } else {
+                        while (($row = oci_fetch_array($s, OCI_ASSOC))) {
+                            $records[] = array(
+                                'last_analyzed' => $row['LAST_ANALYZED'],
+                                'nbre' => $row['NBRE'],
+                                'comment' => '');
+                        }
+                    }
+                }
+
+                oci_free_statement($s);
+            }
+
+            oci_close($c);
+
+            $response = array(EXT_JSON_READER_TOTAL => count($records),
+                EXT_JSON_READER_ROOT => $records);
+            break;
+
         case 'list_histo':
             $db_user = $_REQUEST['db_user'];
             $db_pass = $_REQUEST['db_pass'];
@@ -849,25 +1103,38 @@ ORDER BY ash.sample_time";
             $db_pass = $_REQUEST['db_pass'];
             $db_host = $_REQUEST['db_host'];
             $db_sid = $_REQUEST['db_sid'];
+            $pool = $_REQUEST['pool'];
             $databases_id = $_REQUEST['databases_id'];
 
             $start_date = date("Y-m-d H:i:s");
 
             $sum = 0;
-            $query = "select sga.allo sga, pga.allo pga,SN.END_INTERVAL_TIME time
+
+            switch ($pool) {
+                case 'pga';
+                    $query = "select pga.allo,SN.END_INTERVAL_TIME time
+  from
+(select snap_id,INSTANCE_NUMBER,round(sum(value)/1024/1024) allo
+    from DBA_HIST_PGASTAT where name = 'total PGA allocated'
+   group by snap_id,INSTANCE_NUMBER) pga
+, dba_hist_snapshot sn
+where sn.snap_id=pga.snap_id
+  and sn.INSTANCE_NUMBER=pga.INSTANCE_NUMBER and SN.END_INTERVAL_TIME >= ADD_MONTHS(sysdate,-1)
+order by sn.snap_id";
+                    break;
+                case 'sga';
+                    $query = "select sga.allo,SN.END_INTERVAL_TIME time
   from
 (select snap_id,INSTANCE_NUMBER,round(sum(bytes)/1024/1024) allo
    from DBA_HIST_SGASTAT
   group by snap_id,INSTANCE_NUMBER) sga
-,(select snap_id,INSTANCE_NUMBER,round(sum(value)/1024/1024) allo
-    from DBA_HIST_PGASTAT where name = 'total PGA allocated'
-   group by snap_id,INSTANCE_NUMBER) pga
 , dba_hist_snapshot sn
 where sn.snap_id=sga.snap_id
   and sn.INSTANCE_NUMBER=sga.INSTANCE_NUMBER
-  and sn.snap_id=pga.snap_id
-  and sn.INSTANCE_NUMBER=pga.INSTANCE_NUMBER and SN.END_INTERVAL_TIME >= ADD_MONTHS(sysdate,-1)
+  and SN.END_INTERVAL_TIME >= ADD_MONTHS(sysdate,-1)
 order by sn.snap_id";
+                    break;
+            }
 
             $records = array();
 
@@ -877,8 +1144,7 @@ order by sn.snap_id";
 
                 $records[] = array(
                     'time' => $start_date,
-                    'sga' => 0,
-                    'pga' => 0,
+                    'allo' => 0,
                     'comments' => $e['message']);
             } else {
                 $s = oci_parse($c, $query);
@@ -887,8 +1153,7 @@ order by sn.snap_id";
 
                     $records[] = array(
                         'time' => $start_date,
-                        'sga' => 0,
-                        'pga' => 0,
+                        'allo' => 0,
                         'comments' => $e['message']);
                 } else {
                     $r = oci_execute($s);
@@ -897,16 +1162,14 @@ order by sn.snap_id";
 
                         $records[] = array(
                             'time' => $start_date,
-                            'sga' => 0,
-                            'pga' => 0,
+                            'allo' => 0,
                             'comments' => $e['message']);
                     } else {
                         while (($row = oci_fetch_array($s, OCI_ASSOC))) {
 
                             $records[] = array(
                                 'time' => $row['TIME'],
-                                'sga' => $row['SGA'],
-                                'pga' => $row['PGA'],
+                                'allo' => $row['ALLO'],
                                 'comments' => '');
                         }
                     }
@@ -926,45 +1189,83 @@ order by sn.snap_id";
             $db_pass = $_REQUEST['db_pass'];
             $db_host = $_REQUEST['db_host'];
             $db_sid = $_REQUEST['db_sid'];
+            $pool = $_REQUEST['pool'];
             $databases_id = $_REQUEST['databases_id'];
 
             $start_date = date("Y-m-d H:i:s");
 
             $sum = 0;
-            $query = "SELECT other.taille other,
-         jav.taille AS jav,
-         strm.taille strm,
-         sharedd.taille sharedd,
-         large.taille large,
+
+            switch ($pool) {
+                case 'buffer_cache':
+                    $query = "SELECT other.taille,
          SN.END_INTERVAL_TIME time
     FROM (  SELECT snap_id, ROUND (SUM (bytes) / 1024 / 1024) taille
               FROM DBA_HIST_SGASTAT sga
              WHERE pool IS NULL
           GROUP BY snap_id) other,
-         (  SELECT snap_id, ROUND (SUM (bytes) / 1024 / 1024) taille
-              FROM DBA_HIST_SGASTAT sga
-             WHERE pool = 'java pool'
-          GROUP BY snap_id) jav,
-         (  SELECT snap_id, ROUND (SUM (bytes) / 1024 / 1024) taille
-              FROM DBA_HIST_SGASTAT sga
-             WHERE pool = 'streams pool'
-          GROUP BY snap_id) strm,
-         (  SELECT snap_id, ROUND (SUM (bytes) / 1024 / 1024) taille
+         dba_hist_snapshot sn
+   WHERE     sn.snap_id = other.snap_id
+         AND SN.END_INTERVAL_TIME >= ADD_MONTHS (SYSDATE, -1)
+ORDER BY sn.snap_id";
+                    break;
+                case 'shared':
+                    $query = "SELECT
+         sharedd.taille,
+         SN.END_INTERVAL_TIME time
+    FROM (  SELECT snap_id, ROUND (SUM (bytes) / 1024 / 1024) taille
               FROM DBA_HIST_SGASTAT sga
              WHERE pool = 'shared pool'
           GROUP BY snap_id) sharedd,
-         (  SELECT snap_id, ROUND (SUM (bytes) / 1024 / 1024) taille
+         dba_hist_snapshot sn
+   WHERE     sn.snap_id = sharedd.snap_id
+         AND SN.END_INTERVAL_TIME >= ADD_MONTHS (SYSDATE, -1)
+ORDER BY sn.snap_id";
+                    break;
+
+                case 'large':
+                    $query = "SELECT
+         large.taille,
+         SN.END_INTERVAL_TIME time
+    FROM (  SELECT snap_id, ROUND (SUM (bytes) / 1024 / 1024) taille
               FROM DBA_HIST_SGASTAT sga
              WHERE pool = 'large pool'
           GROUP BY snap_id) large,
          dba_hist_snapshot sn
-   WHERE     sn.snap_id = other.snap_id
-         AND sn.snap_id = strm.snap_id
-         AND sn.snap_id = sharedd.snap_id
-         AND sn.snap_id = large.snap_id
-         AND sn.snap_id = jav.snap_id
+   WHERE
+         sn.snap_id = large.snap_id
          AND SN.END_INTERVAL_TIME >= ADD_MONTHS (SYSDATE, -1)
 ORDER BY sn.snap_id";
+                    break;
+
+                case 'streams':
+                    $query = "SELECT
+         strm.taille,
+         SN.END_INTERVAL_TIME time
+    FROM (  SELECT snap_id, ROUND (SUM (bytes) / 1024 / 1024) taille
+              FROM DBA_HIST_SGASTAT sga
+             WHERE pool = 'streams pool'
+          GROUP BY snap_id) strm,
+         dba_hist_snapshot sn
+   WHERE     sn.snap_id = strm.snap_id
+         AND SN.END_INTERVAL_TIME >= ADD_MONTHS (SYSDATE, -1)
+ORDER BY sn.snap_id";
+                    break;
+
+                case 'java':
+                    $query = "SELECT
+         jav.taille,
+         SN.END_INTERVAL_TIME time
+    FROM (  SELECT snap_id, ROUND (SUM (bytes) / 1024 / 1024) taille
+              FROM DBA_HIST_SGASTAT sga
+             WHERE pool = 'java pool'
+          GROUP BY snap_id) jav,
+         dba_hist_snapshot sn
+   WHERE     sn.snap_id = jav.snap_id
+         AND SN.END_INTERVAL_TIME >= ADD_MONTHS (SYSDATE, -1)
+ORDER BY sn.snap_id";
+                    break;
+            }
 
             $records = array();
 
@@ -974,11 +1275,7 @@ ORDER BY sn.snap_id";
 
                 $records[] = array(
                     'time' => $start_date,
-                    'other' => 0,
-                    'java' => 0,
-                    'streams' => 0,
-                    'shared' => 0,
-                    'large' => 0,
+                    'taille' => 0,
                     'comments' => $e['message']);
             } else {
                 $s = oci_parse($c, $query);
@@ -987,11 +1284,7 @@ ORDER BY sn.snap_id";
 
                     $records[] = array(
                         'time' => $start_date,
-                        'other' => 0,
-                        'java' => 0,
-                        'streams' => 0,
-                        'shared' => 0,
-                        'large' => 0,
+                        'taille' => 0,
                         'comments' => $e['message']);
                 } else {
                     $r = oci_execute($s);
@@ -1000,22 +1293,14 @@ ORDER BY sn.snap_id";
 
                         $records[] = array(
                             'time' => $start_date,
-                            'other' => 0,
-                            'java' => 0,
-                            'streams' => 0,
-                            'shared' => 0,
-                            'large' => 0,
+                            'taille' => 0,
                             'comments' => $e['message']);
                     } else {
                         while (($row = oci_fetch_array($s, OCI_ASSOC))) {
 
                             $records[] = array(
                                 'time' => $row['TIME'],
-                                'other' => $row['OTHER'],
-                                'java' => $row['JAV'],
-                                'streams' => $row['STRM'],
-                                'shared' => $row['SHAREDD'],
-                                'large' => $row['LARGE'],
+                                'taille' => $row['TAILLE'],
                                 'comments' => '');
                         }
                     }
@@ -1031,7 +1316,21 @@ ORDER BY sn.snap_id";
             break;
 
         case 'list_toptbs':
-            $query = "SELECT ts.tablespace_name,
+
+            $db_user = $_REQUEST['db_user'];
+            $db_pass = $_REQUEST['db_pass'];
+            $db_host = $_REQUEST['db_host'];
+            $db_sid = $_REQUEST['db_sid'];
+
+            $records = array();
+
+            $c = oci_connect($db_user, $db_pass, $db_host . "/" . $db_sid);
+            if (!$c) {
+                $e = oci_error();
+
+                $records [] = array('tbs' => substr($e['message'], 15), 'pct_used' => 100, 'rest' => 100 . ';' . 0 . ';' . 0, 'qtip' => $e['message']);
+            } else {
+                $query = "SELECT ts.tablespace_name,
        size_info.megs_alloc,
        size_info.megs_free,
        size_info.megs_used,
@@ -1102,44 +1401,15 @@ ORDER BY sn.snap_id";
        sys.dba_tablespaces ts
  WHERE ts.tablespace_name = size_info.tablespace_name order by (size_info.MAX - size_info.megs_used)";
 
-            $db_user = $_REQUEST['db_user'];
-            $db_pass = $_REQUEST['db_pass'];
-            $db_host = $_REQUEST['db_host'];
-            $db_sid = $_REQUEST['db_sid'];
-
-            $records = array();
-            $total = 0;
-
-            $c = oci_connect($db_user, $db_pass, $db_host . "/" . $db_sid);
-            if (!$c) {
-                $e = oci_error();
-
-                $records [] = array('tbs' => substr($e['message'], 15), 'pct_used' => 100, 'rest' => 100 . ';' . 0 . ';' . 0, 'qtip' => $e['message']);
-
-                $total = $total + 1;
-
-                $response = array('success' => false, 'feedback' => $total . ' espaces logiques', EXT_JSON_READER_TOTAL => $total,
-                    EXT_JSON_READER_ROOT => $records);
-            } else {
                 $s = oci_parse($c, $query);
                 if (!$s) {
                     $e = oci_error($c);
                     $records [] = array('tbs' => substr($e['message'], 15), 'pct_used' => 100, 'rest' => 100 . ';' . 0 . ';' . 0, 'qtip' => $e['message']);
-
-                    $total = $total + 1;
-
-                    $response = array('success' => false, 'feedback' => $total . ' espaces logiques', EXT_JSON_READER_TOTAL => $total,
-                        EXT_JSON_READER_ROOT => $records);
                 } else {
                     $r = oci_execute($s, OCI_COMMIT_ON_SUCCESS);
                     if (!$r) {
                         $e = oci_error($s);
                         $records [] = array('tbs' => substr($e['message'], 15), 'pct_used' => 100, 'rest' => 100 . ';' . 0 . ';' . 0, 'qtip' => $e['message']);
-
-                        $total = $total + 1;
-
-                        $response = array('success' => false, 'feedback' => $total . ' espaces logiques', EXT_JSON_READER_TOTAL => $total,
-                            EXT_JSON_READER_ROOT => $records);
                     } else {
                         $total = 0;
                         while (($row = oci_fetch_array($s, OCI_ASSOC)) && $total < 3) {
@@ -1184,9 +1454,6 @@ ORDER BY sn.snap_id";
                             $tip = $bytes . " libre sur " . $bytes_max;
                             $records [] = array('tbs' => strtolower($row['TABLESPACE_NAME']), 'pct_used' => $total_percent_used, 'rest' => $total_percent_used . ';' . $row['MEGS_FREE'] . ';' . $row['MAX'], 'qtip' => $tip);
                         }
-
-                        $response = array('success' => true, 'feedback' => $total . ' espaces logiques', EXT_JSON_READER_TOTAL => $total,
-                            EXT_JSON_READER_ROOT => $records);
                     }
                 }
 
@@ -1194,6 +1461,244 @@ ORDER BY sn.snap_id";
             }
 
             oci_close($c);
+
+            $response = array(EXT_JSON_READER_TOTAL => count($records),
+                EXT_JSON_READER_ROOT => $records);
+
+            break;
+
+        case 'list_topeventash':
+
+            $db_user = $_REQUEST['db_user'];
+            $db_pass = $_REQUEST['db_pass'];
+            $db_host = $_REQUEST['db_host'];
+            $db_sid = $_REQUEST['db_sid'];
+            $start_sample_id = $_REQUEST['start_sample_id'];
+            $end_sample_id = $_REQUEST['end_sample_id'];
+
+            $records = array();
+
+            $c = oci_connect($db_user, $db_pass, $db_host . "/" . $db_sid);
+            if (!$c) {
+                $e = oci_error();
+
+                $records [] = array('event' => $e['message'], 'pct' => 100);
+            } else {
+                $query = "SELECT *
+  FROM (  SELECT NVL (event, session_state) event,nvl(wait_class_id,0) wait_class_id,
+                 ROUND (100 * COUNT (*) / (SUM (COUNT (1)) OVER ()),0)
+                    as pct
+            FROM v\$active_session_history";
+
+                if (isset($start_sample_id) && !empty($start_sample_id) && isset($end_sample_id) && !empty($end_sample_id)) {
+                    $query = $query . " where sample_id between " . $start_sample_id . " and " . $end_sample_id . " ";
+                }
+
+                $query = $query . " GROUP BY NVL (event, session_state),nvl(wait_class_id,0) ORDER BY COUNT (*) DESC) WHERE ROWNUM <= 10";
+
+                $s = oci_parse($c, $query);
+                if (!$s) {
+                    $e = oci_error($c);
+                    $records [] = array('event' => $e['message'], 'pct' => 100);
+                } else {
+                    $r = oci_execute($s, OCI_COMMIT_ON_SUCCESS);
+                    if (!$r) {
+                        $e = oci_error($s);
+                        $records [] = array('event' => $e['message'], 'pct' => 100);
+                    } else {
+                        while (($row = oci_fetch_array($s, OCI_ASSOC))) {
+                            $class_id = $row['WAIT_CLASS_ID'];
+                            $color = 'black';
+
+                            switch ($class_id) {
+                                case 0;
+                                    $color = 'green';
+                                    break;
+                                case 644977587;
+                                    $color = '#C2B79B';
+                                    break;
+                                case 3290255840;
+                                    $color = '#5C440B';
+                                    break;
+                                case 3386400367;
+                                    $color = '#E46800';
+                                    break;
+                                case 1893977003;
+                                    $color = '#F06EAA';
+                                    break;
+                                case 1740759767;
+                                    $color = '#004AE7';
+                                    break;
+                                case 4217450380;
+                                    $color = '#C02800';
+                                    break;
+                                case 3875070507;
+                                    $color = '#8B1A00';
+                                    break;
+                                case 4108307767;
+                                    $color = '#0094E7';
+                                    break;
+                                case 2000153315;
+                                    $color = '#9F9371';
+                                    break;
+                            }
+
+                            $pct = "<table border='0' cellpadding='0' cellspacing='0' style='width: 100%; height: 10px'><tbody><tr><td style='border-color: " . $color . "; width: " . $row['PCT'] . "%; background-color: " . $color . ";'></td><td style='border-color: white; width: " . (100 - $row['PCT']) . "%; background-color: white;'>&nbsp;</td></tr></tbody></table>";
+                            $records [] = array('event' => $row['EVENT'], 'pct' => $pct);
+                        }
+                    }
+                }
+
+                oci_free_statement($s);
+            }
+
+            oci_close($c);
+
+            $response = array(EXT_JSON_READER_TOTAL => count($records),
+                EXT_JSON_READER_ROOT => $records);
+
+            break;
+
+        case 'list_sgausage':
+
+            $db_user = $_REQUEST['db_user'];
+            $db_pass = $_REQUEST['db_pass'];
+            $db_host = $_REQUEST['db_host'];
+            $db_sid = $_REQUEST['db_sid'];
+
+            $records = array();
+
+            $c = oci_connect($db_user, $db_pass, $db_host . "/" . $db_sid);
+            if (!$c) {
+                $e = oci_error();
+
+                $records [] = array(
+                    'pool' => $e['message'],
+                    'total' => '',
+                    'used' => '',
+                    'pct' => ''
+                );
+            } else {
+                $query = "SELECT 'shared pool' pool,
+       (SELECT ROUND (SUM (bytes) / 1024 / 1024)
+          FROM v\$sgastat
+         WHERE pool = 'shared pool')
+          total,
+       (SELECT ROUND (SUM (bytes) / 1024 / 1024)
+          FROM v\$sgastat
+         WHERE pool = 'shared pool' AND name != 'free memory')
+          used,
+       round((SELECT   100
+               * (SELECT ROUND (SUM (bytes) / 1024 / 1024)
+                    FROM v\$sgastat
+                   WHERE pool = 'shared pool' AND name != 'free memory')
+               / (SELECT ROUND (SUM (bytes) / 1024 / 1024)
+                    FROM v\$sgastat
+                   WHERE pool = 'shared pool')
+          FROM DUAL))
+          pct
+  FROM DUAL
+  union
+  SELECT 'large pool' pool,
+       (SELECT ROUND (SUM (bytes) / 1024 / 1024)
+          FROM v\$sgastat
+         WHERE pool = 'large pool')
+          total,
+       (SELECT ROUND (SUM (bytes) / 1024 / 1024)
+          FROM v\$sgastat
+         WHERE pool = 'large pool' AND name != 'free memory')
+          used,
+       round((SELECT   100
+               * (SELECT ROUND (SUM (bytes) / 1024 / 1024)
+                    FROM v\$sgastat
+                   WHERE pool = 'large pool' AND name != 'free memory')
+               / (SELECT ROUND (SUM (bytes) / 1024 / 1024)
+                    FROM v\$sgastat
+                   WHERE pool = 'large pool')
+          FROM DUAL))
+          pct
+  FROM DUAL
+  union
+SELECT 'java pool' pool,
+       (SELECT ROUND (SUM (bytes) / 1024 / 1024)
+          FROM v\$sgastat
+         WHERE pool = 'java pool')
+          total,
+       (SELECT ROUND (SUM (bytes) / 1024 / 1024)
+          FROM v\$sgastat
+         WHERE pool = 'java pool' AND name != 'free memory')
+          used,
+       round((SELECT   100
+               * (SELECT ROUND (SUM (bytes) / 1024 / 1024)
+                    FROM v\$sgastat
+                   WHERE pool = 'java pool' AND name != 'free memory')
+               / (SELECT ROUND (SUM (bytes) / 1024 / 1024)
+                    FROM v\$sgastat
+                   WHERE pool = 'java pool')
+          FROM DUAL))
+          pct
+  FROM DUAL
+  union
+  SELECT 'streams pool' pool,
+       (SELECT ROUND (SUM (bytes) / 1024 / 1024)
+          FROM v\$sgastat
+         WHERE pool = 'streams pool')
+          total,
+       (SELECT ROUND (SUM (bytes) / 1024 / 1024)
+          FROM v\$sgastat
+         WHERE pool = 'streams pool' AND name != 'free memory')
+          used,
+       round((SELECT   100
+               * (SELECT ROUND (SUM (bytes) / 1024 / 1024)
+                    FROM v\$sgastat
+                   WHERE pool = 'streams pool' AND name != 'free memory')
+               / (SELECT ROUND (SUM (bytes) / 1024 / 1024)
+                    FROM v\$sgastat
+                   WHERE pool = 'streams pool')
+          FROM DUAL))
+          pct
+  FROM DUAL
+";
+                $s = oci_parse($c, $query);
+                if (!$s) {
+                    $e = oci_error($c);
+                    $records [] = array(
+                        'pool' => $e['message'],
+                        'total' => '',
+                        'used' => '',
+                        'pct' => ''
+                    );
+                } else {
+                    $r = oci_execute($s, OCI_COMMIT_ON_SUCCESS);
+                    if (!$r) {
+                        $e = oci_error($s);
+
+                        $records [] = array(
+                            'pool' => $e['message'],
+                            'total' => '',
+                            'used' => '',
+                            'pct' => ''
+                        );
+
+                    } else {
+                        while (($row = oci_fetch_array($s, OCI_ASSOC))) {
+                            $records [] = array(
+                                'pool' => $row['POOL'],
+                                'total' => $row['TOTAL'],
+                                'used' => $row['USED'],
+                                'pct' => $row['PCT']
+                            );
+                        }
+                    }
+                }
+
+                oci_free_statement($s);
+            }
+
+            oci_close($c);
+
+            $response = array(EXT_JSON_READER_TOTAL => count($records),
+                EXT_JSON_READER_ROOT => $records);
 
             break;
     }

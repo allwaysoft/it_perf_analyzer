@@ -47,6 +47,7 @@ class toC_Json_Documents
         }
 
         $download = array('class' => '', 'qtip' => '');
+        $edit = array('class' => '', 'qtip' => '');
         $delete = array('class' => '', 'qtip' => '');
 
         if ($_REQUEST['can_see'] == 1 || $_REQUEST['can_read'] == 1 || $_REQUEST['can_write'] == 1) {
@@ -55,11 +56,13 @@ class toC_Json_Documents
 
         if (strlen($_REQUEST['can_modify']) == 0) {
             $download = array('class' => 'icon-download-record', 'qtip' => $osC_Language->get('icon_download'));
+            $edit = array('class' => 'icon-edit-record', 'qtip' => $osC_Language->get('icon_edit'));
             $delete = array('class' => 'icon-delete-record', 'qtip' => $osC_Language->get('icon_trash'));
         }
 
         if ($_REQUEST['can_publish'] == 1) {
             $download = array('class' => 'icon-download-record', 'qtip' => $osC_Language->get('icon_download'));
+            $edit = array('class' => 'icon-edit-record', 'qtip' => $osC_Language->get('icon_edit'));
             $delete = array('class' => 'icon-delete-record', 'qtip' => $osC_Language->get('icon_trash'));
         }
 
@@ -73,10 +76,11 @@ class toC_Json_Documents
         //var_dump($Qdocuments);
 
         while ($Qdocuments->next()) {
-            $entry_icon = osc_icon_from_filename($Qdocuments->value('filename'));
+            $entry_icon = osc_icon_from_filename($Qdocuments->value('cache_filename'));
             $url = '../cache/documents/' . $Qdocuments->value('cache_filename');
             $action = array(
                 $download,
+                $edit,
                 $delete);
 
             $records[] = array('documents_id' => $Qdocuments->valueInt('documents_id'),

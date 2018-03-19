@@ -53,20 +53,35 @@ Toc.content.ContentManager.renderPct = function (percent) {
     }
 };
 
-Toc.content.ContentManager.renderOsProgress = function (percent) {
-    return "<div id='my-progressbar' style='width: 100%; height: 15px;' class='progressbar-control'><div style='opacity: 1; float: left; position: relative; width: " + percent + "%;' class='item-bar green'></div></div>";
+Toc.content.ContentManager.renderUsagePct = function (percent) {
+    if (percent == 0) {
+        return "";
+    }
 
     if (percent >= 90) {
         return "<div id='my-progressbar' style='width: 100%; height: 15px;' class='progressbar-control'><div style='opacity: 1; float: left; position: relative; width: " + percent + "%;' class='item-bar red'></div></div>";
     }
     else {
-        if (percent < 90 && percent >= 80) {
+        if (percent < 90 && percent >= 70) {
             return "<div id='my-progressbar' style='width: 100%; height: 15px;' class='progressbar-control'><div style='opacity: 1; float: left; position: relative; width: " + percent + "%;' class='item-bar yellow'></div></div>";
         }
         else {
             return "<div id='my-progressbar' style='width: 100%; height: 15px;' class='progressbar-control'><div style='opacity: 1; float: left; position: relative; width: " + percent + "%;' class='item-bar green'></div></div>";
         }
     }
+};
+
+renderNewLine = function (row) {
+    return '<div style = "white-space : normal">' + row + '</div>';
+};
+
+Toc.content.ContentManager.renderOsProgress = function (percent) {
+    if(percent && percent > 0)
+    {
+        return "<div id='my-progressbar' style='width: 100%; height: 15px;' class='progressbar-control'><div style='opacity: 1; float: left; position: relative; width: " + percent + "%;' class='item-bar green'></div></div>";
+    }
+
+    return '';
 };
 
 Toc.content.ContentManager.renderFsProgress = function (rest) {

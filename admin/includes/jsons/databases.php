@@ -922,7 +922,7 @@ WHERE delta_ogg_config.id = delta_ogg_capture_state.config_id and config_id= " .
     {
         global $toC_Json, $osC_Database;
 
-        $query = "SELECT a.*,s.label,s.HOST,s.servers_id,s.typ,s.USER AS server_user,s.pass AS server_pass,s.PORT AS server_port FROM delta_databases a INNER JOIN delta_servers s ON a.servers_id = s.servers_id";
+        $query = "SELECT a.*,s.HOST,s.servers_id,s.typ,s.USER AS server_user,s.pass AS server_pass,s.PORT AS server_port FROM delta_databases a INNER JOIN delta_servers s ON a.servers_id = s.servers_id";
         $Qdatabases = $osC_Database->query($query);
         $Qdatabases->appendQuery('order by a.label ');
         $Qdatabases->execute();
@@ -1270,131 +1270,6 @@ WHERE delta_ogg_config.id = delta_ogg_capture_state.config_id and config_id= " .
         echo $toC_Json->encode($response);
     }
 
-    function listSnapshots()
-    {
-        global $toC_Json;
-
-        $start = empty($_REQUEST['start']) ? 0 : $_REQUEST['start'];
-        $limit = empty($_REQUEST['limit']) ? MAX_DISPLAY_SEARCH_RESULTS : $_REQUEST['limit'];
-
-        $db_user = $_REQUEST['db_user'];
-        $db_pass = $_REQUEST['db_pass'];
-        $db_host = $_REQUEST['db_host'];
-        $db_sid = $_REQUEST['db_sid'];
-        $start_id = $_REQUEST['start_id'];
-        $total = 0;
-
-        $c = oci_pconnect($db_user, $db_pass, $db_host . "/" . $db_sid);
-        if (!$c) {
-            $e = oci_error();
-            $response = array('success' => false, 'feedback' => 'Could not connect to database: ' . htmlentities($e['message']));
-        } else {
-            if (!empty($start_id)) {
-                $query = "SELECT count(snap_id) nbre FROM DBA_HIST_SNAPSHOT WHERE dbid = (SELECT DISTINCT dbid FROM DBA_HIST_DATABASE_INSTANCE) AND snap_id > " . $start_id . " AND startup_time <= (SELECT MIN (startup_time) FROM DBA_HIST_SNAPSHOT WHERE snap_id > " . $start_id . ")";
-            } else {
-                $query = "SELECT count(snap_id) nbre FROM DBA_HIST_SNAPSHOT WHERE dbid = (SELECT DISTINCT dbid FROM DBA_HIST_DATABASE_INSTANCE)";
-            }
-
-            $s = oci_parse($c, $query);
-            if (!$s) {
-                $e = oci_error($c);
-                $response = array('success' => false, 'feedback' => "Impossible d'executer cette requete " . htmlentities($e['message']));
-            } else {
-                $r = oci_execute($s, OCI_COMMIT_ON_SUCCESS);
-                if (!$r) {
-                    $e = oci_error($s);
-                    $response = array('success' => false, 'feedback' => 'Impossible de lister les captures AWR de cette base ' . htmlentities($e['message']));
-                } else {
-                    while (($row = oci_fetch_array($s, OCI_ASSOC))) {
-                        $total = $row['NBRE'];
-                    }
-                }
-            }
-
-            if (!empty($start_id)) {
-                $query = "SELECT * FROM (SELECT a.*, ROWNUM rnum FROM (SELECT snap_id,TO_CHAR (begin_interval_time, 'yyyy/mm/dd hh24:mi:ss') begin_interval_time,TO_CHAR (end_interval_time, 'yyyy/mm/dd hh24:mi:ss') end_interval_time,TO_CHAR (startup_time, 'yyyy/mm/dd hh24:mi:ss') startup_time FROM DBA_HIST_SNAPSHOT WHERE     dbid = (SELECT DISTINCT dbid FROM DBA_HIST_DATABASE_INSTANCE) AND snap_id > " . $start_id . " AND startup_time <= (SELECT MIN (startup_time) FROM DBA_HIST_SNAPSHOT WHERE snap_id > " . $start_id . ") ORDER BY 1) a WHERE ROWNUM <= :MAX_ROW_TO_FETCH) WHERE rnum >= :MIN_ROW_TO_FETCH";
-            } else {
-                $query = "SELECT * FROM (SELECT a.*, ROWNUM rnum FROM (SELECT snap_id,TO_CHAR (begin_interval_time, 'yyyy/mm/dd hh24:mi:ss') begin_interval_time,TO_CHAR (end_interval_time, 'yyyy/mm/dd hh24:mi:ss') end_interval_time,TO_CHAR (startup_time, 'yyyy/mm/dd hh24:mi:ss') startup_time FROM DBA_HIST_SNAPSHOT WHERE     dbid = (SELECT DISTINCT dbid FROM DBA_HIST_DATABASE_INSTANCE) ORDER BY 1) a WHERE ROWNUM <= :MAX_ROW_TO_FETCH) WHERE rnum >= :MIN_ROW_TO_FETCH";
-            }
-
-            $s = oci_parse($c, $query);
-            if (!$s) {
-                $e = oci_error($c);
-                $response = array('success' => false, 'feedback' => "Impossible d'executer cette requete " . htmlentities($e['message']));
-            } else {
-                //oci_bind_by_name($s, ":tablespace_name", $tbs);
-                $fin = $start + $limit;
-                oci_bind_by_name($s, ":MAX_ROW_TO_FETCH", $fin);
-                oci_bind_by_name($s, ":MIN_ROW_TO_FETCH", $start);
-
-                $r = oci_execute($s, OCI_COMMIT_ON_SUCCESS);
-                if (!$r) {
-                    $e = oci_error($s);
-                    $response = array('success' => false, 'feedback' => 'Impossible de lister les captures AWR de cette base ' . htmlentities($e['message']));
-                } else {
-                    $records = array();
-
-                    while (($row = oci_fetch_array($s, OCI_ASSOC))) {
-                        $records [] = array('snap_id' => $row['SNAP_ID'], 'begin_interval_time' => $row['BEGIN_INTERVAL_TIME'], 'end_interval_time' => $row['END_INTERVAL_TIME'], 'startup_time' => $row['STARTUP_TIME']);
-                    }
-
-                    oci_free_statement($s);
-                    oci_close($c);
-
-                    $response = array('success' => true, 'feedback' => $total . ' captures', EXT_JSON_READER_TOTAL => $total,
-                        EXT_JSON_READER_ROOT => $records);
-                }
-            }
-        }
-
-        echo $toC_Json->encode($response);
-    }
-
-    function listIoevents()
-    {
-        global $toC_Json;
-
-        $db_user = $_REQUEST['db_user'];
-        $db_pass = $_REQUEST['db_pass'];
-        $db_host = $_REQUEST['db_host'];
-        $db_sid = $_REQUEST['db_sid'];
-        $class = $_REQUEST['class'];
-        $records = array();
-
-        $c = oci_pconnect($db_user, $db_pass, $db_host . "/" . $db_sid);
-        if (!$c) {
-            $e = oci_error();
-            $response = array('success' => false, 'feedback' => 'Could not connect to database: ' . htmlentities($e['message']));
-        } else {
-            $query = "select event,count(*) from v\$event_histogram where last_update_time is not null and wait_time_milli > 1000 and event in (select name from v\$event_name where wait_class = '" . $class . "') group by event having count(*) > 1";
-
-            $s = oci_parse($c, $query);
-            if (!$s) {
-                $e = oci_error($c);
-                $records[] = array('event' => "Impossible d'executer cette requete : " . htmlentities($e['message']));
-            } else {
-                $r = oci_execute($s, OCI_COMMIT_ON_SUCCESS);
-                if (!$r) {
-                    $e = oci_error($s);
-                    $records[] = array('event' => "Impossible de lister les evenements IO : " . htmlentities($e['message']));
-                } else {
-                    while (($row = oci_fetch_array($s, OCI_ASSOC))) {
-                        $records[] = array('event' => $row['EVENT']);
-                    }
-                }
-
-                oci_free_statement($s);
-            }
-
-            oci_close($c);
-        }
-
-        $response = array(EXT_JSON_READER_TOTAL => count($records),
-            EXT_JSON_READER_ROOT => $records);
-
-        echo $toC_Json->encode($response);
-    }
-
     function listFreq()
     {
         global $toC_Json;
@@ -1568,9 +1443,10 @@ WHERE delta_ogg_config.id = delta_ogg_capture_state.config_id and config_id= " .
                         }
                     }
                 }
+
+                oci_free_statement($s);
             }
 
-            oci_free_statement($s);
             oci_close($c);
         }
 
@@ -1913,8 +1789,9 @@ WHERE delta_ogg_config.id = delta_ogg_capture_state.config_id and config_id= " .
 
             $proc_name = 'proc_gather_stats_' . $randomString;
             $job_name = 'job_gather_stats_' . $randomString;
+            $method = 'FOR ALL COLUMNS';
 
-            $args = "''" . $schema . "'',''" . $table . "''";
+            $args = "''" . $schema . "'',''" . $table . "'',METHOD_OPT => ''" . $method . "''";
 
             $action = "DBMS_STATS.GATHER_TABLE_STATS(" . $args . ");";
 
@@ -1932,17 +1809,19 @@ WHERE delta_ogg_config.id = delta_ogg_capture_state.config_id and config_id= " .
                     $response = array('success' => false, 'feedback' => 'Impossible d executer la requete ' . $query . ' ... raison : ' . htmlentities($e['message']));
                 } else {
                     $response = array('success' => true, 'feedback' => "Procedure cree avec succes ...", 'proc_name' => $proc_name);
-                    $query = "BEGIN DBMS_SCHEDULER.create_job (job_name => '" . $job_name . "',job_type => 'PLSQL_BLOCK',job_action => 'BEGIN " . $proc_name . ";END;',start_date => SYSTIMESTAMP,enabled => TRUE,auto_drop => TRUE);END;";
+                    $query = "BEGIN DBMS_SCHEDULER.create_job (job_name => '" . $job_name . "',job_type => 'PLSQL_BLOCK',job_action => 'BEGIN " . $proc_name . " ;execute immediate ''DROP PROCEDURE " . $proc_name . "'';END;',start_date => SYSTIMESTAMP,enabled => TRUE,auto_drop => TRUE);END;";
 
                     $s = oci_parse($c, $query);
                     if (!$s) {
                         $e = oci_error($c);
+                        var_dump($query);
                         $response = array('success' => false, 'feedback' => 'Impossible de creer ce job : ' . htmlentities($e['message']));
                     } else {
                         $r = oci_execute($s, OCI_COMMIT_ON_SUCCESS);
                         if (!$r) {
                             $e = oci_error($s);
-                            $response = array('success' => false, 'feedback' => 'Impossible de creer ce job : ' . htmlentities($e['message']));
+                            var_dump($query);
+                            $response = array('success' => false, 'feedback' => "Impossible d'executer ce job : " . htmlentities($e['message']));
                         } else {
                             $response = array('success' => true, 'feedback' => "Job cree avec succes ...", 'job_name' => $job_name, 'proc_name' => $proc_name);
                         }
@@ -2245,255 +2124,6 @@ WHERE delta_ogg_config.id = delta_ogg_capture_state.config_id and config_id= " .
             }
 
             oci_free_statement($s);
-        }
-
-        oci_close($c);
-
-        echo $toC_Json->encode($response);
-    }
-
-    function sgaResize()
-    {
-        global $toC_Json;
-
-        $db_user = $_REQUEST['db_user'];
-        $db_pass = $_REQUEST['db_pass'];
-        $db_host = $_REQUEST['db_host'];
-        $db_sid = $_REQUEST['db_sid'];
-        $records = array();
-
-        $c = oci_pconnect($db_user, $db_pass, $db_host . "/" . $db_sid);
-        if (!$c) {
-            $e = oci_error();
-            $entry_icon = osc_icon_from_filename('xxxxxxxx.error');
-            $records [] = array('icon' => $entry_icon,
-                'index' => 0,
-                'component' => htmlentities($e['message']),
-                'parameter' => '',
-                'status' => 'ERROR',
-                'initial_size' => '',
-                'target_size' => '',
-                'final_size' => '',
-                'start_time' => '',
-                'end_time' => '',
-                'duree' => '');
-        } else {
-            $query = "SELECT component,
-       parameter,
-       round(initial_size/1024/1024) initial_size,
-       round(target_size/1024/1024) target_size,
-       round(final_size/1024/1024) final_size,
-       status,
-       start_time,
-       end_time,
-       EXTRACT(SECOND FROM(end_time - start_time) DAY TO SECOND) as duree
-    from v\$sga_resize_ops  order by start_time desc";
-
-            $s = oci_parse($c, $query);
-            if (!$s) {
-                $e = oci_error($c);
-                $entry_icon = osc_icon_from_filename('xxxxxxxx.error');
-                $records [] = array('icon' => $entry_icon,
-                    'index' => 0,
-                    'component' => htmlentities($e['message']),
-                    'parameter' => '',
-                    'status' => 'ERROR',
-                    'initial_size' => '',
-                    'target_size' => '',
-                    'final_size' => '',
-                    'start_time' => '',
-                    'end_time' => '',
-                    'duree' => '');
-            } else {
-                $r = oci_execute($s, OCI_COMMIT_ON_SUCCESS);
-                if (!$r) {
-                    $e = oci_error($s);
-                    $entry_icon = osc_icon_from_filename('xxxxxxxx.error');
-                    $records [] = array('icon' => $entry_icon,
-                        'index' => 0,
-                        'component' => htmlentities($e['message']),
-                        'parameter' => '',
-                        'status' => 'ERROR',
-                        'initial_size' => '',
-                        'target_size' => '',
-                        'final_size' => '',
-                        'start_time' => '',
-                        'end_time' => '',
-                        'duree' => '');
-                } else {
-                    $index = 0;
-
-                    while (($row = oci_fetch_array($s, OCI_ASSOC))) {
-                        $entry_icon = osc_icon_from_filename('xxxxxxxx.' . $row['STATUS']);
-                        $records [] = array('icon' => $entry_icon,
-                            'index' => $index,
-                            'component' => $row['COMPONENT'],
-                            'parameter' => $row['PARAMETER'],
-                            'status' => $row['STATUS'],
-                            'initial_size' => $row['INITIAL_SIZE'],
-                            'target_size' => $row['TARGET_SIZE'],
-                            'final_size' => $row['FINAL_SIZE'],
-                            'start_time' => $row['START_TIME'],
-                            'end_time' => $row['END_TIME'],
-                            'duree' => $row['DUREE']);
-                        $index++;
-                    }
-                }
-            }
-
-            oci_free_statement($s);
-        }
-
-        oci_close($c);
-
-        $response = array(EXT_JSON_READER_TOTAL => count($records),
-            EXT_JSON_READER_ROOT => $records);
-
-        echo $toC_Json->encode($response);
-    }
-
-    function memoryResize()
-    {
-        global $toC_Json;
-
-        $db_user = $_REQUEST['db_user'];
-        $db_pass = $_REQUEST['db_pass'];
-        $db_host = $_REQUEST['db_host'];
-        $db_sid = $_REQUEST['db_sid'];
-        $records = array();
-
-        $c = oci_pconnect($db_user, $db_pass, $db_host . "/" . $db_sid);
-        if (!$c) {
-            $e = oci_error();
-            $entry_icon = osc_icon_from_filename('xxxxxxxx.error');
-            $records [] = array('icon' => $entry_icon,
-                'index' => 0,
-                'component' => htmlentities($e['message']),
-                'parameter' => '',
-                'status' => 'ERROR',
-                'initial_size' => '',
-                'target_size' => '',
-                'final_size' => '',
-                'start_time' => '',
-                'end_time' => '',
-                'duree' => '');
-        } else {
-            $query = "SELECT component,
-       parameter,
-       round(initial_size/1024/1024) initial_size,
-       round(target_size/1024/1024) target_size,
-       round(final_size/1024/1024) final_size,
-       status,
-       start_time,
-       end_time,
-       EXTRACT(SECOND FROM(end_time - start_time) DAY TO SECOND) as duree
-    from V\$MEMORY_RESIZE_OPS order by start_time desc";
-
-            $s = oci_parse($c, $query);
-            if (!$s) {
-                $e = oci_error($c);
-                $entry_icon = osc_icon_from_filename('xxxxxxxx.error');
-                $records [] = array('icon' => $entry_icon,
-                    'index' => 0,
-                    'component' => htmlentities($e['message']),
-                    'parameter' => '',
-                    'status' => 'ERROR',
-                    'initial_size' => '',
-                    'target_size' => '',
-                    'final_size' => '',
-                    'start_time' => '',
-                    'end_time' => '',
-                    'duree' => '');
-            } else {
-                $r = oci_execute($s, OCI_COMMIT_ON_SUCCESS);
-                if (!$r) {
-                    $e = oci_error($s);
-                    $entry_icon = osc_icon_from_filename('xxxxxxxx.error');
-                    $records [] = array('icon' => $entry_icon,
-                        'index' => 0,
-                        'component' => htmlentities($e['message']),
-                        'parameter' => '',
-                        'status' => 'ERROR',
-                        'initial_size' => '',
-                        'target_size' => '',
-                        'final_size' => '',
-                        'start_time' => '',
-                        'end_time' => '',
-                        'duree' => '');
-                } else {
-                    $index = 0;
-
-                    while (($row = oci_fetch_array($s, OCI_ASSOC))) {
-                        $entry_icon = osc_icon_from_filename('xxxxxxxx.' . $row['STATUS']);
-                        $records [] = array('icon' => $entry_icon,
-                            'index' => $index,
-                            'component' => $row['COMPONENT'],
-                            'parameter' => $row['PARAMETER'],
-                            'status' => $row['STATUS'],
-                            'initial_size' => $row['INITIAL_SIZE'],
-                            'target_size' => $row['TARGET_SIZE'],
-                            'final_size' => $row['FINAL_SIZE'],
-                            'start_time' => $row['START_TIME'],
-                            'end_time' => $row['END_TIME'],
-                            'duree' => $row['DUREE']);
-                        $index++;
-                    }
-                }
-            }
-
-            oci_free_statement($s);
-        }
-
-        oci_close($c);
-
-        $response = array(EXT_JSON_READER_TOTAL => count($records),
-            EXT_JSON_READER_ROOT => $records);
-
-        echo $toC_Json->encode($response);
-    }
-
-    function pgaStats()
-    {
-        global $toC_Json;
-
-        $db_user = $_REQUEST['db_user'];
-        $db_pass = $_REQUEST['db_pass'];
-        $db_host = $_REQUEST['db_host'];
-        $db_sid = $_REQUEST['db_sid'];
-
-        $c = oci_pconnect($db_user, $db_pass, $db_host . "/" . $db_sid);
-        if (!$c) {
-            $e = oci_error();
-            $response = array('success' => false, 'feedback' => 'Could not connect to database: ' . htmlentities($e['message']));
-        } else {
-            $query = "SELECT name,
-       CASE unit WHEN 'bytes' THEN to_char(round(VALUE / 1024 / 1024)) || ' MB' ELSE to_char(VALUE) END val
-  FROM v\$PGASTAT";
-
-            $s = oci_parse($c, $query);
-            if (!$s) {
-                $e = oci_error($c);
-                $response = array('success' => false, 'feedback' => "Impossible d'executer cette requete " . htmlentities($e['message']));
-            } else {
-                $r = oci_execute($s, OCI_COMMIT_ON_SUCCESS);
-                if (!$r) {
-                    $e = oci_error($s);
-                    $response = array('success' => false, 'feedback' => 'Erreur : ' . htmlentities($e['message']));
-                } else {
-                    $records = array();
-                    $index = 0;
-
-                    while (($row = oci_fetch_array($s, OCI_ASSOC))) {
-                        $records [] = array('index' => $index, 'name' => $row['NAME'], 'val' => $row['VAL']);
-                        $index++;
-                    }
-
-                    oci_free_statement($s);
-
-                    $response = array('success' => true, EXT_JSON_READER_TOTAL => count($records),
-                        EXT_JSON_READER_ROOT => $records);
-                }
-            }
         }
 
         oci_close($c);
@@ -3075,44 +2705,6 @@ WHERE delta_ogg_config.id = delta_ogg_capture_state.config_id and config_id= " .
         echo $toC_Json->encode($response);
     }
 
-    function runAsh()
-    {
-        global $toC_Json;
-
-        $ssh = new Net_SSH2(REPORT_RUNNER, '22');
-
-        if (empty($ssh->server_identifier)) {
-            $response = array('success' => false, 'msg' => 'Impossible de se connecter au serveur pour generer cet etat, veuillez contacter votre administrateur systeme', 'subscriptions_id' => null, 'status' => null);
-        } else {
-            if (!$ssh->login("guyfomi", "12345")) {
-                $response = array('success' => false, 'msg' => 'Impossible de se connecter au serveur pour generer cet etat, Compte ou mot de passe invalide', 'subscriptions_id' => null, 'status' => null);
-            } else {
-                $ssh->disableQuietMode();
-
-                $data = $_REQUEST;
-                $characters = '0123456789';
-                $charactersLength = strlen($characters);
-                $randomString = '';
-                for ($i = 0; $i < 10; $i++) {
-                    $randomString .= $characters[rand(0, $charactersLength - 1)];
-                }
-
-                $cmd = "nohup curl '" . HTTP_SERVER . "/" . HTTP_COOKIE_PATH . "/admin/json.php' --data 'module=databases&action=ash_report&startValue=" . $data['startValue'] . "&endValue=" . $data['endValue'] . "&db_host=" . $data['db_host'] . "&db_user=" . $data['db_user'] . "&db_pass=" . $data['db_pass'] . "&db_sid=" . $data['db_sid'] . "&databases_id=" . $data['databases_id'] . "&task_id=" . $randomString . "' &";
-                $ssh->exec($cmd);
-                //var_dump($cmd);
-
-                $ssh->disconnect();
-
-                $detail = array('task_id' => $randomString, 'status' => 'run', 'comments' => 'Job cree avec succes');
-                toC_Reports_Admin::addJobDetail($detail);
-
-                $response = array('success' => true, 'msg' => 'Tache creee avec succes', 'task_id' => $randomString, 'status' => 'run');
-            }
-        }
-
-        echo $toC_Json->encode($response);
-    }
-
     function sqlReport()
     {
         global $toC_Json;
@@ -3174,44 +2766,6 @@ WHERE delta_ogg_config.id = delta_ogg_capture_state.config_id and config_id= " .
                 }
 
                 $cmd = "nohup curl '" . HTTP_SERVER . "/" . HTTP_COOKIE_PATH . "/admin/json.php' --data 'module=databases&action=sql_tuning&db_host=" . $data['db_host'] . "&sql_id=" . $data['sql_id'] . "&db_user=" . $data['db_user'] . "&db_pass=" . $data['db_pass'] . "&db_sid=" . $data['db_sid'] . "&databases_id=" . $data['databases_id'] . "&task_id=" . $randomString . "' &";
-                $ssh->exec($cmd);
-                //var_dump($cmd);
-
-                $ssh->disconnect();
-
-                $detail = array('task_id' => $randomString, 'status' => 'run', 'comments' => 'Job cree avec succes');
-                toC_Reports_Admin::addJobDetail($detail);
-
-                $response = array('success' => true, 'msg' => 'Tache creee avec succes', 'task_id' => $randomString, 'status' => 'run');
-            }
-        }
-
-        echo $toC_Json->encode($response);
-    }
-
-    function runAddm()
-    {
-        global $toC_Json;
-
-        $ssh = new Net_SSH2(REPORT_RUNNER, '22');
-
-        if (empty($ssh->server_identifier)) {
-            $response = array('success' => false, 'msg' => 'Impossible de se connecter au serveur pour generer cet etat, veuillez contacter votre administrateur systeme', 'subscriptions_id' => null, 'status' => null);
-        } else {
-            if (!$ssh->login("guyfomi", "12345")) {
-                $response = array('success' => false, 'msg' => 'Impossible de se connecter au serveur pour generer cet etat, Compte ou mot de passe invalide', 'subscriptions_id' => null, 'status' => null);
-            } else {
-                $ssh->disableQuietMode();
-
-                $data = $_REQUEST;
-                $characters = '0123456789';
-                $charactersLength = strlen($characters);
-                $randomString = '';
-                for ($i = 0; $i < 10; $i++) {
-                    $randomString .= $characters[rand(0, $charactersLength - 1)];
-                }
-
-                $cmd = "nohup curl '" . HTTP_SERVER . "/" . HTTP_COOKIE_PATH . "/admin/json.php' --data 'module=databases&action=addm_report&db_host=" . $data['db_host'] . "&db_user=" . $data['db_user'] . "&db_pass=" . $data['db_pass'] . "&db_sid=" . $data['db_sid'] . "&databases_id=" . $data['databases_id'] . "&task_id=" . $randomString . "' &";
                 $ssh->exec($cmd);
                 //var_dump($cmd);
 
@@ -3386,511 +2940,6 @@ WHERE delta_ogg_config.id = delta_ogg_capture_state.config_id and config_id= " .
 
         $response = array(EXT_JSON_READER_TOTAL => count($records),
             EXT_JSON_READER_ROOT => $records);
-
-        echo $toC_Json->encode($response);
-    }
-
-    function addmReport()
-    {
-        error_reporting(E_ALL);
-        global $toC_Json;
-
-        $db_user = $_REQUEST['db_user'];
-        $db_pass = $_REQUEST['db_pass'];
-        $db_host = $_REQUEST['db_host'];
-        $db_sid = $_REQUEST['db_sid'];
-        $data = $_REQUEST;
-
-        $detail = array('task_id' => $data['task_id'], 'status' => 'run', 'comments' => 'recuperation des parametres ...');
-        toC_Reports_Admin::addJobDetail($detail);
-
-        $c = oci_pconnect($db_user, $db_pass, $db_host . "/" . $db_sid);
-        if (!$c) {
-            $e = oci_error();
-            $detail = array('task_id' => $data['task_id'], 'status' => 'error', 'comments' => 'Could not connect to database: ' . htmlentities($e['message']));
-            toC_Reports_Admin::addJobDetail($detail);
-            $response = array('success' => false, 'feedback' => 'Could not connect to database: ' . htmlentities($e['message']));
-        } else {
-            $query = "SELECT (SELECT MIN (snap_id)
-          FROM DBA_HIST_SNAPSHOT
-         WHERE startup_time =
-                  (SELECT MAX (startup_time) FROM DBA_HIST_SNAPSHOT))
-          start_snap,
-       (SELECT MAX (snap_id) FROM DBA_HIST_SNAPSHOT) end_snap
-  FROM DUAL";
-
-            $s = oci_parse($c, $query);
-            if (!$s) {
-                $e = oci_error($c);
-                $detail = array('task_id' => $data['task_id'], 'status' => 'error', 'comments' => "Impossible de charger les snap id " . htmlentities($e['message']));
-                toC_Reports_Admin::addJobDetail($detail);
-                $response = array('success' => false, 'feedback' => "Impossible de charger les snap id " . htmlentities($e['message']));
-            } else {
-                $r = oci_execute($s, OCI_COMMIT_ON_SUCCESS);
-                if (!$r) {
-                    $e = oci_error($s);
-                    $detail = array('task_id' => $data['task_id'], 'status' => 'error', 'comments' => 'Erreur : ' . htmlentities($e['message']));
-                    toC_Reports_Admin::addJobDetail($detail);
-                    $response = array('success' => false, 'feedback' => 'Erreur : ' . htmlentities($e['message']));
-                } else {
-                    $start_snap = 0;
-                    $end_snap = 0;
-
-                    while (($row = oci_fetch_array($s, OCI_ASSOC))) {
-                        $start_snap = $row['START_SNAP'];
-                        $end_snap = $row['END_SNAP'];
-                    }
-
-                    oci_free_statement($s);
-
-                    $query = "SELECT DISTINCT dbid, db_name, instance_number  FROM DBA_HIST_DATABASE_INSTANCE";
-
-                    $s = oci_parse($c, $query);
-                    if (!$s) {
-                        $e = oci_error($c);
-                        $detail = array('task_id' => $data['task_id'], 'status' => 'error', 'comments' => "Impossible de charger les metatada de cette base " . htmlentities($e['message']));
-                        toC_Reports_Admin::addJobDetail($detail);
-                        $response = array('success' => false, 'feedback' => "Impossible de charger les metatada de cette base " . htmlentities($e['message']));
-                    } else {
-                        $r = oci_execute($s, OCI_COMMIT_ON_SUCCESS);
-                        if (!$r) {
-                            $e = oci_error($s);
-                            $detail = array('task_id' => $data['task_id'], 'status' => 'error', 'comments' => 'Erreur : ' . htmlentities($e['message']));
-                            toC_Reports_Admin::addJobDetail($detail);
-                            $response = array('success' => false, 'feedback' => 'Erreur : ' . htmlentities($e['message']));
-                        } else {
-                            $dbid = -1;
-                            $instance_number = 0;
-                            $db_name = '???????????';
-
-                            while (($row = oci_fetch_array($s, OCI_ASSOC))) {
-                                $dbid = $row['DBID'];
-                                $db_name = $row['DB_NAME'];
-                                $instance_number = $row['INSTANCE_NUMBER'];
-                            }
-
-                            oci_free_statement($s);
-
-                            $detail = array('task_id' => $data['task_id'], 'status' => 'run', 'comments' => 'Generation du rapport ...');
-                            toC_Reports_Admin::addJobDetail($detail);
-
-                            $characters = '0123456789';
-                            $charactersLength = strlen($characters);
-                            $randomString = '';
-                            for ($i = 0; $i < 5; $i++) {
-                                $randomString .= $characters[rand(0, $charactersLength - 1)];
-                            }
-
-                            $task_name = 'addm_report_' . $randomString;
-
-                            $query = "DECLARE
-  tname  VARCHAR2 (60);
-  taskid  NUMBER;
-  BEGIN
-  tname := '" . $task_name . "'; dbms_advisor.create_task('ADDM', taskid, tname); dbms_advisor.set_task_parameter(tname, 'START_SNAPSHOT'," . $start_snap . "); dbms_advisor.set_task_parameter(tname, 'END_SNAPSHOT', " . $end_snap . "); dbms_advisor.set_task_parameter(tname, 'INSTANCE', " . $instance_number . "); dbms_advisor.set_task_parameter(tname, 'DB_ID', " . $dbid . "); dbms_advisor.execute_task(tname); END;";
-
-                            $s = oci_parse($c, $query);
-                            if (!$s) {
-                                $e = oci_error($c);
-                                $detail = array('task_id' => $data['task_id'], 'status' => 'error', 'comments' => "Impossible de generer ASH " . htmlentities($e['message']));
-                                toC_Reports_Admin::addJobDetail($detail);
-                                $response = array('success' => false, 'feedback' => "Impossible de generer ADDM " . htmlentities($e['message']));
-                            } else {
-                                $r = oci_execute($s, OCI_COMMIT_ON_SUCCESS);
-                                if (!$r) {
-                                    $e = oci_error($s);
-                                    $detail = array('task_id' => $data['task_id'], 'status' => 'error', 'comments' => 'Erreur : ' . htmlentities($e['message']));
-                                    toC_Reports_Admin::addJobDetail($detail);
-                                    $response = array('success' => false, 'feedback' => 'Erreur : ' . htmlentities($e['message']));
-                                } else {
-                                    oci_free_statement($s);
-
-                                    $query = "SELECT DBMS_ADVISOR.get_task_report ('" . $task_name . "','TEXT','ALL','ALL') report FROM DBA_ADVISOR_TASKS t WHERE     t.task_name = '" . $task_name . "' AND t.owner = SYS_CONTEXT ('USERENV', 'session_user')";
-                                    $s = oci_parse($c, $query);
-
-                                    if (!$s) {
-                                        $e = oci_error($c);
-                                        $detail = array('task_id' => $data['task_id'], 'status' => 'error', 'comments' => 'Erreur : ' . htmlentities($e['message']));
-                                        toC_Reports_Admin::addJobDetail($detail);
-                                        $response = array('success' => false, 'feedback' => 'Erreur : ' . htmlentities($e['message']));
-                                        $response = array('success' => false, 'feedback' => "Impossible de generer ADDM REPORT " . htmlentities($e['message']));
-                                    } else {
-                                        $r = oci_execute($s, OCI_COMMIT_ON_SUCCESS);
-                                        if (!$r) {
-                                            $e = oci_error($s);
-                                            $detail = array('task_id' => $data['task_id'], 'status' => 'error', 'comments' => 'Erreur : ' . htmlentities($e['message']));
-                                            toC_Reports_Admin::addJobDetail($detail);
-                                            $response = array('success' => false, 'feedback' => 'Erreur : ' . htmlentities($e['message']));
-                                            $response = array('success' => false, 'feedback' => 'Erreur : ' . htmlentities($e['message']));
-                                        } else {
-                                            //oci_fetch_all($s, $output);
-
-                                            $out = '';
-                                            while ($row = oci_fetch_array($s, OCI_ASSOC + OCI_RETURN_LOBS)) {
-                                                $out = $out . $row['REPORT'];
-                                            }
-
-                                            $dir = realpath(DIR_WS_REPORTS) . '/';
-                                            if (!file_exists($dir)) {
-                                                mkdir($dir, 0777, true);
-                                            }
-
-                                            $report = 'addm_' . '_' . $start_snap . '_' . $end_snap . '.txt';
-                                            $file_name = $dir . '/' . $report;
-                                            $b = file_put_contents($file_name, $out);
-
-                                            oci_free_statement($s);
-                                            oci_close($c);
-
-                                            if ($b > 0) {
-                                                $detail = array('task_id' => $data['task_id'], 'status' => 'complete', 'comments' => $report);
-                                                toC_Reports_Admin::addJobDetail($detail);
-
-                                                if (isset($data['to']) && !empty($data['to']) && isset($data['subject']) && !empty($data['subject'])) {
-                                                    $data['body'] = $out;
-                                                    toC_Reports_Admin::sendEmail($data);
-                                                }
-                                            } else {
-                                                $detail = array('task_id' => $data['task_id'], 'status' => 'error', 'comments' => "Impossible de creer le fichier de rapport");
-                                                toC_Reports_Admin::addJobDetail($detail);
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        echo $toC_Json->encode($response);
-    }
-
-    function awrReport()
-    {
-        global $toC_Json;
-
-        $db_user = $_REQUEST['db_user'];
-        $db_pass = $_REQUEST['db_pass'];
-        $db_host = $_REQUEST['db_host'];
-        $db_sid = $_REQUEST['db_sid'];
-        $start_snap = $_REQUEST['start_snap'];
-        $end_snap = $_REQUEST['end_snap'];
-        $data = $_REQUEST;
-
-        $detail = array('task_id' => $data['task_id'], 'status' => 'run', 'comments' => 'Connexion à la BD ...');
-        toC_Reports_Admin::addJobDetail($detail);
-
-        $c = oci_pconnect($db_user, $db_pass, $db_host . "/" . $db_sid);
-        if (!$c) {
-            $e = oci_error();
-            $detail = array('task_id' => $data['task_id'], 'status' => 'error', 'comments' => 'Could not connect to database: ' . htmlentities($e['message']));
-            toC_Reports_Admin::addJobDetail($detail);
-
-            $response = array('success' => false, 'feedback' => 'Could not connect to database: ' . htmlentities($e['message']));
-        } else {
-            $detail = array('task_id' => $data['task_id'], 'status' => 'run', 'comments' => 'Recuperation des Parametres ...');
-            toC_Reports_Admin::addJobDetail($detail);
-            $query = "SELECT DISTINCT dbid, db_name, instance_number  FROM DBA_HIST_DATABASE_INSTANCE";
-
-            $s = oci_parse($c, $query);
-            if (!$s) {
-                $e = oci_error($c);
-                $detail = array('task_id' => $data['task_id'], 'status' => 'error', 'comments' => "Impossible de charger les metatada de cette base " . htmlentities($e['message']));
-                toC_Reports_Admin::addJobDetail($detail);
-                $response = array('success' => false, 'feedback' => "Impossible de charger les metatada de cette base " . htmlentities($e['message']));
-            } else {
-                $r = oci_execute($s, OCI_COMMIT_ON_SUCCESS);
-                if (!$r) {
-                    $e = oci_error($s);
-                    $detail = array('task_id' => $data['task_id'], 'status' => 'error', 'comments' => 'Erreur : ' . htmlentities($e['message']));
-                    toC_Reports_Admin::addJobDetail($detail);
-
-                    $response = array('success' => false, 'feedback' => 'Erreur : ' . htmlentities($e['message']));
-                } else {
-                    $dbid = -1;
-                    $instance_number = 0;
-                    $db_name = '???????????';
-
-                    while (($row = oci_fetch_array($s, OCI_ASSOC))) {
-                        $dbid = $row['DBID'];
-                        $db_name = $row['DB_NAME'];
-                        $instance_number = $row['INSTANCE_NUMBER'];
-                    }
-
-                    oci_free_statement($s);
-
-                    $detail = array('task_id' => $data['task_id'], 'status' => 'run', 'comments' => 'Execution du Script ...');
-                    toC_Reports_Admin::addJobDetail($detail);
-
-                    $query = "Select * from table(dbms_workload_repository.AWR_REPORT_HTML(" . $dbid . "," . $instance_number . "," . $start_snap . "," . $end_snap . ",8))";
-                    $s = oci_parse($c, $query);
-
-                    if (!$s) {
-                        $e = oci_error($c);
-                        $detail = array('task_id' => $data['task_id'], 'status' => 'error', 'comments' => "Impossible de generer AWR_REPORT_HTML " . htmlentities($e['message']));
-                        toC_Reports_Admin::addJobDetail($detail);
-                        $response = array('success' => false, 'feedback' => "Impossible de generer AWR_REPORT_HTML " . htmlentities($e['message']));
-                    } else {
-                        $r = oci_execute($s, OCI_COMMIT_ON_SUCCESS);
-                        if (!$r) {
-                            $e = oci_error($s);
-                            $detail = array('task_id' => $data['task_id'], 'status' => 'error', 'comments' => 'Erreur : ' . htmlentities($e['message']));
-                            toC_Reports_Admin::addJobDetail($detail);
-                            $response = array('success' => false, 'feedback' => 'Erreur : ' . htmlentities($e['message']));
-                        } else {
-                            $detail = array('task_id' => $data['task_id'], 'status' => 'run', 'comments' => 'Generation du rapport ...');
-                            toC_Reports_Admin::addJobDetail($detail);
-
-                            $output = array();
-
-                            oci_fetch_all($s, $output);
-
-                            oci_free_statement($s);
-                            oci_close($c);
-
-                            $out = '';
-
-                            foreach ($output as $col) {
-                                foreach ($col as $item) {
-                                    $out = $out . $item;
-                                }
-                            }
-
-                            $dir = realpath(DIR_WS_REPORTS);
-                            if (!file_exists($dir)) {
-                                mkdir($dir, 0777, true);
-                            }
-
-                            $report = 'awr_' . $data['task_id'] . '.html';
-                            $file_name = $dir . '/' . $report;
-
-                            $b = file_put_contents($file_name, $out);
-
-                            if ($b > 0) {
-                                $detail = array('task_id' => $data['task_id'], 'status' => 'complete', 'comments' => $report);
-                                toC_Reports_Admin::addJobDetail($detail);
-
-                                if (isset($data['to']) && !empty($data['to']) && isset($data['subject']) && !empty($data['subject'])) {
-                                    $data['body'] = $output;
-                                    toC_Reports_Admin::sendEmail($data);
-                                }
-
-                                $response = array('success' => true);
-                            } else {
-                                $detail = array('task_id' => $data['task_id'], 'status' => 'error', 'comments' => "Impossible de creer le fichier de rapport : " . $query);
-                                toC_Reports_Admin::addJobDetail($detail);
-
-                                $response = array('success' => false);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        echo $toC_Json->encode($response);
-    }
-
-    function runAwr()
-    {
-        global $toC_Json;
-
-        $ssh = new Net_SSH2(REPORT_RUNNER, '22');
-
-        if (empty($ssh->server_identifier)) {
-            $response = array('success' => false, 'msg' => 'Impossible de se connecter au serveur pour generer cet etat, veuillez contacter votre administrateur systeme', 'subscriptions_id' => null, 'status' => null);
-        } else {
-            if (!$ssh->login("guyfomi", "12345")) {
-                $response = array('success' => false, 'msg' => 'Impossible de se connecter au serveur pour generer cet etat, Compte ou mot de passe invalide', 'subscriptions_id' => null, 'status' => null);
-            } else {
-                $ssh->disableQuietMode();
-
-                $data = $_REQUEST;
-                $characters = '0123456789';
-                $charactersLength = strlen($characters);
-                $randomString = '';
-                for ($i = 0; $i < 10; $i++) {
-                    $randomString .= $characters[rand(0, $charactersLength - 1)];
-                }
-
-                $cmd = "nohup curl '" . HTTP_SERVER . "/" . HTTP_COOKIE_PATH . "/admin/json.php' --data 'module=databases&action=awr_report&db_host=" . $data['db_host'] . "&start_snap=" . $data['PARAM_START_SNAP'] . "&end_snap=" . $data['PARAM_END_SNAP'] . "&db_user=" . $data['db_user'] . "&db_pass=" . $data['db_pass'] . "&db_sid=" . $data['db_sid'] . "&databases_id=" . $data['databases_id'] . "&task_id=" . $randomString . "' &";
-                $ssh->exec($cmd);
-                //var_dump($cmd);
-
-                $ssh->disconnect();
-
-                $detail = array('task_id' => $randomString, 'status' => 'run', 'comments' => 'Job cree avec succes');
-                toC_Reports_Admin::addJobDetail($detail);
-
-                $response = array('success' => true, 'msg' => 'Tache creee avec succes', 'task_id' => $randomString, 'status' => 'run');
-            }
-        }
-
-        echo $toC_Json->encode($response);
-    }
-
-    function ashReport()
-    {
-        error_reporting(E_ALL);
-        global $toC_Json;
-
-        $db_user = $_REQUEST['db_user'];
-        $db_pass = $_REQUEST['db_pass'];
-        $db_host = $_REQUEST['db_host'];
-        $db_sid = $_REQUEST['db_sid'];
-        $endValue = $_REQUEST['endValue'];
-        $startValue = $_REQUEST['startValue'];
-        $data = $_REQUEST;
-
-        $detail = array('task_id' => $data['task_id'], 'status' => 'run', 'comments' => 'Connexion à la BD ...');
-        toC_Reports_Admin::addJobDetail($detail);
-
-        $c = oci_pconnect($db_user, $db_pass, $db_host . "/" . $db_sid);
-        if (!$c) {
-            $e = oci_error();
-            $detail = array('task_id' => $data['task_id'], 'status' => 'error', 'comments' => 'Could not connect to database: ' . htmlentities($e['message']));
-            toC_Reports_Admin::addJobDetail($detail);
-            $response = array('success' => false, 'feedback' => 'Could not connect to database: ' . htmlentities($e['message']));
-        } else {
-            $detail = array('task_id' => $data['task_id'], 'status' => 'run', 'comments' => 'Recuperation des metadonnees ...');
-            toC_Reports_Admin::addJobDetail($detail);
-            $minutes = 15;
-
-            parse:
-            if(isset($endValue) && !empty($endValue) && isset($startValue) && !empty($startValue))
-            {
-                $query = "select TO_char(min(SAMPLE_TIME),'YYYY/MM/DD HH24:MI:SS') START_SNAP,TO_char(max(SAMPLE_TIME),'YYYY/MM/DD HH24:MI:SS') END_SNAP from v\$active_session_history where sample_time between '" . $startValue . "' and '" . $endValue . "'";
-            }
-            else
-            {
-                $query = "select TO_char(min(SAMPLE_TIME) + $minutes/1440,'YYYY/MM/DD HH24:MI:SS') START_SNAP,TO_char(max(SAMPLE_TIME),'YYYY/MM/DD HH24:MI:SS') END_SNAP from v\$active_session_history";
-            }
-
-            $s = oci_parse($c, $query);
-            if (!$s) {
-                $e = oci_error($c);
-                $detail = array('task_id' => $data['task_id'], 'status' => 'error', 'comments' => "Impossible de charger les metadonnees " . htmlentities($e['message']));
-                toC_Reports_Admin::addJobDetail($detail);
-                $response = array('success' => false, 'feedback' => "Impossible de charger les snap id " . htmlentities($e['message']));
-            } else {
-                $r = oci_execute($s, OCI_COMMIT_ON_SUCCESS);
-                if (!$r) {
-                    $e = oci_error($s);
-                    $detail = array('task_id' => $data['task_id'], 'status' => 'error', 'comments' => 'Erreur : ' . htmlentities($e['message']));
-                    toC_Reports_Admin::addJobDetail($detail);
-                    $response = array('success' => false, 'feedback' => 'Erreur : ' . htmlentities($e['message']));
-                } else {
-                    $start_snap = 0;
-                    $end_snap = 0;
-
-                    while (($row = oci_fetch_array($s, OCI_ASSOC))) {
-                        $start_snap = $row['START_SNAP'];
-                        $end_snap = $row['END_SNAP'];
-                    }
-
-                    oci_free_statement($s);
-
-                    $query = "SELECT DISTINCT dbid, db_name, instance_number  FROM DBA_HIST_DATABASE_INSTANCE";
-
-                    $s = oci_parse($c, $query);
-                    if (!$s) {
-                        $e = oci_error($c);
-                        $detail = array('task_id' => $data['task_id'], 'status' => 'error', 'comments' => "Impossible de charger les metatada de cette base " . htmlentities($e['message']));
-                        toC_Reports_Admin::addJobDetail($detail);
-                        $response = array('success' => false, 'feedback' => "Impossible de charger les metatada de cette base " . htmlentities($e['message']));
-                    } else {
-                        $r = oci_execute($s, OCI_COMMIT_ON_SUCCESS);
-                        if (!$r) {
-                            $e = oci_error($s);
-                            $detail = array('task_id' => $data['task_id'], 'status' => 'error', 'comments' => 'Erreur : ' . htmlentities($e['message']));
-                            toC_Reports_Admin::addJobDetail($detail);
-                            $response = array('success' => false, 'feedback' => 'Erreur : ' . htmlentities($e['message']));
-                        } else {
-                            $dbid = -1;
-                            $instance_number = 0;
-                            $db_name = '???????????';
-
-                            while (($row = oci_fetch_array($s, OCI_ASSOC))) {
-                                $dbid = $row['DBID'];
-                                $db_name = $row['DB_NAME'];
-                                $instance_number = $row['INSTANCE_NUMBER'];
-                            }
-
-                            oci_free_statement($s);
-
-                            $detail = array('task_id' => $data['task_id'], 'status' => 'run', 'comments' => 'Generation du rapport ...');
-                            toC_Reports_Admin::addJobDetail($detail);
-
-                            $query = "Select * from table(dbms_workload_repository.ASH_REPORT_HTML(l_dbid => " . $dbid . ",l_inst_num => " . $instance_number . ", l_btime => " . " TO_DATE('" . $start_snap . "','YYYY/MM/DD HH24:MI:SS')," . "l_etime => " . " TO_DATE('" . $end_snap . "','YYYY/MM/DD HH24:MI:SS')," . "l_options => 0,l_slot_width => 0,l_sid => null,l_sql_id => null,l_wait_class => null,l_service_hash => null,l_module => null,l_action => null,l_client_id => null,l_plsql_entry => null))";
-                            $s = oci_parse($c, $query);
-
-                            if (!$s) {
-                                $e = oci_error($c);
-                                $detail = array('task_id' => $data['task_id'], 'status' => 'error', 'comments' => "Impossible de generer ASH " . htmlentities($e['message']));
-                                toC_Reports_Admin::addJobDetail($detail);
-                                $response = array('success' => false, 'feedback' => "Impossible de generer ASH " . htmlentities($e['message']));
-                            } else {
-                                $r = oci_execute($s, OCI_COMMIT_ON_SUCCESS);
-                                if (!$r) {
-                                    $e = oci_error($s);
-                                    if (strpos($e['message'], '01843') !== false)
-                                    {
-                                        $detail = array('task_id' => $data['task_id'], 'status' => 'run', 'comments' => htmlentities($e['message']));
-                                        toC_Reports_Admin::addJobDetail($detail);
-                                        $minutes = $minutes + 15;
-                                        goto parse;
-                                    }
-                                    else
-                                    {
-                                        $detail = array('task_id' => $data['task_id'], 'status' => 'error', 'comments' => 'Erreur : ' . htmlentities($e['message']));
-                                        toC_Reports_Admin::addJobDetail($detail);
-                                        $response = array('success' => false, 'feedback' => 'Erreur : ' . htmlentities($e['message']));
-                                    }
-                                } else {
-                                    oci_fetch_all($s, $output);
-
-                                    oci_free_statement($s);
-                                    oci_close($c);
-
-                                    $out = '';
-
-                                    foreach ($output as $col) {
-                                        foreach ($col as $item) {
-                                            $out = $out . $item;
-                                        }
-                                    }
-
-                                    $dir = realpath(DIR_WS_REPORTS) . '/';
-                                    if (!file_exists($dir)) {
-                                        mkdir($dir, 0777, true);
-                                    }
-
-                                    $report = 'ash_' . $data['task_id'] . '.html';
-                                    $file_name = $dir . '/' . $report;
-
-                                    $b = file_put_contents($file_name, $out);
-
-                                    if ($b > 0) {
-                                        $detail = array('task_id' => $data['task_id'], 'status' => 'complete', 'comments' => $report);
-                                        toC_Reports_Admin::addJobDetail($detail);
-
-                                        if (isset($data['to']) && !empty($data['to']) && isset($data['subject']) && !empty($data['subject'])) {
-                                            $data['body'] = $out;
-                                            toC_Reports_Admin::sendEmail($data);
-                                        }
-                                    } else {
-                                        $detail = array('task_id' => $data['task_id'], 'status' => 'error', 'comments' => "Impossible de creer le fichier de rapport");
-                                        toC_Reports_Admin::addJobDetail($detail);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
 
         echo $toC_Json->encode($response);
     }
@@ -4535,6 +3584,7 @@ WHERE delta_ogg_config.id = delta_ogg_capture_state.config_id and config_id= " .
         echo $toC_Json->encode($response);
     }
 
+
     function loadLob()
     {
         global $toC_Json;
@@ -5008,7 +4058,7 @@ WHERE delta_ogg_config.id = delta_ogg_capture_state.config_id and config_id= " .
         $group_id = empty($_REQUEST['categories_id']) ? 0 : $_REQUEST['categories_id'];
 
         //$QServers = $osC_Database->query('select a.*, cd.*,c.*, atoc.*,s.label,s.host,s.servers_id,s.typ,s.user as server_user,s.pass as server_pass,s.port as server_port,st.* from :table_databases a left join :table_content c on a.databases_id = c.content_id left join  :table_content_description cd on a.databases_id = cd.content_id left join  :table_servers s on a.servers_id = s.servers_id left join :table_content_to_categories atoc on atoc.content_id = a.databases_id LEFT JOIN delta_database_state st ON st.databases_id = a.databases_id where cd.language_id = :language_id and atoc.content_type = "databases" and c.content_type = "databases" and cd.content_type = "databases" AND st.start_date = (SELECT MAX(start_date) FROM delta_database_state WHERE databases_id = a.databases_id) ');
-        $query = "SELECT a.*,s.label,s.HOST,s.servers_id,s.typ,s.USER AS server_user,s.pass AS server_pass,s.PORT AS server_port,st.* FROM delta_databases a LEFT JOIN delta_servers s ON a.servers_id = s.servers_id LEFT JOIN delta_database_state st ON st.databases_id = a.databases_id WHERE st.start_date = (SELECT MAX(start_date) FROM delta_database_state WHERE databases_id = a.databases_id)";
+        $query = "SELECT a.*,s.HOST,s.servers_id,s.typ,s.USER AS server_user,s.pass AS server_pass,s.PORT AS server_port,st.* FROM delta_databases a LEFT JOIN delta_servers s ON a.servers_id = s.servers_id LEFT JOIN delta_database_state st ON st.databases_id = a.databases_id WHERE st.start_date = (SELECT MAX(start_date) FROM delta_database_state WHERE databases_id = a.databases_id)";
         $QServers = $osC_Database->query($query);
 
         if (!empty($_REQUEST['search'])) {
@@ -5135,7 +4185,7 @@ WHERE delta_ogg_config.id = delta_ogg_capture_state.config_id and config_id= " .
 
         $group_id = empty($_REQUEST['category']) ? 0 : $_REQUEST['category'];
 
-        $query = "SELECT a.*,s.label,s.HOST,s.servers_id,s.typ,s.USER AS server_user,s.pass AS server_pass,s.PORT AS server_port FROM delta_databases a LEFT OUTER JOIN delta_servers s ON a.servers_id = s.servers_id WHERE 1 = 1 ";
+        $query = "SELECT a.*,s.HOST,s.servers_id,s.typ,s.USER AS server_user,s.pass AS server_pass,s.PORT AS server_port FROM delta_databases a LEFT OUTER JOIN delta_servers s ON a.servers_id = s.servers_id WHERE 1 = 1 ";
         $QServers = $osC_Database->query($query);
 
         if (!empty($_REQUEST['search'])) {
@@ -6318,176 +5368,6 @@ where 1 = 1 ";
         echo $toC_Json->encode($response);
     }
 
-    function listLibrarycache()
-    {
-        global $toC_Json;
-
-        $db_user = $_REQUEST['db_user'];
-        $db_pass = $_REQUEST['db_pass'];
-        $db_host = $_REQUEST['db_host'];
-        $db_sid = $_REQUEST['db_sid'];
-        $records = array();
-
-        $c = oci_pconnect($db_user, $db_pass, $db_host . "/" . $db_sid);
-        if (!$c) {
-            $e = oci_error();
-            $records [] = array('namespace' => $e['message'],
-                'reloads' => '',
-                'gethits' => '',
-                'pins' => '',
-                'pinhits' => '',
-                'invalidations' => '',
-                'gets' => '',
-                'get' => '',
-                'pin' => '');
-        }
-        else
-        {
-            $query = "SELECT gets,gethits,pins,pinhits,namespace,reloads,invalidations,round(gethitratio * 100) get,round(pinhitratio * 100) pin FROM V\$LIBRARYCACHE ORDER BY namespace";
-
-            $s = oci_parse($c, $query);
-            if (!$s) {
-                $e = oci_error($c);
-                $records [] = array('namespace' => $e['message'],
-                    'reloads' => '',
-                    'gethits' => '',
-                    'pins' => '',
-                    'pinhits' => '',
-                    'invalidations' => '',
-                    'gets' => '',
-                    'get' => '',
-                    'pin' => '');
-            }
-            else
-            {
-                $r = oci_execute($s);
-                if (!$r) {
-                    $e = oci_error($s);
-                    $records [] = array('namespace' => $e['message'],
-                        'reloads' => '',
-                        'gethits' => '',
-                        'pins' => '',
-                        'pinhits' => '',
-                        'invalidations' => '',
-                        'gets' => '',
-                        'get' => '',
-                        'pin' => '');
-                }
-                else
-                {
-                    while (($row = oci_fetch_array($s, OCI_ASSOC))) {
-                        $records [] = array('namespace' => $row['NAMESPACE'],
-                            'reloads' => $row['RELOADS'],
-                            'invalidations' => $row['INVALIDATIONS'],
-                            'gethits' => $row['GETHITS'],
-                            'pins' => $row['PINS'],
-                            'pinhits' => $row['PINHITS'],
-                            'gets' => $row['GETS'],
-                            'get' => $row['GET'],
-                            'pin' => $row['PIN']);
-                    }
-                }
-            }
-
-            oci_free_statement($s);
-        }
-
-        oci_close($c);
-
-        $response = array(EXT_JSON_READER_TOTAL => count($records),
-            EXT_JSON_READER_ROOT => $records);
-
-        echo $toC_Json->encode($response);
-    }
-
-    function listLatch()
-    {
-        global $toC_Json;
-
-        $db_user = $_REQUEST['db_user'];
-        $db_pass = $_REQUEST['db_pass'];
-        $db_host = $_REQUEST['db_host'];
-        $db_sid = $_REQUEST['db_sid'];
-        $records = array();
-
-        $c = oci_pconnect($db_user, $db_pass, $db_host . "/" . $db_sid);
-        if (!$c) {
-            $e = oci_error();
-            $records [] = array('name' => $e['message'],
-                'ind' => '',
-                'misses' => '',
-                'immediate_gets' => '',
-                'immediate_misses' => '',
-                'misses_ratio' => '',
-                'gets' => '');
-        }
-        else
-        {
-            $query = "SELECT LATCH# ind,
-         name,
-         gets,
-         misses,
-         immediate_gets,
-         round(wait_time/1000000) wait_time,
-         immediate_misses,
-         DECODE (gets, 0, 0, ROUND (misses / gets * 100)) misses_ratio
-    FROM v\$latch
-   WHERE misses > 0
-ORDER BY misses_ratio DESC";
-
-            $s = oci_parse($c, $query);
-            if (!$s) {
-                $e = oci_error($c);
-                $records [] = array('name' => $e['message'],
-                    'ind' => '',
-                    'misses' => '',
-                    'wait_time' => '',
-                    'immediate_gets' => '',
-                    'immediate_misses' => '',
-                    'misses_ratio' => '',
-                    'gets' => '');
-            }
-            else
-            {
-                $r = oci_execute($s);
-                if (!$r) {
-                    $e = oci_error($s);
-
-                    $records [] = array('name' => $e['message'],
-                        'ind' => '',
-                        'misses' => '',
-                        'wait_time' => '',
-                        'immediate_gets' => '',
-                        'immediate_misses' => '',
-                        'misses_ratio' => '',
-                        'gets' => '');
-                }
-                else
-                {
-                    while (($row = oci_fetch_array($s, OCI_ASSOC))) {
-                        $records [] = array('name' => $row['NAME'],
-                            'ind' => $row['IND'],
-                            'misses' => $row['MISSES'],
-                            'wait_time' => $row['WAIT_TIME'],
-                            'immediate_gets' => $row['IMMEDIATE_GETS'],
-                            'immediate_misses' => $row['IMMEDIATE_MISSES'],
-                            'misses_ratio' => $row['MISSES_RATIO'],
-                            'gets' => $row['GETS']);
-                    }
-                }
-            }
-
-            oci_free_statement($s);
-        }
-
-        oci_close($c);
-
-        $response = array(EXT_JSON_READER_TOTAL => count($records),
-            EXT_JSON_READER_ROOT => $records);
-
-        echo $toC_Json->encode($response);
-    }
-
     function loadTbsTree()
     {
         global $toC_Json;
@@ -6769,6 +5649,10 @@ order by tablespace_name";
                 $query = "select num,name,display_value,description from v\$parameter where 1 = 1 ";
                     break;
 
+                case "px":
+                    $query = "select num,name,display_value,description from v\$parameter where lower(name) like 'parallel%' or lower(name) in('shared_pool_size','memory_target','memory_max_target','pga_aggregate_target','sga_target','transactions','fast_start_parallel_rollback','cpu_count','dml_locks') ";
+                    break;
+
                 case "shared_pool":
                     $query = "SELECT n.indx num,
          n.ksppinm name,
@@ -6816,83 +5700,6 @@ order by tablespace_name";
                 }
             }
 
-            oci_free_statement($s);
-        }
-
-        oci_close($c);
-
-        $response = array(EXT_JSON_READER_TOTAL => count($records),
-            EXT_JSON_READER_ROOT => $records);
-
-        echo $toC_Json->encode($response);
-    }
-
-    function sqlareaUsage()
-    {
-        global $toC_Json;
-
-        $db_user = $_REQUEST['db_user'];
-        $db_pass = $_REQUEST['db_pass'];
-        $db_host = $_REQUEST['db_host'];
-        $db_sid = $_REQUEST['db_sid'];
-        $records = array();
-
-        $c = oci_pconnect($db_user, $db_pass, $db_host . "/" . $db_sid);
-        if (!$c) {
-            $e = oci_error();
-            $records [] = array('username' => $e['message'],
-                'user_id' => '',
-                'sharable' => '',
-                'persistent' => '',
-                'runtime' => '',
-                'areas' => '',
-                'mem_sum' => '');
-        } else {
-            $query = "SELECT username,user_id,
-         round(SUM (sharable_mem)/1024/1024) sharable,
-         round(SUM (persistent_mem)/1024/1024) persistent,
-         round(SUM (runtime_mem)/1024/1024) runtime,
-         COUNT (*) areas,
-         round(SUM (sharable_mem + persistent_mem + runtime_mem)/1024/1024) mem_sum
-    FROM (SELECT username,user_id,
-                 sharable_mem,
-                 persistent_mem,
-                 runtime_mem
-            FROM sys.v_\$sqlarea a, dba_users b
-           WHERE a.parsing_user_id = b.user_id) s
-GROUP BY username,user_id
-ORDER BY 7 desc";
-
-            $s = oci_parse($c, $query);
-            if (!$s) {
-                $e = oci_error($c);
-                $records [] = array('username' => $e['message'],
-                    'user_id' => '',
-                    'sharable' => '',
-                    'persistent' => '',
-                    'runtime' => '',
-                    'areas' => '',
-                    'mem_sum' => '');
-            } else {
-                $r = oci_execute($s, OCI_COMMIT_ON_SUCCESS);
-                if (!$r) {
-                    $e = oci_error($s);
-                    $records [] = array('username' => $e['message'],
-                        'user_id' => '',
-                        'sharable' => '',
-                        'persistent' => '',
-                        'runtime' => '',
-                        'areas' => '',
-                        'mem_sum' => '');
-                } else {
-
-                    while (($row = oci_fetch_array($s, OCI_ASSOC))) {
-                        $records [] = array('username' => $row['USERNAME'],
-                            'user_id' => $row['USER_ID'],
-                            'sharable' => $row['SHARABLE'], 'persistent' => $row['PERSISTENT'], 'runtime' => $row['RUNTIME'], 'areas' => $row['AREAS'], 'mem_sum' => $row['MEM_SUM']);
-                    }
-                }
-            }
             oci_free_statement($s);
         }
 
@@ -8211,6 +7018,21 @@ ORDER BY SESSION_KEY desc";
             $response = array('success' => true, 'feedback' => $osC_Language->get('ms_success_action_performed'));
         } else {
             $response = array('success' => false, 'feedback' => $osC_Language->get('ms_error_action_not_performed'));
+        }
+
+        echo $toC_Json->encode($response);
+    }
+
+    function getCurrentuser()
+    {
+        global $toC_Json;
+
+        $username = $_SESSION[admin][username];
+
+        $response = array('success' => true, 'feedback' => '','username' => $username);
+
+        if (empty($username)) {
+            $response = array('success' => false, 'feedback' => 'Votre session est expirée ... vous devez vous reconnecter','username' => '');
         }
 
         echo $toC_Json->encode($response);

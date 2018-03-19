@@ -1,15 +1,5 @@
 <?php
-/*
-  $Id: reports.php $
-  Mefobe Cart Solutions
-  http://www.mefobemarket.com
 
-  Copyright (c) 2009 Wuxi Elootec Technology Co., Ltd
-
-  This program is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License v2 (1991)
-  as published by the Free Software Foundation.
-*/
 require('includes/classes/reports.php');
 require('includes/classes/email_account.php');
 require('includes/classes/email_accounts.php');
@@ -88,6 +78,75 @@ class toC_Json_Reports
         echo $toC_Json->encode($response);
     }
 
+    function listDashboards()
+    {
+        global $toC_Json, $osC_Language, $osC_Database;
+
+        $start = empty($_REQUEST['start']) ? 0 : $_REQUEST['start'];
+        $limit = empty($_REQUEST['limit']) ? MAX_DISPLAY_SEARCH_RESULTS : $_REQUEST['limit'];
+
+        $current_category_id = empty($_REQUEST['categories_id']) ? 0 : $_REQUEST['categories_id'];
+
+        $Qreports = $osC_Database->query('select a.*, cd.*,c.*, atoc.*  from :table_dashboards a left join :table_content c on a.dashboards_id = c.content_id left join  :table_content_description cd on a.dashboards_id = cd.content_id left join :table_content_to_categories atoc on atoc.content_id = a.dashboards_id  where cd.language_id = :language_id and atoc.content_type = "dashboards" and c.content_type = "dashboards" AND cd.content_type = "dashboards"');
+
+        $Qreports->appendQuery('and atoc.categories_id = :categories_id ');
+        $Qreports->bindInt(':categories_id', $current_category_id);
+
+        if (!empty($_REQUEST['search'])) {
+            $Qreports->appendQuery('and cd.content_name like :content_name');
+            $Qreports->bindValue(':content_name', '%' . $_REQUEST['search'] . '%');
+        }
+
+        $Qreports->appendQuery('order by cd.content_description ');
+        $Qreports->bindTable(':table_dashboards', TABLE_DASHBOARS);
+        $Qreports->bindTable(':table_content', TABLE_CONTENT);
+        $Qreports->bindTable(':table_content_description', TABLE_CONTENT_DESCRIPTION);
+        $Qreports->bindTable(':table_content_to_categories', TABLE_CONTENT_TO_CATEGORIES);
+        $Qreports->bindInt(':language_id', $osC_Language->getID());
+        $Qreports->setExtBatchLimit($start, $limit);
+        $Qreports->execute();
+
+        $records = array();
+        while ($Qreports->next()) {
+            if(isset($_REQUEST['permissions']))
+            {
+                $permissions = explode(',',$_REQUEST['permissions']);
+                $records[] = array('dashboards_id' => $Qreports->ValueInt('dashboards_id'),
+                    'content_status' => $Qreports->ValueInt('content_status'),
+                    'content_order' => $Qreports->Value('content_order'),
+                    'reports_uri' => $Qreports->Value('reports_uri'),
+                    'content_name' => $Qreports->Value('content_name'),
+                    'created_by' => $Qreports->Value('created_by'),
+                    'content_description' => $Qreports->Value('content_description'),
+                    'can_read' => $_SESSION[admin][username] == 'admin' ? 1 : $permissions[0] != 'undefined' ? $permissions[0] : false,
+                    'can_write' => $_SESSION[admin][username] == 'admin' ? 1 : $permissions[1] != 'undefined' ? $permissions[1] : false,
+                    'can_modify' => $_SESSION[admin][username] == 'admin' ? '' : $permissions[2] != 'undefined' ? $permissions[2] : false,
+                    'can_publish' => $_SESSION[admin][username] == 'admin' ? 1 : $permissions[3] != 'undefined' ? $permissions[3] : false
+                );
+            }
+            else
+            {
+                $records[] = array('dashboards_id' => $Qreports->ValueInt('dashboards_id'),
+                    'content_status' => $Qreports->ValueInt('content_status'),
+                    'content_order' => $Qreports->Value('content_order'),
+                    'reports_uri' => $Qreports->Value('reports_uri'),
+                    'content_name' => $Qreports->Value('content_name'),
+                    'created_by' => $Qreports->Value('created_by'),
+                    'content_description' => $Qreports->Value('content_description'),
+                    'can_read' => $_SESSION[admin][username] == 'admin' ? 1 : false,
+                    'can_write' => $_SESSION[admin][username] == 'admin' ? 1 : false,
+                    'can_modify' => $_SESSION[admin][username] == 'admin' ? '' : false,
+                    'can_publish' => $_SESSION[admin][username] == 'admin' ? 1 : false
+                );
+            }
+        }
+
+        $response = array(EXT_JSON_READER_TOTAL => count($records),
+            EXT_JSON_READER_ROOT => $records);
+
+        echo $toC_Json->encode($response);
+    }
+
     function listSubscriptions()
     {
         global $toC_Json, $osC_Database;
@@ -152,6 +211,17 @@ class toC_Json_Reports
         echo $toC_Json->encode($response);
     }
 
+    function loadDashboard()
+    {
+        global $toC_Json;
+
+        $data = toC_Reports_Admin::getDashboard($_REQUEST['dashboards_id']);
+
+        $response = array('success' => true, 'data' => $data);
+
+        echo $toC_Json->encode($response);
+    }
+
     function loadReportParameters()
     {
         global $toC_Json;
@@ -188,6 +258,39 @@ class toC_Json_Reports
 
         if (toC_Reports_Admin::save((isset($_REQUEST['reports_id']) && ($_REQUEST['reports_id'] != -1)
                     ? $_REQUEST['reports_id'] : null), $data)
+        ) {
+            $response = array('success' => true, 'feedback' => $osC_Language->get('ms_success_action_performed'));
+        } else {
+            $response = array('success' => false, 'feedback' => $_SESSION['LAST_ERROR']);
+        }
+
+        header('Content-Type: text/html');
+        echo $toC_Json->encode($response);
+    }
+
+    function saveDashboard()
+    {
+        global $toC_Json, $osC_Language;
+
+        $data = array('content_name' => $_REQUEST['content_name'],
+            'content_url' => '',
+            'created_by' => $_SESSION[admin][username],
+            'modified_by' => $_SESSION[admin][username],
+            'content_description' => $_REQUEST['content_description'],
+            'owner' => $_REQUEST['owner'],
+            'reports_uri' => $_REQUEST['reports_uri'],
+            'content_order' => 0,
+            'content_status' => $_REQUEST['content_status'],
+            'page_title' => $_REQUEST['content_name'],
+            'meta_keywords' => $_REQUEST['content_name'],
+            'meta_descriptions' => $_REQUEST['content_description']);
+
+        if (isset($_REQUEST[content_categories_id])) {
+            $data['categories'] = explode(',', $_REQUEST[content_categories_id]);
+        }
+
+        if (toC_Reports_Admin::saveDashboard((isset($_REQUEST['dashboards_id']) && ($_REQUEST['dashboards_id'] != -1)
+            ? $_REQUEST['dashboards_id'] : null), $data)
         ) {
             $response = array('success' => true, 'feedback' => $osC_Language->get('ms_success_action_performed'));
         } else {
@@ -413,19 +516,57 @@ class toC_Json_Reports
 
     function deleteReport()
     {
-        if(isset($_REQUEST['reports_id']) && !empty($_REQUEST['reports_id']))
-        {
-            global $toC_Json, $osC_Language;
+        $owner = $_SESSION['admin']['username'];
 
-            if (toC_Reports_Admin::delete($_REQUEST['reports_id'],$_REQUEST['owner'])) {
-                $response = array('success' => true, 'feedback' => $osC_Language->get('ms_success_action_performed'));
-            } else {
-                $response = array('success' => false, 'feedback' => $osC_Language->get('ms_error_action_not_performed'));
-            }
+        if((is_null($owner) || empty($owner)))
+        {
+            $response = array('success' => false, 'feedback' => 'Votre session est expirée, veuillez vous reconnecter');
         }
         else
         {
-            $response = array('success' => false, 'feedback' => 'Veuillez selectionner l\'article que vous voulez supprimer');
+            if(isset($_REQUEST['reports_id']) && !empty($_REQUEST['reports_id']))
+            {
+                global $toC_Json, $osC_Language;
+
+                if (toC_Reports_Admin::delete($_REQUEST['reports_id'],$_REQUEST['owner'])) {
+                    $response = array('success' => true, 'feedback' => $osC_Language->get('ms_success_action_performed'));
+                } else {
+                    $response = array('success' => false, 'feedback' => $osC_Language->get('ms_error_action_not_performed'));
+                }
+            }
+            else
+            {
+                $response = array('success' => false, 'feedback' => 'Veuillez selectionner l\'article que vous voulez supprimer');
+            }
+        }
+
+        echo $toC_Json->encode($response);
+    }
+
+    function deleteDashboard()
+    {
+        $owner = $_SESSION['admin']['username'];
+
+        if((is_null($owner) || empty($owner)))
+        {
+            $response = array('success' => false, 'feedback' => 'Votre session est expirée, veuillez vous reconnecter');
+        }
+        else
+        {
+            if(isset($_REQUEST['dashboards_id']) && !empty($_REQUEST['dashboards_id']))
+            {
+                global $toC_Json, $osC_Language;
+
+                if (toC_Reports_Admin::deleteDashboard($_REQUEST['dashboards_id'],$_REQUEST['owner'])) {
+                    $response = array('success' => true, 'feedback' => $osC_Language->get('ms_success_action_performed'));
+                } else {
+                    $response = array('success' => false, 'feedback' => $osC_Language->get('ms_error_action_not_performed'));
+                }
+            }
+            else
+            {
+                $response = array('success' => false, 'feedback' => 'Veuillez selectionner l\'article que vous voulez supprimer');
+            }
         }
 
         echo $toC_Json->encode($response);
@@ -457,20 +598,60 @@ class toC_Json_Reports
 
         $osC_Image = new osC_Image_Admin();
 
-        $error = false;
+        $owner = $_SESSION['admin']['username'];
 
-        $batch = explode(',', $_REQUEST['batch']);
-        foreach ($batch as $reports_id) {
-            if (!toC_Articles_Admin::delete($reports_id)) {
-                $error = true;
-                break;
+        if((is_null($owner) || empty($owner)))
+        {
+            $response = array('success' => false, 'feedback' => 'Votre session est expirée, veuillez vous reconnecter');
+        }
+        else
+        {
+            $error = false;
+
+            $batch = explode(',', $_REQUEST['batch']);
+            foreach ($batch as $reports_id) {
+                if (!toC_Reports_Admin::delete($reports_id,$owner)) {
+                    $error = true;
+                    break;
+                }
+            }
+
+            if ($error === false) {
+                $response = array('success' => true, 'feedback' => $osC_Language->get('ms_success_action_performed'));
+            } else {
+                $response = array('success' => false, 'feedback' => $osC_Language->get('ms_error_action_not_performed'));
             }
         }
 
-        if ($error === false) {
-            $response = array('success' => true, 'feedback' => $osC_Language->get('ms_success_action_performed'));
-        } else {
-            $response = array('success' => false, 'feedback' => $osC_Language->get('ms_error_action_not_performed'));
+        echo $toC_Json->encode($response);
+    }
+
+    function deleteDashboards()
+    {
+        global $toC_Json, $osC_Language;
+
+        $owner = $_SESSION['admin']['username'];
+
+        if((is_null($owner) || empty($owner)))
+        {
+            $response = array('success' => false, 'feedback' => 'Votre session est expirée, veuillez vous reconnecter');
+        }
+        else
+        {
+            $error = false;
+            $batch = explode(',', $_REQUEST['batch']);
+            foreach ($batch as $reports_id) {
+                if (!toC_Reports_Admin::deleteDashboard($reports_id,$owner)) {
+                    $error = true;
+                    break;
+                }
+            }
+
+            if ($error === false) {
+                $response = array('success' => true, 'feedback' => $osC_Language->get('ms_success_action_performed'));
+            } else {
+                $response = array('success' => false, 'feedback' => $osC_Language->get('ms_error_action_not_performed'));
+            }
         }
 
         echo $toC_Json->encode($response);
@@ -482,6 +663,21 @@ class toC_Json_Reports
 
         if (isset($_REQUEST['reports_id']) && content::setStatus($_REQUEST['reports_id'], (isset($_REQUEST['flag'])
                     ? $_REQUEST['flag'] : null),'reports')
+        ) {
+            $response = array('success' => true, 'feedback' => $osC_Language->get('ms_success_action_performed'));
+        } else {
+            $response = array('success' => false, 'feedback' => $osC_Language->get('ms_error_action_not_performed'));
+        }
+
+        echo $toC_Json->encode($response);
+    }
+
+    function setDashboardStatus()
+    {
+        global $toC_Json, $osC_Language;
+
+        if (isset($_REQUEST['dashboards_id']) && content::setStatus($_REQUEST['dashboards_id'], (isset($_REQUEST['flag'])
+            ? $_REQUEST['flag'] : null),'dashboards')
         ) {
             $response = array('success' => true, 'feedback' => $osC_Language->get('ms_success_action_performed'));
         } else {

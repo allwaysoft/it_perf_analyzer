@@ -46,6 +46,30 @@ class toC_Reports_Admin
         return $data;
     }
 
+    function getDashboard($id)
+    {
+        global $osC_Database;
+
+        $Qreports = $osC_Database->query('select a.*, c.*  from :table_dashboards a left join :table_content c on c.content_id = a.dashboards_id  where a.dashboards_id = :dashboards_id and c.content_type = "dashboards"');
+
+        $Qreports->bindTable(':table_dashboards', TABLE_DASHBOARS);
+        $Qreports->bindTable(':table_content', TABLE_CONTENT);
+        $Qreports->bindInt(':dashboards_id', $id);
+        $Qreports->execute();
+
+        $data = $Qreports->toArray();
+
+        $Qreports->freeResult();
+
+        $description = content::getContentDescription($id, 'dashboards');
+        $data = array_merge($data, $description);
+
+        $product_categories_array = content::getContentCategories($id, 'dashboards');
+        $data['categories_id'] = implode(',', $product_categories_array);
+
+        return $data;
+    }
+
     function getJobRunDetail($id)
     {
         global $osC_Database;
@@ -1336,6 +1360,70 @@ class toC_Reports_Admin
         return $error;
     }
 
+    function saveDashboard($id = null, $data)
+    {
+        $error = false;
+
+        $username = $_SESSION[admin][username];
+
+        if (empty($username)) {
+            $_SESSION['LAST_ERROR'] = 'Votre session est expirée ...';
+            return false;
+        }
+
+        global $osC_Database;
+
+        if (is_numeric($id)) {
+            $Qreport = $osC_Database->query('update :table_dashboards set reports_uri = :reports_uri where dashboards_id = :dashboards_id');
+            $Qreport->bindValue(':dashboards_id',$id);
+        } else {
+            $Qreport = $osC_Database->query('insert into :table_dashboards (reports_uri) values (:reports_uri)');
+        }
+
+        $Qreport->bindValue(':reports_uri', $_REQUEST['reports_uri']);
+        $Qreport->bindTable(':table_dashboards', TABLE_DASHBOARS);
+        $Qreport->execute();
+
+        if ($osC_Database->isError()) {
+            $error = true;
+        } else {
+            if (is_numeric($id)) {
+                $reports_id = $id;
+            } else {
+                $reports_id = $osC_Database->nextID();
+            }
+        }
+
+        $dir = '/tmp';
+
+        //content
+        if ($error === false) {
+            $error = !content::saveContent($id, $reports_id, 'dashboards', $data);
+        }
+
+        //Process Languages
+        if ($error === false) {
+            $error = !content::saveContentDescription($id, $reports_id, 'dashboards', $data);
+        }
+
+        //content_to_categories
+        if ($error === false) {
+            $error = !content::saveContentToCategories($id, $reports_id, 'dashboards', $data);
+        }
+
+        //images
+        if ($error === false) {
+            $error = !content::saveImages($reports_id, 'dashboards');
+        }
+
+        if ($error === false) {
+            osC_Cache::clear('sefu-dashboards');
+            return true;
+        }
+
+        return $error;
+    }
+
     function deleteSubscription($subscriptions_id,$job_id) {
         global $osC_Database;
 
@@ -1483,6 +1571,37 @@ class toC_Reports_Admin
 
         $osC_Database->commitTransaction();
         osC_Cache::clear('sefu-reports');
+        return true;
+    }
+
+    function deleteDashboard($id, $owner)
+    {
+        global $osC_Database, $osC_Image;
+        $error = false;
+
+        $osC_Database->startTransaction();
+
+        $error = !content::deleteContent($id, 'dashboards');
+
+        if ($error === false) {
+            $Qreports = $osC_Database->query('delete from :table_reports where dashboards_id = :reports_id');
+            $Qreports->bindTable(':table_reports', TABLE_DASHBOARS);
+            $Qreports->bindInt(':reports_id', $id);
+            $Qreports->setLogging($_SESSION['module'], $id);
+            $Qreports->execute();
+
+            if ($osC_Database->isError()) {
+                $error = true;
+            }
+        }
+
+        if ($error == true) {
+            $osC_Database->rollbackTransaction();
+            return false;
+        }
+
+        $osC_Database->commitTransaction();
+        osC_Cache::clear('sefu-dashboards');
         return true;
     }
 }

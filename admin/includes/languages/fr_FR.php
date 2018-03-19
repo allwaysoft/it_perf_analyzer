@@ -1,6 +1,6 @@
 
 
-administration_title = Perf Analyser
+administration_title = Plateforme Decisionnelle
 
 header_title_help = Aide
 header_title_tomatocart_support_site = Site du support de Mefobe Cart

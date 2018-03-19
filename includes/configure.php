@@ -72,6 +72,18 @@ define('DB_SMS_USER', 'root');
 define('DB_SMS_PASS', 'WLTG0621%bntc');
 define('DB_SMS_DATABASE', 'SmsServer');
 
+//REDASH
+define('REDASH_URL', 'http://10.100.18.17');
+define('REDASH_ADMIN_USER', 'guyfomi@gmail.com');
+define('REDASH_ADMIN_PASS', 'Guy2p@cc');
+
+//METABASE
+define('METABASE_URL', 'http://10.100.18.21/bi');
+define('METABASE_DEV_USER', 'makaki@gmail.com');
+define('METABASE_DEV_PASS', 'Guy2p@cc');
+define('METABASE_ADMIN_USER', 'admin@gmail.com');
+define('METABASE_ADMIN_PASS', 'Guy2p@cc');
+
 /**
  * These constants are copied here from DataType for facility
  */

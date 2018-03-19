@@ -1,15 +1,4 @@
 <?php
-/*
-  $Id: login.php $
-  Mefobe Cart Solutions
-  http://www.mefobemarket.com
-
-  Copyright (c) 2009 Wuxi Elootec Technology Co., Ltd
-
-  This program is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License v2 (1991)
-  as published by the Free Software Foundation.
-*/
 
   $osC_Language->loadIniFile('login.php');
 ?>
@@ -34,7 +23,7 @@
       <img class="x-loading-panel-logo" style="display:block;margin-bottom:15px;" src="images/tomatocart.jpg" />
       <img src="images/loading.gif" style="width:16px;height:16px;vertical-align:middle" />&#160;
       <span id="load-status"><?php echo $osC_Language->get('init_system'); ?></span>
-      <div style="font-size:10px; font-weight:normal; margin-top:15px;">Copyright &copy; 2009 Mefobe Software, Ltd</div>
+      <div style="font-size:10px; font-weight:normal; margin-top:15px;">Copyright &copy;</div>
     </div>
   </div> 
   
@@ -141,7 +130,33 @@
     function login() {
       frmlogin.form.submit({
         success: function (form, action) {
-          window.location = '<?php echo osc_href_link_admin(FILENAME_DEFAULT); ?>?admin_language=' + cboLanguage.getValue();
+          console.log('creating metabase session ...');
+            Ext.Ajax.request({
+                method : 'POST',
+                url: '<?php echo METABASE_URL; ?>' + '/api/session',
+                headers: {
+                    Accept :'application/json'
+                },
+                jsonData : {
+                    username : action.result.username + '@gmail.com',
+                    password: '<?php echo METABASE_DEV_PASS; ?>'
+                },
+                callback: function (options, success, response) {
+                    var result = Ext.decode(response.responseText);
+                    if(result.id)
+                    {
+                        console.log('session created ...');
+                        console.log('opening app ...');
+                        window.location = '<?php echo osc_href_link_admin(FILENAME_DEFAULT); ?>?admin_language=' + cboLanguage.getValue();
+                    }
+                    else
+                    {
+                        console.log('could not create metabase session ...');
+                        alert('could not create BI session ...' + result.toString());
+                    }
+                },
+                scope: this
+            });
         },
         failure: function (form, action) {
           if (action.failureType != 'client') {
