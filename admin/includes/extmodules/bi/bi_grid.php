@@ -28,6 +28,9 @@ Toc.bi.reportsGrid = function(config) {
       'content_description',
       'created_by',
       'can_modify',
+      'can_write',
+      'hide_edit',
+      'hide_delete',
       'can_publish'
     ]),
     autoLoad: false
@@ -35,9 +38,9 @@ Toc.bi.reportsGrid = function(config) {
 
   config.rowActions = new Ext.ux.grid.RowActions({
     actions:[
-      {iconCls: 'run', qtip: 'Executer'},
-      {iconCls: 'icon-edit-record', qtip: TocLanguage.tipEdit},
-      {iconCls: 'icon-delete-record', qtip: TocLanguage.tipDelete}],
+      {iconCls: 'run', qtip: TocLanguage.run},
+      {iconCls: 'icon-edit-record', qtip: TocLanguage.tipEdit,hideIndex : 'hide_edit'},
+      {iconCls: 'icon-delete-record', qtip: TocLanguage.tipDelete,hideIndex : 'hide_delete'}],
     widthIntercept: Ext.isSafari ? 4 : 2
   });
   config.rowActions.on('action', this.onRowAction, this);
@@ -71,7 +74,7 @@ Toc.bi.reportsGrid = function(config) {
   config.cm = new Ext.grid.ColumnModel([
     config.sm,
     { id: 'content_description', header: 'Description', dataIndex: 'content_description', sortable: true},
-    { id: 'created_by', header: 'Createur', dataIndex: 'created_by', sortable: true},
+    { id: 'created_by', header: TocLanguage.creator, dataIndex: 'created_by', sortable: true},
     { header: 'Publié', align: 'center', renderer: renderPublish, dataIndex: 'content_status'},
     config.rowActions
   ]);
@@ -105,7 +108,7 @@ Toc.bi.reportsGrid = function(config) {
     },
     '-',
     {
-      text: 'Copier',
+      text: TocLanguage.copy,
       iconCls: 'icon-copy-record',
       handler: this.onBathCopy,
       scope: this
@@ -126,23 +129,6 @@ Toc.bi.reportsGrid = function(config) {
     pageSize: Toc.CONF.GRID_PAGE_SIZE,
     store: config.ds,
     steps: Toc.CONF.GRID_STEPS,
-    btnsConfig:[
-      {
-        text: TocLanguage.btnAdd,
-        iconCls:'add',
-        handler: function() {
-          thisObj.onAdd();
-        }
-      },
-      '-',
-      {
-        text: TocLanguage.btnDelete,
-        iconCls:'remove',
-        handler: function() {
-          thisObj.onBatchDelete();
-        }
-      }
-    ],
     beforePageText : TocLanguage.beforePageText,
     firstText: TocLanguage.firstText,
     lastText: TocLanguage.lastText,
@@ -163,46 +149,45 @@ Toc.bi.reportsGrid = function(config) {
 Ext.extend(Toc.bi.reportsGrid, Ext.grid.GridPanel, {
   
   onAdd: function() {
-    var dlg = new Toc.bi.reportsDialog();
-    var path = this.mainPanel.getCategoryPath();
+    var dlg = new Toc.bi.reportsDialog({permissions : this.permissions});
+    //var path = this.mainPanel.getCategoryPath();
     dlg.on('saveSuccess', function() {
       this.onRefresh();
     }, this);
     
-    dlg.show(null, path);
+    dlg.show(null,null, this.categoriesId);
   },
 
   setPermissions: function(permissions) {
-    this.bottomToolbar.items.items[0].disable();
-    this.bottomToolbar.items.items[2].disable();
-
+//console.debug(permissions);
     this.topToolbar.items.items[0].disable();
-    this.topToolbar.items.items[2].disable();
+    this.topToolbar.items.items[4].disable();
+    this.topToolbar.items.items[6].disable();
     if(permissions)
     {
-        if(permissions.can_write == 1 || permissions.can_modify == '')
+        if(permissions.can_write === 1 || permissions.can_modify !== 0 || permissions.can_publish === 1)
         {
-            this.bottomToolbar.items.items[0].enable();
             this.topToolbar.items.items[0].enable();
         }
         if(permissions.can_modify == '')
         {
-            this.bottomToolbar.items.items[2].enable();
-            this.topToolbar.items.items[2].enable();
+            //this.topToolbar.items.items[0].enable();
         }
     }
+
+    this.permissions = permissions;
   },
 
   onEdit: function(record) {
-    var dlg = new Toc.bi.reportsDialog();
-    var path = this.mainPanel.getCategoryPath();
+    var dlg = new Toc.bi.reportsDialog({permissions : this.permissions});
+    //var path = this.mainPanel.getCategoryPath();
     dlg.setTitle(record.get("content_name"));
     
     dlg.on('saveSuccess', function() {
       this.onRefresh();
     }, this);
     
-    dlg.show(record.get("dashboards_id"),record.get("created_by"),path);
+    dlg.show(record.get("dashboards_id"),record.get("created_by"),this.categoriesId);
   },
 
   onRun: function(record) {
@@ -226,7 +211,7 @@ Ext.extend(Toc.bi.reportsGrid, Ext.grid.GridPanel, {
 
                        //var DsPanel = new Ext.Component({autoEl:{tag: 'iframe',style: 'height: 100%; width: 100%; border: none',src: '<?php echo REDASH_URL . '/login?next=' . REDASH_URL . '/data_sources&email='; ?>' + result.username + '&password=12345'},height: 600,width: 600});
 
-                       var cmp = new Ext.Component({autoEl:{tag: 'iframe',style: 'height: 100%; width: 100%; border: none',src: record.get("reports_uri") + '?username=' + result.username + '@gmail.com&password=' + '<?php echo METABASE_DEV_PASS; ?>'},height: 600,id: 'dashboard_iframe' + record.get("dashboards_id"),width: 600});
+                       var cmp = new Ext.Component({autoEl:{tag: 'iframe',style: 'height: 100%; width: 100%; border: none',src: record.get("reports_uri") + '?fullscreen&username=' + result.username + '@gmail.com&password=' + '<?php echo METABASE_DEV_PASS; ?>'},height: 600,id: 'dashboard_iframe' + record.get("dashboards_id"),width: 600});
                        var pnl = new Ext.Panel();
                        pnl.add(cmp);
 

@@ -1,18 +1,12 @@
-# $Id: ext_desktop.php $
-# Mefobe Cart Solutions
-# http://www.mefobemarket.com
-#
-# Copyright (c) 2009-2010 Wuxi Elootec Technology Co., Ltd
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License v2 (1991)
-# as published by the Free Software Foundation.
+run = Executer
+creator = Createur
+copy = Copier
 
 tomatocartApp = Système de panier d\'achat TomatoCart
 Start = Démarrer
 Logout = Quitter
 
-btnSubmit = BtnSoumettre
+btnSubmit = Soumettre
 btnSave = Sauvegarder
 btnClose = Fermer
 
@@ -75,6 +69,7 @@ msgActiveConfirm = Voulez-vous réellement activer les enregistrements sélectio
 msgDeactiveConfirm = Voulez-vous réellement désactiver les enregistrements sélectionnés ?
 
 tipDelete = Supprimer
+tipEdit = Modifier
 tipEdit = Modifier
 tipMove = Déplacer
 tipRestore = Restaurer

@@ -18,10 +18,6 @@ class toC_Json_Reports
 
         $Qreports = $osC_Database->query('select a.*, cd.*,c.*, atoc.*  from :table_reports a left join :table_content c on a.reports_id = c.content_id left join  :table_content_description cd on a.reports_id = cd.content_id left join :table_content_to_categories atoc on atoc.content_id = a.reports_id  where cd.language_id = :language_id and atoc.content_type = "reports" and c.content_type = "reports" AND cd.content_type = "reports"');
 
-//        if ($current_category_id != 0) {
-//            $Qreports->appendQuery('and atoc.categories_id = :categories_id ');
-//            $Qreports->bindInt(':categories_id', $current_category_id);
-//        }
         $Qreports->appendQuery('and atoc.categories_id = :categories_id ');
         $Qreports->bindInt(':categories_id', $current_category_id);
 
@@ -44,11 +40,21 @@ class toC_Json_Reports
             if(isset($_REQUEST['permissions']))
             {
                 $permissions = explode(',',$_REQUEST['permissions']);
+                $hide_edit = false;
+                $hide_delete = false;
+
+                if($permissions[1] == 0 && $permissions[2] == 0 && $permissions[3] == 0)
+                {
+                    $hide_edit = true;
+                    $hide_delete = true;
+                }
                 $records[] = array('reports_id' => $Qreports->ValueInt('reports_id'),
                                    'content_status' => $Qreports->ValueInt('content_status'),
                                    'content_order' => $Qreports->Value('content_order'),
                                    'content_name' => $Qreports->Value('content_name'),
                                    'created_by' => $Qreports->Value('created_by'),
+                                   'hide_edit' => $hide_edit,
+                                   'hide_delete' => $hide_delete,
                                    'content_description' => $Qreports->Value('content_description'),
                                    'can_read' => $_SESSION[admin][username] == 'admin' ? 1 : $permissions[0] != 'undefined' ? $permissions[0] : false,
                                    'can_write' => $_SESSION[admin][username] == 'admin' ? 1 : $permissions[1] != 'undefined' ? $permissions[1] : false,
@@ -63,6 +69,8 @@ class toC_Json_Reports
                                    'content_order' => $Qreports->Value('content_order'),
                                    'content_name' => $Qreports->Value('content_name'),
                                    'created_by' => $Qreports->Value('created_by'),
+                                   'hide_edit' => $_SESSION[admin][username] == 'admin' ? false : true,
+                                   'hide_delete' => $_SESSION[admin][username] == 'admin' ? false : true,
                                    'content_description' => $Qreports->Value('content_description'),
                                    'can_read' => $_SESSION[admin][username] == 'admin' ? 1 : false,
                                    'can_write' => $_SESSION[admin][username] == 'admin' ? 1 : false,
@@ -110,13 +118,24 @@ class toC_Json_Reports
         while ($Qreports->next()) {
             if(isset($_REQUEST['permissions']))
             {
+                $hide_edit = false;
+                $hide_delete = false;
                 $permissions = explode(',',$_REQUEST['permissions']);
+
+                if($permissions[1] == 0 && $permissions[2] != '' && $permissions[3] == 0)
+                {
+                    $hide_edit = true;
+                    $hide_delete = true;
+                }
+
                 $records[] = array('dashboards_id' => $Qreports->ValueInt('dashboards_id'),
                     'content_status' => $Qreports->ValueInt('content_status'),
                     'content_order' => $Qreports->Value('content_order'),
                     'reports_uri' => $Qreports->Value('reports_uri'),
                     'content_name' => $Qreports->Value('content_name'),
                     'created_by' => $Qreports->Value('created_by'),
+                    'hide_edit' => $hide_edit,
+                    'hide_delete' => $hide_delete,
                     'content_description' => $Qreports->Value('content_description'),
                     'can_read' => $_SESSION[admin][username] == 'admin' ? 1 : $permissions[0] != 'undefined' ? $permissions[0] : false,
                     'can_write' => $_SESSION[admin][username] == 'admin' ? 1 : $permissions[1] != 'undefined' ? $permissions[1] : false,
@@ -132,6 +151,8 @@ class toC_Json_Reports
                     'reports_uri' => $Qreports->Value('reports_uri'),
                     'content_name' => $Qreports->Value('content_name'),
                     'created_by' => $Qreports->Value('created_by'),
+                    'hide_edit' => $_SESSION[admin][username] == 'admin' ? false : true,
+                    'hide_delete' => $_SESSION[admin][username] == 'admin' ? false : true,
                     'content_description' => $Qreports->Value('content_description'),
                     'can_read' => $_SESSION[admin][username] == 'admin' ? 1 : false,
                     'can_write' => $_SESSION[admin][username] == 'admin' ? 1 : false,
@@ -272,29 +293,91 @@ class toC_Json_Reports
     {
         global $toC_Json, $osC_Language;
 
-        $data = array('content_name' => $_REQUEST['content_name'],
-            'content_url' => '',
-            'created_by' => $_SESSION[admin][username],
-            'modified_by' => $_SESSION[admin][username],
-            'content_description' => $_REQUEST['content_description'],
-            'owner' => $_REQUEST['owner'],
-            'reports_uri' => $_REQUEST['reports_uri'],
-            'content_order' => 0,
-            'content_status' => $_REQUEST['content_status'],
-            'page_title' => $_REQUEST['content_name'],
-            'meta_keywords' => $_REQUEST['content_name'],
-            'meta_descriptions' => $_REQUEST['content_description']);
+        $username = $_SESSION[admin][username];
 
-        if (isset($_REQUEST[content_categories_id])) {
-            $data['categories'] = explode(',', $_REQUEST[content_categories_id]);
+        if (empty($username)) {
+            $response = array('success' => false, 'feedback' => 'Votre session est expirée ... vous devez vous reconnecter');
         }
+        else
+        {
+            $data = array('content_name' => $_REQUEST['content_name'],
+                'content_url' => $_REQUEST['reports_uri'],
+                'created_by' => $username,
+                'modified_by' => $username,
+                'content_description' => $_REQUEST['content_description'],
+                'owner' => $_REQUEST['owner'],
+                'reports_uri' => $_REQUEST['reports_uri'],
+                'content_order' => 0,
+                'content_status' => (isset($_REQUEST['content_status']) && !empty($_REQUEST['content_status']) ? $_REQUEST['content_status'] : 0),
+                'page_title' => $_REQUEST['content_name'],
+                'meta_keywords' => $_REQUEST['content_name'],
+                'meta_descriptions' => $_REQUEST['content_description']);
 
-        if (toC_Reports_Admin::saveDashboard((isset($_REQUEST['dashboards_id']) && ($_REQUEST['dashboards_id'] != -1)
-            ? $_REQUEST['dashboards_id'] : null), $data)
-        ) {
-            $response = array('success' => true, 'feedback' => $osC_Language->get('ms_success_action_performed'));
-        } else {
-            $response = array('success' => false, 'feedback' => $_SESSION['LAST_ERROR']);
+            /*if (isset($_REQUEST[content_categories_id])) {
+                $data['categories'] = explode(',', $_REQUEST[content_categories_id]);
+            }*/
+
+            $data['categories'] = $_REQUEST['current_category_id'];
+
+            if (toC_Reports_Admin::saveDashboard((isset($_REQUEST['dashboards_id']) && ($_REQUEST['dashboards_id'] != -1)
+                ? $_REQUEST['dashboards_id'] : null), $data)
+            ) {
+
+                //$toC_Email_Account = new toC_Email_Account(4);
+
+                $characters = '0123456789';
+                $charactersLength = strlen($characters);
+                $randomString = '';
+                for ($i = 0; $i < 5; $i++) {
+                    $randomString .= $characters[rand(0, $charactersLength - 1)];
+                }
+
+                $subscribers = content::getSubscriber($data['categories'],'pages',$data['content_status'] == 0 ? 'on_write' : 'on_publish');
+
+                $toC_Email_Account = new toC_Email_Account(4);
+
+                $to = array();
+                $emails = explode(';',$subscribers);
+                foreach ($emails as $email) {
+                    if (!empty($email)) {
+                        $to[] = osC_Mail::parseEmail($email);
+                    }
+                }
+
+                $body = "<html><head><title></title></head><body><table border='0' cellpadding='1' cellspacing='1' style='width: 100%'><tbody><tr><td style='text-align: center; background-color: rgb(204, 204, 204);'><strong>Description</strong></td></tr><tr><td style='text-align: center;'>" . $_REQUEST['content_description'] . "</td></tr><tr><td style='text-align: center; background-color: rgb(204, 204, 204);'><strong>Lien</strong></td></tr><tr>";
+                $body = $body . "<td style='text-align: center;'><a href='" . $_REQUEST['reports_uri'] . "'>Cliquez ici pour afficher&nbsp;</a></td></tr></tbody></table><p>&nbsp;</p></body></html>";
+
+                $mail = array('accounts_id' => $toC_Email_Account->getAccountId(),
+                    'id' => $randomString . '222',
+                    'to' => $to,
+                    'from' => $toC_Email_Account->getAccountName(),
+                    'sender' => $toC_Email_Account->getAccountEmail(),
+                    'subject' => $username . " a " . $data['content_status'] == 0 ? 'ajouté' : 'publié' . " un tableau de bord",
+                    'reply_to' => $toC_Email_Account->getAccountEmail(),
+                    'full_from' => $toC_Email_Account->getAccountName() . ' <' . $toC_Email_Account->getAccountEmail() . '>',
+                    'body' => $body,
+                    'priority' => 1,
+                    'content_type' => 'html',
+                    'notification' => false,
+                    'udate' => time(),
+                    'date' => date('m/d/Y H:i:s'),
+                    'fetch_timestamp' => time(),
+                    'messages_flag' => EMAIL_MESSAGE_DRAFT,
+                    'attachments' => null);
+
+                if($toC_Email_Account->sendMailJob($mail))
+                {
+                    $msg = "OK";
+                }
+                else
+                {
+                    $msg = "NOK";
+                }
+
+                $response = array('success' => true, 'feedback' => $osC_Language->get('ms_success_action_performed') . " : " . $data['categories']);
+            } else {
+                $response = array('success' => false, 'feedback' => $_SESSION['LAST_ERROR']);
+            }
         }
 
         header('Content-Type: text/html');

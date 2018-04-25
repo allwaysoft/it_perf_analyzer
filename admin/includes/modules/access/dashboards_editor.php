@@ -8,7 +8,9 @@
         $_sort_order = 100;
 
     function osC_Access_Dashboards_editor() {
-      $this->_title = "Dashboards Editor";
+        global $osC_Language;
+
+        $this->_title = $osC_Language->get('dashboards_editor');
     }
   }
 ?>

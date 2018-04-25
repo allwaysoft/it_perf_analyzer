@@ -12,8 +12,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html dir="<?php echo $osC_Language->getTextDirection();?>" xml:lang="<?php echo $osC_Language->getCode();?>" lang="<?php echo $osC_Language->getCode();?>">
 <head>
-<title>Plateforme Decisionnelle</title>
-
+<title><?php PLATFORM_NAME;?></title>
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="pragma" content="no-cache" />
@@ -57,7 +56,7 @@
 <!--      <img class="x-loading-panel-logo" style="display:block;margin-bottom:15px;" src="images/tomatocart.jpg" />-->
       <img src="images/loading.gif" style="width:16px;height:16px;vertical-align:middle" />&#160;
       <span id="load-status"><?php echo $osC_Language->get('init_system'); ?></span>
-      <div style="font-size:10px; font-weight:normal; margin-top:15px;">Copyright &copy;</div>
+      <div style="font-size:10px; font-weight:normal; margin-top:15px;">Copyright &copy;<?php echo COPYRIGHT; ?></div>
     </div>
   </div>
 
@@ -82,13 +81,13 @@
   <script type="text/javascript" src="external/extjs/adapter/ext/ext-base-2.3.0.js"></script>
   <script type="text/javascript" src="external/extjs/ext-all.js"></script>
   
-  <script type="text/javascript" src="external/devAnalogClock/swfobject.js"></script>
+<!--  <script type="text/javascript" src="external/devAnalogClock/swfobject.js"></script>-->
 
 <?php if (USE_WYSIWYG_TINYMCE_EDITOR == '1') { ?>  
 
-  <script type="text/javascript" src="external/tinymec/miframe-min.js"></script>
-  <script type="text/javascript" src="external/tinymec/tiny_mce/tiny_mce.js"></script>
-  <script type="text/javascript" src="external/tinymec/Ext.ux.TinyMCE.min.js"></script>
+<!--  <script type="text/javascript" src="external/tinymec/miframe-min.js"></script>-->
+<!--  <script type="text/javascript" src="external/tinymec/tiny_mce/tiny_mce.js"></script>-->
+<!--  <script type="text/javascript" src="external/tinymec/Ext.ux.TinyMCE.min.js"></script>-->
   <script src="external/amcharts_3.20.19.free/amcharts/amcharts.js" type="text/javascript"></script>
   <script src="external/amcharts_3.20.19.free/amcharts/serial.js" type="text/javascript"></script>
   <script src="external/amcharts_3.20.19.free/amcharts/gauge.js" type="text/javascript"></script>
@@ -136,7 +135,7 @@
   <script type="text/javascript" src="<?php echo osc_href_link_admin('tocdesktop.php'); ?>"></script>      
   <script type="text/javascript" src="templates/default/extensions/CategoriesComboBox.js"></script>
   <script type="text/javascript" src="templates/default/extensions/CategoriesTreePanel.js"></script>
-    <script type="text/javascript" src="templates/default/extensions/ActionsTreePanel.js"></script>
+  <script type="text/javascript" src="templates/default/extensions/ActionsTreePanel.js"></script>
   <script type="text/javascript" src="templates/default/extensions/form/CompositeField.js"></script>
   <script type="text/javascript" src="templates/default/extensions/form/lovcombo.js"></script>
   <script type="text/javascript" src="templates/default/extensions/uploadpanel/all.js"></script>

@@ -5,7 +5,7 @@ Toc.categories.CategoriesDialog = function (config) {
   config = config || {};
   
   config.id = 'categories-dialog-win';
-  config.title = 'Configurer un Espace';
+  config.title = '<?php echo $osC_Language->get('managed_workspace'); ?>';
   config.layout = 'fit';
   config.width = 730;
   config.height = 380;
@@ -65,10 +65,10 @@ Ext.extend(Toc.categories.CategoriesDialog, Ext.Window, {
     if (this.categoriesId && this.categoriesId > 0) {
         this.pnlPermissions = new Toc.content.PermissionsPanel({content_id : this.categoriesId,content_type : 'pages',owner : this.owner,action:'list_perms'});
         this.pnlNotifications = new Toc.content.NotificationsPanel({content_id : this.categoriesId,content_type : 'pages',owner : this.owner});
-        this.pnlComments =  new Toc.content.CommentsPanel({content_id : this.categoriesId,content_type : 'pages',owner : Toc.content.ContentManager});
+        //this.pnlComments =  new Toc.content.CommentsPanel({content_id : this.categoriesId,content_type : 'pages',owner : Toc.content.ContentManager});
         this.tabCategories.add(this.pnlPermissions);
         this.tabCategories.add(this.pnlNotifications);
-        this.tabCategories.add(this.pnlComments);
+        //this.tabCategories.add(this.pnlComments);
 
         this.loadCategory(this.pnlGeneral);
     }
@@ -83,7 +83,7 @@ Ext.extend(Toc.categories.CategoriesDialog, Ext.Window, {
     if (this.categoriesId && this.categoriesId > 0) {
       if(panel)
       {
-        panel.getEl().mask('Chargement en cours....');
+        panel.getEl().mask('<?php echo $osC_Language->get('loading'); ?>');
       }
       this.frmCategories.load({
         url: Toc.CONF.CONN_URL,
@@ -94,13 +94,6 @@ Ext.extend(Toc.categories.CategoriesDialog, Ext.Window, {
           if(panel)
           {
              panel.getEl().unmask();
-          }
-
-          var img = action.result.data.categories_image;
-
-          if (img) {
-            var html = '<img src ="../images/categories/' + img + '"  style = "margin-left: 170px; width: 70px; height:70px" /><br/><span style = "padding-left: 170px;">/images/categories/' + img + '</span>';
-            this.frmCategories.findById('categories_image_panel').body.update(html);
           }
         },
         failure: function (form, action) {
@@ -123,7 +116,7 @@ Ext.extend(Toc.categories.CategoriesDialog, Ext.Window, {
   
   buildForm: function () {
     this.pnlGeneral = new Toc.categories.GeneralPanel();
-    this.pnlMetaInfo = new Toc.content.MetaInfoPanel();
+    //this.pnlMetaInfo = new Toc.content.MetaInfoPanel();
 
     this.tabCategories = new Ext.TabPanel({
       activeTab: 0,
@@ -131,7 +124,7 @@ Ext.extend(Toc.categories.CategoriesDialog, Ext.Window, {
         hideMode:'offsets'
       },
       deferredRender: false,
-      items: [this.pnlGeneral,this.pnlMetaInfo]
+      items: [this.pnlGeneral]
     });
     
     this.frmCategories = new Ext.form.FormPanel({

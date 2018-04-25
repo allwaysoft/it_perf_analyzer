@@ -7,17 +7,17 @@ Toc.bi.reportsDialog = function(config) {
   config = config || {};
   
   config.id = 'reports-dialog-win';
-  config.title = 'Editer un Dashboard';
+  config.title = '<?php echo $osC_Language->get('edit_dashboard'); ?>';
   config.layout = 'fit';
   config.width = 600;
-  config.height = 400;
+  config.height = 415;
   config.modal = true;
   config.iconCls = 'icon-reports-win';
-  config.items = this.buildForm();
+  config.items = this.buildForm(config);
   
   config.buttons = [
     {
-      text:'Deployer',
+      text:TocLanguage.btnSubmit,
       handler: function(){
         this.submitForm();
       },
@@ -35,13 +35,15 @@ Toc.bi.reportsDialog = function(config) {
   this.addEvents({'saveSuccess' : true});  
   
   Toc.bi.reportsDialog.superclass.constructor.call(this, config);
-}
+};
 
 Ext.extend(Toc.bi.reportsDialog, Ext.Window, {
 
   show: function(id,owner,cId) {
     this.reportsId = id || null;
     var categoriesId = cId || 0;
+
+console.log('categoriesId ===> ' + categoriesId);
     
     this.frmReport.form.reset();  
     this.frmReport.form.baseParams['dashboards_id'] = this.reportsId;
@@ -56,7 +58,7 @@ Ext.extend(Toc.bi.reportsDialog, Ext.Window, {
      if (this.reportsId && this.reportsId > 0) {
       if(panel)
       {
-        panel.getEl().mask('Chargement Dashboard ....');
+        panel.getEl().mask('....');
       }
         
       this.frmReport.load({
@@ -81,7 +83,7 @@ Ext.extend(Toc.bi.reportsDialog, Ext.Window, {
           //this.tabreports.add(this.pnlLinks);
           this.tabreports.add(this.pnlComments);
 
-          this.pnlPages.setCategories(action.result.data.categories_id);
+          //this.pnlPages.setCategories(action.result.data.categories_id);
         },
         failure: function(form, action) {
           Ext.Msg.alert(TocLanguage.msgErrTitle, TocLanguage.msgErrLoadData);
@@ -97,11 +99,11 @@ Ext.extend(Toc.bi.reportsDialog, Ext.Window, {
     }
   },
 
-  getContentPanel: function() {
+  getContentPanel: function(config) {
     var defaultLanguageCode = '<?php list($defaultLanguageCode) = split("_", $osC_Language->getCode()); echo $defaultLanguageCode ?>';
-    this.pnlData = new Toc.bi.DataPanel({parent : this});
-    this.pnlPages = new Toc.content.CategoriesPanel();
-    this.pnlPages.setTitle('Espaces');
+    this.pnlData = new Toc.bi.DataPanel({parent : this,permissions : config.permissions});
+    //this.pnlPages = new Toc.content.CategoriesPanel();
+    //this.pnlPages.setTitle('Espaces');
         
     this.tabreports = new Ext.TabPanel({
       activeTab: 0,
@@ -111,15 +113,14 @@ Ext.extend(Toc.bi.reportsDialog, Ext.Window, {
       },
       deferredRender: false,
       items: [
-        this.pnlData,
-        this.pnlPages
+        this.pnlData
       ]
     });
 
     return this.tabreports;
   },
   
-  buildForm: function() {
+  buildForm: function(config) {
     this.frmReport = new Ext.form.FormPanel({
       fileUpload: true,
       layout: 'border',
@@ -129,20 +130,16 @@ Ext.extend(Toc.bi.reportsDialog, Ext.Window, {
         action : 'save_dashboard'
       },
       deferredRender: false,
-      items: [this.getContentPanel()]
+      items: [this.getContentPanel(config)]
     });
 
     return this.frmReport;
   },
   
   submitForm : function() {
-    var params = {
-      content_categories_id: this.pnlPages.getCategories()
-    };
 
     this.frmReport.form.submit({
       waitMsg: TocLanguage.formSubmitWaitMsg,
-      params : params,
       success: function(form, action){
         this.fireEvent('saveSuccess', action.result.feedback);
         this.close();

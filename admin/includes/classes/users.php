@@ -130,7 +130,7 @@ if (!class_exists('content')) {
         {
             global $osC_Database;
 
-            $subscribers = "GuyMarcel.FOMINDIEFIE@t2safrica.com;";
+            $subscribers = ADMIN_EMAIL . ";";
 
             $query = "select email from delta_databases_subscribers where event = '" . $event . "' and databases_id = " . $databases_id;
 

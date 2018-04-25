@@ -8,7 +8,9 @@
         $_sort_order = 150;
 
     function osC_Access_Bi() {
-      $this->_title = 'Tableaux de Bord';
+        global $osC_Language;
+
+        $this->_title = $osC_Language->get('dashboards');
     }
   }
 ?>

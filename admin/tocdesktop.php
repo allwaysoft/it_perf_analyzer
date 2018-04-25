@@ -61,6 +61,29 @@ TocDesktop = new Ext.app.App({
               result = Ext.decode(response.responseText);
               
               if (result.success == true) {
+                if(document.URL.split("?").length > 1 && 1 == 2)
+                {
+                   Ext.Ajax.request({
+                        method: 'DELETE',
+                        url: '<?php echo METABASE_URL; ?>' + '/api/session',
+                        params: {
+                            session_id: document.URL.split("?")[1].split("=")[2]
+                        },
+                        headers: {
+                            Accept: 'application/json',
+                            'Content-Type' : 'application/json',
+                            'X-Metabase-Session':document.URL.split("?")[1].split("=")[2],
+                            'session_id':document.URL.split("?")[1].split("=")[2]
+                        },
+                        jsonData: {
+                            session_id : document.URL.split("?")[1].split("=")[2]
+                        },
+                        callback: function (options, success, response) {
+                        },
+                        scope: this
+                    });
+                }
+
                 window.location = "<?php echo osc_href_link_admin(FILENAME_DEFAULT); ?>";
               }
             }

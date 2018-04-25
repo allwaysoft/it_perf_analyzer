@@ -1,6 +1,5 @@
 <?php
 
-
   echo 'Ext.namespace("Toc.roles");';
 
 //  include('roles_permissions_grid_panel.php');

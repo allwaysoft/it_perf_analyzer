@@ -8,25 +8,24 @@
 ?>
 
 Ext.override(TocDesktop.BiWindow, {
+    createWindow: function() {
+        var desktop = this.app.getDesktop();
+        var win = desktop.getWindow('bi-win');
 
-createWindow: function() {
-var desktop = this.app.getDesktop();
-var win = desktop.getWindow('bi-win');
+        if (!win) {
+            var pnl = new Toc.bi.mainPanel({owner: this});
 
-if (!win) {
-var pnl = new Toc.bi.mainPanel({owner: this});
+            win = desktop.createWindow({
+                id: 'bi-win',
+                title: '<?php echo $osC_Language->get('dashboards'); ?>',
+                width: 800,
+                height: 400,
+                iconCls: 'icon-bi-win',
+                layout: 'fit',
+                items: pnl
+                });
+        }
 
-win = desktop.createWindow({
-id: 'bi-win',
-title: 'Dashboards',
-width: 800,
-height: 400,
-iconCls: 'icon-bi-win',
-layout: 'fit',
-items: pnl
-});
-}
-
-win.show();
-}
+        win.show();
+    }
 });

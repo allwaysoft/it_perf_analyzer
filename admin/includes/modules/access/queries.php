@@ -8,7 +8,9 @@
         $_sort_order = 75;
 
     function osC_Access_Queries() {
-      $this->_title = 'Gestionnaire de Requetes SQL';
+        global $osC_Language;
+
+        $this->_title = $osC_Language->get('query_editor');
     }
   }
 ?>

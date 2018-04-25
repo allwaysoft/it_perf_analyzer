@@ -354,17 +354,21 @@ class toC_Json_Categories
 
     function loadCategoriesTree()
     {
+        global $toC_Json;
         $roles = $_SESSION['admin']['roles'];
 
         if((is_null($roles) || empty($roles)) && $_SESSION['admin']['username'] != 'admin' && $_SESSION['admin']['username'] != 'makaki')
         {
-            echo null;
             unset($_SESSION['admin']);
+            $categories_array = array('id' => -5, 'text' => 'Session expirée');
+            $categories_array['leaf'] = true;
+            $categories_array['roles_id'] = null;
+            $categories_array['cls'] = 'x-tree-node-collapsed';
+            $categories_array['icon'] = 'templates/default/images/icons/16x16/home.png';
+            $categories_array['permissions'] = null;
         }
         else
         {
-            global $toC_Json;
-
             $include_custom_pages = isset($_REQUEST['filter']) && $_REQUEST['filter'] != '-1' ? true : false;
             $show_home = isset($_REQUEST['sh']) && $_REQUEST['sh'] == '1' ? true : false;
             $check_permissions = isset($_REQUEST['cp']) && $_REQUEST['cp'] == '0' ? false : true;
@@ -372,8 +376,9 @@ class toC_Json_Categories
             $osC_CategoryTree->setShowCategoryProductCount(isset($_REQUEST['scc']) && $_REQUEST['scc'] == '1' ? true : false);
 
             $categories_array = $osC_CategoryTree->buildExtJsonTreeArrayForUser(0, '', $include_custom_pages, $show_home, $check_permissions);
-            echo $toC_Json->encode($categories_array);
         }
+
+        echo $toC_Json->encode($categories_array);
     }
 
     function loadDashboardTree()

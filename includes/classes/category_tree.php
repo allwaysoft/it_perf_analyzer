@@ -709,9 +709,11 @@
 
                 foreach ($this->data[$parent_id] as $category_id => $category) {
                     if (isset($this->data[$category_id])) {
-                        $category_name = $indent . '<img src = "templates/default/images/icons/16x16/categories.png" alt = "" /> ' . $category['name'];
+                        $icon = $category[categories_status] == 1 ? 'categories.png' : 'categories_offline.png';
+                        $category_name = $indent . "<img src = 'templates/default/images/icons/16x16/" .  $icon . " alt = '' /> " . $category['name'];
                     } else {
-                        $category_name = $indent . '<img src = "templates/default/images/icons/16x16/page.png" alt = "" /> ' . $category['name'];
+                        $icon = $category[categories_status] == 1 ? 'page.png' : 'page_offline.png';
+                        $category_name = $indent . "<img src = 'templates/default/images/icons/16x16/" .  $icon . " alt = '' /> " . $category['name'];
                     }
 
                     $data = array('categories_id' => $category_id, 'categories_name' => $category_name);

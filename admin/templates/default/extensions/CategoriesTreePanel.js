@@ -1,10 +1,3 @@
-/**
- * Created by JetBrains PhpStorm.
- * User: Administrator
- * Date: 10/2/11
- * Time: 11:49 AM
- * To change this template use File | Settings | File Templates.
- */
 Toc.CategoriesTreePanel = function(config) {
     config = config || {};
 
@@ -40,15 +33,8 @@ Toc.CategoriesTreePanel = function(config) {
         },
         listeners: {
             load: function() {
-                if(this.root.childNodes.length == 0)
-                {
-                    Ext.MessageBox.alert(TocLanguage.msgErrTitle,"Votre Session est expirée, vous devez vous reconnecter !!!");
-                }
-                else
-                {
-                    this.expandAll();
-                    this.setCategoryId(this.currentCategoryId || 0);
-                }
+                this.expandAll();
+                this.setCategoryId(this.currentCategoryId || 0);
             },
             scope: this
         }
@@ -253,7 +239,7 @@ Ext.extend(Toc.CategoriesTreePanel, Ext.tree.TreePanel, {
         node = (node == null) ? this.getNodeById(this.currentCategoryId) : node;
         var permissions = node.attributes.permissions;
 
-        return permissions != undefined ? permissions : '';
+        return permissions || '';
     },
 
     setFilter: function(filter) {

@@ -11,25 +11,21 @@ class toC_Json_Login
 
         $response = array();
         if (!empty($_REQUEST['user_name']) && !empty($_REQUEST['user_password'])) {
-            if ($_REQUEST['user_name'] == "admin" || AUTH == "local" || $_REQUEST['user_name'] == "makaki" || $_REQUEST['user_name'] == "demo" || $_REQUEST['user_name'] == "ged") {
-                $Qadmin = $osC_Database->query('select id, user_name, user_password from :table_administrators where user_name = :user_name');
-                $Qadmin->bindTable(':table_administrators', TABLE_ADMINISTRATORS);
-                $Qadmin->bindValue(':user_name', $_REQUEST['user_name']);
-                $Qadmin->execute();
+            $Qadmin = $osC_Database->query('select id, user_name, user_password from :table_administrators where user_name = :user_name');
+            $Qadmin->bindTable(':table_administrators', TABLE_ADMINISTRATORS);
+            $Qadmin->bindValue(':user_name', $_REQUEST['user_name']);
+            $Qadmin->execute();
 
-                if ($Qadmin->numberOfRows() > 0) {
-                    if (osc_validate_password($_REQUEST['user_password'], $Qadmin->value('user_password'))) {
-                        $_SESSION['admin'] = array('id' => $Qadmin->valueInt('id'),
-                            'username' => $Qadmin->value('user_name'),
-                            'name' => 'Guy FOMI',
-                            'access' => osC_Access::getUserLevels($Qadmin->valueInt('id')),
-                            'roles' => osC_Access::getUserRoles($Qadmin->valueInt('id'))
-                        );
+            if ($Qadmin->numberOfRows() > 0) {
+                if (osc_validate_password($_REQUEST['user_password'], $Qadmin->value('user_password'))) {
+                    $_SESSION['admin'] = array('id' => $Qadmin->valueInt('id'),
+                        'username' => $Qadmin->value('user_name'),
+                        'name' => 'Guy FOMI',
+                        'access' => osC_Access::getUserLevels($Qadmin->valueInt('id')),
+                        'roles' => osC_Access::getUserRoles($Qadmin->valueInt('id'))
+                    );
 
-                        $response = array('success' => true, 'feedback' => 'OK','username' => $Qadmin->value('user_name'));
-                    }
-                } else {
-                    $response = array('success' => false, 'feedback' => 'Compte ou mot de passe invalide','username' => null);
+                    $response = array('success' => true, 'feedback' => 'OK','username' => $Qadmin->value('user_name'));
                 }
             } else {
                 $user = $_REQUEST['user_name'];
@@ -113,7 +109,6 @@ class toC_Json_Login
 
     function loginwin()
     {
-
         global $toC_Json, $osC_Language, $osC_Database;
 
         $response = array();

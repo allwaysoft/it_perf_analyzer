@@ -9,8 +9,9 @@
         $_sort_order = 2;
 
     function osC_Access_Servers() {
+        global $osC_Language;
 
-      $this->_title = 'Referentiel Serveurs';
+        $this->_title = $osC_Language->get('servers');
     }
   }
 ?>

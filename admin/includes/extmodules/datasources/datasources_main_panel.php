@@ -28,14 +28,18 @@ Ext.extend(Toc.datasources.mainPanel, Ext.Panel, {
 
                     if(result.success)
                     {
-                       if (this.items) {
-                        this.removeAll(true);
-                       }
+                        that.username = result.username;
+                        this.getEl().mask('...');
+                        if (this.items) {
+                          this.removeAll(true);
+                        }
 
-                       var DsPanel = new Ext.Component({autoEl:{tag: 'iframe',style: 'height: 100%; width: 100%; border: none',src: '<?php echo REDASH_URL . '/login?next=' . REDASH_URL . '/data_sources&email='; ?>' + result.username + '&password=12345'},height: 600,width: 600});
+                       //var DsPanel = new Ext.Component({autoEl:{tag: 'iframe',style: 'height: 100%; width: 100%; border: none',src: '<?php echo REDASH_URL . '/login?next=' . REDASH_URL . '/data_sources&email='; ?>' + result.username + '&password=12345'},height: 600,width: 600});
+                       var DsPanel = new Ext.Component({autoEl:{tag: 'iframe',style: 'height: 100%; width: 100%; border: none',src: '<?php echo METABASE_URL . '/admin/databases'; ?>' + '?username=' + that.username + '@gmail.com' + '&password=' + '<?php echo METABASE_DEV_PASS; ?>'},height: 600,width: 600});
 
                        this.add(DsPanel);
                        this.doLayout();
+                       this.getEl().unmask();
                     }
                     else
                     {

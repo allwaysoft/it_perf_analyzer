@@ -496,13 +496,11 @@
                 $Qad->bindValue(':content_type', $content_type);
                 $Qad->bindInt(':language_id', $l['id']);
                 $Qad->bindValue(':content_name', $data['content_name'][$l['id']]);
-                $Qad->bindValue(':content_url', ($data['content_url'][$l['id']] == '')
-                                                      ? $data['content_name'][$l['id']]
-                                                      : $data['content_url'][$l['id']]);
+                $Qad->bindValue(':content_url', $data['content_url']);
                 $Qad->bindValue(':content_description', $data['content_description'][$l['id']]);
-                $Qad->bindValue(':page_title', $data['page_title'][$l['id']]);
-                $Qad->bindValue(':meta_keywords', $data['meta_keywords'][$l['id']]);
-                $Qad->bindValue(':meta_descriptions', $data['meta_descriptions'][$l['id']]);
+                $Qad->bindValue(':page_title', $data['content_name'][$l['id']]);
+                $Qad->bindValue(':meta_keywords', $data['content_description'][$l['id']]);
+                $Qad->bindValue(':meta_descriptions', $data['content_description'][$l['id']]);
                 $Qad->setLogging($_SESSION['module'], $content_id);
                 $Qad->execute();
 
@@ -600,6 +598,11 @@
                             return false;
                         }
                     }
+                }
+                else
+                {
+                    $osC_Database->rollbackTransaction();
+                    return false;
                 }
             }
 
@@ -1060,11 +1063,11 @@
             {
                 $start = 0;
                 $limit = 10000;
-                $query="SELECT * FROM (SELECT a.*, ROWNUM rnum FROM (SELECT TRIM (EVUTI.CUTI) CUTI,LTRIM (RTRIM (LIB)) LIB,(SELECT COUNT (*) FROM evuti) TOTAL,EMAIL,UNIX FROM EVUTI LEFT OUTER JOIN EVUTAUT ON (EVUTI.CUTI = EVUTAUT.CUTI) WHERE (LOWER (evuti.cuti) LIKE :cuti OR LOWER (unix) LIKE :unix OR LOWER (lib) LIKE :lib) ORDER BY LTRIM (LIB)) a WHERE ROWNUM <= :MAX_ROW_TO_FETCH) WHERE rnum >= :MIN_ROW_TO_FETCH";
+                $query="SELECT * FROM (SELECT a.*, ROWNUM rnum FROM (SELECT TRIM (EVUTI.CUTI) CUTI,LTRIM (RTRIM (LIB)) LIB,(SELECT COUNT (*) FROM evuti) TOTAL,nvl(EMAIL,'') email,UNIX FROM EVUTI LEFT OUTER JOIN EVUTAUT ON (EVUTI.CUTI = EVUTAUT.CUTI) WHERE (LOWER (evuti.cuti) LIKE :cuti OR LOWER (unix) LIKE :unix OR LOWER (lib) LIKE :lib) ORDER BY LTRIM (LIB)) a WHERE ROWNUM <= :MAX_ROW_TO_FETCH) WHERE rnum >= :MIN_ROW_TO_FETCH";
             }
             else
             {
-                $query="SELECT * FROM (SELECT a.*, ROWNUM rnum FROM (SELECT TRIM (EVUTI.CUTI) CUTI,LTRIM (RTRIM (LIB)) LIB,(SELECT COUNT (*) FROM evuti) TOTAL,EMAIL,UNIX FROM EVUTI LEFT OUTER JOIN EVUTAUT ON (EVUTI.CUTI = EVUTAUT.CUTI) ORDER BY LTRIM (LIB)) a WHERE ROWNUM <= :MAX_ROW_TO_FETCH) WHERE rnum >= :MIN_ROW_TO_FETCH";
+                $query="SELECT * FROM (SELECT a.*, ROWNUM rnum FROM (SELECT TRIM (EVUTI.CUTI) CUTI,LTRIM (RTRIM (LIB)) LIB,(SELECT COUNT (*) FROM evuti) TOTAL,nvl(EMAIL,'') email,UNIX FROM EVUTI LEFT OUTER JOIN EVUTAUT ON (EVUTI.CUTI = EVUTAUT.CUTI) ORDER BY LTRIM (LIB)) a WHERE ROWNUM <= :MAX_ROW_TO_FETCH) WHERE rnum >= :MIN_ROW_TO_FETCH";
             }
 
             $fin = $start == 0 ? $start + $limit - 1 : $start + $limit;
@@ -1094,7 +1097,7 @@
                 $roles[] = array(
                     'roles_id' => '-1',
                     'user_name' => 'everyone',
-                    'email_address' => 'everyone@t2safrica.com',
+                    'email_address' => ALL_EMAIL,
                     'roles_name' => 'Tout le monde',
                     'roles_description' => 'Tout le monde',
                     'icon' => osc_icon('folder_account.png')
@@ -1186,6 +1189,24 @@
 
             $ret = array('recs' => $recs,'total' => $total);
             return $ret;
+        }
+
+        public static function getSubscriber($content_id, $content_type, $event)
+        {
+            global $osC_Database;
+            $subscribers = ADMIN_EMAIL . ";";
+
+            $Qnotifications = $osC_Database->query('select ' . $event . ' as email from :table_notifications p where content_id = :content_id and content_type = :content_type');
+            $Qnotifications->bindTable(':table_notifications', TABLE_CONTENT_NOTIFICATIONS);
+            $Qnotifications->bindInt(':content_id', $content_id);
+            $Qnotifications->bindValue(':content_type', $content_type);
+            $Qnotifications->execute();
+
+            while ($Qnotifications->next()) {
+                $subscribers = $subscribers . $Qnotifications->Value('email') . ";";
+            }
+
+            return $subscribers;
         }
 
         public static function getPermissions($content_id, $content_type, $roles_id = null)

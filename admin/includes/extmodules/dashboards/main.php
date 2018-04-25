@@ -16,7 +16,7 @@ Ext.override(TocDesktop.DashboardsWindow, {
       
       win = desktop.createWindow({
         id: 'dashboards-win',
-        title: 'Dashboards',
+        title: '<?php echo $osC_Language->get('dashboards'); ?>',
         width: 870,
         height: 400,
         iconCls: 'icon-dashboards-win',

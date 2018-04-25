@@ -176,6 +176,7 @@ Ext.extend(Toc.content.NotificationsPanel, Ext.grid.GridPanel, {
     },
 
     onClick: function(e, target) {
+        console.log('onClick');
         var t = e.getTarget();
         var v = this.view;
         var row = v.findRowIndex(t);
@@ -187,36 +188,53 @@ Ext.extend(Toc.content.NotificationsPanel, Ext.grid.GridPanel, {
             var email_address = this.getStore().getAt(row).get('email_address');
             var roles_id = this.getStore().getAt(row).get('roles_id');
 
-            if(Ext.isEmpty(email_address) && roles_id != '-1')
+            if(email_address === null)
             {
-                Ext.MessageBox.alert(TocLanguage.msgInfoTitle,'Aucune adresse EMAIL definie pour ce Compte');
+                Ext.MessageBox.alert(TocLanguage.msgInfoTitle,'Aucune adresse EMAIL definie pour ce Compte !!!');
+                return;
             }
-            else
+
+            if(email_address === 'null')
             {
-                if (col > 0) {
-                    var record = this.getStore().getAt(row);
-                    var flagName = this.getColumnModel().getDataIndex(col);
-                    this.fireEvent('selectchange', record);
-                }
+                Ext.MessageBox.alert(TocLanguage.msgInfoTitle,'Aucune adresse EMAIL definie pour ce Compte !!!');
+                return;
+            }
 
-                var btn = e.getTarget(".img-button");
+            if(typeof email_address !== "string")
+            {
+                Ext.MessageBox.alert(TocLanguage.msgInfoTitle,'Aucune adresse EMAIL definie pour ce Compte !!!');
+                return;
+            }
 
-                if (btn) {
-                    var field_id = this.getStore().getAt(row).get(this.id_field);
-                    action = btn.className.replace(/img-button btn-/, '').trim();
-                    var content_id = this.getStore().getAt(row).get('content_id');
-                    var content_type = this.getStore().getAt(row).get('content_type');
-                    roles_id = this.getStore().getAt(row).get('roles_id');
-                    email_address = this.getStore().getAt(row).get('email_address');
-                    var module = 'setNotification';
+            if(email_address.trim().length <= 5)
+            {
+                Ext.MessageBox.alert(TocLanguage.msgInfoTitle,'Aucune adresse EMAIL definie pour ce Compte !!!');
+                return;
+            }
 
-                    switch (action) {
-                        case 'status-off':
-                        case 'status-on':
-                            flag = (action == 'status-on') ? 1 : 0;
-                            this.setNotification(module, field_id, content_id, content_type, roles_id, flagName, flag,email_address);
-                            break;
-                    }
+            if (col > 0) {
+                var record = this.getStore().getAt(row);
+                var flagName = this.getColumnModel().getDataIndex(col);
+                this.fireEvent('selectchange', record);
+            }
+
+            var btn = e.getTarget(".img-button");
+
+            if (btn) {
+                var field_id = this.getStore().getAt(row).get(this.id_field);
+                action = btn.className.replace(/img-button btn-/, '').trim();
+                var content_id = this.getStore().getAt(row).get('content_id');
+                var content_type = this.getStore().getAt(row).get('content_type');
+                roles_id = this.getStore().getAt(row).get('roles_id');
+                email_address = this.getStore().getAt(row).get('email_address');
+                var module = 'setNotification';
+
+                switch (action) {
+                    case 'status-off':
+                    case 'status-on':
+                        flag = (action == 'status-on') ? 1 : 0;
+                        this.setNotification(module, field_id, content_id, content_type, roles_id, flagName, flag,email_address);
+                        break;
                 }
             }
         }

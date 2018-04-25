@@ -38,39 +38,33 @@ Toc.roles.RolesDialog = function(config) {
 }
 
 Ext.extend(Toc.roles.RolesDialog, Ext.Window, {
+  
   show: function (data) {
-    if(data)
-    {
-       var administratorsId = data.administrators_id || null;
-       this.rolesId= data.roles_id || null;
-       this.data = data;
+    var administratorsId = data.administrators_id || null;
+    this.rolesId= data.roles_id || null;
+    this.data = data;
+    
+    this.frmAdministrator.form.reset();
+    this.frmAdministrator.form.baseParams['roles_id'] = this.rolesId;
+    this.frmAdministrator.form.baseParams['administrators_id'] = administratorsId;
 
-       this.frmAdministrator.form.reset();
-       this.frmAdministrator.form.baseParams['roles_id'] = this.rolesId;
-       this.frmAdministrator.form.baseParams['administrators_id'] = administratorsId;
-
-       Toc.roles.RolesDialog.superclass.show.call(this);
-       this.loadRole(this.pnlAdmin);
-    }
-    else
-    {
-       this.frmAdministrator.form.reset();
-       Toc.roles.RolesDialog.superclass.show.call(this);
-    }
+    Toc.roles.RolesDialog.superclass.show.call(this);
+    this.loadRole(this.pnlAdmin);
   },
+
   loadRole : function(panel){
      if (this.rolesId && this.rolesId != -1) {
       if(panel)
       {
-         panel.getEl().mask('Chargement en cours....');
+        panel.getEl().mask('Chargement en cours....');
       }
 
       this.frmAdministrator.load({
         url: Toc.CONF.CONN_URL,
         params:{
           module: 'roles',
-          action: 'load_role',
-          src:'local'
+          action: 'load_user',
+          src:this.data.src
         },
         success: function(form, action) {
           if(panel)
@@ -96,6 +90,31 @@ Ext.extend(Toc.roles.RolesDialog, Ext.Window, {
       });
     }
   },
+  
+  onCheckChange: function(node, checked) {
+    if (node.hasChildNodes) {
+      node.expand();
+      node.eachChild(function(child) {
+        child.ui.toggleCheck(checked);
+      });
+    }
+  },
+  
+  checkAll: function() {
+    this.pnlAccessTree.root.cascade(function(n) {
+      if (!n.getUI().isChecked()) {
+        n.getUI().toggleCheck(true);
+      }
+    });
+  },
+  
+  uncheckAll: function() {
+    this.pnlAccessTree.root.cascade(function(n) {
+      if (n.getUI().isChecked()) {
+        n.getUI().toggleCheck(false);
+      }
+    });
+  },
       
   getAdminPanel: function() {
     this.pnlAdmin = new Ext.Panel({
@@ -114,21 +133,17 @@ Ext.extend(Toc.roles.RolesDialog, Ext.Window, {
           xtype: 'hidden',
           name: 'roles_id',
           id: 'roles_id'
-        },{
-          xtype: 'hidden',
-          name: 'department_id',
-          id: 'department_id'
         },
         {
           xtype: 'textfield',
-          disabled:false,
+          disabled:true,
           fieldLabel: 'Nom',
           name: 'roles_name',
           allowBlank: false
         },
         {
           xtype: 'textarea',
-          disabled:false,
+          disabled:true,
           fieldLabel: 'Description',
           name: 'roles_description',
           id:  'roles_description',
@@ -139,6 +154,91 @@ Ext.extend(Toc.roles.RolesDialog, Ext.Window, {
     });  
     
     return this.pnlAdmin;
+  }, 
+  
+  getAccessPanel: function() {
+    this.chkGlobal = new Ext.form.Checkbox({
+      name: 'access_globaladmin', 
+      boxLabel: 'Acces Global',
+      listeners: {
+        check: function(chk, checked) {
+          if(checked)
+            this.checkAll();
+          else
+            this.uncheckAll();
+        },
+        scope: this
+      }
+    });  
+  
+    this.pnlAccessTree = new Ext.ux.tree.CheckTreePanel({
+      name: 'access_modules', 
+      id: 'access_modules',
+      xtype: 'checktreepanel',
+      height : 400,
+<!--      layout : 'fit',-->
+      title : 'Modules',
+      deepestOnly: true,
+      bubbleCheck: 'none',
+      cascadeCheck: 'none',
+      autoScroll: true,
+      containerScroll: false,
+      border: false,
+      bodyStyle: 'background-color:white;border:1px solid #B5B8C8',
+      rootVisible: false,
+      anchor: '-24 -60',
+      root: {
+        nodeType: 'async',
+        text: 'root',
+        id: 'root',
+        expanded: true,
+        uiProvider: false
+      },
+      loader: new Ext.tree.TreeLoader({
+        dataUrl: Toc.CONF.CONN_URL,
+        preloadChildren: false,
+        baseParams: {
+          module: 'roles',
+          action: 'get_accesses'
+        },
+        listeners: {
+          load: function() {
+            console.log();
+            this.pnlAccessTree.setValue(this.access_modules);
+            this.treeLoaded = true;
+
+            if(this.access_globaladmin == true) {
+              this.chkGlobal.setValue(true);
+              this.checkAll();
+            }else {
+              this.pnlAccessTree.getEl().unmask();
+            }
+          },
+          beforeload: function(_this,node,callback) {
+            return this.isVisible();
+          },
+          scope: this
+        }
+      }),
+      listeners: {
+        checkchange: this.onCheckChange,
+        activate : function(panel) {
+            if (!this.treeLoaded) {
+                this.pnlAccessTree.loader.preloadChildren = true;
+                this.pnlAccessTree.getEl().mask('Chargement des modules............');
+                this.pnlAccessTree.loader.load(this.pnlAccessTree.getRootNode());
+            }
+        },
+        show : function(comp) {
+        },
+        beforeshow : function(comp) {
+        },
+        scope: this
+      },
+      tbar: [this.chkGlobal]
+    });      
+
+    return this.pnlAccessTree;
   },
   
   buildForm: function() {
@@ -148,7 +248,7 @@ Ext.extend(Toc.roles.RolesDialog, Ext.Window, {
       hideMode:'offsets'
       },
     deferredRender: false,
-      items: [this.getAdminPanel()]
+    items: [this.getAdminPanel(),this.getAccessPanel()]
     });
 
     this.frmAdministrator = new Ext.form.FormPanel({ 
@@ -165,7 +265,7 @@ Ext.extend(Toc.roles.RolesDialog, Ext.Window, {
   },
 
   submitForm : function() {
-    this.frmAdministrator.baseParams['modules'] = '';
+    this.frmAdministrator.baseParams['modules'] = this.pnlAccessTree.getValue().toString();
     this.frmAdministrator.form.submit({
       url: Toc.CONF.CONN_URL,
       params: {
@@ -183,6 +283,6 @@ Ext.extend(Toc.roles.RolesDialog, Ext.Window, {
         }
       },  
       scope: this
-    });
+    });   
   }
 });

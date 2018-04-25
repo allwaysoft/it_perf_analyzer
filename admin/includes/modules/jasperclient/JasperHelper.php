@@ -1,9 +1,5 @@
 <?php
-/**
- * Description of JasperHelper
- *
- * @author Daniel Wendler
- */
+
 namespace Jasper;
 
 
@@ -28,4 +24,3 @@ class JasperHelper {
         return $url;
     }
 }
-

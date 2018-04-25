@@ -1,18 +1,12 @@
-# $Id: administrators_log.php $
-# Mefobe Cart Solutions
-# http://www.mefobemarket.com
-#
-# Copyright (c) 2009 Wuxi Elootec Technology Co., Ltd
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License v2 (1991)
-# as published by the Free Software Foundation.
+run = Run
+creator = Creator
+copy = Copy
 
 tomatocartApp = TomatoCart Shopping Cart System
 Start = Start
 Logout = Logout
 
-btnSubmit = btnSubmit
+btnSubmit = Submit
 btnSave = Save
 btnClose = Close
 btnSaveAndContinue = Save and Continue Edit

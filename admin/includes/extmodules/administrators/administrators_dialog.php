@@ -1,15 +1,5 @@
 <?php
-/*
-  $Id: administrators_dialog.php $
-  Mefobe Cart Solutions
-  http://www.mefobemarket.com
 
-  Copyright (c) 2009 Wuxi Elootec Technology Co., Ltd
-
-  This program is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License v2 (1991)
-  as published by the Free Software Foundation.
-*/
 ?>
 
 Toc.administrators.AdministratorsDialog = function(config) {
@@ -233,25 +223,24 @@ Ext.extend(Toc.administrators.AdministratorsDialog, Ext.Window, {
   },
 
   submitForm : function() {
-    this.frmAdministrator.baseParams['modules'] = this.pnlAccessTree.getValue().toString();
-    
-    this.frmAdministrator.form.submit({
-      url: Toc.CONF.CONN_URL,
-      params: {
-        'module' : 'administrators',
-        'action' : 'save_administrator'
-      },
-      waitMsg: TocLanguage.formSubmitWaitMsg,
-      success: function(form, action) {
-         this.fireEvent('saveSuccess', action.result.feedback);
-         this.close();  
-      },    
-      failure: function(form, action) {
-        if (action.failureType != 'client') {
-          Ext.MessageBox.alert(TocLanguage.msgErrTitle, action.result.feedback);
-        }
-      },  
-      scope: this
-    });   
-  }
-});
+   this.frmAdministrator.baseParams['modules'] = this.pnlAccessTree.getValue().toString();
+
+        this.frmAdministrator.form.submit({
+              url: Toc.CONF.CONN_URL,
+              params: {
+                'module' : 'administrators',
+                'action' : 'save_administrator'
+              },
+              waitMsg: TocLanguage.formSubmitWaitMsg,
+              success: function(form, action) {
+                 this.fireEvent('saveSuccess', action.result.feedback);
+                 this.close();
+              },
+              failure: function(form, action) {
+                if (action.failureType != 'client') {
+                  Ext.MessageBox.alert(TocLanguage.msgErrTitle, action.result.feedback);
+                }
+              },
+              scope: this
+        });
+}})

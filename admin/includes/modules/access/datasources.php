@@ -8,7 +8,9 @@
         $_sort_order = 50;
 
     function osC_Access_Datasources() {
-      $this->_title = 'Sources de Données';
+        global $osC_Language;
+
+        $this->_title = $osC_Language->get('datasource');
     }
   }
 ?>

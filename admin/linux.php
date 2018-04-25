@@ -187,7 +187,7 @@ if (isset($_REQUEST['action'])) {
 
     switch(strtolower($action))
     {
-        case 'mem_usage':
+        case 'mem_usage';
             $db_host = $_REQUEST['db_host'];
             $os_user = $_REQUEST['server_user'];
             $os_pass = $_REQUEST['server_pass'];
@@ -227,6 +227,37 @@ if (isset($_REQUEST['action'])) {
                         'pct' => $pct,
                         'category' => $start_date
                     );
+
+                    $comment = '';
+                }
+            }
+
+            $ssh->disconnect();
+
+            $response = array(EXT_JSON_READER_TOTAL => count($usage),
+                EXT_JSON_READER_ROOT => $usage, 'comment' => $comment, 'pct' => $pct);
+
+            break;
+
+        case 'create_metabase_user';
+            $email = $_REQUEST['email'];
+            $first_name = $_REQUEST['first_name'];
+            $session_id = $_REQUEST['session_id'];
+
+            $ssh = new Net_SSH2('localhost',22,5);
+            if (empty($ssh->server_identifier)) {
+                $comment = 'Impossible de se connecter au serveur localhost';
+            }
+            else
+            {
+                if (!$ssh->login('guyfomi', '12345')) {
+                    $comment = 'Impossible de se connecter au serveur ';
+                } else {
+                    $ssh->disableQuietMode();
+                    $ssh->setTimeout(5);
+
+                    $cmd = "curl 'http://localhost:3000/api/user' -H 'X-Metabase-Session: '" . $session_id . "' -H 'Origin: http://localhost' -H 'Accept-Encoding: gzip, deflate' -H 'Accept-Language: en,de;q=0.8' -H 'User-Agent: Mozilla/5.0 (Windows NT 6.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.112 Safari/537.36' -H 'Content-Type: application/json' -H 'Accept: application/json' -H 'Referer: http://localhost' --data-binary '{\"email\":" . $email . ",\"first_name\":" . $first_name . ",\"last_name\":...,\"password\":" . METABASE_DEV_PASS . "}' --compressed";
+                    $total = $ssh->exec($cmd);
 
                     $comment = '';
                 }
@@ -314,6 +345,7 @@ if (isset($_REQUEST['action'])) {
 
             $response = array(EXT_JSON_READER_TOTAL => count($pct),
                 EXT_JSON_READER_ROOT => $pct, 'comment' => $comment);
+
             break;
 
         case 'disk_activity';
@@ -392,6 +424,7 @@ if (isset($_REQUEST['action'])) {
                 EXT_JSON_READER_ROOT => $disks, 'comment' => $comment);
 
             break;
+
         case 'net_usage':
             $db_host = $_REQUEST['db_host'];
             $os_user = $_REQUEST['server_user'];

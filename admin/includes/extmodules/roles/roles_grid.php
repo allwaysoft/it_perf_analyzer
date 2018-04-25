@@ -1,4 +1,5 @@
 <?php
+
 ?>
 
 Toc.roles.RolesGrid = function(config) {
@@ -12,7 +13,7 @@ Toc.roles.RolesGrid = function(config) {
     url: Toc.CONF.CONN_URL,
     baseParams: {
       module: 'roles',
-      action: 'list_roles'
+      action: 'list_users'
     },
     reader: new Ext.data.JsonReader({
       root: Toc.CONF.JSON_READER_ROOT,
@@ -26,16 +27,14 @@ Toc.roles.RolesGrid = function(config) {
       'email_address',
       'roles_name',
       'roles_description',
-      'src',
-      'hide'
+      'src'
     ]),
     autoLoad: true
   });  
   
   config.rowActions = new Ext.ux.grid.RowActions({
     actions:[
-      {iconCls: 'icon-edit-record', qtip: TocLanguage.tipEdit,hideIndex : 'hide'},
-      {iconCls: 'icon-delete-record', qtip: TocLanguage.tipDelete, hideIndex : 'hide'}],
+      {iconCls: 'icon-edit-record', qtip: TocLanguage.tipEdit}],
     widthIntercept: Ext.isSafari ? 4 : 2
   });
   config.rowActions.on('action', this.onRowAction, this);    
@@ -119,7 +118,6 @@ Ext.extend(Toc.roles.RolesGrid, Ext.grid.GridPanel, {
 
   onAdd: function() {
     var dlg = this.owner.createRolesDialog();
-    dlg.setTitle("Creer un Groupe d'Utilisateurs");
     
     dlg.on('saveSuccess', function() {
       this.onRefresh();
@@ -129,7 +127,7 @@ Ext.extend(Toc.roles.RolesGrid, Ext.grid.GridPanel, {
   },
   
   onEdit: function(record) {
-    if(record.data && record.data.roles_id)
+    if(record.data.roles_id != undefined)
     {
         var dlg = this.owner.createRolesDialog();
         dlg.setTitle(record.get("roles_name"));
@@ -142,16 +140,14 @@ Ext.extend(Toc.roles.RolesGrid, Ext.grid.GridPanel, {
     }
     else
     {
-        console.dir(record);
+        //console.dir(record);
         Ext.Msg.alert(TocLanguage.msgErrTitle,'invalide roles_id');
     }
   },
   
   onDelete: function(record) {
     var administrators_id = record.get('administrators_id');
-    roles_id = record.get('roles_id');
-
-
+    
     Ext.MessageBox.confirm(
       TocLanguage.msgWarningTitle, 
       TocLanguage.msgDeleteConfirm,
@@ -162,9 +158,7 @@ Ext.extend(Toc.roles.RolesGrid, Ext.grid.GridPanel, {
             params: {
               module: 'roles',
               action: 'delete_role',
-              administrators_id: administrators_id,
-
-              roles_id : roles_id
+              adminId: administrators_id
             },
             callback: function(options, success, response) {
               result = Ext.decode(response.responseText);

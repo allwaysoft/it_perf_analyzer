@@ -15,7 +15,7 @@ Ext.override(TocDesktop.DatasourcesWindow, {
       
       win = desktop.createWindow({
         id: 'datasources-win',
-        title: 'Sources de Données',
+        title: '<?php echo $osC_Language->get('datasource'); ?>',
         width: 800,
         height: 600,
         iconCls: 'icon-datasources-win',

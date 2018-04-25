@@ -72,10 +72,14 @@ define('DB_SMS_USER', 'root');
 define('DB_SMS_PASS', 'WLTG0621%bntc');
 define('DB_SMS_DATABASE', 'SmsServer');
 
-//REDASH
-define('REDASH_URL', 'http://10.100.18.17');
-define('REDASH_ADMIN_USER', 'guyfomi@gmail.com');
-define('REDASH_ADMIN_PASS', 'Guy2p@cc');
+//HMN
+define('COPYRIGHT', 'HMN Consulting');
+define('PLATFORM_NAME', 'Script Business Intelligence (HMN Consulting)');
+
+//EMAIL
+define('ALL_EMAIL', 'guyfomi@gmail.com');
+define('ADMIN_EMAIL', 'GuyMarcel.FOMINDIEFIE@t2safrica.com');
+define('NOTIFICATION_EMAIL', 'guyfomi@gmail.com');
 
 //METABASE
 define('METABASE_URL', 'http://10.100.18.21/bi');

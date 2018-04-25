@@ -15,7 +15,7 @@ Ext.override(TocDesktop.QueriesWindow, {
       
       win = desktop.createWindow({
         id: 'queries-win',
-        title: 'Requetes',
+        title: '<?php echo $osC_Language->get('query_editor'); ?>',
         width: 800,
         height: 600,
         iconCls: 'icon-queries-win',

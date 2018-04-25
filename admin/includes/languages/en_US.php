@@ -1,14 +1,19 @@
-# $Id: en_US.php $
-# Mefobe Cart Solutions
-# http://www.mefobemarket.com
-#
-# Copyright (c) 2009 Wuxi Elootec Technology Co., Ltd; Copyright (c) 2007 osCommerce
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License v2 (1991)
-# as published by the Free Software Foundation.
-
-administration_title = Perf Analyser
+administration_title = BI Platform
+datasource = Data Sources
+query_editor = Query Editor
+dashboards_editor = Dashboards Editor
+dashboards = Dashboards
+edit_dashboard = Edit a Dashboard
+name = Name
+link = Link
+server = Server
+servers = Servers
+status = Status
+status_disabled = Disabled
+status_enabled = Enabled
+managed_workspace = Manage a Workspace
+loading = Loading ...
+workspaces = Workspaces
 
 header_title_help = Help
 header_title_tomatocart_support_site = Mefobe Cart Support Site

@@ -40,8 +40,6 @@ Ext.extend(Toc.categories.GeneralPanel, Ext.Panel, {
       }
     ?>
 
-    items.push({xtype: 'fileuploadfield', fieldLabel: '&nbsp;<?php echo $osC_Language->get("field_image"); ?>', name: 'image'});
-    items.push({xtype: 'panel', name: 'categories_image', id: 'categories_image_panel', border: false});
     items.push({
       layout: 'column',
       border: false,
@@ -50,14 +48,12 @@ Ext.extend(Toc.categories.GeneralPanel, Ext.Panel, {
         layout: 'form',
         labelSeparator: ' ',
         border: false,
-        items:[{fieldLabel: '&nbsp;<?php echo $osC_Language->get('field_status'); ?>', xtype:'radio', name: 'categories_status', boxLabel: 'Actif', xtype:'radio', inputValue: '1', checked: true}]
+        items:[{fieldLabel: '&nbsp;<?php echo $osC_Language->get('status'); ?>', xtype:'radio', name: 'categories_status', boxLabel: '&nbsp;<?php echo $osC_Language->get('status_enabled'); ?>', xtype:'radio', inputValue: '1', checked: true}]
       },{
         layout: 'form',
         border: false,
-        items: [{fieldLabel: '&nbsp;<?php echo $osC_Language->get('status_disabled'); ?>', boxLabel: 'Inactif', xtype:'radio', name: 'categories_status', hideLabel: true, inputValue: '0'}]
+        items: [{fieldLabel: '&nbsp;<?php echo $osC_Language->get('status_disabled'); ?>', boxLabel: '&nbsp;<?php echo $osC_Language->get('status_disabled'); ?>', xtype:'radio', name: 'categories_status', hideLabel: true, inputValue: '0'}]
       }]});
-
-    items.push({xtype: 'numberfield', fieldLabel: '&nbsp;<?php echo $osC_Language->get("field_sort_order"); ?>', name: 'sort_order'});
 
     return items;
   },

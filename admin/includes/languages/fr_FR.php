@@ -1,6 +1,19 @@
-
-
 administration_title = Plateforme Decisionnelle
+datasource = Sources de Données
+query_editor = Gestionnaire de Requetes
+dashboards_editor = Gestionnaire de Tableaux de Bord
+dashboards = Tableaux de Bord
+edit_dashboard = Editer un Tableau de Bord
+name = Nom
+link = Lien
+server = Serveur
+servers = Serveurs
+status = Status
+status_disabled = Inactif
+status_enabled = Actif
+managed_workspace = Configurer un Espace
+loading = Chargement ...
+workspaces = Espaces
 
 header_title_help = Aide
 header_title_tomatocart_support_site = Site du support de Mefobe Cart
