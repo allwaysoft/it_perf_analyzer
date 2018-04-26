@@ -32,6 +32,10 @@ Ext.extend(Toc.bi.mainPanel, Ext.Panel, {
   
   onPnlCategoriesTreeNodeSelectChange: function(categoryId) {
     //console.debug(this.pnlCategoriesTree);
+this.tab.removeAll();
+this.grdCategories = new Toc.bi.reportsGrid({owner: this.owner, mainPanel: this,tab : this.tab});
+this.tab.add(this.grdCategories);
+this.tab.activate(this.grdCategories);
     this.grdCategories.setTitle(this.pnlCategoriesTree.selModel.selNode.text);
     this.grdCategories.refreshGrid(categoryId);
     this.grdCategories.setPermissions(this.pnlCategoriesTree.getCategoryPermissions());

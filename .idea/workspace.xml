@@ -203,7 +203,7 @@
     <file path="/perf.js" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1518104202001" ignored="false" />
     <file path="/security.js" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1517237397972" ignored="false" />
     <file path="/oracle_perf.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1517670640337" ignored="false" />
-    <file path="/bi_main_panel.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1524756043249" ignored="false" />
+    <file path="/bi_main_panel.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1524766796116" ignored="false" />
     <file path="/bi.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1518006991228" ignored="false" />
     <file path="/bi_grid.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1524755902174" ignored="false" />
     <file path="/bi_dialog.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1524214727250" ignored="false" />
@@ -241,10 +241,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="bi_grid.php" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="bi_grid.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/bi/bi_grid.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="265" column="85" selection-start="8862" selection-end="8862" vertical-scroll-proportion="0.24401914">
+            <state line="265" column="85" selection-start="8862" selection-end="8862" vertical-scroll-proportion="-3.9230769">
               <folding>
                 <element signature="n#style#0;n#img#5;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#img#6;n#!!top" expanded="true" />
@@ -262,10 +262,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="bi_main_panel.php" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="bi_main_panel.php" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/bi/bi_main_panel.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="52" column="3" selection-start="1554" selection-end="1554" vertical-scroll-proportion="-14.769231">
+            <state line="35" column="97" selection-start="1106" selection-end="1106" vertical-scroll-proportion="0.69138753">
               <folding />
             </state>
           </provider>
@@ -1268,20 +1268,20 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/bi/bi_main_panel.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="52" column="3" selection-start="1554" selection-end="1554" vertical-scroll-proportion="-14.769231">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/bi/bi_grid.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="265" column="85" selection-start="8862" selection-end="8862" vertical-scroll-proportion="0.24401914">
+        <state line="265" column="85" selection-start="8862" selection-end="8862" vertical-scroll-proportion="-3.9230769">
           <folding>
             <element signature="n#style#0;n#img#5;n#!!top" expanded="true" />
             <element signature="n#style#0;n#img#6;n#!!top" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/bi/bi_main_panel.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="35" column="97" selection-start="1106" selection-end="1106" vertical-scroll-proportion="0.69138753">
+          <folding />
         </state>
       </provider>
     </entry>
