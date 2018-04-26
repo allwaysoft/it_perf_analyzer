@@ -27,5 +27,6 @@ Ext.override(TocDesktop.BiWindow, {
         }
 
         win.show();
+        win.maximize();
     }
 });

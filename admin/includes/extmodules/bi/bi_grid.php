@@ -6,6 +6,7 @@ Toc.bi.reportsGrid = function(config) {
   var that = this;
   config = config || {};
   config.region = 'center';
+  config.title = 'center';
   config.loadMask = true;
   config.border = false;
   config.viewConfig = {emptyText: TocLanguage.gridNoRecords};
@@ -241,6 +242,53 @@ Ext.extend(Toc.bi.reportsGrid, Ext.grid.GridPanel, {
             });
   },
 
+  runDashboard: function(record) {
+    this.getEl().mask('Chargement Metadata ...');
+            Ext.Ajax.request({
+                method: 'GET',
+                url: '<?php echo METABASE_URL; ?>' + '/api/user/current',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type' : 'application/json'
+                },
+                callback: function (options, success, response) {
+                    this.getEl().unmask();
+                    var result = Ext.decode(response.responseText);
+
+                    if(result.id > 0)
+                    {
+                      if(this.tab)
+                      {
+                        var cmp = new Ext.Component({autoEl:{tag: 'iframe',style: 'height: 100%; width: 100%; border: none'},height: 600,id: 'dashboard_iframe' + record.get("dashboards_id"),width: 600});
+                        var pnl = new Ext.Panel({id : 'pnl_iframe_' + record.get("dashboards_id"),closable : true});
+
+                        //console.debug(cmp);
+                        this.tab.remove('pnl_iframe_' + record.get("dashboards_id"));
+                        this.tab.add(pnl);
+                        this.tab.activate(pnl);
+                        pnl.add(cmp);
+                        pnl.setTitle(record.get("content_name"));
+                        pnl.doLayout(true, true);
+                        this.tab.doLayout(true, true);
+                        cmp.el.dom.src = record.get("reports_uri") + '?id=' + result.id + '&username=' + result.email + '&password=' + '<?php echo METABASE_DEV_PASS; ?>';
+
+                        cmp.el.dom.onload = function() {
+                            console.log('iframe onload ...')
+                            pnl.getEl().unmask();
+                        };
+
+                        pnl.getEl().mask('<?php echo $osC_Language->get('loading'); ?>' + ' ' + record.get("content_name"));
+                      }
+                    }
+                    else
+                    {
+                       Ext.MessageBox.alert(TocLanguage.msgErrTitle, result.feedback);
+                    }
+                },
+                scope: this
+            });
+  },
+
   onBathMove: function () {
     var keys = this.getSelectionModel().selections.keys;
 
@@ -386,7 +434,8 @@ Ext.extend(Toc.bi.reportsGrid, Ext.grid.GridPanel, {
         break;
 
       case 'run':
-        this.onRun(record);
+        //this.onRun(record);
+        this.runDashboard(record);
         break;
     }
   },
