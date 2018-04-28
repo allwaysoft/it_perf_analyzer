@@ -222,6 +222,26 @@
     <file path="/frontend.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1523965184107" ignored="false" />
     <file path="/MetabaseHelper.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1523965332264" ignored="false" />
     <file path="/categories_general_panel.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1524070540864" ignored="false" />
+    <file path="$PROJECT_DIR$/admin/includes/jsons/email.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1524945597243" ignored="false" />
+    <file path="$PROJECT_DIR$/admin/includes/modules/jasperclient/Jasper.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1524945597243" ignored="false" />
+    <file path="$PROJECT_DIR$/../cloud_perf_analyzer/admin/includes/extmodules/bi/bi_main_panel.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1524945597243" ignored="false" />
+    <file path="$PROJECT_DIR$/admin/includes/jsons/servers.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1524945597243" ignored="false" />
+    <file path="$PROJECT_DIR$/admin/includes/jsons/users.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1524945597243" ignored="false" />
+    <file path="$PROJECT_DIR$/admin/includes/jsons/documents.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1524945597243" ignored="false" />
+    <file path="$PROJECT_DIR$/includes/classes/category_tree.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1524945597243" ignored="false" />
+    <file path="$PROJECT_DIR$/admin/includes/ext_config.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1524945597244" ignored="false" />
+    <file path="$PROJECT_DIR$/ext/phpmailer/class.smtp.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1524945597244" ignored="false" />
+    <file path="$PROJECT_DIR$/admin/includes/classes/content.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1524945597244" ignored="false" />
+    <file path="$PROJECT_DIR$/admin/includes/jsons/categories.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1524945597244" ignored="false" />
+    <file path="$PROJECT_DIR$/admin/includes/classes/inbound_mail.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1524945597244" ignored="false" />
+    <file path="$PROJECT_DIR$/admin/templates/default/login/login.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1524945597244" ignored="false" />
+    <file path="$PROJECT_DIR$/admin/includes/filenames.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1524945597244" ignored="false" />
+    <file path="$PROJECT_DIR$/admin/external/groupoffice/imap.class.inc" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1524945597244" ignored="false" />
+    <file path="$PROJECT_DIR$/admin/includes/classes/email_account.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1524945597244" ignored="false" />
+    <file path="$PROJECT_DIR$/includes/configure.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1524945597244" ignored="false" />
+    <file path="$PROJECT_DIR$/includes/filenames.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1524945597244" ignored="false" />
+    <file path="$PROJECT_DIR$/admin/includes/jsons/reports.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1524945597244" ignored="false" />
+    <file path="$PROJECT_DIR$/admin/includes/jsons/content.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1524945597244" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -241,40 +261,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="bi_grid.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/bi/bi_grid.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="265" column="85" selection-start="8862" selection-end="8862" vertical-scroll-proportion="-3.9230769">
-              <folding>
-                <element signature="n#style#0;n#img#5;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#img#6;n#!!top" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="xxx.js" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/bi/xxx.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="2" column="47" selection-start="146" selection-end="146" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="bi_main_panel.php" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/bi/bi_main_panel.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="35" column="97" selection-start="1106" selection-end="1106" vertical-scroll-proportion="0.69138753">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="explorer_main_panel.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/database_explorer/explorer_main_panel.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="23" column="51" selection-start="794" selection-end="839" vertical-scroll-proportion="-9.384615">
+            <state line="23" column="51" selection-start="794" selection-end="839" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -289,38 +279,12 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="oracle.js" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/admin/templates/default/extensions/oracle/oracle.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="2064" column="12" selection-start="81458" selection-end="81483" vertical-scroll-proportion="0.0">
-              <folding>
-                <marker date="1518000894545" expanded="false" signature="34916:34931" placeholder="..." />
-                <marker date="1518000894545" expanded="false" signature="35073:35088" placeholder="..." />
-                <marker date="1518000894545" expanded="false" signature="47546:47566" placeholder="..." />
-                <marker date="1518000894545" expanded="false" signature="49619:49639" placeholder="..." />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="main.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/bi/main.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="19" column="71" selection-start="509" selection-end="556" vertical-scroll-proportion="-6.4615383">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="default.php" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="default.php" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/admin/templates/default.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="81" column="74" selection-start="4324" selection-end="4324" vertical-scroll-proportion="-7.6538463">
+            <state line="80" column="74" selection-start="4230" selection-end="4230" vertical-scroll-proportion="0.48044693">
               <folding>
-                <element signature="n#style#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#img#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#div#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <marker date="1524937957265" expanded="true" signature="5314:6176" placeholder="{&quot;CONN_URL&quot;: '&lt;?php echo osc_href_link_admin(FILENAME_JSON); ?&gt;'...}" />
               </folding>
             </state>
           </provider>
@@ -347,11 +311,11 @@
         <option value="$PROJECT_DIR$/admin/templates/default/extensions/content/content_notifications_panel.js" />
         <option value="$PROJECT_DIR$/admin/includes/extmodules/categories/categories_dialog.php" />
         <option value="$PROJECT_DIR$/includes/configure.php" />
-        <option value="$PROJECT_DIR$/admin/templates/default.php" />
         <option value="$PROJECT_DIR$/admin/includes/extmodules/bi/main.php" />
         <option value="$PROJECT_DIR$/admin/includes/extmodules/bi/xxx.js" />
         <option value="$PROJECT_DIR$/admin/includes/extmodules/bi/bi_grid.php" />
         <option value="$PROJECT_DIR$/admin/includes/extmodules/bi/bi_main_panel.php" />
+        <option value="$PROJECT_DIR$/admin/templates/default.php" />
       </list>
     </option>
   </component>
@@ -369,8 +333,8 @@
   <component name="ProjectFrameBounds">
     <option name="x" value="-4" />
     <option name="y" value="-4" />
-    <option name="width" value="1348" />
-    <option name="height" value="650" />
+    <option name="width" value="1374" />
+    <option name="height" value="748" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -413,7 +377,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="cloud_perf_analyzer" />
+              <option name="myItemId" value="it_perf_analyzer" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -423,21 +387,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="cloud_perf_analyzer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="includes" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dev" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="cloud_perf_analyzer" />
+              <option name="myItemId" value="it_perf_analyzer" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -451,7 +401,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="cloud_perf_analyzer" />
+              <option name="myItemId" value="it_perf_analyzer" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -460,290 +410,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="templates" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dev" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="cloud_perf_analyzer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="admin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="templates" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="default" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dev" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="cloud_perf_analyzer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="admin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="templates" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="default" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="extensions" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dev" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="cloud_perf_analyzer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="admin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="templates" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="default" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="extensions" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="oracle" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dev" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="cloud_perf_analyzer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="admin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="includes" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dev" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="cloud_perf_analyzer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="admin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="includes" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="extmodules" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dev" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="cloud_perf_analyzer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="admin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="includes" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="extmodules" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="database_explorer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dev" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="cloud_perf_analyzer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="admin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="includes" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="extmodules" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="bi" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dev" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="cloud_perf_analyzer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="admin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="external" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dev" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="cloud_perf_analyzer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="admin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="external" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="miframe2_1_5" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dev" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="cloud_perf_analyzer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="admin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="external" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="miframe2_1_5" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="build" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dev" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="cloud_perf_analyzer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="admin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="external" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="extjs" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dev" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="cloud_perf_analyzer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="admin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="external" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="extjs" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="adapter" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -764,20 +430,10 @@
     <property name="restartRequiresConfirmation" value="true" />
     <property name="WebServerToolWindowPanel.toolwindow.highlight.symlinks" value="true" />
     <property name="FullScreen" value="false" />
-    <property name="options.splitter.details.proportions" value="0.2" />
     <property name="options.searchVisible" value="true" />
+    <property name="options.splitter.details.proportions" value="0.2" />
   </component>
-  <component name="PublishConfig" serverName="svp" serverId="2d2efcc8-ee1d-46e8-b9ca-9fef4a0e1bec">
-    <servers>
-      <server id="2d2efcc8-ee1d-46e8-b9ca-9fef4a0e1bec">
-        <serverdata>
-          <mappings>
-            <mapping deploy="/opt/lampp/htdocs/bicec/admin" local="$PROJECT_DIR$" web="" />
-          </mappings>
-        </serverdata>
-      </server>
-    </servers>
-  </component>
+  <component name="PublishConfig" serverName="svp" serverId="2d2efcc8-ee1d-46e8-b9ca-9fef4a0e1bec" />
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\xampp\htdocs\cloud_perf_analyzer\admin\includes\modules" />
@@ -804,11 +460,11 @@
     <configuration default="true" type="PhpWebAppRunConfigurationType" factoryName="PHP Web Application" editBeforeRun="true" server_name="local" start_url="http://10.100.1.144/dev/admin/json.php?action=list_programmes&amp;categories_id=-1&amp;count=0&amp;current_category_id=-1&amp;module=users&amp;search=&amp;token=716e5cec8ae1c96707c821ca90c4d869">
       <method />
     </configuration>
-    <configuration default="true" type="PhpRemoteDebugRunConfigurationType" factoryName="PHP Remote Debug" editBeforeRun="true" server_name="svp">
-      <method />
-    </configuration>
     <configuration default="true" type="PhpHttpRequestRunConfigurationType" factoryName="PHP HTTP Request" server_name="local" url="http://127.0.0.1/dev/admin/json.php">
       <HttpRequestSettings request_body="content_status&#9;1&#10;content_name&#9;eeeeeeeeee&#10;content_description&#9;eeeeeeeeeeeeeeeee&#10;field_jrxml&#9;&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt; &lt;jasperReport xmlns=&quot;http://jasperreports.sourceforge.net/jasperreports&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xsi:schemaLocation=&quot;http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd&quot; name=&quot;report7&quot; pageWidth=&quot;595&quot; pageHeight=&quot;842&quot; columnWidth=&quot;585&quot; leftMargin=&quot;5&quot; rightMargin=&quot;5&quot; topMargin=&quot;5&quot; bottomMargin=&quot;5&quot; uuid=&quot;19b3117d-bf85-46d3-922c-a34d4def95e3&quot;&gt; &lt;property name=&quot;ireport.zoom&quot; value=&quot;1.0&quot;/&gt; &lt;property name=&quot;ireport.x&quot; value=&quot;0&quot;/&gt; &lt;property name=&quot;ireport.y&quot; value=&quot;0&quot;/&gt; &lt;style name=&quot;table&quot;&gt; &lt;box&gt; &lt;pen lineWidth=&quot;1.0&quot; lineColor=&quot;#000000&quot;/&gt; &lt;/box&gt; &lt;/style&gt; &lt;style name=&quot;table_TH&quot; mode=&quot;Opaque&quot; backcolor=&quot;#A9A9A9&quot;&gt; &lt;box&gt; &lt;pen lineWidth=&quot;0.5&quot; lineColor=&quot;#000000&quot;/&gt; &lt;/box&gt; &lt;/style&gt; &lt;style name=&quot;table_CH&quot; mode=&quot;Opaque&quot; backcolor=&quot;#FFBFBF&quot;&gt; &lt;box&gt; &lt;pen lineWidth=&quot;0.5&quot; lineColor=&quot;#000000&quot;/&gt; &lt;/box&gt; &lt;/style&gt; &lt;style name=&quot;table_TD&quot; mode=&quot;Opaque&quot; backcolor=&quot;#FFFFFF&quot;&gt; &lt;box&gt; &lt;pen lineWidth=&quot;0.5&quot; lineColor=&quot;#000000&quot;/&gt; &lt;/box&gt; &lt;/style&gt; &lt;style name=&quot;table 1&quot;&gt; &lt;box&gt; &lt;pen lineWidth=&quot;1.0&quot; lineColor=&quot;#000000&quot;/&gt; &lt;/box&gt; &lt;/style&gt; &lt;style name=&quot;table 1_TH&quot; mode=&quot;Opaque&quot; backcolor=&quot;#F0F8FF&quot;&gt; &lt;box&gt; &lt;pen lineWidth=&quot;0.5&quot; lineColor=&quot;#000000&quot;/&gt; &lt;/box&gt; &lt;/style&gt; &lt;style name=&quot;table 1_CH&quot; mode=&quot;Opaque&quot; backcolor=&quot;#BFE1FF&quot;&gt; &lt;box&gt; &lt;pen lineWidth=&quot;0.5&quot; lineColor=&quot;#000000&quot;/&gt; &lt;/box&gt; &lt;/style&gt; &lt;style name=&quot;table 1_TD&quot; mode=&quot;Opaque&quot; backcolor=&quot;#FFFFFF&quot;&gt; &lt;box&gt; &lt;pen lineWidth=&quot;0.5&quot; lineColor=&quot;#000000&quot;/&gt; &lt;/box&gt; &lt;/style&gt; &lt;style name=&quot;table 2&quot;&gt; &lt;box&gt; &lt;pen lineWidth=&quot;1.0&quot; lineColor=&quot;#000000&quot;/&gt; &lt;/box&gt; &lt;/style&gt; &lt;style name=&quot;table 2_TH&quot; mode=&quot;Opaque&quot; backcolor=&quot;#F0F8FF&quot;&gt; &lt;box&gt; &lt;pen lineWidth=&quot;0.5&quot; lineColor=&quot;#000000&quot;/&gt; &lt;/box&gt; &lt;/style&gt; &lt;style name=&quot;table 2_CH&quot; mode=&quot;Opaque&quot; backcolor=&quot;#BFE1FF&quot;&gt; &lt;box&gt; &lt;pen lineWidth=&quot;0.5&quot; lineColor=&quot;#000000&quot;/&gt; &lt;/box&gt; &lt;/style&gt; &lt;style name=&quot;table 2_TD&quot; mode=&quot;Opaque&quot; backcolor=&quot;#FFFFFF&quot;&gt; &lt;box&gt; &lt;pen lineWidth=&quot;0.5&quot; lineColor=&quot;#000000&quot;/&gt; &lt;/box&gt; &lt;/style&gt; &lt;style name=&quot;table 3&quot;&gt; &lt;box&gt; &lt;pen lineWidth=&quot;1.0&quot; lineColor=&quot;#000000&quot;/&gt; &lt;/box&gt; &lt;/style&gt; &lt;style name=&quot;table 3_TH&quot; mode=&quot;Opaque&quot; backcolor=&quot;#F0F8FF&quot;&gt; &lt;box&gt; &lt;pen lineWidth=&quot;0.5&quot; lineColor=&quot;#000000&quot;/&gt; &lt;/box&gt; &lt;/style&gt; &lt;style name=&quot;table 3_CH&quot; mode=&quot;Opaque&quot; backcolor=&quot;#BFE1FF&quot;&gt; &lt;box&gt; &lt;pen lineWidth=&quot;0.5&quot; lineColor=&quot;#000000&quot;/&gt; &lt;/box&gt; &lt;/style&gt; &lt;style name=&quot;table 3_TD&quot; mode=&quot;Opaque&quot; backcolor=&quot;#FFFFFF&quot;&gt; &lt;box&gt; &lt;pen lineWidth=&quot;0.5&quot; lineColor=&quot;#000000&quot;/&gt; &lt;/box&gt; &lt;/style&gt; &lt;parameter name=&quot;LABEL_SERVEUR&quot; class=&quot;java.lang.String&quot;/&gt; &lt;queryString language=&quot;linux&quot;&gt; &lt;![CDATA[user=oracle#pass=oracle#port=22#host=10.100.1.51#cmd=df -PT|awk '{if (NR &gt; 1) {print $1&quot;;&quot;$2&quot;;&quot;$3&quot;;&quot;$4&quot;;&quot;$5&quot;;&quot;$6&quot;;&quot;$7}}']]&gt; &lt;/queryString&gt; &lt;field name=&quot;mount&quot; class=&quot;java.lang.String&quot;&gt; &lt;fieldDescription&gt;&lt;![CDATA[mount]]&gt;&lt;/fieldDescription&gt; &lt;/field&gt; &lt;field name=&quot;pct_used&quot; class=&quot;java.lang.String&quot;&gt; &lt;fieldDescription&gt;&lt;![CDATA[pct_used]]&gt;&lt;/fieldDescription&gt; &lt;/field&gt; &lt;field name=&quot;dispo&quot; class=&quot;java.lang.Number&quot;&gt; &lt;fieldDescription&gt;&lt;![CDATA[dispo]]&gt;&lt;/fieldDescription&gt; &lt;/field&gt; &lt;field name=&quot;used&quot; class=&quot;java.lang.Number&quot;&gt; &lt;fieldDescription&gt;&lt;![CDATA[used]]&gt;&lt;/fieldDescription&gt; &lt;/field&gt; &lt;field name=&quot;size&quot; class=&quot;java.lang.Number&quot;&gt; &lt;fieldDescription&gt;&lt;![CDATA[size]]&gt;&lt;/fieldDescription&gt; &lt;/field&gt; &lt;background&gt; &lt;band splitType=&quot;Stretch&quot;/&gt; &lt;/background&gt; &lt;title&gt; &lt;band height=&quot;79&quot; splitType=&quot;Stretch&quot;&gt; &lt;rectangle&gt; &lt;reportElement x=&quot;0&quot; y=&quot;0&quot; width=&quot;585&quot; height=&quot;79&quot; backcolor=&quot;#000066&quot; uuid=&quot;8ffaa7b1-6381-482d-a0de-c6d6903da8f6&quot;/&gt; &lt;/rectangle&gt; &lt;textField&gt; &lt;reportElement x=&quot;0&quot; y=&quot;0&quot; width=&quot;585&quot; height=&quot;79&quot; forecolor=&quot;#FFFFFF&quot; uuid=&quot;444433a1-aac7-4f30-8870-b00c28486ece&quot;/&gt; &lt;textElement textAlignment=&quot;Center&quot; verticalAlignment=&quot;Middle&quot;&gt; &lt;font size=&quot;24&quot;/&gt; &lt;/textElement&gt; &lt;textFieldExpression&gt;&lt;![CDATA[&quot;Etat des FS du Serveur &quot; + $P{LABEL_SERVEUR}]]&gt;&lt;/textFieldExpression&gt; &lt;/textField&gt; &lt;/band&gt; &lt;/title&gt; &lt;columnHeader&gt; &lt;band height=&quot;753&quot; splitType=&quot;Stretch&quot;&gt; &lt;stackedBarChart&gt; &lt;chart isShowLegend=&quot;true&quot; evaluationTime=&quot;Report&quot;&gt; &lt;reportElement positionType=&quot;Float&quot; stretchType=&quot;RelativeToBandHeight&quot; mode=&quot;Transparent&quot; x=&quot;0&quot; y=&quot;0&quot; width=&quot;585&quot; height=&quot;753&quot; uuid=&quot;63cb2e2b-3370-4b93-98f9-7c1174f738b8&quot;/&gt; &lt;chartTitle/&gt; &lt;chartSubtitle/&gt; &lt;chartLegend position=&quot;Top&quot;/&gt; &lt;/chart&gt; &lt;categoryDataset&gt; &lt;categorySeries&gt; &lt;seriesExpression&gt;&lt;![CDATA[&quot;Utilisé (GB)&quot;]]&gt;&lt;/seriesExpression&gt; &lt;categoryExpression&gt;&lt;![CDATA[$F{mount}]]&gt;&lt;/categoryExpression&gt; &lt;valueExpression&gt;&lt;![CDATA[$F{used}]]&gt;&lt;/valueExpression&gt; &lt;/categorySeries&gt; &lt;categorySeries&gt; &lt;seriesExpression&gt;&lt;![CDATA[&quot;Disponible (GB)&quot;]]&gt;&lt;/seriesExpression&gt; &lt;categoryExpression&gt;&lt;![CDATA[$F{mount}]]&gt;&lt;/categoryExpression&gt; &lt;valueExpression&gt;&lt;![CDATA[$F{dispo}]]&gt;&lt;/valueExpression&gt; &lt;/categorySeries&gt; &lt;/categoryDataset&gt; &lt;barPlot&gt; &lt;plot orientation=&quot;Horizontal&quot;&gt; &lt;seriesColor seriesOrder=&quot;0&quot; color=&quot;#FA0505&quot;/&gt; &lt;seriesColor seriesOrder=&quot;1&quot; color=&quot;#037303&quot;/&gt; &lt;/plot&gt; &lt;itemLabel/&gt; &lt;categoryAxisFormat&gt; &lt;axisFormat/&gt; &lt;/categoryAxisFormat&gt; &lt;valueAxisFormat&gt; &lt;axisFormat/&gt; &lt;/valueAxisFormat&gt; &lt;/barPlot&gt; &lt;/stackedBarChart&gt; &lt;/band&gt; &lt;/columnHeader&gt; &lt;/jasperReport&gt;&#10;content_categories_id&#9;12&#10;module&#9;reports&#10;action&#9;save_report&#10;current_category_id&#9;0&#10;token&#9;24f762659575d54fbe53314198c87203&#10;Source&#10;-----------------------------114782935826962 Content-Disposition: form-data; name=&quot;content_status&quot; 1 -----------------------------114782935826962 Content-Disposition: form-data; name=&quot;content_name&quot; eeeeeeeeee -----------------------------114782935826962 Content-Disposition: form-data; name=&quot;content_description&quot; eeeeeeeeeeeeeeeee -----------------------------114782935826962 Content-Disposition: form-data; name=&quot;field_jrxml&quot;; filename=&quot;report7.jrxml&quot; Content-Type: application/octet-stream &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt; &lt;jasperReport xmlns=&quot;http://jasperreports.sourceforge.net/jasperreports&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xsi:schemaLocation=&quot;http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd&quot; name=&quot;report7&quot; pageWidth=&quot;595&quot; pageHeight=&quot;842&quot; columnWidth=&quot;585&quot; leftMargin=&quot;5&quot; rightMargin=&quot;5&quot; topMargin=&quot;5&quot; bottomMargin=&quot;5&quot; uuid=&quot;19b3117d-bf85-46d3-922c-a34d4def95e3&quot;&gt; &lt;property name=&quot;ireport.zoom&quot; value=&quot;1.0&quot;/&gt; &lt;property name=&quot;ireport.x&quot; value=&quot;0&quot;/&gt; &lt;property name=&quot;ireport.y&quot; value=&quot;0&quot;/&gt; &lt;style name=&quot;table&quot;&gt; &lt;box&gt; &lt;pen lineWidth=&quot;1.0&quot; lineColor=&quot;#000000&quot;/&gt; &lt;/box&gt; &lt;/style&gt; &lt;style name=&quot;table_TH&quot; mode=&quot;Opaque&quot; backcolor=&quot;#A9A9A9&quot;&gt; &lt;box&gt; &lt;pen lineWidth=&quot;0.5&quot; lineColor=&quot;#000000&quot;/&gt; &lt;/box&gt; &lt;/style&gt; &lt;style name=&quot;table_CH&quot; mode=&quot;Opaque&quot; backcolor=&quot;#FFBFBF&quot;&gt; &lt;box&gt; &lt;pen lineWidth=&quot;0.5&quot; lineColor=&quot;#000000&quot;/&gt; &lt;/box&gt; &lt;/style&gt; &lt;style name=&quot;table_TD&quot; mode=&quot;Opaque&quot; backcolor=&quot;#FFFFFF&quot;&gt; &lt;box&gt; &lt;pen lineWidth=&quot;0.5&quot; lineColor=&quot;#000000&quot;/&gt; &lt;/box&gt; &lt;/style&gt; &lt;style name=&quot;table 1&quot;&gt; &lt;box&gt; &lt;pen lineWidth=&quot;1.0&quot; lineColor=&quot;#000000&quot;/&gt; &lt;/box&gt; &lt;/style&gt; &lt;style name=&quot;table 1_TH&quot; mode=&quot;Opaque&quot; backcolor=&quot;#F0F8FF&quot;&gt; &lt;box&gt; &lt;pen lineWidth=&quot;0.5&quot; lineColor=&quot;#000000&quot;/&gt; &lt;/box&gt; &lt;/style&gt; &lt;style name=&quot;table 1_CH&quot; mode=&quot;Opaque&quot; backcolor=&quot;#BFE1FF&quot;&gt; &lt;box&gt; &lt;pen lineWidth=&quot;0.5&quot; lineColor=&quot;#000000&quot;/&gt; &lt;/box&gt; &lt;/style&gt; &lt;style name=&quot;table 1_TD&quot; mode=&quot;Opaque&quot; backcolor=&quot;#FFFFFF&quot;&gt; &lt;box&gt; &lt;pen lineWidth=&quot;0.5&quot; lineColor=&quot;#000000&quot;/&gt; &lt;/box&gt; &lt;/style&gt; &lt;style name=&quot;table 2&quot;&gt; &lt;box&gt; &lt;pen lineWidth=&quot;1.0&quot; lineColor=&quot;#000000&quot;/&gt; &lt;/box&gt; &lt;/style&gt; &lt;style name=&quot;table 2_TH&quot; mode=&quot;Opaque&quot; backcolor=&quot;#F0F8FF&quot;&gt; &lt;box&gt; &lt;pen lineWidth=&quot;0.5&quot; lineColor=&quot;#000000&quot;/&gt; &lt;/box&gt; &lt;/style&gt; &lt;style name=&quot;table 2_CH&quot; mode=&quot;Opaque&quot; backcolor=&quot;#BFE1FF&quot;&gt; &lt;box&gt; &lt;pen lineWidth=&quot;0.5&quot; lineColor=&quot;#000000&quot;/&gt; &lt;/box&gt; &lt;/style&gt; &lt;style name=&quot;table 2_TD&quot; mode=&quot;Opaque&quot; backcolor=&quot;#FFFFFF&quot;&gt; &lt;box&gt; &lt;pen lineWidth=&quot;0.5&quot; lineColor=&quot;#000000&quot;/&gt; &lt;/box&gt; &lt;/style&gt; &lt;style name=&quot;table 3&quot;&gt; &lt;box&gt; &lt;pen lineWidth=&quot;1.0&quot; lineColor=&quot;#000000&quot;/&gt; &lt;/box&gt; &lt;/style&gt; &lt;style name=&quot;table 3_TH&quot; mode=&quot;Opaque&quot; backcolor=&quot;#F0F8FF&quot;&gt; &lt;box&gt; &lt;pen lineWidth=&quot;0.5&quot; lineColor=&quot;#000000&quot;/&gt; &lt;/box&gt; &lt;/style&gt; &lt;style name=&quot;table 3_CH&quot; mode=&quot;Opaque&quot; backcolor=&quot;#BFE1FF&quot;&gt; &lt;box&gt; &lt;pen lineWidth=&quot;0.5&quot; lineColor=&quot;#000000&quot;/&gt; &lt;/box&gt; &lt;/style&gt; &lt;style name=&quot;table 3_TD&quot; mode=&quot;Opaque&quot; backcolor=&quot;#FFFFFF&quot;&gt; &lt;box&gt; &lt;pen lineWidth=&quot;0.5&quot; lineColor=&quot;#000000&quot;/&gt; &lt;/box&gt; &lt;/style&gt; &lt;parameter name=&quot;LABEL_SERVEUR&quot; class=&quot;java.lang.String&quot;/&gt; &lt;queryString language=&quot;linux&quot;&gt; &lt;![CDATA[user=oracle#pass=oracle#port=22#host=10.100.1.51#cmd=df -PT|awk '{if (NR &gt; 1) {print $1&quot;;&quot;$2&quot;;&quot;$3&quot;;&quot;$4&quot;;&quot;$5&quot;;&quot;$6&quot;;&quot;$7}}']]&gt; &lt;/queryString&gt; &lt;field name=&quot;mount&quot; class=&quot;java.lang.String&quot;&gt; &lt;fieldDescription&gt;&lt;![CDATA[mount]]&gt;&lt;/fieldDescription&gt; &lt;/field&gt; &lt;field name=&quot;pct_used&quot; class=&quot;java.lang.String&quot;&gt; &lt;fieldDescription&gt;&lt;![CDATA[pct_used]]&gt;&lt;/fieldDescription&gt; &lt;/field&gt; &lt;field name=&quot;dispo&quot; class=&quot;java.lang.Number&quot;&gt; &lt;fieldDescription&gt;&lt;![CDATA[dispo]]&gt;&lt;/fieldDescription&gt; &lt;/field&gt; &lt;field name=&quot;used&quot; class=&quot;java.lang.Number&quot;&gt; &lt;fieldDescription&gt;&lt;![CDATA[used]]&gt;&lt;/fieldDescription&gt; &lt;/field&gt; &lt;field name=&quot;size&quot; class=&quot;java.lang.Number&quot;&gt; &lt;fieldDescription&gt;&lt;![CDATA[size]]&gt;&lt;/fieldDescription&gt; &lt;/field&gt; &lt;background&gt; &lt;band splitType=&quot;Stretch&quot;/&gt; &lt;/background&gt; &lt;title&gt; &lt;band height=&quot;79&quot; splitType=&quot;Stretch&quot;&gt; &lt;rectangle&gt; &lt;reportElement x=&quot;0&quot; y=&quot;0&quot; width=&quot;585&quot; height=&quot;79&quot; backcolor=&quot;#000066&quot; uuid=&quot;8ffaa7b1-6381-482d-a0de-c6d6903da8f6&quot;/&gt; &lt;/rectangle&gt; &lt;textField&gt; &lt;reportElement x=&quot;0&quot; y=&quot;0&quot; width=&quot;585&quot; height=&quot;79&quot; forecolor=&quot;#FFFFFF&quot; uuid=&quot;444433a1-aac7-4f30-8870-b00c28486ece&quot;/&gt; &lt;textElement textAlignment=&quot;Center&quot; verticalAlignment=&quot;Middle&quot;&gt; &lt;font size=&quot;24&quot;/&gt; &lt;/textElement&gt; &lt;textFieldExpression&gt;&lt;![CDATA[&quot;Etat des FS du Serveur &quot; + $P{LABEL_SERVEUR}]]&gt;&lt;/textFieldExpression&gt; &lt;/textField&gt; &lt;/band&gt; &lt;/title&gt; &lt;columnHeader&gt; &lt;band height=&quot;753&quot; splitType=&quot;Stretch&quot;&gt; &lt;stackedBarChart&gt; &lt;chart isShowLegend=&quot;true&quot; evaluationTime=&quot;Report&quot;&gt; &lt;reportElement positionType=&quot;Float&quot; stretchType=&quot;RelativeToBandHeight&quot; mode=&quot;Transparent&quot; x=&quot;0&quot; y=&quot;0&quot; width=&quot;585&quot; height=&quot;753&quot; uuid=&quot;63cb2e2b-3370-4b93-98f9-7c1174f738b8&quot;/&gt; &lt;chartTitle/&gt; &lt;chartSubtitle/&gt; &lt;chartLegend position=&quot;Top&quot;/&gt; &lt;/chart&gt; &lt;categoryDataset&gt; &lt;categorySeries&gt; &lt;seriesExpression&gt;&lt;![CDATA[&quot;Utilisé (GB)&quot;]]&gt;&lt;/seriesExpression&gt; &lt;categoryExpression&gt;&lt;![CDATA[$F{mount}]]&gt;&lt;/categoryExpression&gt; &lt;valueExpression&gt;&lt;![CDATA[$F{used}]]&gt;&lt;/valueExpression&gt; &lt;/categorySeries&gt; &lt;categorySeries&gt; &lt;seriesExpression&gt;&lt;![CDATA[&quot;Disponible (GB)&quot;]]&gt;&lt;/seriesExpression&gt; &lt;categoryExpression&gt;&lt;![CDATA[$F{mount}]]&gt;&lt;/categoryExpression&gt; &lt;valueExpression&gt;&lt;![CDATA[$F{dispo}]]&gt;&lt;/valueExpression&gt; &lt;/categorySeries&gt; &lt;/categoryDataset&gt; &lt;barPlot&gt; &lt;plot orientation=&quot;Horizontal&quot;&gt; &lt;seriesColor seriesOrder=&quot;0&quot; color=&quot;#FA0505&quot;/&gt; &lt;seriesColor seriesOrder=&quot;1&quot; color=&quot;#037303&quot;/&gt; &lt;/plot&gt; &lt;itemLabel/&gt; &lt;categoryAxisFormat&gt; &lt;axisFormat/&gt; &lt;/categoryAxisFormat&gt; &lt;valueAxisFormat&gt; &lt;axisFormat/&gt; &lt;/valueAxisFormat&gt; &lt;/barPlot&gt; &lt;/stackedBarChart&gt; &lt;/band&gt; &lt;/columnHeader&gt; &lt;/jasperReport&gt; -----------------------------114782935826962 Content-Disposition: form-data; name=&quot;content_categories_id&quot; 12 -----------------------------114782935826962 Content-Disposition: form-data; name=&quot;module&quot; reports -----------------------------114782935826962 Content-Disposition: form-data; name=&quot;action&quot; save_report -----------------------------114782935826962 Content-Disposition: form-data; name=&quot;current_category_id&quot; 0 -----------------------------114782935826962 Content-Disposition: form-data; name=&quot;token&quot; 24f762659575d54fbe53314198c87203 -----------------------------114782935826962--" request_method="POST" />
+      <method />
+    </configuration>
+    <configuration default="true" type="PhpRemoteDebugRunConfigurationType" factoryName="PHP Remote Debug" editBeforeRun="true" server_name="svp">
       <method />
     </configuration>
     <configuration default="true" type="PhpLocalRunConfigurationType" factoryName="PHP Console">
@@ -837,14 +493,14 @@
       </JSRemoteDebuggerConfigurationSettings>
       <method />
     </configuration>
+    <configuration default="true" type="PhpUnitRemoteRunConfigurationType" factoryName="PHPUnit on Server" server_id="1ce1d161-749d-4ab4-a4c2-8c827288f82c" server_name="svp">
+      <method />
+    </configuration>
     <configuration default="true" type="JavascriptDebugSession" factoryName="Local" singleton="true">
       <JSDebuggerConfigurationSettings>
         <option name="engineId" value="firefox" />
         <option name="fileUrl" />
       </JSDebuggerConfigurationSettings>
-      <method />
-    </configuration>
-    <configuration default="true" type="PhpUnitRemoteRunConfigurationType" factoryName="PHPUnit on Server" server_id="1ce1d161-749d-4ab4-a4c2-8c827288f82c" server_name="svp">
       <method />
     </configuration>
     <configuration default="false" name="Unnamed" type="PhpHttpRequestRunConfigurationType" factoryName="PHP HTTP Request" editBeforeRun="true" server_name="local" url="http://127.0.0.1/dev/admin/json.php">
@@ -913,16 +569,15 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-4" y="-4" width="1348" height="650" extended-state="6" />
+    <frame x="-4" y="-4" width="1374" height="748" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32890365" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.42460316" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.19165379" sideWeight="0.49801588" order="1" side_tool="true" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.19469696" sideWeight="0.49833888" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Remote Host" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32954547" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.19165379" sideWeight="0.5019841" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.19469696" sideWeight="0.5016611" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3327032" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.19587629" sideWeight="0.34175083" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3327032" sideWeight="0.5" order="9" side_tool="true" content_ui="tabs" />
@@ -932,6 +587,7 @@
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.42460316" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="REST Client" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.5714286" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
@@ -1029,22 +685,22 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/admin/includes/jsons/content.php</url>
-          <line>505</line>
+          <line>494</line>
           <option name="timeStamp" value="50" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/admin/includes/jsons/categories.php</url>
-          <line>433</line>
+          <line>428</line>
           <option name="timeStamp" value="52" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/admin/includes/jsons/categories.php</url>
-          <line>81</line>
+          <line>71</line>
           <option name="timeStamp" value="56" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/admin/includes/classes/content.php</url>
-          <line>1127</line>
+          <line>1148</line>
           <option name="timeStamp" value="60" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
@@ -1059,7 +715,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/admin/includes/jsons/reports.php</url>
-          <line>247</line>
+          <line>433</line>
           <option name="timeStamp" value="81" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
@@ -1113,16 +769,6 @@
           <option name="timeStamp" value="106" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
-          <url>file://$PROJECT_DIR$/admin/includes/jsons/reports.php</url>
-          <line>510</line>
-          <option name="timeStamp" value="109" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="php">
-          <url>file://$PROJECT_DIR$/admin/includes/jsons/reports.php</url>
-          <line>774</line>
-          <option name="timeStamp" value="111" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/includes/classes/category_tree.php</url>
           <line>335</line>
           <option name="timeStamp" value="115" />
@@ -1139,12 +785,12 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/admin/includes/jsons/documents.php</url>
-          <line>214</line>
+          <line>218</line>
           <option name="timeStamp" value="138" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/admin/includes/classes/content.php</url>
-          <line>871</line>
+          <line>892</line>
           <option name="timeStamp" value="142" />
         </line-breakpoint>
       </breakpoints>
@@ -1152,99 +798,9 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/admin/templates/default/login/login.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="241" column="26" selection-start="9257" selection-end="9802" vertical-scroll-proportion="-9.230769">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/admin/external/miframe2_1_5/mif.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-3.3130631">
-          <folding>
-            <element signature="n#!!doc" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/admin/external/miframe2_1_5/build/miframe-debug.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="4882" column="63" selection-start="200608" selection-end="200608" vertical-scroll-proportion="0.038288288">
-          <folding>
-            <element signature="n#!!doc" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/admin/external/miframe2_1_5/build/readme.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="18" column="1" selection-start="1003" selection-end="1082" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/admin/external/extjs/adapter/ext/ext-base-3.2.2.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="n#!!doc" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/admin/external/extjs/CHANGES.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/admin/external/extjs/ext-all-3.2.2.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/admin/templates/default.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="81" column="74" selection-start="4324" selection-end="4324" vertical-scroll-proportion="-7.6538463">
-          <folding>
-            <element signature="n#style#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#img#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/database_explorer/main.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/database_explorer/explorer_main_panel.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="23" column="51" selection-start="794" selection-end="839" vertical-scroll-proportion="-9.384615">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/bi/main.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="19" column="71" selection-start="509" selection-end="556" vertical-scroll-proportion="-6.4615383">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/bi/xxx.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="2" column="47" selection-start="146" selection-end="146" vertical-scroll-proportion="0.0">
+        <state line="23" column="51" selection-start="794" selection-end="839" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
@@ -1256,32 +812,62 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/admin/templates/default/extensions/oracle/oracle.js">
+    <entry file="file://$PROJECT_DIR$/admin/templates/default.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="2064" column="12" selection-start="81458" selection-end="81483" vertical-scroll-proportion="0.0">
+        <state line="81" column="74" selection-start="4199" selection-end="4199" vertical-scroll-proportion="0.0">
           <folding>
-            <marker date="1518000894545" expanded="false" signature="34916:34931" placeholder="..." />
-            <marker date="1518000894545" expanded="false" signature="35073:35088" placeholder="..." />
-            <marker date="1518000894545" expanded="false" signature="47546:47566" placeholder="..." />
-            <marker date="1518000894545" expanded="false" signature="49619:49639" placeholder="..." />
+            <marker date="1524937957265" expanded="true" signature="5314:6176" placeholder="{&quot;CONN_URL&quot;: '&lt;?php echo osc_href_link_admin(FILENAME_JSON); ?&gt;'...}" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/bi/bi_grid.php">
+    <entry file="file://$PROJECT_DIR$/admin/templates/default/login/login.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="265" column="85" selection-start="8862" selection-end="8862" vertical-scroll-proportion="-3.9230769">
-          <folding>
-            <element signature="n#style#0;n#img#5;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#img#6;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/bi/bi_main_panel.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="35" column="97" selection-start="1106" selection-end="1106" vertical-scroll-proportion="0.69138753">
+        <state line="241" column="26" selection-start="9257" selection-end="9802" vertical-scroll-proportion="-9.230769">
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/external/extjs/adapter/ext/ext-base-3.2.2.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/external/extjs/CHANGES.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/external/extjs/ext-all-3.2.2.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/database_explorer/main.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/database_explorer/explorer_main_panel.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="23" column="51" selection-start="794" selection-end="839" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/database_explorer/xxx.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="8" column="12" selection-start="179" selection-end="179" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/templates/default.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="80" column="74" selection-start="4230" selection-end="4230" vertical-scroll-proportion="0.48044693">
+          <folding>
+            <marker date="1524937957265" expanded="true" signature="5314:6176" placeholder="{&quot;CONN_URL&quot;: '&lt;?php echo osc_href_link_admin(FILENAME_JSON); ?&gt;'...}" />
+          </folding>
         </state>
       </provider>
     </entry>
