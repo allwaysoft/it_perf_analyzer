@@ -215,7 +215,7 @@
     <file path="/dashboards_editor.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1519051767955" ignored="false" />
     <file path="/dashboards_editor_main_panel.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1520093335324" ignored="false" />
     <file path="/administrators_dialog.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1523643426571" ignored="false" />
-    <file path="/language.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1523637360294" ignored="false" />
+    <file path="/language.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1524947134780" ignored="false" />
     <file path="/dashboards.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1523639905870" ignored="false" />
     <file path="/ext_desktop.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1523641119022" ignored="false" />
     <file path="/tocdesktop.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1523967956591" ignored="false" />
@@ -228,18 +228,12 @@
     <file path="$PROJECT_DIR$/admin/includes/jsons/servers.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1524945597243" ignored="false" />
     <file path="$PROJECT_DIR$/admin/includes/jsons/users.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1524945597243" ignored="false" />
     <file path="$PROJECT_DIR$/admin/includes/jsons/documents.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1524945597243" ignored="false" />
-    <file path="$PROJECT_DIR$/includes/classes/category_tree.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1524945597243" ignored="false" />
-    <file path="$PROJECT_DIR$/admin/includes/ext_config.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1524945597244" ignored="false" />
     <file path="$PROJECT_DIR$/ext/phpmailer/class.smtp.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1524945597244" ignored="false" />
     <file path="$PROJECT_DIR$/admin/includes/classes/content.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1524945597244" ignored="false" />
     <file path="$PROJECT_DIR$/admin/includes/jsons/categories.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1524945597244" ignored="false" />
     <file path="$PROJECT_DIR$/admin/includes/classes/inbound_mail.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1524945597244" ignored="false" />
-    <file path="$PROJECT_DIR$/admin/templates/default/login/login.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1524945597244" ignored="false" />
-    <file path="$PROJECT_DIR$/admin/includes/filenames.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1524945597244" ignored="false" />
     <file path="$PROJECT_DIR$/admin/external/groupoffice/imap.class.inc" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1524945597244" ignored="false" />
     <file path="$PROJECT_DIR$/admin/includes/classes/email_account.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1524945597244" ignored="false" />
-    <file path="$PROJECT_DIR$/includes/configure.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1524945597244" ignored="false" />
-    <file path="$PROJECT_DIR$/includes/filenames.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1524945597244" ignored="false" />
     <file path="$PROJECT_DIR$/admin/includes/jsons/reports.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1524945597244" ignored="false" />
     <file path="$PROJECT_DIR$/admin/includes/jsons/content.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1524945597244" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -279,13 +273,44 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="default.php" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="default.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/admin/templates/default.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="80" column="74" selection-start="4230" selection-end="4230" vertical-scroll-proportion="0.48044693">
+            <state line="80" column="74" selection-start="4230" selection-end="4230" vertical-scroll-proportion="-9.923077">
               <folding>
-                <marker date="1524937957265" expanded="true" signature="5314:6176" placeholder="{&quot;CONN_URL&quot;: '&lt;?php echo osc_href_link_admin(FILENAME_JSON); ?&gt;'...}" />
+                <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#img#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="login.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/admin/templates/default/login/login.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="99" column="34" selection-start="4462" selection-end="4462" vertical-scroll-proportion="-4.6153846">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="language.php" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/includes/classes/language.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="19" column="30" selection-start="492" selection-end="492" vertical-scroll-proportion="0.5549348">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="database_tables.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/includes/database_tables.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="74" column="7" selection-start="4653" selection-end="4653" vertical-scroll-proportion="-7.1923075">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -300,7 +325,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/admin/includes/extmodules/roles_amplitude/roles_dialog.php" />
         <option value="$PROJECT_DIR$/admin/includes/modules/access/roles.php" />
         <option value="$PROJECT_DIR$/admin/includes/jsons/roles.php" />
         <option value="$PROJECT_DIR$/includes/classes/category_tree.php" />
@@ -316,6 +340,7 @@
         <option value="$PROJECT_DIR$/admin/includes/extmodules/bi/bi_grid.php" />
         <option value="$PROJECT_DIR$/admin/includes/extmodules/bi/bi_main_panel.php" />
         <option value="$PROJECT_DIR$/admin/templates/default.php" />
+        <option value="$PROJECT_DIR$/includes/classes/language.php" />
       </list>
     </option>
   </component>
@@ -391,6 +416,38 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="includes" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dev" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="it_perf_analyzer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="includes" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="classes" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dev" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="it_perf_analyzer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="admin" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -410,6 +467,54 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="templates" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dev" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="it_perf_analyzer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="admin" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="templates" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="default" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="login" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dev" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="it_perf_analyzer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="admin" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="templates" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="default" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -816,15 +921,12 @@
       <provider selected="true" editor-type-id="text-editor">
         <state line="81" column="74" selection-start="4199" selection-end="4199" vertical-scroll-proportion="0.0">
           <folding>
-            <marker date="1524937957265" expanded="true" signature="5314:6176" placeholder="{&quot;CONN_URL&quot;: '&lt;?php echo osc_href_link_admin(FILENAME_JSON); ?&gt;'...}" />
+            <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#img#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/admin/templates/default/login/login.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="241" column="26" selection-start="9257" selection-end="9802" vertical-scroll-proportion="-9.230769">
-          <folding />
         </state>
       </provider>
     </entry>
@@ -864,10 +966,35 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/admin/templates/default.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="80" column="74" selection-start="4230" selection-end="4230" vertical-scroll-proportion="0.48044693">
+        <state line="80" column="74" selection-start="4230" selection-end="4230" vertical-scroll-proportion="-9.923077">
           <folding>
-            <marker date="1524937957265" expanded="true" signature="5314:6176" placeholder="{&quot;CONN_URL&quot;: '&lt;?php echo osc_href_link_admin(FILENAME_JSON); ?&gt;'...}" />
+            <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#img#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/templates/default/login/login.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="99" column="34" selection-start="4462" selection-end="4462" vertical-scroll-proportion="-4.6153846">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/includes/database_tables.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="74" column="7" selection-start="4653" selection-end="4653" vertical-scroll-proportion="-7.1923075">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/includes/classes/language.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="19" column="30" selection-start="492" selection-end="492" vertical-scroll-proportion="0.5549348">
+          <folding />
         </state>
       </provider>
     </entry>
