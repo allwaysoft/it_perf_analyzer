@@ -98,6 +98,7 @@ Ext.onReady(function () {
     Toc.Languages = [];
     <?php 
       foreach ($osC_Language->getAll() as $l) {
+        var_dump($l);
         echo 'Toc.Languages.push(["' . $l['code'] . '", "' . $l['name'] . '"]);';
       }
     ?>

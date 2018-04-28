@@ -158,7 +158,7 @@
     <file path="/ncpgrid.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1470415885066" ignored="false" />
     <file path="/dataguard.js" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1473081611351" ignored="false" />
     <file path="/index.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1476202744903" ignored="false" />
-    <file path="/login.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1524046097053" ignored="false" />
+    <file path="/login.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1524947390516" ignored="false" />
     <file path="/json.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1483122139152" ignored="false" />
     <file path="/deltacartes_grid.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1484229324666" ignored="false" />
     <file path="/amplitude_cartes_main_panel.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1484230081469" ignored="false" />
@@ -288,19 +288,19 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="login.php" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="login.php" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/admin/templates/default/login/login.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="99" column="34" selection-start="4462" selection-end="4462" vertical-scroll-proportion="-4.6153846">
+            <state line="100" column="21" selection-start="4497" selection-end="4497" vertical-scroll-proportion="0.25512105">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="language.php" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="language.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/includes/classes/language.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="19" column="30" selection-start="492" selection-end="492" vertical-scroll-proportion="0.5549348">
+            <state line="52" column="7" selection-start="2589" selection-end="2589" vertical-scroll-proportion="-19.346153">
               <folding />
             </state>
           </provider>
@@ -325,7 +325,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/admin/includes/modules/access/roles.php" />
         <option value="$PROJECT_DIR$/admin/includes/jsons/roles.php" />
         <option value="$PROJECT_DIR$/includes/classes/category_tree.php" />
         <option value="$PROJECT_DIR$/admin/includes/extmodules/roles/roles_dialog.php" />
@@ -341,6 +340,7 @@
         <option value="$PROJECT_DIR$/admin/includes/extmodules/bi/bi_main_panel.php" />
         <option value="$PROJECT_DIR$/admin/templates/default.php" />
         <option value="$PROJECT_DIR$/includes/classes/language.php" />
+        <option value="$PROJECT_DIR$/admin/templates/default/login/login.php" />
       </list>
     </option>
   </component>
@@ -977,13 +977,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/admin/templates/default/login/login.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="99" column="34" selection-start="4462" selection-end="4462" vertical-scroll-proportion="-4.6153846">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/includes/database_tables.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="74" column="7" selection-start="4653" selection-end="4653" vertical-scroll-proportion="-7.1923075">
@@ -993,7 +986,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/includes/classes/language.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="19" column="30" selection-start="492" selection-end="492" vertical-scroll-proportion="0.5549348">
+        <state line="52" column="7" selection-start="2589" selection-end="2589" vertical-scroll-proportion="-19.346153">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/templates/default/login/login.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="100" column="21" selection-start="4497" selection-end="4497" vertical-scroll-proportion="0.25512105">
           <folding />
         </state>
       </provider>
