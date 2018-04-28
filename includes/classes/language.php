@@ -14,7 +14,7 @@
 
       $Qlanguages = $osC_Database->query('select * from :table_languages order by sort_order, name');
       $Qlanguages->bindTable(':table_languages', TABLE_LANGUAGES);
-      $Qlanguages->setCache('languages');
+      //$Qlanguages->setCache('languages');
       $Qlanguages->execute();
 
       while ($Qlanguages->next()) {        
