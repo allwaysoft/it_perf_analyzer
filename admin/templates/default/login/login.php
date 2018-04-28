@@ -33,21 +33,12 @@ $osC_Language->loadIniFile('login.php');
 </div>
 
 <div id="x-login-panel">
-    <img src="templates/default/desktop/images/default/s.gif" class="login-logo abs-position"/>
+    <img src="images/Logo_BSCA_BANK.png" style="width: 798px"/>
+    <img src="templates/default/desktop/images/default/s.gif" class="login-logo abs-position" />
 
-    <img src="templates/default/desktop/images/default/s.gif" class="login-screenshot abs-position"/>
-    
-    <span class="login-supported abs-position">
-      <b>Supported Browsers</b><br/>
-      <a href="http://www.mozilla.org/download.html" target="_blank">Firefox 2+</a><br/>
-      <a href="http://www.microsoft.com/windows/downloads/ie/getitnow.mspx" target="_blank">Internet Explorer
-          7+</a><br/>
-      <a href="http://www.opera.com/download/" target="_blank">Opera 9+</a>
-    </span>
+    <img src="templates/default/desktop/images/default/s.gif" class="login-screenshot abs-position" />
 
-    <div id="x-login-form" class="x-login-form abs-position"><a id='forget-password'
-                                                                onclick="javascript:forgetPassword();"><?php echo $osC_Language->get("label_forget_password"); ?></a>
-    </div>
+    <div id="x-login-form" class="x-login-form abs-position"><a id='forget-password' onclick="javascript:forgetPassword();"><?php echo $osC_Language->get("label_forget_password"); ?></a></div>
 </div>
 
 <script src="external/extjs/adapter/ext/ext-base.js"></script>
