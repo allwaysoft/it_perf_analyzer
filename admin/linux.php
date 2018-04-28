@@ -187,7 +187,7 @@ if (isset($_REQUEST['action'])) {
 
     switch(strtolower($action))
     {
-        case 'mem_usage';
+        case 'mem_usage':
             $db_host = $_REQUEST['db_host'];
             $os_user = $_REQUEST['server_user'];
             $os_pass = $_REQUEST['server_pass'];

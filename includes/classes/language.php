@@ -17,8 +17,6 @@
       $Qlanguages->setCache('languages');
       $Qlanguages->execute();
 
-        var_dump($Qlanguages);
-
       while ($Qlanguages->next()) {        
         $this->_languages[$Qlanguages->value('code')] = array('id' => $Qlanguages->valueInt('languages_id'),
                                                               'code' => $Qlanguages->value('code'),
