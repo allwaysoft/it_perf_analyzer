@@ -155,7 +155,29 @@ Ext.extend(Toc.categories.CategoriesGrid, Ext.grid.GridPanel, {
     
     dlg.show(record.get('categories_id'),parent_id);
   },
-  
+
+  setPermissions: function(permissions) {
+//console.debug(permissions);
+    this.topToolbar.items.items[0].disable();
+    this.topToolbar.items.items[2].disable();
+    this.topToolbar.items.items[4].disable();
+    this.topToolbar.items.items[6].enable();
+    if(permissions)
+    {
+        if(permissions.can_write === 1 || permissions.can_modify !== 0 || permissions.can_publish === 1)
+        {
+            this.topToolbar.items.items[0].enable();
+            this.topToolbar.items.items[2].enable();
+            this.topToolbar.items.items[4].enable();
+        }
+        if(permissions.can_modify == '')
+        {
+            //this.topToolbar.items.items[0].enable();
+        }
+    }
+
+    this.permissions = permissions;
+  },
   onMove: function (record) {
     var dlg = this.owner.createCategoriesMoveDialog();
     dlg.setTitle('<?php echo $osC_Language->get("action_heading_batch_move_categories"); ?>');
