@@ -1276,73 +1276,73 @@
                 }
 
                 oci_close($c);
+            }
 
-                if (count($records) > 0) {
-                    $permissions = $records[0];
-                }
-                else
-                {
-                    $permissions = array(
-                        'on_read' => '',
-                        'on_write' => '',
-                        'on_modify' => '',
-                        'on_publish' => ''
-                    );
-                }
-                if (is_array($permissions)) {
-                    $read_permissions = explode(';', $permissions['on_read']);
-                    $write_permissions = explode(';', $permissions['on_write']);
-                    $modify_permissions = explode(';', $permissions['on_modify']);
-                    $publish_permissions = explode(';', $permissions['on_publish']);
+            if (count($records) > 0) {
+                $permissions = $records[0];
+            }
+            else
+            {
+                $permissions = array(
+                    'on_read' => '',
+                    'on_write' => '',
+                    'on_modify' => '',
+                    'on_publish' => ''
+                );
+            }
+            if (is_array($permissions)) {
+                $read_permissions = explode(';', $permissions['on_read']);
+                $write_permissions = explode(';', $permissions['on_write']);
+                $modify_permissions = explode(';', $permissions['on_modify']);
+                $publish_permissions = explode(';', $permissions['on_publish']);
 
-                    foreach ($roles as $role) {
-                        $current_role = is_array($role[0]) ? $role[0] : $role;
-                        if(empty($current_role['email_address']) || !isset($current_role['email_address']))
-                        {
-                            $current_role['on_read'] = '0';
-                            $current_role['on_write'] = '0';
-                            $current_role['on_publish'] = '0';
-                            $current_role['on_modify'] = '0';
+                foreach ($roles as $role) {
+                    $current_role = is_array($role[0]) ? $role[0] : $role;
+                    if(empty($current_role['email_address']) || !isset($current_role['email_address']))
+                    {
+                        $current_role['on_read'] = '0';
+                        $current_role['on_write'] = '0';
+                        $current_role['on_publish'] = '0';
+                        $current_role['on_modify'] = '0';
+                    }
+                    else
+                    {
+                        if (is_array($read_permissions) && in_array($current_role['email_address'], $read_permissions)) {
+                            $current_role['on_read'] = '1';
                         }
                         else
                         {
-                            if (is_array($read_permissions) && in_array($current_role['email_address'], $read_permissions)) {
-                                $current_role['on_read'] = '1';
-                            }
-                            else
-                            {
-                                $current_role['on_read'] = '0';
-                            }
-
-                            if (is_array($write_permissions) && in_array($current_role['email_address'], $write_permissions)) {
-                                $current_role['on_write'] = '1';
-                            }
-                            else
-                            {
-                                $current_role['on_write'] = '0';
-                            }
-
-                            if (is_array($modify_permissions) && in_array($current_role['email_address'], $modify_permissions)) {
-                                $current_role['on_modify'] = '1';
-                            }
-                            else
-                            {
-                                $current_role['on_modify'] = '0';
-                            }
-
-                            if (is_array($publish_permissions) && in_array($current_role['email_address'], $publish_permissions)) {
-                                $current_role['on_publish'] = '1';
-                            }
-                            else
-                            {
-                                $current_role['on_publish'] = '0';
-                            }
+                            $current_role['on_read'] = '0';
                         }
 
-                        $current_role['content_id'] = $content_id;
-                        $current_role['content_type'] = $content_type;
-                        $recs[] = $current_role;
+                        if (is_array($write_permissions) && in_array($current_role['email_address'], $write_permissions)) {
+                            $current_role['on_write'] = '1';
+                        }
+                        else
+                        {
+                            $current_role['on_write'] = '0';
+                        }
+
+                        if (is_array($modify_permissions) && in_array($current_role['email_address'], $modify_permissions)) {
+                            $current_role['on_modify'] = '1';
+                        }
+                        else
+                        {
+                            $current_role['on_modify'] = '0';
+                        }
+
+                        if (is_array($publish_permissions) && in_array($current_role['email_address'], $publish_permissions)) {
+                            $current_role['on_publish'] = '1';
+                        }
+                        else
+                        {
+                            $current_role['on_publish'] = '0';
+                        }
                     }
+
+                    $current_role['content_id'] = $content_id;
+                    $current_role['content_type'] = $content_type;
+                    $recs[] = $current_role;
                 }
             }
 

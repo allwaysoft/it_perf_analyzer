@@ -264,10 +264,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="login.php" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="login.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/admin/includes/jsons/login.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="9" column="55" selection-start="203" selection-end="203" vertical-scroll-proportion="0.065891474">
+            <state line="9" column="55" selection-start="203" selection-end="203" vertical-scroll-proportion="-1.3076923">
               <folding />
             </state>
           </provider>
@@ -293,10 +293,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="content.php" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="content.php" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/admin/includes/classes/content.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="1191" column="12" selection-start="51228" selection-end="51228" vertical-scroll-proportion="-15.269231">
+            <state line="1322" column="60" selection-start="57981" selection-end="57981" vertical-scroll-proportion="0.11046512">
               <folding>
                 <element signature="e#8#172#0" expanded="true" />
               </folding>
@@ -360,12 +360,12 @@
         <option value="$PROJECT_DIR$/admin/includes/extmodules/categories/xxx.js" />
         <option value="$PROJECT_DIR$/admin/includes/extmodules/categories/categories_main_panel.php" />
         <option value="$PROJECT_DIR$/includes/classes/category_tree.php" />
-        <option value="$PROJECT_DIR$/admin/includes/classes/content.php" />
         <option value="$PROJECT_DIR$/includes/bsca.php" />
         <option value="$PROJECT_DIR$/includes/customers/test1.php" />
         <option value="$PROJECT_DIR$/includes/configure.php" />
         <option value="$PROJECT_DIR$/admin/includes/application_top.php" />
         <option value="$PROJECT_DIR$/admin/includes/jsons/login.php" />
+        <option value="$PROJECT_DIR$/admin/includes/classes/content.php" />
       </list>
     </option>
   </component>
@@ -957,15 +957,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/admin/includes/classes/content.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="1191" column="12" selection-start="51228" selection-end="51228" vertical-scroll-proportion="-15.269231">
-          <folding>
-            <element signature="e#8#172#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/admin/index.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
@@ -1026,8 +1017,17 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/admin/includes/jsons/login.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="9" column="55" selection-start="203" selection-end="203" vertical-scroll-proportion="0.065891474">
+        <state line="9" column="55" selection-start="203" selection-end="203" vertical-scroll-proportion="-1.3076923">
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/includes/classes/content.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="1322" column="60" selection-start="57981" selection-end="57981" vertical-scroll-proportion="0.11046512">
+          <folding>
+            <element signature="e#8#172#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
