@@ -863,6 +863,16 @@
         {
             global $osC_Database;
             $roles = array();
+
+            $roles[] = array(
+                'roles_id' => '-1',
+                'user_name' => 'everyone',
+                'email_address' => ALL_EMAIL,
+                'roles_name' => 'Tout le monde',
+                'roles_description' => 'Tout le monde',
+                'icon' => osc_icon('folder_account.png')
+            );
+
             $total = 1;
             $tot = 0;
 
@@ -872,10 +882,8 @@
             $Qpermissions->bindValue(':content_type', $content_type);
             $Qpermissions->execute();
 
-            var_dump($Qpermissions);
-
             if ($osC_Database->isError()) {
-                var_dump($Qpermissions);
+                //var_dump($Qpermissions);
                 $total = $total + 1;
                 $roles[] = array(
                     'roles_id' => 'error',
@@ -899,30 +907,19 @@
             }
             $Qpermissions->freeResult();
 
-            $roles[] = array(
-                'roles_id' => '-1',
-                'user_name' => 'everyone',
-                'email_address' => ALL_EMAIL,
-                'roles_name' => 'Tout le monde',
-                'roles_description' => 'Tout le monde',
-                'icon' => osc_icon('folder_account.png')
-            );
-
             $Qadmin = $osC_Database->query('select id, user_name, email_address from :table_administrators where id != 1 order by user_name');
             $Qadmin->bindTable(':table_administrators', TABLE_ADMINISTRATORS);
             $Qadmin->execute();
 
-            var_dump($Qadmin);
-
             if ($osC_Database->isError()) {
-                var_dump($Qpermissions);
                 $total = $total + 1;
+                var_dump($osC_Database);
                 $roles[] = array(
                     'roles_id' => 'error',
                     'user_name' => 'error',
                     'email_address' => '',
                     'roles_name' => 'error',
-                    'roles_description' => $osC_Database->getError(),
+                    'roles_description' => 'error',
                     'icon' => osc_icon('xxx.error')
                 );
             }
@@ -956,7 +953,7 @@
                 $c = oci_pconnect($db_user, $db_pass, $db_host . "/" . $db_sid);
                 if (!$c) {
                     $e = oci_error();
-                    var_dump($e);
+                    //var_dump($e);
                     $total = $total + 1;
                     $roles[] = array(
                         'roles_id' => 'error',
@@ -987,7 +984,7 @@
                     $s = oci_parse($c, $query);
                     if (!$s) {
                         $e = oci_error($c);
-                        var_dump($e);
+                        //var_dump($e);
                         //trigger_error('Could not parse statement: ' . $e['message'], E_USER_ERROR);
                         $total = $total + 1;
                         $roles[] = array(
@@ -1011,7 +1008,7 @@
                         $r = oci_execute($s);
                         if (!$r) {
                             $e = oci_error($s);
-                            var_dump($e);
+                            //var_dump($e);
                             //trigger_error('Could not execute statement: ' . $e['message'], E_USER_ERROR);
                             $total = $total + 1;
                             $roles[] = array(
@@ -1112,6 +1109,16 @@
 
             $recs = array();
             $roles = array();
+
+            $roles[] = array(
+                'roles_id' => '-1',
+                'user_name' => 'everyone',
+                'email_address' => ALL_EMAIL,
+                'roles_name' => 'Tout le monde',
+                'roles_description' => 'Tout le monde',
+                'icon' => osc_icon('folder_account.png')
+            );
+
             $total = 1;
             $tot = 0;
 
@@ -1144,27 +1151,19 @@
             }
             $Qnotifications->freeResult();
 
-            $roles[] = array(
-                'roles_id' => '-1',
-                'user_name' => 'everyone',
-                'email_address' => ALL_EMAIL,
-                'roles_name' => 'Tout le monde',
-                'roles_description' => 'Tout le monde',
-                'icon' => osc_icon('folder_account.png')
-            );
-
             $Qadmin = $osC_Database->query('select id, user_name, email_address from :table_administrators where id != 1 order by user_name');
             $Qadmin->bindTable(':table_administrators', TABLE_ADMINISTRATORS);
             $Qadmin->execute();
 
             if ($osC_Database->isError()) {
                 $total = $total + 1;
+                var_dump($osC_Database);
                 $roles[] = array(
                     'roles_id' => 'error',
                     'user_name' => 'error',
                     'email_address' => '',
                     'roles_name' => 'error',
-                    'roles_description' => $osC_Database->getError(),
+                    'roles_description' => 'error',
                     'icon' => osc_icon('xxx.error')
                 );
             }

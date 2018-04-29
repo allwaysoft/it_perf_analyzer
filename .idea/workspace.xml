@@ -15,7 +15,7 @@
     <file path="/servers_data_panel.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1388081561668" ignored="false" />
     <file path="/servers.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1523642432660" ignored="false" />
     <file path="/servers_grid.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1405706855356" ignored="false" />
-    <file path="/content.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1525031153600" ignored="false" />
+    <file path="/content.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1525033695936" ignored="false" />
     <file path="/database_data_panel.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1388236772011" ignored="false" />
     <file path="/content_manager.js" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1517589393601" ignored="false" />
     <file path="/databases.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1519039220338" ignored="false" />
@@ -272,10 +272,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="content.php" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="content.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/admin/includes/jsons/content.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="516" column="90" selection-start="22751" selection-end="22751" vertical-scroll-proportion="0.4651163">
+            <state line="516" column="32" selection-start="22693" selection-end="22693" vertical-scroll-proportion="-9.230769">
               <folding />
             </state>
           </provider>
@@ -290,10 +290,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="content.php" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="content.php" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/admin/includes/classes/content.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="861" column="31" selection-start="36133" selection-end="36133" vertical-scroll-proportion="-6.6153846">
+            <state line="1287" column="18" selection-start="56284" selection-end="56284" vertical-scroll-proportion="0.93410856">
               <folding>
                 <element signature="e#8#172#0" expanded="true" />
               </folding>
@@ -367,8 +367,8 @@
         <option value="$PROJECT_DIR$/admin/includes/extmodules/datasources/datasources_main_panel.php" />
         <option value="$PROJECT_DIR$/includes/configure.php" />
         <option value="$PROJECT_DIR$/admin/includes/jsons/administrators.php" />
-        <option value="$PROJECT_DIR$/admin/includes/classes/content.php" />
         <option value="$PROJECT_DIR$/admin/includes/jsons/content.php" />
+        <option value="$PROJECT_DIR$/admin/includes/classes/content.php" />
       </list>
     </option>
   </component>
@@ -970,7 +970,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/admin/includes/classes/content.php</url>
-          <line>952</line>
+          <line>949</line>
           <option name="timeStamp" value="142" />
         </line-breakpoint>
       </breakpoints>
@@ -1082,19 +1082,19 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/admin/includes/classes/content.php">
+    <entry file="file://$PROJECT_DIR$/admin/includes/jsons/content.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="861" column="31" selection-start="36133" selection-end="36133" vertical-scroll-proportion="-6.6153846">
-          <folding>
-            <element signature="e#8#172#0" expanded="true" />
-          </folding>
+        <state line="516" column="32" selection-start="22693" selection-end="22693" vertical-scroll-proportion="-9.230769">
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/admin/includes/jsons/content.php">
+    <entry file="file://$PROJECT_DIR$/admin/includes/classes/content.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="516" column="90" selection-start="22751" selection-end="22751" vertical-scroll-proportion="0.4651163">
-          <folding />
+        <state line="1287" column="18" selection-start="56284" selection-end="56284" vertical-scroll-proportion="0.93410856">
+          <folding>
+            <element signature="e#8#172#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
