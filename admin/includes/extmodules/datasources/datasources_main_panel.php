@@ -32,9 +32,9 @@ windows.getEl().unmask();
                         //var pnl = new Ext.Panel({id : 'pnl_iframe_datasources'});
 
                         //console.debug(cmp);
-windows.add(cmp);
-                        //pnl.add(cmp);
-                        //pnl.doLayout(true, true);
+//windows.add(cmp);
+                        this.add(cmp);
+                        this.doLayout(true, true);
 windows.doLayout(true, true);
                         cmp.el.dom.src = '<?php echo METABASE_URL . '/admin/databases'; ?>' + '?username=' + result.email + '&password=' + '<?php echo METABASE_DEV_PASS; ?>';
 
