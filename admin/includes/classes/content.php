@@ -872,6 +872,8 @@
             $Qpermissions->bindValue(':content_type', $content_type);
             $Qpermissions->execute();
 
+            var_dump($Qpermissions);
+
             if ($osC_Database->isError()) {
                 var_dump($Qpermissions);
                 $total = $total + 1;
@@ -909,6 +911,8 @@
             $Qadmin = $osC_Database->query('select id, user_name, email_address from :table_administrators where id != 1 order by user_name');
             $Qadmin->bindTable(':table_administrators', TABLE_ADMINISTRATORS);
             $Qadmin->execute();
+
+            var_dump($Qadmin);
 
             if ($osC_Database->isError()) {
                 var_dump($Qpermissions);
@@ -1032,11 +1036,9 @@
                                     'icon' => osc_icon('folder_account.png')
                                 );
                             }
-
-                            oci_free_statement($r);
                         }
+                        oci_free_statement($r);
                     }
-
                 }
 
                 oci_close($c);
