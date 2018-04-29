@@ -290,10 +290,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="content.php" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="content.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/admin/includes/classes/content.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="1287" column="18" selection-start="56284" selection-end="56284" vertical-scroll-proportion="0.93410856">
+            <state line="1287" column="18" selection-start="56284" selection-end="56284" vertical-scroll-proportion="-18.538462">
               <folding>
                 <element signature="e#8#172#0" expanded="true" />
               </folding>
@@ -310,10 +310,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="configure.php" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="configure.php" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/includes/configure.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="25" column="58" selection-start="1226" selection-end="1226" vertical-scroll-proportion="-2.6153846">
+            <state line="42" column="2" selection-start="1720" selection-end="1720" vertical-scroll-proportion="0.6748582">
               <folding />
             </state>
           </provider>
@@ -365,10 +365,10 @@
         <option value="$PROJECT_DIR$/admin/includes/extmodules/datasources/xxx.js" />
         <option value="$PROJECT_DIR$/admin/templates/default/login/login.php" />
         <option value="$PROJECT_DIR$/admin/includes/extmodules/datasources/datasources_main_panel.php" />
-        <option value="$PROJECT_DIR$/includes/configure.php" />
         <option value="$PROJECT_DIR$/admin/includes/jsons/administrators.php" />
         <option value="$PROJECT_DIR$/admin/includes/jsons/content.php" />
         <option value="$PROJECT_DIR$/admin/includes/classes/content.php" />
+        <option value="$PROJECT_DIR$/includes/configure.php" />
       </list>
     </option>
   </component>
@@ -1047,13 +1047,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/includes/configure.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="25" column="58" selection-start="1226" selection-end="1226" vertical-scroll-proportion="-2.6153846">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/administrators/administrators_grid.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
@@ -1091,10 +1084,17 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/admin/includes/classes/content.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="1287" column="18" selection-start="56284" selection-end="56284" vertical-scroll-proportion="0.93410856">
+        <state line="1287" column="18" selection-start="56284" selection-end="56284" vertical-scroll-proportion="-18.538462">
           <folding>
             <element signature="e#8#172#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/includes/configure.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="42" column="2" selection-start="1720" selection-end="1720" vertical-scroll-proportion="0.6748582">
+          <folding />
         </state>
       </provider>
     </entry>

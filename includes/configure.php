@@ -34,13 +34,13 @@ define('DB_TABLE_PREFIX', 'delta_');
 define('USE_PCONNECT', 'false');
 define('STORE_SESSIONS', 'mysql');
 
-define('DB_USER', 'gm_fomi');
-define('DB_PASS', 'Kouepe3073');
-define('DB_HOST', '10.100.1.50');
-define('DB_SID', 'STOCKV10');
-define('APP_HOST', '10.100.1.57');
-define('APP_USER', 'plateformesvp');
-define('APP_PASS', 'Kouepe@2015');
+//define('DB_USER', 'gm_fomi');
+//define('DB_PASS', 'Kouepe3073');
+//define('DB_HOST', '10.100.1.50');
+//define('DB_SID', 'STOCKV10');
+//define('APP_HOST', '10.100.1.57');
+//define('APP_USER', 'plateformesvp');
+//define('APP_PASS', 'Kouepe@2015');
 
 define('CURL_RUNNER', 'localhost');
 define('CURL_USER', 'guyfomi');
