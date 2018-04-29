@@ -226,7 +226,7 @@
     <file path="$PROJECT_DIR$/../cloud_perf_analyzer/admin/includes/extmodules/bi/bi_main_panel.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1524945597243" ignored="false" />
     <file path="$PROJECT_DIR$/ext/phpmailer/class.smtp.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1524945597244" ignored="false" />
     <file path="$PROJECT_DIR$/admin/external/groupoffice/imap.class.inc" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1524945597244" ignored="false" />
-    <file path="/application_top.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1525040084149" ignored="false" />
+    <file path="/application_top.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1525041387949" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -289,16 +289,16 @@
       <file leaf-file-name="configure.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/includes/configure.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="1" column="25" selection-start="31" selection-end="31" vertical-scroll-proportion="-0.65384614">
+            <state line="3" column="17" selection-start="46" selection-end="55" vertical-scroll-proportion="-1.9615384">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="test1.php" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="test1.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/includes/customers/test1.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="64" column="2" selection-start="2389" selection-end="2389" vertical-scroll-proportion="0.9357278">
+            <state line="47" column="29" selection-start="1878" selection-end="1878" vertical-scroll-proportion="-9.230769">
               <folding />
             </state>
           </provider>
@@ -322,10 +322,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="application_top.php" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="application_top.php" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/admin/includes/application_top.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="22" column="52" selection-start="600" selection-end="600" vertical-scroll-proportion="-13.076923">
+            <state line="26" column="52" selection-start="753" selection-end="753" vertical-scroll-proportion="0.7712665">
               <folding />
             </state>
           </provider>
@@ -350,7 +350,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/admin/includes/languages/fr_FR/login.php" />
         <option value="$PROJECT_DIR$/admin/includes/languages/en_US/login.php" />
         <option value="$PROJECT_DIR$/includes/classes/database.php" />
         <option value="$PROJECT_DIR$/includes/classes/language.php" />
@@ -364,6 +363,7 @@
         <option value="$PROJECT_DIR$/includes/classes/category_tree.php" />
         <option value="$PROJECT_DIR$/admin/includes/classes/content.php" />
         <option value="$PROJECT_DIR$/includes/bsca.php" />
+        <option value="$PROJECT_DIR$/includes/customers/test1.php" />
         <option value="$PROJECT_DIR$/includes/configure.php" />
         <option value="$PROJECT_DIR$/admin/includes/application_top.php" />
       </list>
@@ -442,6 +442,24 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="includes" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dev" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="it_perf_analyzer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="includes" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="customers" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -635,14 +653,14 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-4" y="-4" width="1374" height="748" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32890365" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.19469696" sideWeight="0.49833888" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Remote Host" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32954547" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.19469696" sideWeight="0.5016611" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.19469696" sideWeight="0.5016611" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3327032" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.19587629" sideWeight="0.34175083" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3327032" sideWeight="0.5" order="9" side_tool="true" content_ui="tabs" />
@@ -941,13 +959,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/includes/configure.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="1" column="25" selection-start="31" selection-end="31" vertical-scroll-proportion="-0.65384614">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/includes/customers/bsca.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
@@ -955,16 +966,23 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/admin/includes/application_top.php">
+    <entry file="file://$PROJECT_DIR$/includes/customers/test1.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="22" column="52" selection-start="600" selection-end="600" vertical-scroll-proportion="-13.076923">
+        <state line="47" column="29" selection-start="1878" selection-end="1878" vertical-scroll-proportion="-9.230769">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/includes/customers/test1.php">
+    <entry file="file://$PROJECT_DIR$/includes/configure.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="64" column="2" selection-start="2389" selection-end="2389" vertical-scroll-proportion="0.9357278">
+        <state line="3" column="17" selection-start="46" selection-end="55" vertical-scroll-proportion="-1.9615384">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/includes/application_top.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="26" column="52" selection-start="753" selection-end="753" vertical-scroll-proportion="0.7712665">
           <folding />
         </state>
       </provider>

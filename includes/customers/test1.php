@@ -47,10 +47,6 @@ define('CURL_RUNNER', 'localhost');
 define('CURL_USER', 'guyfomi');
 define('CURL_PASS', '12345');
 
-//HMN
-define('COPYRIGHT', 'HMN Consulting');
-define('PLATFORM_NAME', 'Script Business Intelligence (HMN Consulting)');
-
 //EMAIL
 define('ALL_EMAIL', 'guyfomi@gmail.com');
 define('ADMIN_EMAIL', 'guyfomi@gmail.com');

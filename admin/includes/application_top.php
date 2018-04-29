@@ -20,6 +20,10 @@ if (!defined('CLIENT')) {
     $osC_MessageStack->add('header','No Customer defined', 'error');
 }
 
+if ( !file_exists('../includes/customers/' . CLIENT . '.php') ) {
+    echo "Votre Application n'a pas ete activee , veuillez contacter " . COPYRIGHT;
+}
+
 require('../includes/customers/' . CLIENT . '.php');
   
 // include tomatocart constants
