@@ -14,32 +14,36 @@ Toc.datasources.mainPanel = function(config) {
 Ext.extend(Toc.datasources.mainPanel, Ext.Panel, {
    start : function(windows){
      console.log('activate datasources ...');
-            this.getEl().mask('Chargement Metadata ...');
+     this.getEl().mask('Metadata ...');
             Ext.Ajax.request({
-                method : 'GET',
-                url: Toc.CONF.CONN_URL,
-                params: {
-                    module : 'databases',
-                    action: 'get_currentuser'
+                method: 'GET',
+                url: '<?php echo METABASE_URL; ?>' + '/api/user/current',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type' : 'application/json'
                 },
                 callback: function (options, success, response) {
                     this.getEl().unmask();
                     var result = Ext.decode(response.responseText);
 
-                    if(result.success)
+                    if(result.id > 0)
                     {
-                        that.username = result.username;
-                        this.getEl().mask('...');
-                        if (this.items) {
-                          this.removeAll(true);
-                        }
+						var cmp = new Ext.Component({autoEl:{tag: 'iframe',style: 'height: 100%; width: 100%; border: none'},height: 600,id: 'datasources_iframe',width: 600});
+                        var pnl = new Ext.Panel({id : 'pnl_iframe_datasources'});
 
-                       //var DsPanel = new Ext.Component({autoEl:{tag: 'iframe',style: 'height: 100%; width: 100%; border: none',src: '<?php echo REDASH_URL . '/login?next=' . REDASH_URL . '/data_sources&email='; ?>' + result.username + '&password=12345'},height: 600,width: 600});
-                       var DsPanel = new Ext.Component({autoEl:{tag: 'iframe',style: 'height: 100%; width: 100%; border: none',src: '<?php echo METABASE_URL . '/admin/databases'; ?>' + '?username=' + that.username + '@gmail.com' + '&password=' + '<?php echo METABASE_DEV_PASS; ?>'},height: 600,width: 600});
+                        //console.debug(cmp);
+                        this.add(pnl);
+                        pnl.add(cmp);
+                        pnl.doLayout(true, true);
+                        this.doLayout(true, true);
+                        cmp.el.dom.src = '<?php echo METABASE_URL . '/admin/databases'; ?>' + '?username=' + result.email + '&password=' + '<?php echo METABASE_DEV_PASS; ?>'};
 
-                       this.add(DsPanel);
-                       this.doLayout();
-                       this.getEl().unmask();
+                        cmp.el.dom.onload = function() {
+                            //console.log('iframe onload ...')
+                            pnl.getEl().unmask();
+                        };
+
+                        pnl.getEl().mask('<?php echo $osC_Language->get('loading'); ?>');
                     }
                     else
                     {
