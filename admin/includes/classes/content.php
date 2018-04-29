@@ -900,10 +900,10 @@
             while ($Qadmin->next()) {
                 $total = $total + 1;
                 $roles[] = array(
-                    'roles_id' => $Qadmin->value['user_name'],
-                    'user_name' => $Qadmin->value['user_name'],
+                    'roles_id' => $Qadmin->value('user_name'),
+                    'user_name' => $Qadmin->value('user_name'),
                     'email_address' => $Qadmin->value('email_address'),
-                    'roles_name' => $Qadmin->value['user_name'],
+                    'roles_name' => $Qadmin->value('user_name'),
                     'roles_description' => 'Utilisateur local',
                     'icon' => osc_icon('folder_account.png')
                 );
@@ -1089,10 +1089,10 @@
             while ($Qadmin->next()) {
                 $total = $total + 1;
                 $roles[] = array(
-                    'roles_id' => $Qadmin->value['user_name'],
-                    'user_name' => $Qadmin->value['user_name'],
+                    'roles_id' => $Qadmin->value('user_name'),
+                    'user_name' => $Qadmin->value('user_name'),
                     'email_address' => $Qadmin->value('email_address'),
-                    'roles_name' => $Qadmin->value['user_name'],
+                    'roles_name' => $Qadmin->value('user_name'),
                     'roles_description' => 'Utilisateur local',
                     'icon' => osc_icon('folder_account.png')
                 );
