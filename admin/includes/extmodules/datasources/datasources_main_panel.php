@@ -14,7 +14,7 @@ Toc.datasources.mainPanel = function(config) {
 Ext.extend(Toc.datasources.mainPanel, Ext.Panel, {
    start : function(windows){
      console.log('activate datasources ...');
-     this.getEl().mask('Metadata ...');
+windows.getEl().mask('Metadata ...');
             Ext.Ajax.request({
                 method: 'GET',
                 url: '<?php echo METABASE_URL; ?>' + '/api/user/current',
@@ -23,7 +23,7 @@ Ext.extend(Toc.datasources.mainPanel, Ext.Panel, {
                     'Content-Type' : 'application/json'
                 },
                 callback: function (options, success, response) {
-                    this.getEl().unmask();
+windows.getEl().unmask();
                     var result = Ext.decode(response.responseText);
 
                     if(result.id > 0)
@@ -32,18 +32,18 @@ Ext.extend(Toc.datasources.mainPanel, Ext.Panel, {
                         //var pnl = new Ext.Panel({id : 'pnl_iframe_datasources'});
 
                         //console.debug(cmp);
-                        this.add(cmp);
+windows.add(cmp);
                         //pnl.add(cmp);
                         //pnl.doLayout(true, true);
-                        this.doLayout(true, true);
+windows.doLayout(true, true);
                         cmp.el.dom.src = '<?php echo METABASE_URL . '/admin/databases'; ?>' + '?username=' + result.email + '&password=' + '<?php echo METABASE_DEV_PASS; ?>';
 
                         cmp.el.dom.onload = function() {
-                            //console.log('iframe onload ...')
-this.getEl().unmask();
+                            console.log('iframe onload ...')
+windows.getEl().unmask();
                         };
 
-this.getEl().mask('<?php echo $osC_Language->get('loading'); ?>');
+windows.getEl().mask('<?php echo $osC_Language->get('loading'); ?>');
                     }
                     else
                     {
