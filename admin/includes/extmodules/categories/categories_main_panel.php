@@ -6,7 +6,7 @@ Toc.categories.mainPanel = function(config) {
   config.layout = 'border';
   config.border = false;
 
-  config.pnlCategoriesTree = new Toc.CategoriesTreePanel({owner: config.owner, parent: this,cp:1});
+  config.pnlCategoriesTree = new Toc.CategoriesTreePanel({owner: config.owner, parent: this,cp:1,content_type : 'pages'});
   config.grdCategories = new Toc.categories.CategoriesGrid({owner: config.owner, mainPanel: this});
   
   config.pnlCategoriesTree.on('selectchange', this.onPnlCategoriesTreeNodeSelectChange, this);
