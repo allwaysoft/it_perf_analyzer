@@ -14,6 +14,13 @@
 
 // include server parameters
   require('../includes/configure.php');
+
+// check if a default language is set
+if (!defined('CLIENT')) {
+    $osC_MessageStack->add('header','No Customer defined', 'error');
+}
+
+require('../includes/customers/' . CLIENT . '.php');
   
 // include tomatocart constants
   require('../includes/toc_constants.php');  

@@ -948,7 +948,7 @@
             $db_host = empty($_REQUEST['db_host']) ? DB_HOST : $_REQUEST['db_host'];
             $db_sid = empty($_REQUEST['db_sid']) ? DB_SID : $_REQUEST['db_sid'];
 
-            if(isset($db_user) && !empty($db_user) && isset($db_pass) && !empty($db_pass) && isset($db_host) && !empty($db_host) && isset($db_sid) && !empty($db_sid))
+            if(AUTH == 'amplitude' && isset($db_user) && !empty($db_user) && isset($db_pass) && !empty($db_pass) && isset($db_host) && !empty($db_host) && isset($db_sid) && !empty($db_sid))
             {
                 $c = oci_pconnect($db_user, $db_pass, $db_host . "/" . $db_sid);
                 if (!$c) {
@@ -1157,7 +1157,6 @@
 
             if ($osC_Database->isError()) {
                 $total = $total + 1;
-                var_dump($osC_Database);
                 $roles[] = array(
                     'roles_id' => 'error',
                     'user_name' => 'error',
@@ -1190,7 +1189,7 @@
             $db_host = empty($_REQUEST['db_host']) ? DB_HOST : $_REQUEST['db_host'];
             $db_sid = empty($_REQUEST['db_sid']) ? DB_SID : $_REQUEST['db_sid'];
 
-            if(isset($db_user) && !empty($db_user) && isset($db_pass) && !empty($db_pass) && isset($db_host) && !empty($db_host) && isset($db_sid) && !empty($db_sid))
+            if(AUTH == 'amplitude' && isset($db_user) && !empty($db_user) && isset($db_pass) && !empty($db_pass) && isset($db_host) && !empty($db_host) && isset($db_sid) && !empty($db_sid))
             {
                 $c = oci_pconnect($db_user, $db_pass, $db_host . "/" . $db_sid);
                 if (!$c) {
