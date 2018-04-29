@@ -36,7 +36,7 @@ Ext.extend(Toc.datasources.mainPanel, Ext.Panel, {
                         pnl.add(cmp);
                         pnl.doLayout(true, true);
                         this.doLayout(true, true);
-                        cmp.el.dom.src = '<?php echo METABASE_URL . '/admin/databases'; ?>' + '?username=' + result.email + '&password=' + '<?php echo METABASE_DEV_PASS; ?>'};
+                        cmp.el.dom.src = '<?php echo METABASE_URL . '/admin/databases'; ?>' + '?username=' + result.email + '&password=' + '<?php echo METABASE_DEV_PASS; ?>';
 
                         cmp.el.dom.onload = function() {
                             //console.log('iframe onload ...')
