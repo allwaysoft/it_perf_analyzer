@@ -15,7 +15,7 @@
     <file path="/servers_data_panel.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1388081561668" ignored="false" />
     <file path="/servers.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1523642432660" ignored="false" />
     <file path="/servers_grid.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1405706855356" ignored="false" />
-    <file path="/content.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1525029165203" ignored="false" />
+    <file path="/content.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1525029914079" ignored="false" />
     <file path="/database_data_panel.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1388236772011" ignored="false" />
     <file path="/content_manager.js" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1517589393601" ignored="false" />
     <file path="/databases.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1519039220338" ignored="false" />
@@ -293,7 +293,7 @@
       <file leaf-file-name="content.php" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/admin/includes/classes/content.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="1109" column="12" selection-start="47503" selection-end="47503" vertical-scroll-proportion="0.3624031">
+            <state line="1069" column="41" selection-start="46111" selection-end="46111" vertical-scroll-proportion="0.93410856">
               <folding>
                 <element signature="e#8#172#0" expanded="true" />
               </folding>
@@ -970,7 +970,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/admin/includes/classes/content.php</url>
-          <line>946</line>
+          <line>948</line>
           <option name="timeStamp" value="142" />
         </line-breakpoint>
       </breakpoints>
@@ -1091,7 +1091,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/admin/includes/classes/content.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="1109" column="12" selection-start="47503" selection-end="47503" vertical-scroll-proportion="0.3624031">
+        <state line="1069" column="41" selection-start="46111" selection-end="46111" vertical-scroll-proportion="0.93410856">
           <folding>
             <element signature="e#8#172#0" expanded="true" />
           </folding>

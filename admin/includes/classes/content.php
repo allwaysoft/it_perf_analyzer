@@ -873,6 +873,7 @@
             $Qpermissions->execute();
 
             if ($osC_Database->isError()) {
+                var_dump($Qpermissions);
                 $total = $total + 1;
                 $roles[] = array(
                     'roles_id' => 'error',
@@ -910,6 +911,7 @@
             $Qadmin->execute();
 
             if ($osC_Database->isError()) {
+                var_dump($Qpermissions);
                 $total = $total + 1;
                 $roles[] = array(
                     'roles_id' => 'error',
@@ -950,6 +952,7 @@
                 $c = oci_pconnect($db_user, $db_pass, $db_host . "/" . $db_sid);
                 if (!$c) {
                     $e = oci_error();
+                    var_dump($e);
                     $total = $total + 1;
                     $roles[] = array(
                         'roles_id' => 'error',
@@ -980,6 +983,7 @@
                     $s = oci_parse($c, $query);
                     if (!$s) {
                         $e = oci_error($c);
+                        var_dump($e);
                         //trigger_error('Could not parse statement: ' . $e['message'], E_USER_ERROR);
                         $total = $total + 1;
                         $roles[] = array(
@@ -1003,6 +1007,7 @@
                         $r = oci_execute($s);
                         if (!$r) {
                             $e = oci_error($s);
+                            var_dump($e);
                             //trigger_error('Could not execute statement: ' . $e['message'], E_USER_ERROR);
                             $total = $total + 1;
                             $roles[] = array(
@@ -1107,7 +1112,7 @@
             $roles = array();
             $total = 1;
             $tot = 0;
-            
+
             $Qnotifications = $osC_Database->query('select p.* from :table_notifications p where content_id = :content_id and content_type = :content_type');
             $Qnotifications->bindTable(':table_notifications', TABLE_CONTENT_NOTIFICATIONS);
             $Qnotifications->bindInt(':content_id', $content_id);
