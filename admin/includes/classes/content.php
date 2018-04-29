@@ -869,6 +869,7 @@
             $Qpermissions->execute();
 
             $records = array();
+
             while ($Qpermissions->next()) {
                 $records[] = array(
                     'can_read' => $Qpermissions->value('can_read'),
@@ -879,8 +880,34 @@
             }
             $Qpermissions->freeResult();
 
-            $recs = array();
             $roles = array();
+
+            $roles[] = array(
+                'roles_id' => '-1',
+                'user_name' => 'everyone',
+                'email_address' => ALL_EMAIL,
+                'roles_name' => 'Tout le monde',
+                'roles_description' => 'Tout le monde',
+                'icon' => osc_icon('folder_account.png')
+            );
+
+            $Qadmin = $osC_Database->query('select id, user_name, email_address from :table_administrators where id != 1 order by user_name');
+            $Qadmin->bindTable(':table_administrators', TABLE_ADMINISTRATORS);
+            $Qadmin->execute();
+
+            while ($Qadmin->next()) {
+                $roles[] = array(
+                    'roles_id' => $Qadmin->value['user_name'],
+                    'user_name' => $Qadmin->value['user_name'],
+                    'email_address' => $Qadmin->value('email_address'),
+                    'roles_name' => $Qadmin->value['user_name'],
+                    'roles_description' => 'Utilisateur local',
+                    'icon' => osc_icon('folder_account.png')
+                );
+            }
+            $Qadmin->freeResult();
+
+            $recs = array();
 
             $start = empty($_REQUEST['start']) ? 0 : $_REQUEST['start'];
             $limit = empty($_REQUEST['limit']) ? MAX_DISPLAY_SEARCH_RESULTS : $_REQUEST['limit'];
@@ -934,14 +961,7 @@
 
             if($start == 0)
             {
-                $roles[] = array(
-                    'roles_id' => '-1',
-                    'user_name' => 'everyone',
-                    'email_address' => '',
-                    'roles_name' => 'Tout le monde',
-                    'roles_description' => 'Tout le monde',
-                    'icon' => osc_icon('folder_account.png')
-                );
+
             }
 
             while (($row = oci_fetch_array($s, OCI_ASSOC))) {
