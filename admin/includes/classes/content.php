@@ -862,11 +862,27 @@
         public static function getPerms($content_id, $content_type, $roles_id = null)
         {
             global $osC_Database;
+            $roles = array();
+            $total = 1;
+            $tot = 0;
+
             $Qpermissions = $osC_Database->query('select p.* from :table_permissions p where content_id = :content_id and content_type = :content_type');
             $Qpermissions->bindTable(':table_permissions', TABLE_CONTENT_PERMISSIONS);
             $Qpermissions->bindInt(':content_id', $content_id);
             $Qpermissions->bindValue(':content_type', $content_type);
             $Qpermissions->execute();
+
+            if ($osC_Database->isError()) {
+                $total = $total + 1;
+                $roles[] = array(
+                    'roles_id' => 'error',
+                    'user_name' => 'error',
+                    'email_address' => '',
+                    'roles_name' => 'error',
+                    'roles_description' => $osC_Database->getError(),
+                    'icon' => osc_icon('xxx.error')
+                );
+            }
 
             $records = array();
 
@@ -880,10 +896,6 @@
             }
             $Qpermissions->freeResult();
 
-            $roles = array();
-            $total = 1;
-            $tot = 0;
-
             $roles[] = array(
                 'roles_id' => '-1',
                 'user_name' => 'everyone',
@@ -896,6 +908,18 @@
             $Qadmin = $osC_Database->query('select id, user_name, email_address from :table_administrators where id != 1 order by user_name');
             $Qadmin->bindTable(':table_administrators', TABLE_ADMINISTRATORS);
             $Qadmin->execute();
+
+            if ($osC_Database->isError()) {
+                $total = $total + 1;
+                $roles[] = array(
+                    'roles_id' => 'error',
+                    'user_name' => 'error',
+                    'email_address' => '',
+                    'roles_name' => 'error',
+                    'roles_description' => $osC_Database->getError(),
+                    'icon' => osc_icon('xxx.error')
+                );
+            }
 
             while ($Qadmin->next()) {
                 $total = $total + 1;
@@ -926,6 +950,15 @@
                 $c = oci_pconnect($db_user, $db_pass, $db_host . "/" . $db_sid);
                 if (!$c) {
                     $e = oci_error();
+                    $total = $total + 1;
+                    $roles[] = array(
+                        'roles_id' => 'error',
+                        'user_name' => 'error',
+                        'email_address' => '',
+                        'roles_name' => 'error',
+                        'roles_description' => $e['message'],
+                        'icon' => osc_icon('xxx.error')
+                    );
                     //trigger_error('Could not connect to database: ' . $e['message'], E_USER_ERROR);
                 }
                 else
@@ -948,6 +981,15 @@
                     if (!$s) {
                         $e = oci_error($c);
                         //trigger_error('Could not parse statement: ' . $e['message'], E_USER_ERROR);
+                        $total = $total + 1;
+                        $roles[] = array(
+                            'roles_id' => 'error',
+                            'user_name' => 'error',
+                            'email_address' => '',
+                            'roles_name' => 'error',
+                            'roles_description' => $e['message'],
+                            'icon' => osc_icon('xxx.error')
+                        );
                     }
                     else
                     {
@@ -962,6 +1004,15 @@
                         if (!$r) {
                             $e = oci_error($s);
                             //trigger_error('Could not execute statement: ' . $e['message'], E_USER_ERROR);
+                            $total = $total + 1;
+                            $roles[] = array(
+                                'roles_id' => 'error',
+                                'user_name' => 'error',
+                                'email_address' => '',
+                                'roles_name' => 'error',
+                                'roles_description' => $e['message'],
+                                'icon' => osc_icon('xxx.error')
+                            );
                         }
                         else
                         {
@@ -1051,11 +1102,29 @@
         public static function getNotifications($content_id, $content_type, $roles_id = null)
         {
             global $osC_Database;
+
+            $recs = array();
+            $roles = array();
+            $total = 1;
+            $tot = 0;
+            
             $Qnotifications = $osC_Database->query('select p.* from :table_notifications p where content_id = :content_id and content_type = :content_type');
             $Qnotifications->bindTable(':table_notifications', TABLE_CONTENT_NOTIFICATIONS);
             $Qnotifications->bindInt(':content_id', $content_id);
             $Qnotifications->bindValue(':content_type', $content_type);
             $Qnotifications->execute();
+
+            if ($osC_Database->isError()) {
+                $total = $total + 1;
+                $roles[] = array(
+                    'roles_id' => 'error',
+                    'user_name' => 'error',
+                    'email_address' => '',
+                    'roles_name' => 'error',
+                    'roles_description' => $osC_Database->getError(),
+                    'icon' => osc_icon('xxx.error')
+                );
+            }
 
             $records = array();
             while ($Qnotifications->next()) {
@@ -1067,11 +1136,6 @@
                 );
             }
             $Qnotifications->freeResult();
-
-            $recs = array();
-            $roles = array();
-            $total = 1;
-            $tot = 0;
 
             $roles[] = array(
                 'roles_id' => '-1',
@@ -1085,6 +1149,18 @@
             $Qadmin = $osC_Database->query('select id, user_name, email_address from :table_administrators where id != 1 order by user_name');
             $Qadmin->bindTable(':table_administrators', TABLE_ADMINISTRATORS);
             $Qadmin->execute();
+
+            if ($osC_Database->isError()) {
+                $total = $total + 1;
+                $roles[] = array(
+                    'roles_id' => 'error',
+                    'user_name' => 'error',
+                    'email_address' => '',
+                    'roles_name' => 'error',
+                    'roles_description' => $osC_Database->getError(),
+                    'icon' => osc_icon('xxx.error')
+                );
+            }
 
             while ($Qadmin->next()) {
                 $total = $total + 1;
@@ -1114,6 +1190,15 @@
                 if (!$c) {
                     $e = oci_error();
                     //trigger_error('Could not connect to database: ' . $e['message'], E_USER_ERROR);
+                    $total = $total + 1;
+                    $roles[] = array(
+                        'roles_id' => 'error',
+                        'user_name' => 'error',
+                        'email_address' => '',
+                        'roles_name' => 'error',
+                        'roles_description' => $e['message'],
+                        'icon' => osc_icon('xxx.error')
+                    );
                 }
                 else
                 {
@@ -1133,6 +1218,15 @@
                     if (!$s) {
                         $e = oci_error($c);
                         //trigger_error('Could not parse statement: ' . $e['message'], E_USER_ERROR);
+                        $total = $total + 1;
+                        $roles[] = array(
+                            'roles_id' => 'error',
+                            'user_name' => 'error',
+                            'email_address' => '',
+                            'roles_name' => 'error',
+                            'roles_description' => $e['message'],
+                            'icon' => osc_icon('xxx.error')
+                        );
                     }
                     else
                     {
@@ -1147,6 +1241,15 @@
                         if (!$r) {
                             $e = oci_error($s);
                             //trigger_error('Could not execute statement: ' . $e['message'], E_USER_ERROR);
+                            $total = $total + 1;
+                            $roles[] = array(
+                                'roles_id' => 'error',
+                                'user_name' => 'error',
+                                'email_address' => '',
+                                'roles_name' => 'error',
+                                'roles_description' => $e['message'],
+                                'icon' => osc_icon('xxx.error')
+                            );
                         }
                         else
                         {
@@ -1268,6 +1371,10 @@
             $Qpermissions->bindInt(':content_id', $content_id);
             $Qpermissions->bindValue(':content_type', $content_type);
             $Qpermissions->execute();
+
+            if ($osC_Database->isError()) {
+                $error = true;
+            }
 
             $records = array();
             while ($Qpermissions->next()) {
