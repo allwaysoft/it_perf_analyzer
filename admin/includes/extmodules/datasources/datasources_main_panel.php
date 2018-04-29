@@ -29,21 +29,21 @@ Ext.extend(Toc.datasources.mainPanel, Ext.Panel, {
                     if(result.id > 0)
                     {
 						var cmp = new Ext.Component({autoEl:{tag: 'iframe',style: 'height: 100%; width: 100%; border: none'},height: 600,id: 'datasources_iframe',width: 600});
-                        var pnl = new Ext.Panel({id : 'pnl_iframe_datasources'});
+                        //var pnl = new Ext.Panel({id : 'pnl_iframe_datasources'});
 
                         //console.debug(cmp);
-                        this.add(pnl);
-                        pnl.add(cmp);
-                        pnl.doLayout(true, true);
+                        this.add(cmp);
+                        //pnl.add(cmp);
+                        //pnl.doLayout(true, true);
                         this.doLayout(true, true);
                         cmp.el.dom.src = '<?php echo METABASE_URL . '/admin/databases'; ?>' + '?username=' + result.email + '&password=' + '<?php echo METABASE_DEV_PASS; ?>';
 
                         cmp.el.dom.onload = function() {
                             //console.log('iframe onload ...')
-                            pnl.getEl().unmask();
+this.getEl().unmask();
                         };
 
-                        pnl.getEl().mask('<?php echo $osC_Language->get('loading'); ?>');
+this.getEl().mask('<?php echo $osC_Language->get('loading'); ?>');
                     }
                     else
                     {

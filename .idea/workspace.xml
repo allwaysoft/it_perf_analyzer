@@ -273,7 +273,7 @@
       <file leaf-file-name="datasources_main_panel.php" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/datasources/datasources_main_panel.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="38" column="173" selection-start="1769" selection-end="1769" vertical-scroll-proportion="0.5968992">
+            <state line="31" column="26" selection-start="1315" selection-end="1315" vertical-scroll-proportion="0.36627907">
               <folding />
             </state>
           </provider>
@@ -1115,7 +1115,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/datasources/datasources_main_panel.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="38" column="173" selection-start="1769" selection-end="1769" vertical-scroll-proportion="0.5968992">
+        <state line="31" column="26" selection-start="1315" selection-end="1315" vertical-scroll-proportion="0.36627907">
           <folding />
         </state>
       </provider>
