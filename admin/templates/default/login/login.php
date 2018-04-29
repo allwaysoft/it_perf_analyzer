@@ -33,7 +33,7 @@ $osC_Language->loadIniFile('login.php');
 </div>
 
 <div id="x-login-panel">
-    <img src="images/Logo_BSCA_BANK.png" style="width: 798px"/>
+    <img src="images/Logo_BSCA_BANK.png"/>
     <img src="templates/default/desktop/images/default/s.gif" class="login-logo abs-position" />
 
     <img src="templates/default/desktop/images/default/s.gif" class="login-screenshot abs-position" />
