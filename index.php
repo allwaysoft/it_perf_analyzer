@@ -1,9 +1,14 @@
+<?php
+
+require('includes/application_top.php');
+
+?>
 
 <!DOCTYPE html>
 <html>
 
    <head>
-      <title>INNOVICS</title>
+      <title>BI SERVER</title>
    </head>
 	
    <body>                 

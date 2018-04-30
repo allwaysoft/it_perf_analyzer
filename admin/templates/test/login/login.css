@@ -1,0 +1,78 @@
+
+html, body {
+  font: normal 12px arial, tahoma, verdana, sans-serif;
+  font-size:11px;
+  color:#ffffff;
+  background:#ffffff none;
+}
+
+p {
+	margin:12px 0;
+}
+a {
+	color:#ffcc33;
+}
+.key {
+	text-decoration:underline;
+}
+
+.abs-position {
+	position:absolute;
+}
+#x-login-panel {
+	background:white;
+	border:1px solid #000108;
+	height:510px;
+	width:798px;
+}
+
+#x-login-form {
+  left : 215px;
+  top : 215px;
+}
+
+.login-logo {
+	//background:transparent url(images/logo.png) no-repeat;
+	filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='system/login/images/logo.png', sizingMethod='scale');
+	height:130px;
+	left:0px;
+	top:0px;
+	width:420px;
+}
+
+.login-features {
+	left:52px;
+	top:145px;
+	width:300px;
+}
+
+.login-screenshot {
+	//background:transparent url(images/screenshot.png) no-repeat;
+	filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='system/login/images/screenshot.png', sizingMethod='scale');
+	height:190px;
+	left:37px;
+	top:285px;
+	width:329px;
+}
+
+.login-supported {
+	left:623px;
+	top:35px;
+}
+
+.x-combo-list-item{
+	color: #000000
+}
+
+.x-form-item {
+  font: normal 12px arial, tahoma, verdana, sans-serif;
+}
+
+#forget-password {
+	position: relative;
+	cursor: pointer;
+	top: 90px;
+	left: 108px;
+  color: #FFFFFF;
+  text-decoration: none;
+}
