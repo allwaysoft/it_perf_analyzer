@@ -184,9 +184,9 @@
     <file path="/explorer_main_panel.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1502302306046" ignored="false" />
     <file path="/database_explorer.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1502291586045" ignored="false" />
     <file path="/server_explorer.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1502353669765" ignored="false" />
-    <file path="/fr_FR.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1524222266496" ignored="false" />
+    <file path="/fr_FR.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1525077139356" ignored="false" />
     <file path="/de_DE.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1502552345408" ignored="false" />
-    <file path="/en_US.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1524222279962" ignored="false" />
+    <file path="/en_US.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1525077125284" ignored="false" />
     <file path="$PROJECT_DIR$/../dev/admin/templates/default/extensions/content/oracle.js" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1502700235618" ignored="false" />
     <file path="/linux.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1524036009760" ignored="false" />
     <file path="/cerebro_main_panel.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1505990070167" ignored="false" />
@@ -213,7 +213,7 @@
     <file path="/queries_main_panel.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1525074689260" ignored="false" />
     <file path="/queries.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1518875968588" ignored="false" />
     <file path="/dashboards_editor.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1519051767955" ignored="false" />
-    <file path="/dashboards_editor_main_panel.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1520093335324" ignored="false" />
+    <file path="/dashboards_editor_main_panel.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1525077380613" ignored="false" />
     <file path="/administrators_dialog.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1523643426571" ignored="false" />
     <file path="/language.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1524947134780" ignored="false" />
     <file path="/dashboards.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1523639905870" ignored="false" />
@@ -247,26 +247,6 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="content.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/admin/includes/classes/content.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="1322" column="60" selection-start="57981" selection-end="57981" vertical-scroll-proportion="-2.1923077">
-              <folding>
-                <element signature="e#8#172#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="index.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/admin/index.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="categories_main_panel.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/categories/categories_main_panel.php">
           <provider selected="true" editor-type-id="text-editor">
@@ -279,16 +259,52 @@
       <file leaf-file-name="datasources_main_panel.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/datasources/datasources_main_panel.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="59" column="4" selection-start="494" selection-end="2349" vertical-scroll-proportion="-17.884615">
+            <state line="13" column="12" selection-start="452" selection-end="452" vertical-scroll-proportion="-0.65384614">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="queries_main_panel.php" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="queries_main_panel.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/queries/queries_main_panel.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="126" column="3" selection-start="4043" selection-end="4043" vertical-scroll-proportion="4.1511626">
+            <state line="126" column="5" selection-start="4104" selection-end="4104" vertical-scroll-proportion="-17.884615">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="bsca.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/includes/customers/bsca.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="configure.php" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/includes/configure.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="5" column="2" selection-start="153" selection-end="153" vertical-scroll-proportion="0.16068053">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="en_US.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/admin/includes/languages/en_US.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="1" column="0" selection-start="35" selection-end="75" vertical-scroll-proportion="-0.65384614">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="fr_FR.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/admin/includes/languages/fr_FR.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="2" column="42" selection-start="122" selection-end="122" vertical-scroll-proportion="-1.3076923">
               <folding />
             </state>
           </provider>
@@ -306,16 +322,7 @@
       <file leaf-file-name="dashboards_editor_main_panel.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/dashboards_editor/dashboards_editor_main_panel.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="42" column="13" selection-start="1244" selection-end="1311" vertical-scroll-proportion="-11.615385">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="bi_grid.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/bi/bi_grid.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="179" column="4" selection-start="4603" selection-end="5178" vertical-scroll-proportion="-16.461538">
+            <state line="71" column="0" selection-start="2323" selection-end="2323" vertical-scroll-proportion="-10.692307">
               <folding />
             </state>
           </provider>
@@ -330,18 +337,6 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="categories_grid.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/categories/categories_grid.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="170" column="52" selection-start="5098" selection-end="5098" vertical-scroll-proportion="-9.384615">
-              <folding>
-                <element signature="n#style#0;n#img#1;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#img#2;n#!!top" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
     </leaf>
   </component>
   <component name="FindManager">
@@ -352,10 +347,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/admin/templates/default/login/login.php" />
-        <option value="$PROJECT_DIR$/admin/includes/extmodules/datasources/datasources_main_panel.php" />
-        <option value="$PROJECT_DIR$/admin/includes/jsons/administrators.php" />
-        <option value="$PROJECT_DIR$/admin/includes/jsons/content.php" />
         <option value="$PROJECT_DIR$/admin/includes/extmodules/categories/xxx.js" />
         <option value="$PROJECT_DIR$/includes/classes/category_tree.php" />
         <option value="$PROJECT_DIR$/includes/bsca.php" />
@@ -366,8 +357,12 @@
         <option value="$PROJECT_DIR$/admin/includes/classes/content.php" />
         <option value="$PROJECT_DIR$/admin/includes/extmodules/categories/categories_grid.php" />
         <option value="$PROJECT_DIR$/admin/includes/extmodules/categories/categories_main_panel.php" />
-        <option value="$PROJECT_DIR$/admin/includes/extmodules/queries/queries_main_panel.php" />
         <option value="$PROJECT_DIR$/admin/includes/extmodules/queries/xxx.js" />
+        <option value="$PROJECT_DIR$/admin/includes/languages/en_US.php" />
+        <option value="$PROJECT_DIR$/admin/includes/languages/fr_FR.php" />
+        <option value="$PROJECT_DIR$/admin/includes/extmodules/dashboards_editor/dashboards_editor_main_panel.php" />
+        <option value="$PROJECT_DIR$/admin/includes/extmodules/datasources/datasources_main_panel.php" />
+        <option value="$PROJECT_DIR$/admin/includes/extmodules/queries/queries_main_panel.php" />
       </list>
     </option>
   </component>
@@ -444,178 +439,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="includes" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dev" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="it_perf_analyzer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="includes" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="classes" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dev" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="it_perf_analyzer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="admin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dev" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="it_perf_analyzer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="admin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="includes" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dev" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="it_perf_analyzer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="admin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="includes" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="jsons" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dev" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="it_perf_analyzer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="admin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="includes" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="extmodules" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dev" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="it_perf_analyzer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="admin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="includes" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="extmodules" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="queries" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dev" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="it_perf_analyzer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="admin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="includes" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="extmodules" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dashboards_editor" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dev" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="it_perf_analyzer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="admin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="includes" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="extmodules" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="bi" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -995,36 +818,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/admin/includes/application_top.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="26" column="52" selection-start="753" selection-end="753" vertical-scroll-proportion="-15.692307">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/includes/customers/test.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="39" column="35" selection-start="1634" selection-end="1634" vertical-scroll-proportion="-4.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/includes/classes/category_tree.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="576" column="17" selection-start="23093" selection-end="23093" vertical-scroll-proportion="-11.846154">
-          <folding>
-            <marker date="1525039301172" expanded="false" signature="-1:-1" placeholder="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/admin/includes/jsons/categories.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="377" column="62" selection-start="16128" selection-end="16128" vertical-scroll-proportion="-15.923077">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/admin/includes/classes/access.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="68" column="13" selection-start="2125" selection-end="2125" vertical-scroll-proportion="-7.1153846">
@@ -1086,20 +879,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/datasources/datasources_main_panel.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="59" column="4" selection-start="494" selection-end="2349" vertical-scroll-proportion="-17.884615">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/dashboards_editor/dashboards_editor_main_panel.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="42" column="13" selection-start="1244" selection-end="1311" vertical-scroll-proportion="-11.615385">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/queries/xxx.js">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
@@ -1107,9 +886,51 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/admin/includes/languages/en_US.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="1" column="0" selection-start="35" selection-end="75" vertical-scroll-proportion="-0.65384614">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/includes/languages/fr_FR.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="2" column="42" selection-start="122" selection-end="122" vertical-scroll-proportion="-1.3076923">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/dashboards_editor/dashboards_editor_main_panel.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="71" column="0" selection-start="2323" selection-end="2323" vertical-scroll-proportion="-10.692307">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/datasources/datasources_main_panel.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="13" column="12" selection-start="452" selection-end="452" vertical-scroll-proportion="-0.65384614">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/queries/queries_main_panel.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="126" column="3" selection-start="4043" selection-end="4043" vertical-scroll-proportion="4.1511626">
+        <state line="126" column="5" selection-start="4104" selection-end="4104" vertical-scroll-proportion="-17.884615">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/includes/customers/bsca.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/includes/configure.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="5" column="2" selection-start="153" selection-end="153" vertical-scroll-proportion="0.16068053">
           <folding />
         </state>
       </provider>

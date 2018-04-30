@@ -94,7 +94,8 @@ Ext.extend(Toc.queries.mainPanel, Ext.Panel, {
             if (that.items) {
                 that.removeAll(true);
             }
-            Ext.MessageBox.alert(TocLanguage.msgErrTitle,"Session expirée ...");
+
+            Ext.MessageBox.alert(TocLanguage.msgErrTitle,'<?php echo $osC_Language->get('exîred_session'); ?>');
         }
    },
     onRefresh : function(windows){
@@ -121,7 +122,7 @@ Ext.extend(Toc.queries.mainPanel, Ext.Panel, {
             if (that.items) {
                 that.removeAll(true);
             }
-            Ext.MessageBox.alert(TocLanguage.msgErrTitle,"Session expirée ...");
+            Ext.MessageBox.alert(TocLanguage.msgErrTitle,'<?php echo $osC_Language->get('exîred_session'); ?>');
         }
     }
 });

@@ -1,5 +1,6 @@
 administration_title = Plateforme Decisionnelle
 datasource = Sources de Données
+exîred_session = Votre Session est expirée
 query_editor = Gestionnaire de Requetes
 dashboards_editor = Gestionnaire de Tableaux de Bord
 dashboards = Tableaux de Bord

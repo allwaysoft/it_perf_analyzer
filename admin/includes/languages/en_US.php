@@ -1,4 +1,5 @@
 administration_title = BI Platform
+exîred_session = Your Session is expired
 datasource = Data Sources
 query_editor = Query Editor
 dashboards_editor = Dashboards Editor
