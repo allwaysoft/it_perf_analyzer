@@ -18,6 +18,8 @@ $osC_Language->loadIniFile('login.php');
 </head>
 
 <body scroll="no">
+<img src="images/Logo_BSCA_BANK.png"/>
+<img src="images/Immeuble_BSCA_7.jpg"/>
 <div id="x-loading-mask"
      style="width:100%; height:100%; background:#000000; position:absolute; z-index:20000; left:0; top:0;">&#160;</div>
 <div id="x-loading-panel"
@@ -33,7 +35,6 @@ $osC_Language->loadIniFile('login.php');
 </div>
 
 <div id="x-login-panel">
-    <img src="images/Logo_BSCA_BANK.png"/>
     <img src="templates/default/desktop/images/default/s.gif" class="login-logo abs-position" />
 
     <img src="templates/default/desktop/images/default/s.gif" class="login-screenshot abs-position" />
