@@ -278,7 +278,7 @@
       <file leaf-file-name="login.php" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/admin/templates/default/login/login.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="20" column="38" selection-start="946" selection-end="946" vertical-scroll-proportion="0.39534885">
+            <state line="36" column="43" selection-start="1943" selection-end="1943" vertical-scroll-proportion="0.60465115">
               <folding>
                 <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
               </folding>
@@ -1031,7 +1031,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/admin/templates/default/login/login.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="20" column="38" selection-start="946" selection-end="946" vertical-scroll-proportion="0.39534885">
+        <state line="36" column="43" selection-start="1943" selection-end="1943" vertical-scroll-proportion="0.60465115">
           <folding>
             <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
           </folding>
