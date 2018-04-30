@@ -3,10 +3,6 @@ Toc.queries.mainPanel = function(config) {
     config = config || {};
     config.border = false;
 
-    //config.QueriesPanel = new Ext.Component({autoEl:{tag: 'iframe',style: 'height: 100%; width: 100%; border: none',src: '<?php echo REDASH_URL . '/queries/my'; ?>'},height: 600,width: 600});
-
-    //config.items = [config.QueriesPanel];
-
     config.tbar = [
         {
             text: 'Requetes',
@@ -28,33 +24,38 @@ Toc.queries.mainPanel = function(config) {
 
 Ext.extend(Toc.queries.mainPanel, Ext.Panel, {
    start : function(windows){
+    windows.getEl().mask('Metadata ...');
     var that = this;
-    this.getEl().mask('Chargement Session Metadata  ...');
     Ext.Ajax.request({
-    method : 'GET',
-    url: Toc.CONF.CONN_URL,
-    params: {
-        module : 'databases',
-        action: 'get_currentuser'
+    method: 'GET',
+    url: '<?php echo METABASE_URL; ?>' + '/api/user/current',
+    headers: {
+        Accept: 'application/json',
+        'Content-Type' : 'application/json'
     },
     callback: function (options, success, response) {
-        this.getEl().unmask();
+        windows.getEl().unmask();
         var result = Ext.decode(response.responseText);
 
-        if(result.success)
+        if(result.id > 0)
         {
-            that.username = result.username;
-            this.getEl().mask('Chargement liste de requetes ...');
+            that.username = result.email;
             if (this.items) {
               this.removeAll(true);
             }
 
-           //var DsPanel = new Ext.Component({autoEl:{tag: 'iframe',style: 'height: 100%; width: 100%; border: none',src: '<?php echo METABASE_URL . '/auth/login?redirect=/questions'; ?>' + '&username=' + that.username + '@gmail.com' + '&password=' + '<?php echo METABASE_DEV_PASS; ?>'},height: 600,width: 600});
-           var DsPanel = new Ext.Component({autoEl:{tag: 'iframe',style: 'height: 100%; width: 100%; border: none',src: '<?php echo METABASE_URL . '/questions'; ?>' + '?username=' + that.username + '@gmail.com' + '&password=' + '<?php echo METABASE_DEV_PASS; ?>'},height: 600,width: 600});
+            var cmp = new Ext.Component({autoEl:{tag: 'iframe',style: 'height: 100%; width: 100%; border: none'},height: 600,id: 'queries_iframe',width: 600});
+            this.add(cmp);
+            this.doLayout(true, true);
+            windows.doLayout(true, true);
+            cmp.el.dom.src = '<?php echo METABASE_URL . '/questions'; ?>' + '?username=' + result.email + '&password=' + '<?php echo METABASE_DEV_PASS; ?>';
 
-           this.add(DsPanel);
-           this.doLayout();
-           this.getEl().unmask();
+            cmp.el.dom.onload = function() {
+                //console.log('iframe onload ...')
+                windows.getEl().unmask();
+            };
+
+            windows.getEl().mask('<?php echo $osC_Language->get('loading'); ?>');
         }
         else
         {
@@ -70,48 +71,57 @@ Ext.extend(Toc.queries.mainPanel, Ext.Panel, {
     });
    },
    onAdd : function(windows){
-            if(this.username)
-            {
-              this.getEl().mask('Chargement du Gestionnaire de requetes ...');
-              if (this.items) {
-              this.removeAll(true);
+       if(this.username)
+        {
+            if (this.items) {
+                this.removeAll(true);
             }
 
-              //var DsPanel = new Ext.Component({autoEl:{tag: 'iframe',style: 'height: 100%; width: 100%; border: none',src: '<?php echo METABASE_URL . '/question/new'; ?>'},height: 600,width: 600});
-              var DsPanel = new Ext.Component({autoEl:{tag: 'iframe',style: 'height: 100%; width: 100%; border: none',src: '<?php echo METABASE_URL . '/question/new'; ?>' + '?username=' + this.username + '@gmail.com' + '&password=' + '<?php echo METABASE_DEV_PASS; ?>'},height: 600,width: 600});
+            var cmp = new Ext.Component({autoEl:{tag: 'iframe',style: 'height: 100%; width: 100%; border: none'},height: 600,id: 'queries_iframe',width: 600});
+            this.add(cmp);
+            this.doLayout(true, true);
+            cmp.el.dom.src = '<?php echo METABASE_URL . '/questions/new'; ?>' + '?username=' + this.username + '&password=' + '<?php echo METABASE_DEV_PASS; ?>';
 
-              this.add(DsPanel);
-              this.doLayout();
-              this.getEl().unmask();
+            cmp.el.dom.onload = function() {
+                //console.log('iframe onload ...')
+                this.getEl().unmask();
+            };
+
+            this.getEl().mask('<?php echo $osC_Language->get('loading'); ?>');
+        }
+        else
+        {
+            if (that.items) {
+                that.removeAll(true);
             }
-            else
-            {
-               if (that.items) {
-                 that.removeAll(true);
-               }
-               Ext.MessageBox.alert(TocLanguage.msgErrTitle,"Session expirée ...");
-            }
+            Ext.MessageBox.alert(TocLanguage.msgErrTitle,"Session expirée ...");
+        }
    },
-onRefresh : function(windows){
-if(this.username)
-{
-this.getEl().mask('Chargement du Gestionnaire de requetes ...');
-if (this.items) {
-this.removeAll(true);
-}
+    onRefresh : function(windows){
+        if(this.username)
+        {
+            if (this.items) {
+                this.removeAll(true);
+            }
 
-var DsPanel = new Ext.Component({autoEl:{tag: 'iframe',style: 'height: 100%; width: 100%; border: none',src: '<?php echo METABASE_URL . '/questions'; ?>' + '?username=' + this.username + '@gmail.com' + '&password=' + '<?php echo METABASE_DEV_PASS; ?>'},height: 600,width: 600});
+            var cmp = new Ext.Component({autoEl:{tag: 'iframe',style: 'height: 100%; width: 100%; border: none'},height: 600,id: 'queries_iframe',width: 600});
+            this.add(cmp);
+            this.doLayout(true, true);
+            cmp.el.dom.src = '<?php echo METABASE_URL . '/questions'; ?>' + '?username=' + this.username + '&password=' + '<?php echo METABASE_DEV_PASS; ?>';
 
-this.add(DsPanel);
-this.doLayout();
-this.getEl().unmask();
-}
-else
-{
-if (that.items) {
-that.removeAll(true);
-}
-Ext.MessageBox.alert(TocLanguage.msgErrTitle,"Session expirée ...");
-}
-}
+            cmp.el.dom.onload = function() {
+                //console.log('iframe onload ...')
+                this.getEl().unmask();
+            };
+
+            this.getEl().mask('<?php echo $osC_Language->get('loading'); ?>');
+        }
+        else
+        {
+            if (that.items) {
+                that.removeAll(true);
+            }
+            Ext.MessageBox.alert(TocLanguage.msgErrTitle,"Session expirée ...");
+        }
+    }
 });
