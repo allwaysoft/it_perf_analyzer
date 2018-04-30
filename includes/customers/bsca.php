@@ -53,7 +53,7 @@ define('ADMIN_EMAIL', 'guyfomi@gmail.com');
 define('NOTIFICATION_EMAIL', 'guyfomi@gmail.com');
 
 //METABASE
-define('METABASE_URL', 'http://localhost/bi');
+define('METABASE_URL', HTTP_SERVER . '/bi');
 define('METABASE_DEV_USER', 'makaki@gmail.com');
 define('METABASE_DEV_PASS', 'Guy2p@cc');
 define('METABASE_ADMIN_USER', 'admin@gmail.com');
