@@ -83,7 +83,7 @@ Ext.extend(Toc.queries.mainPanel, Ext.Panel, {
             cmp.el.dom.src = '<?php echo METABASE_URL . '/questions/new'; ?>' + '?username=' + this.username + '&password=' + '<?php echo METABASE_DEV_PASS; ?>';
 
             cmp.el.dom.onload = function() {
-                //console.log('iframe onload ...')
+                console.log('iframe onload ...')
                 this.getEl().unmask();
             };
 
@@ -111,7 +111,7 @@ Ext.extend(Toc.queries.mainPanel, Ext.Panel, {
             cmp.el.dom.src = '<?php echo METABASE_URL . '/questions'; ?>' + '?username=' + this.username + '&password=' + '<?php echo METABASE_DEV_PASS; ?>';
 
             cmp.el.dom.onload = function() {
-                //console.log('iframe onload ...')
+                console.log('iframe onload ...')
                 this.getEl().unmask();
             };
 
