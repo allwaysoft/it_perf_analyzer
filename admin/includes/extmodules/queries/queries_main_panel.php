@@ -71,6 +71,7 @@ Ext.extend(Toc.queries.mainPanel, Ext.Panel, {
     });
    },
    onAdd : function(windows){
+       var that = this;
        if(this.username)
         {
             if (this.items) {
@@ -80,11 +81,11 @@ Ext.extend(Toc.queries.mainPanel, Ext.Panel, {
             var cmp = new Ext.Component({autoEl:{tag: 'iframe',style: 'height: 100%; width: 100%; border: none'},height: 600,id: 'queries_iframe',width: 600});
             this.add(cmp);
             this.doLayout(true, true);
-            cmp.el.dom.src = '<?php echo METABASE_URL . '/questions/new'; ?>' + '?username=' + this.username + '&password=' + '<?php echo METABASE_DEV_PASS; ?>';
+            cmp.el.dom.src = '<?php echo METABASE_URL . '/question'; ?>' + '?username=' + this.username + '&password=' + '<?php echo METABASE_DEV_PASS; ?>';
 
             cmp.el.dom.onload = function() {
                 console.log('iframe onload ...')
-                this.getEl().unmask();
+                that.getEl().unmask();
             };
 
             this.getEl().mask('<?php echo $osC_Language->get('loading'); ?>');
@@ -99,6 +100,7 @@ Ext.extend(Toc.queries.mainPanel, Ext.Panel, {
         }
    },
     onRefresh : function(windows){
+        var that = this;
         if(this.username)
         {
             if (this.items) {
@@ -112,7 +114,7 @@ Ext.extend(Toc.queries.mainPanel, Ext.Panel, {
 
             cmp.el.dom.onload = function() {
                 console.log('iframe onload ...')
-                this.getEl().unmask();
+                that.getEl().unmask();
             };
 
             this.getEl().mask('<?php echo $osC_Language->get('loading'); ?>');
