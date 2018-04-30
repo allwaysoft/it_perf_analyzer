@@ -19,7 +19,7 @@ Toc.categories.mainPanel = function(config) {
 Ext.extend(Toc.categories.mainPanel, Ext.Panel, {
   
   onPnlCategoriesTreeNodeSelectChange: function(categoryId) {
-this.grdCategories.setPermissions(this.pnlCategoriesTree.getCategoryPermissions());
+//this.grdCategories.setPermissions(this.pnlCategoriesTree.getCategoryPermissions());
     this.grdCategories.refreshGrid(categoryId);
   },
   

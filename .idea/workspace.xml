@@ -296,10 +296,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="categories_main_panel.php" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="categories_main_panel.php" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/categories/categories_main_panel.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="21" column="56" selection-start="776" selection-end="776" vertical-scroll-proportion="-12.846154">
+            <state line="21" column="2" selection-start="722" selection-end="722" vertical-scroll-proportion="0.63137996">
               <folding />
             </state>
           </provider>
@@ -323,10 +323,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="categories_grid.php" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="categories_grid.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/categories/categories_grid.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="170" column="52" selection-start="5098" selection-end="5098" vertical-scroll-proportion="0.4728682">
+            <state line="170" column="52" selection-start="5098" selection-end="5098" vertical-scroll-proportion="-9.384615">
               <folding>
                 <element signature="n#style#0;n#img#1;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#img#2;n#!!top" expanded="true" />
@@ -368,8 +368,8 @@
         <option value="$PROJECT_DIR$/admin/includes/application_top.php" />
         <option value="$PROJECT_DIR$/admin/includes/jsons/login.php" />
         <option value="$PROJECT_DIR$/admin/includes/classes/content.php" />
-        <option value="$PROJECT_DIR$/admin/includes/extmodules/categories/categories_main_panel.php" />
         <option value="$PROJECT_DIR$/admin/includes/extmodules/categories/categories_grid.php" />
+        <option value="$PROJECT_DIR$/admin/includes/extmodules/categories/categories_main_panel.php" />
       </list>
     </option>
   </component>
@@ -1059,20 +1059,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/bi/bi_main_panel.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="40" column="4" selection-start="1311" selection-end="1394" vertical-scroll-proportion="-13.307693">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/categories/categories_main_panel.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="21" column="56" selection-start="776" selection-end="776" vertical-scroll-proportion="-12.846154">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/bi/bi_grid.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="179" column="4" selection-start="4603" selection-end="5178" vertical-scroll-proportion="-16.461538">
@@ -1082,11 +1068,25 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/categories/categories_grid.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="170" column="52" selection-start="5098" selection-end="5098" vertical-scroll-proportion="0.4728682">
+        <state line="170" column="52" selection-start="5098" selection-end="5098" vertical-scroll-proportion="-9.384615">
           <folding>
             <element signature="n#style#0;n#img#1;n#!!top" expanded="true" />
             <element signature="n#style#0;n#img#2;n#!!top" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/bi/bi_main_panel.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="40" column="4" selection-start="1311" selection-end="1394" vertical-scroll-proportion="-13.307693">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/categories/categories_main_panel.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="21" column="2" selection-start="722" selection-end="722" vertical-scroll-proportion="0.63137996">
+          <folding />
         </state>
       </provider>
     </entry>
