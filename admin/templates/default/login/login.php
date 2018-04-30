@@ -173,6 +173,7 @@ Ext.onReady(function () {
     }
 
     function loginBi(username) {
+        Ext.get('x-login-panel').mask('BI Session ...');
         Ext.Ajax.request({
             method: 'POST',
             url: '<?php echo METABASE_URL; ?>' + '/api/session',
@@ -184,6 +185,7 @@ Ext.onReady(function () {
                 password: '<?php echo METABASE_DEV_PASS; ?>'
             },
             callback: function (options, success, response) {
+                Ext.get('x-login-panel').unmask();
                 var result = Ext.decode(response.responseText);
                 if (result.id) {
                     console.log('session created ...' + result.id);
@@ -192,7 +194,7 @@ Ext.onReady(function () {
                     window.location = '<?php echo osc_href_link_admin(FILENAME_DEFAULT); ?>?admin_language=' + cboLanguage.getValue() + '&id=' + result.id;
                 }
                 else {
-                    console.log('could not create metabase session ... creating new user');
+                    //console.log('could not create metabase session ... creating new user');
                     createBiUser(username);
                     //alert('could not create BI session ...' + result.toString());
                 }
@@ -202,7 +204,8 @@ Ext.onReady(function () {
     }
 
     function createBiUser(username) {
-        console.log('admin login to create a new user');
+        //console.log('admin login to create a new user');
+        Ext.get('x-login-panel').mask('BI User Configuration ...');
         Ext.Ajax.request({
             method: 'POST',
             url: '<?php echo METABASE_URL; ?>' + '/api/session',
@@ -215,9 +218,11 @@ Ext.onReady(function () {
                 password: '<?php echo METABASE_ADMIN_PASS; ?>'
             },
             callback: function (options, success, response) {
+                Ext.get('x-login-panel').unmask();
                 var result = Ext.decode(response.responseText);
                 if (result.id) {
-                    console.log('creating a new user');
+                    //console.log('creating a new user');
+                    Ext.get('x-login-panel').mask('BI User Activation ...');
                     Ext.util.Cookies.set('metabase.SESSION_ID',result.id);
                     Ext.Ajax.request({
                         method: 'POST',
@@ -239,6 +244,7 @@ Ext.onReady(function () {
                             password: '<?php echo METABASE_DEV_PASS; ?>'
                         },
                         callback: function (options, success, response) {
+                            Ext.get('x-login-panel').unmask();
                             Ext.Ajax.request({
                                 method: 'DELETE',
                                 url: '<?php echo METABASE_URL; ?>' + '/api/session',
@@ -275,12 +281,15 @@ Ext.onReady(function () {
     }
 
     function login() {
+        Ext.get('x-login-panel').mask('<?php echo $osC_Language->get("login"); ?>');
         frmlogin.form.submit({
             success: function (form, action) {
-                console.log('creating metabase session ...');
+                //console.log('creating metabase session ...');
+                Ext.get('x-login-panel').unmask();
                 loginBi(action.result.username);
             },
             failure: function (form, action) {
+                Ext.get('x-login-panel').unmask();
                 if (action.failureType != 'client') {
                     alert(action.result.feedback);
                 }
