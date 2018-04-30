@@ -228,7 +228,7 @@
     <file path="$PROJECT_DIR$/admin/external/groupoffice/imap.class.inc" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1524945597244" ignored="false" />
     <file path="/application_top.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1525041387949" ignored="false" />
     <file path="/categories_grid.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1525043123578" ignored="false" />
-    <file path="/login.css" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1525082228686" ignored="false" />
+    <file path="/login.css" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1525084371073" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -278,9 +278,10 @@
       <file leaf-file-name="login.php" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/admin/templates/default/login/login.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="36" column="43" selection-start="1943" selection-end="1943" vertical-scroll-proportion="0.60465115">
+            <state line="35" column="24" selection-start="1899" selection-end="1899" vertical-scroll-proportion="0.60465115">
               <folding>
                 <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#img#0;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -289,7 +290,7 @@
       <file leaf-file-name="login.css" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/admin/templates/default/login/login.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="22" column="23" selection-start="292" selection-end="292" vertical-scroll-proportion="0.0">
+            <state line="22" column="21" selection-start="290" selection-end="290" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -1024,16 +1025,17 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/admin/templates/default/login/login.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="22" column="23" selection-start="292" selection-end="292" vertical-scroll-proportion="0.0">
+        <state line="22" column="21" selection-start="290" selection-end="290" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/admin/templates/default/login/login.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="36" column="43" selection-start="1943" selection-end="1943" vertical-scroll-proportion="0.60465115">
+        <state line="35" column="24" selection-start="1899" selection-end="1899" vertical-scroll-proportion="0.60465115">
           <folding>
             <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#img#0;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
           </folding>
         </state>
       </provider>

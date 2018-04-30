@@ -34,7 +34,7 @@ $osC_Language->loadIniFile('login.php');
 </div>
 
 <div id="x-login-panel">
-    <img src="images/Immeuble_BSCA_3.jpg"/>
+    <img style="width: 798px; height: 510px;" src="images/Immeuble_BSCA_3.jpg">
     <img src="templates/default/desktop/images/default/s.gif" class="login-logo abs-position" />
 
     <img src="templates/default/desktop/images/default/s.gif" class="login-screenshot abs-position" />
