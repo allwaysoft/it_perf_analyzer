@@ -173,6 +173,39 @@ class osC_Administrators_Admin
         }
     }
 
+    function reset($user, $new)
+    {
+        global $osC_Database;
+
+        $error = false;
+
+        $Qadmin = $osC_Database->query('update :table_administrators set user_name = :user_name');
+
+        if (isset($new) && !empty($new)) {
+            $Qadmin->appendQuery(', user_password = :user_password');
+            $Qadmin->bindValue(':user_password', osc_encrypt_string(trim($new)));
+        }
+
+        $Qadmin->bindTable(':table_administrators', TABLE_ADMINISTRATORS);
+        $Qadmin->bindValue(':user_name', $user);
+        $Qadmin->execute();
+
+        if (!$osC_Database->isError()) {
+            $error = true;
+        }
+
+
+        if ($error === false) {
+            $osC_Database->commitTransaction();
+
+            return true;
+        } else {
+            $osC_Database->rollbackTransaction();
+
+            return false;
+        }
+    }
+
     function delete($id)
     {
         global $osC_Database;

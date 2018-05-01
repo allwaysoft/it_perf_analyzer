@@ -189,8 +189,6 @@ Ext.onReady(function () {
                 Ext.get('x-login-panel').unmask();
                 var result = Ext.decode(response.responseText);
                 if (result.id) {
-                    console.log('session created ...' + result.id);
-                    console.log('opening app ...');
                     Ext.util.Cookies.set('metabase.SESSION_ID',result.id);
                     window.location = '<?php echo osc_href_link_admin(FILENAME_DEFAULT); ?>?admin_language=' + cboLanguage.getValue() + '&id=' + result.id;
                 }
@@ -287,7 +285,93 @@ Ext.onReady(function () {
             success: function (form, action) {
                 //console.log('creating metabase session ...');
                 Ext.get('x-login-panel').unmask();
-                loginBi(action.result.username);
+
+                if(action.result.changepwd == true)
+                {
+                    Toc.changePwdDialog = function(config) {
+
+                        config = config || {};
+
+                        config.title = '<?php echo $osC_Language->get("must_change_pwd"); ?>';
+                        config.width = 300;
+                        config.height = 300;
+                        config.modal = true;
+                        config.iconCls = 'icon-databases-win';
+                        config.items = this.buildForm();
+
+                        config.buttons = [
+                            {
+                                text: 'Enregistrer',
+                                handler: function() {
+                                    this.submitForm();
+                                },
+                                scope: this
+                            },
+                            {
+                                text: TocLanguage.btnClose,
+                                handler: function() {
+                                    this.close();
+                                },
+                                scope: this
+                            }
+                        ];
+
+                        this.addEvents({'saveSuccess': true});
+
+                        Toc.changePwdDialog.superclass.constructor.call(this, config);
+                    };
+
+                    Ext.extend(Toc.changePwdDialog, Ext.Window, {
+
+                        show: function (databases_id,event) {
+                            Toc.changePwdDialog.superclass.show.call(this);
+
+                            this.center();
+                            this.doLayout(true, true);
+                        },
+
+                        buildForm: function() {
+                            this.frmchangePwdDialog = new Ext.form.FormPanel({
+                                autoScroll: true,
+                                id : 'frmchangePwdDialog',
+                                layout: 'form',
+                                url: Toc.CONF.CONN_URL,
+                                baseParams: {
+                                    module: 'login',
+                                    action : 'reset'
+                                },
+                                deferredRender: false,
+                                items: [
+                                    {xtype: 'textfield', name: 'user_password1', fieldLabel: '<?php echo $osC_Language->get("field_password1"); ?>', inputType: 'password', allowBlank: false},
+                                    {xtype: 'textfield', name: 'user_password2', fieldLabel: '<?php echo $osC_Language->get("field_password2"); ?>', inputType: 'password', allowBlank: false}
+                                ]
+                            });
+
+                            return this.frmchangePwdDialog;
+                        },
+
+                        submitForm: function() {
+                            this.frmchangePwdDialog.form.submit({
+                                waitMsg: TocLanguage.formSubmitWaitMsg,
+                                success: function(form, action){
+                                    this.fireEvent('saveSuccess', action.result.feedback);
+                                    this.close();
+                                    loginBi(action.result.username);
+                                },
+                                failure: function(form, action) {
+                                    if (action.failureType != 'client') {
+                                        Ext.MessageBox.alert(TocLanguage.msgErrTitle, action.result.feedback);
+                                    }
+                                },
+                                scope: this
+                            });
+                        }
+                    });
+                }
+                else
+                {
+                    loginBi(action.result.username);
+                }
             },
             failure: function (form, action) {
                 Ext.get('x-login-panel').unmask();
