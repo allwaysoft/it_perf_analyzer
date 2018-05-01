@@ -545,7 +545,9 @@ class PHPMailer {
   public function Send() {
     try {
       if ((count($this->to) + count($this->cc) + count($this->bcc)) < 1) {
-        throw new phpmailerException($this->Lang('provide_address'), self::STOP_CRITICAL);
+        //throw new phpmailerException($this->Lang('provide_address'), self::STOP_CRITICAL);
+          error_log($this->Lang('provide_address'));
+          return false;
       }
 
       // Set whether the message is multipart/alternative
@@ -559,7 +561,9 @@ class PHPMailer {
       $body = $this->CreateBody();
 
       if (empty($this->Body)) {
-        throw new phpmailerException($this->Lang('empty_message'), self::STOP_CRITICAL);
+        //throw new phpmailerException($this->Lang('empty_message'), self::STOP_CRITICAL);
+          error_log($this->Lang('empty_message'));
+          return false;
       }
 
       // digitally sign with DKIM if enabled
@@ -581,10 +585,12 @@ class PHPMailer {
     } catch (phpmailerException $e) {
       $this->SetError($e->getMessage());
       if ($this->exceptions) {
-        throw $e;
+        //throw $e;
+          error_log($e->getMessage());
+          return false;
       }
-      echo $e->getMessage()."\n";
-      return false;
+        error_log($e->getMessage());
+        return false;
     }
   }
 
@@ -703,11 +709,15 @@ class PHPMailer {
     $bad_rcpt = array();
 
     if(!$this->SmtpConnect()) {
-      throw new phpmailerException($this->Lang('smtp_connect_failed'), self::STOP_CRITICAL);
+      //throw new phpmailerException($this->Lang('smtp_connect_failed'), self::STOP_CRITICAL);
+        error_log($this->Lang('smtp_connect_failed'));
+        return false;
     }
     $smtp_from = ($this->Sender == '') ? $this->From : $this->Sender;
     if(!$this->smtp->Mail($smtp_from)) {
-      throw new phpmailerException($this->Lang('from_failed') . $smtp_from, self::STOP_CRITICAL);
+      //throw new phpmailerException($this->Lang('from_failed') . $smtp_from, self::STOP_CRITICAL);
+        error_log($this->Lang('from_failed'));
+        return false;
     }
 
     // Attempt to send attach all recipients
@@ -751,10 +761,14 @@ class PHPMailer {
 
     if (count($bad_rcpt) > 0 ) { //Create error message for any bad addresses
       $badaddresses = implode(', ', $bad_rcpt);
-      throw new phpmailerException($this->Lang('recipients_failed') . $badaddresses);
+      //throw new phpmailerException($this->Lang('recipients_failed') . $badaddresses);
+        error_log($this->Lang('recipients_failed'));
+        return false;
     }
     if(!$this->smtp->Data($header . $body)) {
-      throw new phpmailerException($this->Lang('data_not_accepted'), self::STOP_CRITICAL);
+      //throw new phpmailerException($this->Lang('data_not_accepted'), self::STOP_CRITICAL);
+        error_log($this->Lang('data_not_accepted'));
+        return false;
     }
     if($this->SMTPKeepAlive == true) {
       $this->smtp->Reset();
