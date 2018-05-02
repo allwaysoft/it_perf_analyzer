@@ -70,10 +70,11 @@ Ext.extend(Toc.roles.RolesDialog, Ext.Window, {
           if(panel)
           {
              panel.getEl().unmask();
-          }
-
-          this.access_globaladmin = action.result.data.access_globaladmin;
-          this.access_modules = action.result.data.access_modules;
+             this.access_globaladmin = action.result.data.access_globaladmin;
+             this.access_modules = action.result.data.access_modules;
+             this.tabRoles.activate(pnlAccessTree);
+             panel.hide();
+          }          
 
           //this.tabRoles.add(new Toc.content.PermissionsPanel({owner : this.owner,content_id : this.rolesId,content_type : 'roles',module : 'categories',action :  'list_role_permissions',id_field : 'categories_id',autoExpandColumn : 'categories_name'}));
         },
@@ -247,7 +248,7 @@ Ext.extend(Toc.roles.RolesDialog, Ext.Window, {
       hideMode:'offsets'
       },
     deferredRender: false,
-    items: [this.getAccessPanel()]
+    items: [this.getAdminPanel(),this.getAccessPanel()]
     });
 
     this.frmAdministrator = new Ext.form.FormPanel({ 
