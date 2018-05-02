@@ -117,6 +117,7 @@ class toC_Json_Roles
             $total = $total + 1;
             var_dump($osC_Database);
             $roles[] = array(
+                'administrators_id' => 0,
                 'roles_id' => 'error',
                 'user_name' => 'error',
                 'email_address' => '',
@@ -129,6 +130,7 @@ class toC_Json_Roles
         while ($Qadmin->next()) {
             $total = $total + 1;
             $roles[] = array(
+                'administrators_id' => $Qadmin->value('id'),
                 'roles_id' => $Qadmin->value('user_name'),
                 'user_name' => $Qadmin->value('user_name'),
                 'email_address' => $Qadmin->value('email_address'),
@@ -175,6 +177,7 @@ class toC_Json_Roles
                 $e = oci_error($c);
                 $total = $total + 1;
                 $roles[] = array(
+                    'administrators_id' => 0,
                     'roles_id' => 'error',
                     'user_name' => 'error',
                     'email_address' => '',
@@ -197,6 +200,7 @@ class toC_Json_Roles
                     $e = oci_error($s);
                     $total = $total + 1;
                     $roles[] = array(
+                        'administrators_id' => 0,
                         'roles_id' => 'error',
                         'user_name' => 'error',
                         'email_address' => '',
@@ -212,6 +216,7 @@ class toC_Json_Roles
                         {
                             $roles[] = array(
                                 $tot = $row['TOTAL'],
+                                'administrators_id' => $row['CUTI'],
                                 'roles_id' => $row['CUTI'],
                                 'user_name' => $row['UNIX'],
                                 'email_address' => $row['EMAIL'],
