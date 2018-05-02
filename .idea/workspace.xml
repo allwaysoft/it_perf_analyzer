@@ -229,7 +229,7 @@
     <file path="/categories_grid.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1525043123578" ignored="false" />
     <file path="/login.css" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1525084371073" ignored="false" />
     <file path="/start.sh" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1525098808273" ignored="false" />
-    <file path="/administrators.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1525196431339" ignored="false" />
+    <file path="/administrators.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1525224546252" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -258,10 +258,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="login.php" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="login.php" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/admin/includes/jsons/login.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="234" column="122" selection-start="11410" selection-end="11410" vertical-scroll-proportion="-9.807693">
+            <state line="236" column="20" selection-start="11449" selection-end="11449" vertical-scroll-proportion="0.56007755">
               <folding />
             </state>
           </provider>
@@ -270,7 +270,7 @@
       <file leaf-file-name="administrators.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/admin/includes/classes/administrators.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="177" column="24" selection-start="6814" selection-end="6814" vertical-scroll-proportion="-3.2692308">
+            <state line="206" column="29" selection-start="7571" selection-end="7571" vertical-scroll-proportion="-18.538462">
               <folding />
             </state>
           </provider>
@@ -300,10 +300,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="login.php" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="login.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/admin/templates/bsca/login/login.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="388" column="5" selection-start="16330" selection-end="16330" vertical-scroll-proportion="0.93410856">
+            <state line="330" column="14" selection-start="13658" selection-end="13658" vertical-scroll-proportion="-0.65384614">
               <folding>
                 <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -374,11 +374,11 @@
         <option value="$PROJECT_DIR$/index.php" />
         <option value="$PROJECT_DIR$/metabase/start.sh" />
         <option value="$PROJECT_DIR$/ext/phpmailer/class.phpmailer.php" />
-        <option value="$PROJECT_DIR$/admin/includes/classes/administrators.php" />
         <option value="$PROJECT_DIR$/admin/includes/jsons/login.php" />
         <option value="$PROJECT_DIR$/includes/customers/bsca.php" />
         <option value="$PROJECT_DIR$/includes/configure.php" />
         <option value="$PROJECT_DIR$/admin/templates/bsca/login/login.php" />
+        <option value="$PROJECT_DIR$/admin/includes/classes/administrators.php" />
       </list>
     </option>
   </component>
@@ -1101,20 +1101,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/admin/includes/classes/administrators.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="177" column="24" selection-start="6814" selection-end="6814" vertical-scroll-proportion="-3.2692308">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/admin/includes/jsons/login.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="234" column="122" selection-start="11410" selection-end="11410" vertical-scroll-proportion="-9.807693">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/admin/templates/test/login/login.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="177" column="35" selection-start="6914" selection-end="6914" vertical-scroll-proportion="-1.5384616">
@@ -1145,7 +1131,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/admin/templates/bsca/login/login.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="388" column="5" selection-start="16330" selection-end="16330" vertical-scroll-proportion="0.93410856">
+        <state line="330" column="14" selection-start="13658" selection-end="13658" vertical-scroll-proportion="-0.65384614">
           <folding>
             <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -1155,6 +1141,20 @@
             <element signature="n#style#0;n#div#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#img#0;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/includes/classes/administrators.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="206" column="29" selection-start="7571" selection-end="7571" vertical-scroll-proportion="-18.538462">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/includes/jsons/login.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="236" column="20" selection-start="11449" selection-end="11449" vertical-scroll-proportion="0.56007755">
+          <folding />
         </state>
       </provider>
     </entry>

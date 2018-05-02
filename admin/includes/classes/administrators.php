@@ -179,13 +179,9 @@ class osC_Administrators_Admin
 
         $error = false;
 
-        $Qadmin = $osC_Database->query('update :table_administrators set user_name = :user_name');
+        $Qadmin = $osC_Database->query('update :table_administrators set user_password = :user_password where user_name = :user_name');
 
-        if (isset($new) && !empty($new)) {
-            $Qadmin->appendQuery(', user_password = :user_password');
-            $Qadmin->bindValue(':user_password', osc_encrypt_string(trim($new)));
-        }
-
+        $Qadmin->bindValue(':user_password', osc_encrypt_string(trim($new)));
         $Qadmin->bindTable(':table_administrators', TABLE_ADMINISTRATORS);
         $Qadmin->bindValue(':user_name', $user);
         $Qadmin->execute();
