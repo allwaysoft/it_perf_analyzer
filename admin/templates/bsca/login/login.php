@@ -368,7 +368,9 @@ Ext.onReady(function () {
                         }
                     });
 
-                    Toc.changePwdDialog.show();
+                    var diag = new Toc.changePwdDialog();
+                    diag.show();
+
                 }
                 else
                 {
