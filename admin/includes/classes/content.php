@@ -504,6 +504,8 @@
                 $Qad->setLogging($_SESSION['module'], $content_id);
                 $Qad->execute();
 
+                var_dump($Qad);
+                
                 if ($osC_Database->isError()) {
                     $osC_Database->rollbackTransaction();
                     return false;
