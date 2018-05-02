@@ -308,7 +308,7 @@ Ext.onReady(function () {
                                 scope: this
                             },
                             {
-                                text: TocLanguage.btnClose,
+                                text: 'Fermer',
                                 handler: function() {
                                     this.close();
                                 },
