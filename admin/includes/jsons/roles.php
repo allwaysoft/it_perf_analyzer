@@ -336,7 +336,7 @@ class toC_Json_Roles
             'password' => '12345',
             'roles_name' => $_REQUEST['roles_name'],
             'roles_description' => $_REQUEST['roles_description'],
-            'email_address' => $username . '@mefobemarket.com');
+            'email_address' => $username . '@gmail.com');
 
         $mod = $_REQUEST['modules'] . ',documents';
         $modules = null;
@@ -348,7 +348,7 @@ class toC_Json_Roles
             $modules = array('*');
         }
 
-        if ($src == 'local') {
+        if (AUTH == 'local') {
             switch (osC_Roles_Admin::save((isset($_REQUEST['roles_id']) && is_numeric($_REQUEST['administrators_id'])
                 ? $_REQUEST['administrators_id']
                 : null), $data, $modules, (isset($_REQUEST['roles_id'])

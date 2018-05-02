@@ -294,22 +294,22 @@ Ext.onReady(function () {
                         config = config || {};
 
                         config.title = '<?php echo $osC_Language->get("must_change_pwd"); ?>';
-                        config.width = 300;
-                        config.height = 300;
+                        config.width = 345;
+                        config.height = 120;
                         config.modal = true;
                         config.iconCls = 'icon-databases-win';
                         config.items = this.buildForm();
 
                         config.buttons = [
                             {
-                                text: 'Enregistrer',
+                                text: '<?php echo $osC_Language->get("button_save"); ?>',
                                 handler: function() {
                                     this.submitForm();
                                 },
                                 scope: this
                             },
                             {
-                                text: 'Fermer',
+                                text: '<?php echo $osC_Language->get("button_close"); ?>',
                                 handler: function() {
                                     this.close();
                                 },

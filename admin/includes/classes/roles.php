@@ -188,29 +188,6 @@ class osC_Roles_Admin
         global $osC_Database;
 
         $error = false;
-        if (osc_validate_email_address($data['email_address'])) {
-            $QcheckEmail = $osC_Database->query('select id from :table_administrators where email_address = :email_address');
-            $QcheckEmail->bindTable(':table_administrators', TABLE_ADMINISTRATORS);
-            $QcheckEmail->bindValue(':email_address', $data['email_address']);
-
-            if (is_numeric($id)) {
-                $QcheckEmail->appendQuery('and id != :id');
-                $QcheckEmail->bindInt(':id', $id);
-            }
-
-            $QcheckEmail->execute();
-
-            if ($osC_Database->isError()) {
-                $_SESSION['error'] = $osC_Database->getError();
-                //var_dump($QcheckEmail);
-                return -5;
-            }
-            if ($QcheckEmail->numberOfRows() > 0) {
-                return -4;
-            }
-        } else {
-            return -3;
-        }
 
         $Qcheck = $osC_Database->query('select id from :table_administrators where user_name = :user_name');
 
@@ -232,41 +209,6 @@ class osC_Roles_Admin
 
         if ($Qcheck->numberOfRows() < 1) {
             $osC_Database->startTransaction();
-
-            if (is_numeric($id)) {
-                $Qadmin = $osC_Database->query('update :table_administrators set user_name = :user_name, email_address = :email_address');
-
-                if (isset($data['password']) && !empty($data['password'])) {
-                    $Qadmin->appendQuery(', user_password = :user_password');
-                    $Qadmin->bindValue(':user_password', osc_encrypt_string(trim($data['password'])));
-                }
-
-                $Qadmin->appendQuery('where id = :id');
-                $Qadmin->bindInt(':id', $id);
-            } else {
-                $Qadmin = $osC_Database->query('insert into :table_administrators (user_name, user_password, email_address) values (:user_name, :user_password, :email_address)');
-                $Qadmin->bindValue(':user_password', osc_encrypt_string(trim($data['password'])));
-            }
-
-            $Qadmin->bindTable(':table_administrators', TABLE_ADMINISTRATORS);
-            $Qadmin->bindValue(':user_name', $data['username']);
-            $Qadmin->bindValue(':email_address', $data['email_address']);
-            $Qadmin->setLogging($_SESSION['module'], $id);
-            $Qadmin->execute();
-
-            if ($osC_Database->isError()) {
-                $_SESSION['error'] = $osC_Database->getError();
-                //var_dump($Qadmin);
-                return -5;
-            }
-
-            if (!$osC_Database->isError()) {
-                if (!is_numeric($id)) {
-                    $id = $osC_Database->nextID();
-                }
-            } else {
-                $error = true;
-            }
 
             if ($error === false) {
                 if (!empty($modules)) {
