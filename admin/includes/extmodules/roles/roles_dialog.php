@@ -49,7 +49,7 @@ Ext.extend(Toc.roles.RolesDialog, Ext.Window, {
     this.frmAdministrator.form.baseParams['administrators_id'] = administratorsId;
 
     Toc.roles.RolesDialog.superclass.show.call(this);
-    this.loadRole(this.pnlAdmin);
+    this.loadRole(this.pnlAdmin,administratorsId);
   },
 
   loadRole : function(panel,administratorsId){

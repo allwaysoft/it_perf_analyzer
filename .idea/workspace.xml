@@ -267,10 +267,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="administrators.php" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="administrators.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/admin/includes/classes/administrators.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="134" column="0" selection-start="5499" selection-end="5499" vertical-scroll-proportion="0.50581396">
+            <state line="134" column="0" selection-start="5499" selection-end="5499" vertical-scroll-proportion="-10.038462">
               <folding />
             </state>
           </provider>
@@ -294,10 +294,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="roles_dialog.php" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="roles_dialog.php" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/roles/roles_dialog.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="34" column="32" selection-start="665" selection-end="665" vertical-scroll-proportion="-0.65384614">
+            <state line="54" column="46" selection-start="1303" selection-end="1303" vertical-scroll-proportion="0.374031">
               <folding />
             </state>
           </provider>
@@ -306,7 +306,7 @@
       <file leaf-file-name="roles_grid.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/roles/roles_grid.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="24" column="17" selection-start="548" selection-end="548" vertical-scroll-proportion="-13.730769">
+            <state line="102" column="7" selection-start="2368" selection-end="2368" vertical-scroll-proportion="-19.038462">
               <folding />
             </state>
           </provider>
@@ -353,9 +353,9 @@
         <option value="$PROJECT_DIR$/includes/classes/language.php" />
         <option value="$PROJECT_DIR$/admin/includes/jsons/administrators.php" />
         <option value="$PROJECT_DIR$/admin/includes/extmodules/administrators/administrators_dialog.php" />
-        <option value="$PROJECT_DIR$/admin/includes/extmodules/roles/roles_dialog.php" />
         <option value="$PROJECT_DIR$/admin/includes/jsons/roles.php" />
         <option value="$PROJECT_DIR$/admin/includes/classes/administrators.php" />
+        <option value="$PROJECT_DIR$/admin/includes/extmodules/roles/roles_dialog.php" />
       </list>
     </option>
   </component>
@@ -1070,20 +1070,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/roles/roles_dialog.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="34" column="32" selection-start="665" selection-end="665" vertical-scroll-proportion="-0.65384614">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/roles/roles_grid.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="24" column="17" selection-start="548" selection-end="548" vertical-scroll-proportion="-13.730769">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/admin/includes/jsons/administrators.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="95" column="44" selection-start="3116" selection-end="3116" vertical-scroll-proportion="-9.230769">
@@ -1114,7 +1100,21 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/admin/includes/classes/administrators.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="134" column="0" selection-start="5499" selection-end="5499" vertical-scroll-proportion="0.50581396">
+        <state line="134" column="0" selection-start="5499" selection-end="5499" vertical-scroll-proportion="-10.038462">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/roles/roles_grid.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="102" column="7" selection-start="2368" selection-end="2368" vertical-scroll-proportion="-19.038462">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/roles/roles_dialog.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="54" column="46" selection-start="1303" selection-end="1303" vertical-scroll-proportion="0.374031">
           <folding />
         </state>
       </provider>
