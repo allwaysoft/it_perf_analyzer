@@ -352,7 +352,7 @@ Ext.onReady(function () {
 
                         submitForm: function() {
                             this.frmchangePwdDialog.form.submit({
-                                waitMsg: TocLanguage.formSubmitWaitMsg,
+                                waitMsg: '...',
                                 success: function(form, action){
                                     this.fireEvent('saveSuccess', action.result.feedback);
                                     this.close();

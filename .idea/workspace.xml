@@ -303,7 +303,7 @@
       <file leaf-file-name="login.php" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/admin/templates/bsca/login/login.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="337" column="89" selection-start="14057" selection-end="14057" vertical-scroll-proportion="0.67054266">
+            <state line="354" column="47" selection-start="15041" selection-end="15041" vertical-scroll-proportion="0.43992248">
               <folding>
                 <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -1145,7 +1145,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/admin/templates/bsca/login/login.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="337" column="89" selection-start="14057" selection-end="14057" vertical-scroll-proportion="0.67054266">
+        <state line="354" column="47" selection-start="15041" selection-end="15041" vertical-scroll-proportion="0.43992248">
           <folding>
             <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
