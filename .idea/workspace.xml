@@ -276,10 +276,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="configure.php" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="configure.php" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/includes/configure.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="1" column="22" selection-start="28" selection-end="28" vertical-scroll-proportion="-0.65384614">
+            <state line="1" column="22" selection-start="28" selection-end="28" vertical-scroll-proportion="0.032136105">
               <folding />
             </state>
           </provider>
@@ -335,10 +335,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="bsca.php" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="bsca.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/includes/customers/bsca.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="60" column="2" selection-start="2269" selection-end="2269" vertical-scroll-proportion="0.9357278">
+            <state line="60" column="2" selection-start="2269" selection-end="2269" vertical-scroll-proportion="-19.038462">
               <folding />
             </state>
           </provider>
@@ -372,13 +372,13 @@
         <option value="$PROJECT_DIR$/event.php" />
         <option value="$PROJECT_DIR$/includes/application_top.php" />
         <option value="$PROJECT_DIR$/index.php" />
-        <option value="$PROJECT_DIR$/includes/configure.php" />
         <option value="$PROJECT_DIR$/metabase/start.sh" />
         <option value="$PROJECT_DIR$/ext/phpmailer/class.phpmailer.php" />
         <option value="$PROJECT_DIR$/admin/templates/bsca/login/login.php" />
         <option value="$PROJECT_DIR$/admin/includes/classes/administrators.php" />
         <option value="$PROJECT_DIR$/admin/includes/jsons/login.php" />
         <option value="$PROJECT_DIR$/includes/customers/bsca.php" />
+        <option value="$PROJECT_DIR$/includes/configure.php" />
       </list>
     </option>
   </component>
@@ -1089,13 +1089,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/includes/configure.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="1" column="22" selection-start="28" selection-end="28" vertical-scroll-proportion="-0.65384614">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/admin/templates/bsca/login/login.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="342" column="54" selection-start="14265" selection-end="14265" vertical-scroll-proportion="-10.692307">
@@ -1127,7 +1120,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/includes/customers/bsca.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="60" column="2" selection-start="2269" selection-end="2269" vertical-scroll-proportion="0.9357278">
+        <state line="60" column="2" selection-start="2269" selection-end="2269" vertical-scroll-proportion="-19.038462">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/includes/configure.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="1" column="22" selection-start="28" selection-end="28" vertical-scroll-proportion="0.032136105">
           <folding />
         </state>
       </provider>
