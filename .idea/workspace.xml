@@ -267,19 +267,19 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="categories.php" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="categories.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/admin/includes/classes/categories.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="137" column="25" selection-start="6968" selection-end="6968" vertical-scroll-proportion="0.93410856">
+            <state line="110" column="38" selection-start="5008" selection-end="5008" vertical-scroll-proportion="-0.88461536">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="language.php" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="language.php" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/includes/classes/language.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="187" column="8" selection-start="8346" selection-end="8346" vertical-scroll-proportion="-16.576923">
+            <state line="160" column="39" selection-start="6923" selection-end="6923" vertical-scroll-proportion="0.07751938">
               <folding />
             </state>
           </provider>
@@ -371,8 +371,8 @@
         <option value="$PROJECT_DIR$/admin/templates/test/login/login.php" />
         <option value="$PROJECT_DIR$/admin/includes/jsons/login.php" />
         <option value="$PROJECT_DIR$/admin/templates/bsca/login/login.php" />
-        <option value="$PROJECT_DIR$/includes/classes/language.php" />
         <option value="$PROJECT_DIR$/admin/includes/classes/categories.php" />
+        <option value="$PROJECT_DIR$/includes/classes/language.php" />
       </list>
     </option>
   </component>
@@ -1053,16 +1053,16 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/includes/classes/language.php">
+    <entry file="file://$PROJECT_DIR$/admin/includes/classes/categories.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="187" column="8" selection-start="8346" selection-end="8346" vertical-scroll-proportion="-16.576923">
+        <state line="110" column="38" selection-start="5008" selection-end="5008" vertical-scroll-proportion="-0.88461536">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/admin/includes/classes/categories.php">
+    <entry file="file://$PROJECT_DIR$/includes/classes/language.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="137" column="25" selection-start="6968" selection-end="6968" vertical-scroll-proportion="0.93410856">
+        <state line="160" column="39" selection-start="6923" selection-end="6923" vertical-scroll-proportion="0.07751938">
           <folding />
         </state>
       </provider>
