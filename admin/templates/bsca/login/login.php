@@ -335,7 +335,7 @@ Ext.onReady(function () {
                                 autoScroll: true,
                                 id : 'frmchangePwdDialog',
                                 layout: 'form',
-                                url: Toc.CONF.CONN_URL,
+                                url: '<?php echo osc_href_link_admin(FILENAME_JSON); ?>',
                                 baseParams: {
                                     module: 'login',
                                     action : 'reset'
