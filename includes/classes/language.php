@@ -184,7 +184,7 @@
         }
 
         $Qlanguages->freeResult();
-        
+
         return $this->_languages;
     }
 

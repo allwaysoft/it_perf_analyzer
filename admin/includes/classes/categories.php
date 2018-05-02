@@ -115,6 +115,8 @@ class osC_Categories_Admin
                     $Qcd = $osC_Database->query('insert into :table_categories_description (categories_id, language_id, categories_name, categories_url, categories_page_title, categories_meta_keywords, categories_meta_description) values (:categories_id, :language_id, :categories_name, :categories_url, :categories_page_title, :categories_meta_keywords, :categories_meta_description)');
                 }
 
+                var_dump($l);
+
                 $Qcd->bindTable(':table_categories_description', TABLE_CATEGORIES_DESCRIPTION);
                 $Qcd->bindInt(':categories_id', $category_id);
                 $Qcd->bindInt(':language_id', $l['id']);
