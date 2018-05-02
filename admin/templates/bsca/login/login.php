@@ -367,6 +367,8 @@ Ext.onReady(function () {
                             });
                         }
                     });
+
+                    Toc.changePwdDialog.show();
                 }
                 else
                 {

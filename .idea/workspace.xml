@@ -158,7 +158,7 @@
     <file path="/ncpgrid.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1470415885066" ignored="false" />
     <file path="/dataguard.js" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1473081611351" ignored="false" />
     <file path="/index.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1525092235768" ignored="false" />
-    <file path="/login.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1525196789472" ignored="false" />
+    <file path="/login.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1525222677411" ignored="false" />
     <file path="/json.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1483122139152" ignored="false" />
     <file path="/deltacartes_grid.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1484229324666" ignored="false" />
     <file path="/amplitude_cartes_main_panel.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1484230081469" ignored="false" />
@@ -276,10 +276,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="configure.php" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="configure.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/includes/configure.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="1" column="22" selection-start="28" selection-end="28" vertical-scroll-proportion="0.032136105">
+            <state line="1" column="22" selection-start="28" selection-end="28" vertical-scroll-proportion="-0.65384614">
               <folding />
             </state>
           </provider>
@@ -300,10 +300,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="login.php" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="login.php" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/admin/templates/bsca/login/login.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="342" column="54" selection-start="14265" selection-end="14265" vertical-scroll-proportion="-10.692307">
+            <state line="376" column="14" selection-start="15983" selection-end="15983" vertical-scroll-proportion="0.93410856">
               <folding>
                 <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -374,11 +374,11 @@
         <option value="$PROJECT_DIR$/index.php" />
         <option value="$PROJECT_DIR$/metabase/start.sh" />
         <option value="$PROJECT_DIR$/ext/phpmailer/class.phpmailer.php" />
-        <option value="$PROJECT_DIR$/admin/templates/bsca/login/login.php" />
         <option value="$PROJECT_DIR$/admin/includes/classes/administrators.php" />
         <option value="$PROJECT_DIR$/admin/includes/jsons/login.php" />
         <option value="$PROJECT_DIR$/includes/customers/bsca.php" />
         <option value="$PROJECT_DIR$/includes/configure.php" />
+        <option value="$PROJECT_DIR$/admin/templates/bsca/login/login.php" />
       </list>
     </option>
   </component>
@@ -559,6 +559,32 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="test" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="login" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dev" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="it_perf_analyzer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="admin" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="templates" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bsca" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -1089,21 +1115,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/admin/templates/bsca/login/login.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="342" column="54" selection-start="14265" selection-end="14265" vertical-scroll-proportion="-10.692307">
-          <folding>
-            <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#img#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#img#1;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#img#0;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/admin/templates/test/login/login.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="177" column="35" selection-start="6914" selection-end="6914" vertical-scroll-proportion="-1.5384616">
@@ -1127,8 +1138,23 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/includes/configure.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="1" column="22" selection-start="28" selection-end="28" vertical-scroll-proportion="0.032136105">
+        <state line="1" column="22" selection-start="28" selection-end="28" vertical-scroll-proportion="-0.65384614">
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/templates/bsca/login/login.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="376" column="14" selection-start="15983" selection-end="15983" vertical-scroll-proportion="0.93410856">
+          <folding>
+            <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#img#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#img#1;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#img#0;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
