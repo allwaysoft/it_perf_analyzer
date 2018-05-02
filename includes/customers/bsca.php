@@ -1,9 +1,9 @@
 <?php
-define('HTTP_SERVER', 'http://localhost/');
-define('HTTPS_SERVER', 'http://localhost/');
+define('HTTP_SERVER', 'http://10.205.177.98/');
+define('HTTPS_SERVER', 'http://10.205.177.98/');
 define('ENABLE_SSL', false);
-define('HTTP_COOKIE_DOMAIN', 'localhost');
-define('HTTPS_COOKIE_DOMAIN', 'localhost');
+define('HTTP_COOKIE_DOMAIN', '10.205.177.98');
+define('HTTPS_COOKIE_DOMAIN', '10.205.177.98');
 define('HTTP_COOKIE_PATH', '/');
 define('HTTPS_COOKIE_PATH', '/');
 define('DIR_WS_HTTP_CATALOG', 'bi_server/');
@@ -53,7 +53,7 @@ define('ADMIN_EMAIL', 'guyfomi@gmail.com');
 define('NOTIFICATION_EMAIL', 'guyfomi@gmail.com');
 
 //METABASE
-define('METABASE_URL', 'http://localhost/bi');
+define('METABASE_URL', 'http://10.205.177.98/bi');
 define('METABASE_DEV_USER', 'makaki@gmail.com');
 define('METABASE_DEV_PASS', 'Guy2p@cc');
 define('METABASE_ADMIN_USER', 'admin@gmail.com');

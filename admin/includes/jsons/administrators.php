@@ -12,10 +12,21 @@ class toC_Json_Administrators
         $limit = empty($_REQUEST['limit']) ? MAX_DISPLAY_SEARCH_RESULTS : $_REQUEST['limit'];
 
         if ($_SESSION['admin']['username'] == 'admin') {
-            $query = "select id, user_name, email_address from :table_administrators order by user_name";
+            $query = "select id, user_name, email_address from :table_administrators where 1 = 1 ";
         } else {
-            $query = "select id, user_name, email_address from :table_administrators where user_name !='admin' order by user_name";
+            $query = "select id, user_name, email_address from :table_administrators where user_name !='admin' ";
         }
+
+        $search = empty($_REQUEST['search']) ? '' : $_REQUEST['search'];
+
+        if(!empty($search))
+        {
+            $start = 0;
+            $limit = 10000;
+            $query = $query . " and user_name like '%" . $search . "%'or email_address like '%" . $search . "%'";
+        }
+
+        $query = $query . " order by user_name";
 
         $Qadmin = $osC_Database->query($query);
         $Qadmin->bindTable(':table_administrators', TABLE_ADMINISTRATORS);
