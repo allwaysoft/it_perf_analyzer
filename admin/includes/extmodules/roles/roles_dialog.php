@@ -203,7 +203,6 @@ Ext.extend(Toc.roles.RolesDialog, Ext.Window, {
         },
         listeners: {
           load: function() {
-            console.log();
             this.pnlAccessTree.setValue(this.access_modules);
             this.treeLoaded = true;
 
@@ -248,7 +247,7 @@ Ext.extend(Toc.roles.RolesDialog, Ext.Window, {
       hideMode:'offsets'
       },
     deferredRender: false,
-    items: [this.getAdminPanel(),this.getAccessPanel()]
+    items: [this.getAccessPanel()]
     });
 
     this.frmAdministrator = new Ext.form.FormPanel({ 
