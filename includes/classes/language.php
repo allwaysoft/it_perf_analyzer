@@ -159,6 +159,31 @@
     }
 
     function getAll() {
+        global $osC_Database;
+
+        $Qlanguages = $osC_Database->query('select * from :table_languages order by sort_order, name');
+        $Qlanguages->bindTable(':table_languages', TABLE_LANGUAGES);
+        //$Qlanguages->setCache('languages');
+        $Qlanguages->execute();
+
+        while ($Qlanguages->next()) {
+            $this->_languages[$Qlanguages->value('code')] = array('id' => $Qlanguages->valueInt('languages_id'),
+                'code' => $Qlanguages->value('code'),
+                'country_iso' => strtolower(substr($Qlanguages->value('code'), 3)),
+                'name' => $Qlanguages->value('name'),
+                'locale' => $Qlanguages->value('locale'),
+                'charset' => $Qlanguages->value('charset'),
+                'date_format_short' => $Qlanguages->value('date_format_short'),
+                'date_format_long' => $Qlanguages->value('date_format_long'),
+                'time_format' => $Qlanguages->value('time_format'),
+                'text_direction' => $Qlanguages->value('text_direction'),
+                'currencies_id' => $Qlanguages->valueInt('currencies_id'),
+                'numeric_separator_decimal' => $Qlanguages->value('numeric_separator_decimal'),
+                'numeric_separator_thousands' => $Qlanguages->value('numeric_separator_thousands'),
+                'parent_id' => $Qlanguages->valueInt('parent_id'));
+        }
+
+        $Qlanguages->freeResult();
 
         return $this->_languages;
     }

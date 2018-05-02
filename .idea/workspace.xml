@@ -261,7 +261,7 @@
       <file leaf-file-name="reports.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/admin/includes/jsons/reports.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="321" column="42" selection-start="15656" selection-end="15656" vertical-scroll-proportion="-7.8461537">
+            <state line="321" column="45" selection-start="15659" selection-end="15659" vertical-scroll-proportion="-6.769231">
               <folding />
             </state>
           </provider>
@@ -270,7 +270,7 @@
       <file leaf-file-name="reports.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/admin/includes/classes/reports.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="1394" column="42" selection-start="53085" selection-end="53085" vertical-scroll-proportion="-10.038462">
+            <state line="1394" column="38" selection-start="53081" selection-end="53081" vertical-scroll-proportion="-15.269231">
               <folding />
             </state>
           </provider>
@@ -279,7 +279,7 @@
       <file leaf-file-name="content.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/admin/includes/classes/content.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="486" column="39" selection-start="18070" selection-end="18070" vertical-scroll-proportion="-8.5">
+            <state line="486" column="39" selection-start="18070" selection-end="18070" vertical-scroll-proportion="-10.538462">
               <folding>
                 <element signature="e#8#172#0" expanded="true" />
               </folding>
@@ -290,7 +290,7 @@
       <file leaf-file-name="language.php" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/includes/classes/language.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="40" column="0" selection-start="2233" selection-end="2233" vertical-scroll-proportion="0.7364341">
+            <state line="185" column="34" selection-start="8336" selection-end="8336" vertical-scroll-proportion="0.6375969">
               <folding />
             </state>
           </provider>
@@ -1095,13 +1095,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/admin/includes/jsons/reports.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="321" column="42" selection-start="15656" selection-end="15656" vertical-scroll-proportion="-7.8461537">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/includes/database_tables.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="107" column="7" selection-start="7091" selection-end="7091" vertical-scroll-proportion="0.3488372">
@@ -1109,16 +1102,23 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/admin/includes/jsons/reports.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="321" column="45" selection-start="15659" selection-end="15659" vertical-scroll-proportion="-6.769231">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/admin/includes/classes/reports.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="1394" column="42" selection-start="53085" selection-end="53085" vertical-scroll-proportion="-10.038462">
+        <state line="1394" column="38" selection-start="53081" selection-end="53081" vertical-scroll-proportion="-15.269231">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/admin/includes/classes/content.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="486" column="39" selection-start="18070" selection-end="18070" vertical-scroll-proportion="-8.5">
+        <state line="486" column="39" selection-start="18070" selection-end="18070" vertical-scroll-proportion="-10.538462">
           <folding>
             <element signature="e#8#172#0" expanded="true" />
           </folding>
@@ -1127,7 +1127,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/includes/classes/language.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="40" column="0" selection-start="2233" selection-end="2233" vertical-scroll-proportion="0.7364341">
+        <state line="185" column="34" selection-start="8336" selection-end="8336" vertical-scroll-proportion="0.6375969">
           <folding />
         </state>
       </provider>
