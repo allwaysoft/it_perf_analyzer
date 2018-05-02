@@ -116,7 +116,7 @@
     <file path="/documents_main_panel.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1407875464966" ignored="false" />
     <file path="/documents_grid.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1477059242810" ignored="false" />
     <file path="/roles_grid.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1524234601713" ignored="false" />
-    <file path="/roles_dialog.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1525252010178" ignored="false" />
+    <file path="/roles_dialog.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1525252282607" ignored="false" />
     <file path="/categories_main_panel.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1525038561846" ignored="false" />
     <file path="/users_grid.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1412330893779" ignored="false" />
     <file path="/user_dialog.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1409147805374" ignored="false" />
@@ -297,7 +297,7 @@
       <file leaf-file-name="roles_dialog.php" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/roles/roles_dialog.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="74" column="44" selection-start="1889" selection-end="1889" vertical-scroll-proportion="0.43992248">
+            <state line="75" column="49" selection-start="1951" selection-end="1951" vertical-scroll-proportion="0.8895349">
               <folding />
             </state>
           </provider>
@@ -1096,7 +1096,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/roles/roles_dialog.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="74" column="44" selection-start="1889" selection-end="1889" vertical-scroll-proportion="0.43992248">
+        <state line="75" column="49" selection-start="1951" selection-end="1951" vertical-scroll-proportion="0.8895349">
           <folding />
         </state>
       </provider>

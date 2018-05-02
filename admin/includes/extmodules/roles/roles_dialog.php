@@ -73,7 +73,7 @@ Ext.extend(Toc.roles.RolesDialog, Ext.Window, {
              this.access_globaladmin = action.result.data.access_globaladmin;
              this.access_modules = action.result.data.access_modules;
              this.tabRoles.activate(this.pnlAccessTree);
-             panel.hide();
+             this.tabRoles.remove(this.pnlAdmin);
           }
 
           //this.tabRoles.add(new Toc.content.PermissionsPanel({owner : this.owner,content_id : this.rolesId,content_type : 'roles',module : 'categories',action :  'list_role_permissions',id_field : 'categories_id',autoExpandColumn : 'categories_name'}));
