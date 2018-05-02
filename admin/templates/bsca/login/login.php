@@ -286,6 +286,7 @@ Ext.onReady(function () {
                 //console.log('creating metabase session ...');
                 Ext.get('x-login-panel').unmask();
 
+                var username = action.result.username;
                 if(action.result.changepwd == true)
                 {
                     Toc.changePwdDialog = function(config) {
@@ -356,7 +357,7 @@ Ext.onReady(function () {
                                 success: function(form, action){
                                     this.fireEvent('saveSuccess', action.result.feedback);
                                     this.close();
-                                    loginBi(action.result.username);
+                                    loginBi(username);
                                 },
                                 failure: function(form, action) {
                                     if (action.failureType != 'client') {
@@ -374,7 +375,7 @@ Ext.onReady(function () {
                 }
                 else
                 {
-                    loginBi(action.result.username);
+                    loginBi(username);
                 }
             },
             failure: function (form, action) {
