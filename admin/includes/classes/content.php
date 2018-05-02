@@ -907,7 +907,17 @@
             }
             $Qpermissions->freeResult();
 
-            $Qadmin = $osC_Database->query('select id, user_name, email_address from :table_administrators where id != 1 order by user_name');
+            $query = "select id, user_name, email_address from :table_administrators where user_name !='admin' ";
+
+            $search = empty($_REQUEST['search']) ? '' : $_REQUEST['search'];
+
+            if(!empty($search))
+            {
+                $query = $query . " and user_name like '%" . $search . "%'or email_address like '%" . $search . "%'";
+            }
+
+            $query = $query . " order by user_name";
+            $Qadmin = $osC_Database->query($query);
             $Qadmin->bindTable(':table_administrators', TABLE_ADMINISTRATORS);
             $Qadmin->execute();
 
@@ -1151,7 +1161,18 @@
             }
             $Qnotifications->freeResult();
 
-            $Qadmin = $osC_Database->query('select id, user_name, email_address from :table_administrators where id != 1 order by user_name');
+            $query = "select id, user_name, email_address from :table_administrators where user_name !='admin' ";
+
+            $search = empty($_REQUEST['search']) ? '' : $_REQUEST['search'];
+
+            if(!empty($search))
+            {
+                $query = $query . " and user_name like '%" . $search . "%'or email_address like '%" . $search . "%'";
+            }
+
+            $query = $query . " order by user_name";
+            
+            $Qadmin = $osC_Database->query($query);
             $Qadmin->bindTable(':table_administrators', TABLE_ADMINISTRATORS);
             $Qadmin->execute();
 
