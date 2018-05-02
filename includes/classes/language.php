@@ -158,7 +158,7 @@
       return array_key_exists($code, $this->_languages);
     }
 
-    function getAll() {                
+    function getAll() {
         return $this->_languages;
     }
 
