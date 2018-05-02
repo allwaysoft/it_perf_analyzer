@@ -52,7 +52,7 @@ Ext.extend(Toc.roles.RolesDialog, Ext.Window, {
     this.loadRole(this.pnlAdmin);
   },
 
-  loadRole : function(panel){
+  loadRole : function(panel,administratorsId){
      if (this.rolesId && this.rolesId != -1) {
       if(panel)
       {
@@ -62,9 +62,9 @@ Ext.extend(Toc.roles.RolesDialog, Ext.Window, {
       this.frmAdministrator.load({
         url: Toc.CONF.CONN_URL,
         params:{
-          module: 'roles',
-          action: 'load_user',
-          src:this.data.src
+          module: 'administrators',
+          action: 'load_administrator',
+          aID : administratorsId
         },
         success: function(form, action) {
           if(panel)
