@@ -249,15 +249,6 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="bsca.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/includes/customers/bsca.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="25" column="58" selection-start="1242" selection-end="1242" vertical-scroll-proportion="2.8461537">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="reports.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/admin/includes/jsons/reports.php">
           <provider selected="true" editor-type-id="text-editor">
@@ -267,13 +258,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="login.php" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="login.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/admin/includes/jsons/login.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="234" column="122" selection-start="11410" selection-end="11410" vertical-scroll-proportion="0.49418604">
-              <folding>
-                <marker date="1525196874459" expanded="true" signature="10909:11623" placeholder="{...}" />
-              </folding>
+            <state line="234" column="122" selection-start="11410" selection-end="11410" vertical-scroll-proportion="-9.807693">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -282,24 +271,6 @@
         <entry file="file://$PROJECT_DIR$/admin/includes/classes/administrators.php">
           <provider selected="true" editor-type-id="text-editor">
             <state line="177" column="24" selection-start="6814" selection-end="6814" vertical-scroll-proportion="-3.2692308">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="email_account.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/admin/includes/classes/email_account.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="769" column="22" selection-start="26759" selection-end="26759" vertical-scroll-proportion="-10.038462">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="mail.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/includes/classes/mail.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="224" column="18" selection-start="6532" selection-end="6532" vertical-scroll-proportion="-5.9615383">
               <folding />
             </state>
           </provider>
@@ -332,7 +303,7 @@
       <file leaf-file-name="login.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/admin/templates/bsca/login/login.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="344" column="78" selection-start="14371" selection-end="14385" vertical-scroll-proportion="-12.0">
+            <state line="342" column="54" selection-start="14265" selection-end="14265" vertical-scroll-proportion="-10.692307">
               <folding>
                 <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -342,6 +313,33 @@
                 <element signature="n#style#0;n#div#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#img#0;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="login.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/admin/templates/test/login/login.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="177" column="35" selection-start="6914" selection-end="6914" vertical-scroll-proportion="-1.5384616">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="test.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/includes/customers/test.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="47" column="29" selection-start="0" selection-end="2269" vertical-scroll-proportion="-8.923077">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="bsca.php" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/includes/customers/bsca.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="60" column="2" selection-start="2269" selection-end="2269" vertical-scroll-proportion="0.9357278">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -376,11 +374,11 @@
         <option value="$PROJECT_DIR$/index.php" />
         <option value="$PROJECT_DIR$/includes/configure.php" />
         <option value="$PROJECT_DIR$/metabase/start.sh" />
-        <option value="$PROJECT_DIR$/includes/customers/bsca.php" />
         <option value="$PROJECT_DIR$/ext/phpmailer/class.phpmailer.php" />
         <option value="$PROJECT_DIR$/admin/templates/bsca/login/login.php" />
         <option value="$PROJECT_DIR$/admin/includes/classes/administrators.php" />
         <option value="$PROJECT_DIR$/admin/includes/jsons/login.php" />
+        <option value="$PROJECT_DIR$/includes/customers/bsca.php" />
       </list>
     </option>
   </component>
@@ -474,6 +472,24 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="customers" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dev" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="it_perf_analyzer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="includes" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="classes" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -542,85 +558,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="default" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dev" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="it_perf_analyzer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="admin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="templates" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="default" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="extensions" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dev" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="it_perf_analyzer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="admin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="templates" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="default" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="extensions" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="oracle" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dev" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="it_perf_analyzer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="admin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="templates" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="bsca" />
+              <option name="myItemId" value="test" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -1066,44 +1004,9 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/includes/application_top.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="113" column="0" selection-start="3476" selection-end="3476" vertical-scroll-proportion="-19.038462">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/index.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="10" column="10" selection-start="322" selection-end="322" vertical-scroll-proportion="-6.5384617">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/includes/customers/test.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/includes/configure.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="1" column="22" selection-start="28" selection-end="28" vertical-scroll-proportion="-0.65384614">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/metabase/start.sh">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="2" column="15" selection-start="86" selection-end="86" vertical-scroll-proportion="0.061261263">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/includes/customers/bsca.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="25" column="58" selection-start="1242" selection-end="1242" vertical-scroll-proportion="2.8461537">
           <folding />
         </state>
       </provider>
@@ -1179,9 +1082,23 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/admin/includes/jsons/login.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="234" column="122" selection-start="11410" selection-end="11410" vertical-scroll-proportion="-9.807693">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/includes/configure.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="1" column="22" selection-start="28" selection-end="28" vertical-scroll-proportion="-0.65384614">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/admin/templates/bsca/login/login.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="344" column="78" selection-start="14371" selection-end="14385" vertical-scroll-proportion="-12.0">
+        <state line="342" column="54" selection-start="14265" selection-end="14265" vertical-scroll-proportion="-10.692307">
           <folding>
             <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -1194,12 +1111,24 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/admin/includes/jsons/login.php">
+    <entry file="file://$PROJECT_DIR$/admin/templates/test/login/login.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="234" column="122" selection-start="11410" selection-end="11410" vertical-scroll-proportion="0.49418604">
-          <folding>
-            <marker date="1525196874459" expanded="true" signature="10909:11623" placeholder="{...}" />
-          </folding>
+        <state line="177" column="35" selection-start="6914" selection-end="6914" vertical-scroll-proportion="-1.5384616">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/includes/customers/test.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="47" column="29" selection-start="0" selection-end="2269" vertical-scroll-proportion="-8.923077">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/includes/customers/bsca.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="60" column="2" selection-start="2269" selection-end="2269" vertical-scroll-proportion="0.9357278">
+          <folding />
         </state>
       </provider>
     </entry>
