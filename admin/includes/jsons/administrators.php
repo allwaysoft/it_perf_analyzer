@@ -47,22 +47,6 @@ class toC_Json_Administrators
 
         $access_modules_array = array();
 
-        foreach ($osC_DirectoryListing->getFiles() as $file) {
-            $module = substr($file['name'], 0, strrpos($file['name'], '.'));
-
-            if (!class_exists('osC_Access_' . ucfirst($module))) {
-                $osC_Language->loadIniFile('modules/access/' . $file['name']);
-                include($osC_DirectoryListing->getDirectory() . '/' . $file['name']);
-            }
-
-            $module = 'osC_Access_' . ucfirst($module);
-            $module = new $module();
-            $title = osC_Access::getGroupTitle($module->getGroup());
-
-            $access_modules_array[$title][] = array('id' => $module->getModule(),
-                'text' => $module->getTitle(),
-                'leaf' => true);
-        }
 
         foreach ($osC_DirectoryListing->getFiles() as $file) {
             $module = substr($file['name'], 0, strrpos($file['name'], '.'));
@@ -72,7 +56,7 @@ class toC_Json_Administrators
                 include($osC_DirectoryListing->getDirectory() . '/' . $file['name']);
             }
 
-            if ($_SESSION['admin']['username'] == 'admin') {
+            if (osC_Access::hasAccess($module)) {
                 $module = 'osC_Access_' . ucfirst($module);
                 $module = new $module();
                 $title = osC_Access::getGroupTitle($module->getGroup());
@@ -80,18 +64,7 @@ class toC_Json_Administrators
                 $access_modules_array[$title][] = array('id' => $module->getModule(),
                     'text' => $module->getTitle(),
                     'leaf' => true);
-            } else {
-                if (osC_Access::hasAccess($module)) {
-                    $module = 'osC_Access_' . ucfirst($module);
-                    $module = new $module();
-                    $title = osC_Access::getGroupTitle($module->getGroup());
-
-                    $access_modules_array[$title][] = array('id' => $module->getModule(),
-                        'text' => $module->getTitle(),
-                        'leaf' => true);
-                }
             }
-
         }
 
         ksort($access_modules_array);

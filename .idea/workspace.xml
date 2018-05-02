@@ -252,16 +252,16 @@
       <file leaf-file-name="roles.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/admin/includes/jsons/roles.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="285" column="5" selection-start="9398" selection-end="11036" vertical-scroll-proportion="-15.269231">
+            <state line="237" column="4" selection-start="9398" selection-end="11036" vertical-scroll-proportion="-2.6153846">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="administrators.php" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="administrators.php" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/admin/includes/jsons/administrators.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="122" column="45" selection-start="4318" selection-end="4318" vertical-scroll-proportion="-9.230769">
+            <state line="66" column="13" selection-start="2426" selection-end="2426" vertical-scroll-proportion="0.67054266">
               <folding />
             </state>
           </provider>
@@ -276,10 +276,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="administrators.php" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="administrators.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/admin/includes/classes/administrators.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="21" column="74" selection-start="646" selection-end="646" vertical-scroll-proportion="0.498062">
+            <state line="21" column="74" selection-start="646" selection-end="646" vertical-scroll-proportion="-9.884615">
               <folding />
             </state>
           </provider>
@@ -362,8 +362,8 @@
         <option value="$PROJECT_DIR$/includes/classes/language.php" />
         <option value="$PROJECT_DIR$/admin/includes/jsons/roles.php" />
         <option value="$PROJECT_DIR$/admin/includes/extmodules/roles/roles_dialog.php" />
-        <option value="$PROJECT_DIR$/admin/includes/jsons/administrators.php" />
         <option value="$PROJECT_DIR$/admin/includes/classes/administrators.php" />
+        <option value="$PROJECT_DIR$/admin/includes/jsons/administrators.php" />
       </list>
     </option>
   </component>
@@ -1059,13 +1059,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/admin/includes/jsons/roles.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="285" column="5" selection-start="9398" selection-end="11036" vertical-scroll-proportion="-15.269231">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/administrators/administrators_dialog.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="56" column="38" selection-start="1381" selection-end="1381" vertical-scroll-proportion="-3.9230769">
@@ -1087,16 +1080,23 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/admin/includes/jsons/administrators.php">
+    <entry file="file://$PROJECT_DIR$/admin/includes/classes/administrators.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="122" column="45" selection-start="4318" selection-end="4318" vertical-scroll-proportion="-9.230769">
+        <state line="21" column="74" selection-start="646" selection-end="646" vertical-scroll-proportion="-9.884615">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/admin/includes/classes/administrators.php">
+    <entry file="file://$PROJECT_DIR$/admin/includes/jsons/roles.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="21" column="74" selection-start="646" selection-end="646" vertical-scroll-proportion="0.498062">
+        <state line="237" column="4" selection-start="9398" selection-end="11036" vertical-scroll-proportion="-2.6153846">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/includes/jsons/administrators.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="66" column="13" selection-start="2426" selection-end="2426" vertical-scroll-proportion="0.67054266">
           <folding />
         </state>
       </provider>
