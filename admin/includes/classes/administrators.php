@@ -18,7 +18,7 @@ class osC_Administrators_Admin
     {
         global $osC_Database;
 
-        $Qadmin = $osC_Database->query('select id, user_name, email_address from :table_administrators where id = :id');
+        $Qadmin = $osC_Database->query('select id, user_name, email_address,user_password from :table_administrators where id = :id');
         $Qadmin->bindTable(':table_administrators', TABLE_ADMINISTRATORS);
         $Qadmin->bindInt(':id', $id);
         $Qadmin->execute();

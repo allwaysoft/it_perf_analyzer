@@ -229,7 +229,7 @@
     <file path="/categories_grid.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1525043123578" ignored="false" />
     <file path="/login.css" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1525084371073" ignored="false" />
     <file path="/start.sh" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1525098808273" ignored="false" />
-    <file path="/administrators.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1525224546252" ignored="false" />
+    <file path="/administrators.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1525249752190" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -249,15 +249,6 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="categories.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/admin/includes/jsons/categories.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="307" column="47" selection-start="13393" selection-end="13393" vertical-scroll-proportion="-11.346154">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="content.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/admin/includes/jsons/content.php">
           <provider selected="true" editor-type-id="text-editor">
@@ -278,10 +269,46 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="roles.php" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="roles.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/admin/includes/jsons/roles.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="227" column="0" selection-start="9193" selection-end="9193" vertical-scroll-proportion="0.5387597">
+            <state line="285" column="5" selection-start="9398" selection-end="11036" vertical-scroll-proportion="-15.269231">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="administrators.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/admin/includes/jsons/administrators.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="122" column="46" selection-start="4319" selection-end="4319" vertical-scroll-proportion="-9.230769">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="administrators.php" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/admin/includes/classes/administrators.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="39" column="31" selection-start="1327" selection-end="1327" vertical-scroll-proportion="0.7364341">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="administrators_dialog.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/administrators/administrators_dialog.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="56" column="38" selection-start="1381" selection-end="1381" vertical-scroll-proportion="-3.9230769">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="roles_dialog.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/roles/roles_dialog.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="216" column="39" selection-start="5432" selection-end="5432" vertical-scroll-proportion="-18.538462">
               <folding />
             </state>
           </provider>
@@ -290,43 +317,7 @@
       <file leaf-file-name="roles.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/admin/includes/classes/roles.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="18" column="30" selection-start="405" selection-end="405" vertical-scroll-proportion="-11.769231">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="categories.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/admin/includes/classes/categories.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="110" column="38" selection-start="5008" selection-end="5008" vertical-scroll-proportion="-0.88461536">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="language.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/includes/classes/language.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="169" column="48" selection-start="7115" selection-end="7115" vertical-scroll-proportion="-7.423077">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="application_top.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/admin/includes/application_top.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="104" column="27" selection-start="3290" selection-end="3290" vertical-scroll-proportion="-6.769231">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="language.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/admin/includes/classes/language.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="4" column="40" selection-start="95" selection-end="95" vertical-scroll-proportion="-2.6153846">
+            <state line="249" column="0" selection-start="9466" selection-end="9466" vertical-scroll-proportion="-18.538462">
               <folding />
             </state>
           </provider>
@@ -349,6 +340,15 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="bsca.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/includes/customers/bsca.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="35" column="12" selection-start="1514" selection-end="1518" vertical-scroll-proportion="-16.5">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
     </leaf>
   </component>
   <component name="FindManager">
@@ -359,8 +359,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/includes/filenames.php" />
-        <option value="$PROJECT_DIR$/account.php" />
         <option value="$PROJECT_DIR$/event.php" />
         <option value="$PROJECT_DIR$/includes/application_top.php" />
         <option value="$PROJECT_DIR$/index.php" />
@@ -368,13 +366,15 @@
         <option value="$PROJECT_DIR$/ext/phpmailer/class.phpmailer.php" />
         <option value="$PROJECT_DIR$/includes/customers/bsca.php" />
         <option value="$PROJECT_DIR$/includes/configure.php" />
-        <option value="$PROJECT_DIR$/admin/includes/classes/administrators.php" />
         <option value="$PROJECT_DIR$/admin/templates/test/login/login.php" />
         <option value="$PROJECT_DIR$/admin/includes/jsons/login.php" />
         <option value="$PROJECT_DIR$/admin/templates/bsca/login/login.php" />
         <option value="$PROJECT_DIR$/admin/includes/classes/categories.php" />
         <option value="$PROJECT_DIR$/includes/classes/language.php" />
         <option value="$PROJECT_DIR$/admin/includes/jsons/roles.php" />
+        <option value="$PROJECT_DIR$/admin/includes/extmodules/roles/roles_dialog.php" />
+        <option value="$PROJECT_DIR$/admin/includes/jsons/administrators.php" />
+        <option value="$PROJECT_DIR$/admin/includes/classes/administrators.php" />
       </list>
     </option>
   </component>
@@ -482,38 +482,6 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="includes" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="classes" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dev" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="it_perf_analyzer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ext" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dev" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="it_perf_analyzer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
               <option name="myItemId" value="admin" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -555,6 +523,54 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="jsons" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dev" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="it_perf_analyzer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="admin" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="includes" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="extmodules" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dev" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="it_perf_analyzer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="admin" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="includes" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="extmodules" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="administrators" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -956,56 +972,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/includes/configure.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="1" column="22" selection-start="28" selection-end="28" vertical-scroll-proportion="-0.65384614">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/admin/includes/classes/administrators.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="206" column="29" selection-start="7571" selection-end="7571" vertical-scroll-proportion="-18.538462">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/admin/templates/test/login/login.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="187" column="63" selection-start="7352" selection-end="7352" vertical-scroll-proportion="0.60465115">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/includes/customers/bsca.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="60" column="2" selection-start="2269" selection-end="2269" vertical-scroll-proportion="-16.423077">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/admin/includes/jsons/login.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="15" column="108" selection-start="484" selection-end="484" vertical-scroll-proportion="-9.807693">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/admin/templates/bsca/login/login.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="12" column="30" selection-start="625" selection-end="625" vertical-scroll-proportion="-7.230769">
-          <folding>
-            <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#img#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#img#1;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#img#0;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/admin/includes/application_top.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="104" column="27" selection-start="3290" selection-end="3290" vertical-scroll-proportion="-6.769231">
@@ -1048,13 +1014,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/admin/includes/classes/roles.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="18" column="30" selection-start="405" selection-end="405" vertical-scroll-proportion="-11.769231">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/admin/includes/jsons/content.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="516" column="32" selection-start="22693" selection-end="22693" vertical-scroll-proportion="-8.576923">
@@ -1071,9 +1030,66 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/admin/templates/bsca/login/login.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="12" column="30" selection-start="625" selection-end="625" vertical-scroll-proportion="-7.230769">
+          <folding>
+            <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#img#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#img#1;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#img#0;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/includes/customers/bsca.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="35" column="12" selection-start="1514" selection-end="1518" vertical-scroll-proportion="-16.5">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/includes/classes/roles.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="249" column="0" selection-start="9466" selection-end="9466" vertical-scroll-proportion="-18.538462">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/roles/roles_dialog.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="216" column="39" selection-start="5432" selection-end="5432" vertical-scroll-proportion="-18.538462">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/admin/includes/jsons/roles.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="227" column="0" selection-start="9193" selection-end="9193" vertical-scroll-proportion="0.5387597">
+        <state line="285" column="5" selection-start="9398" selection-end="11036" vertical-scroll-proportion="-15.269231">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/administrators/administrators_dialog.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="56" column="38" selection-start="1381" selection-end="1381" vertical-scroll-proportion="-3.9230769">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/includes/jsons/administrators.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="122" column="46" selection-start="4319" selection-end="4319" vertical-scroll-proportion="-9.230769">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/includes/classes/administrators.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="39" column="31" selection-start="1327" selection-end="1327" vertical-scroll-proportion="0.7364341">
           <folding />
         </state>
       </provider>
