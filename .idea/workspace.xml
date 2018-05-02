@@ -279,7 +279,7 @@
       <file leaf-file-name="content.php" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/admin/includes/classes/content.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="507" column="16" selection-start="19864" selection-end="19864" vertical-scroll-proportion="0.93410856">
+            <state line="496" column="56" selection-start="19195" selection-end="19195" vertical-scroll-proportion="0.6375969">
               <folding>
                 <element signature="e#8#172#0" expanded="true" />
               </folding>
@@ -1125,7 +1125,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/admin/includes/classes/content.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="507" column="16" selection-start="19864" selection-end="19864" vertical-scroll-proportion="0.93410856">
+        <state line="496" column="56" selection-start="19195" selection-end="19195" vertical-scroll-proportion="0.6375969">
           <folding>
             <element signature="e#8#172#0" expanded="true" />
           </folding>
