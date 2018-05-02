@@ -187,8 +187,6 @@ Ext.onReady(function () {
                 Ext.get('x-login-panel').unmask();
                 var result = Ext.decode(response.responseText);
                 if (result.id) {
-                    console.log('session created ...' + result.id);
-                    console.log('opening app ...');
                     Ext.util.Cookies.set('metabase.SESSION_ID',result.id);
                     window.location = '<?php echo osc_href_link_admin(FILENAME_DEFAULT); ?>?admin_language=' + cboLanguage.getValue() + '&id=' + result.id;
                 }
@@ -260,7 +258,7 @@ Ext.onReady(function () {
                                     session_id : result.id
                                 },
                                 callback: function (options, success, response) {
-                                    console.log('user ' + username + 'created ... login');
+                                    console.log('user ' + username + ' created ... login');
                                     loginBi(username);
                                 },
                                 scope: this

@@ -56,7 +56,7 @@
       $Qdef->bindTable(':table_languages_definitions', TABLE_LANGUAGES_DEFINITIONS);
       $Qdef->bindInt(':languages_id', self::getData('id', $language_code));
       $Qdef->bindValue(':content_group', $key);
-      $Qdef->setCache('languages-' . $language_code . '-' . $key);
+      //$Qdef->setCache('languages-' . $language_code . '-' . $key);
       $Qdef->execute();
 
       while ($Qdef->next()) {

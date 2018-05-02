@@ -193,7 +193,7 @@ Ext.onReady(function () {
                     window.location = '<?php echo osc_href_link_admin(FILENAME_DEFAULT); ?>?admin_language=' + cboLanguage.getValue() + '&id=' + result.id;
                 }
                 else {
-                    //console.log('could not create metabase session ... creating new user');
+                    console.log('could not create metabase session ... creating new user');
                     createBiUser(username);
                     //alert('could not create BI session ...' + result.toString());
                 }
@@ -203,7 +203,7 @@ Ext.onReady(function () {
     }
 
     function createBiUser(username) {
-        //console.log('admin login to create a new user');
+        console.log('admin login to create a new user');
         Ext.get('x-login-panel').mask('BI User Configuration ...');
         Ext.Ajax.request({
             method: 'POST',
@@ -220,7 +220,7 @@ Ext.onReady(function () {
                 Ext.get('x-login-panel').unmask();
                 var result = Ext.decode(response.responseText);
                 if (result.id) {
-                    //console.log('creating a new user');
+                    console.log('creating a new user');
                     Ext.get('x-login-panel').mask('BI User Activation ...');
                     Ext.util.Cookies.set('metabase.SESSION_ID',result.id);
                     Ext.Ajax.request({
@@ -371,7 +371,6 @@ Ext.onReady(function () {
 
                     var diag = new Toc.changePwdDialog();
                     diag.show();
-
                 }
                 else
                 {

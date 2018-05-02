@@ -13,7 +13,7 @@ class toC_Json_Login
         if (!empty($_REQUEST['user_name']) && !empty($_REQUEST['user_password'])) {
             switch (AUTH) {
                 case 'local':
-                    $response = array('success' => false, 'feedback' => "Authentification à la base locale ", 'changepwd' => false);
+                    $response = array('success' => false, 'feedback' => "Compte ou mot de passe invalide !!!", 'changepwd' => false);
 
                     $Qadmin = $osC_Database->query('select id, user_name, user_password from :table_administrators where user_name = :user_name');
                     $Qadmin->bindTable(':table_administrators', TABLE_ADMINISTRATORS);
