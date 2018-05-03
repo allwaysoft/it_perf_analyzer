@@ -58,6 +58,6 @@ define('METABASE_DEV_USER', 'makaki@gmail.com');
 define('METABASE_DEV_PASS', 'Guy2p@cc');
 define('METABASE_ADMIN_USER', 'admin@gmail.com');
 define('METABASE_ADMIN_PASS', 'Guy2p@cc');
-define('SD','MjAxOC0wNS0wMQ==');
-define('LAIRT','Mg==');
+define('SD','MjAxOC0wNS0wNQ==');
+define('LAIRT','');
 ?>
