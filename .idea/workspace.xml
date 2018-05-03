@@ -309,7 +309,7 @@
       <file leaf-file-name="bsca.php" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/includes/customers/bsca.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="61" column="16" selection-start="2316" selection-end="2316" vertical-scroll-proportion="0.77504724">
+            <state line="60" column="13" selection-start="2280" selection-end="2280" vertical-scroll-proportion="0.74291116">
               <folding />
             </state>
           </provider>
@@ -1122,7 +1122,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/includes/customers/bsca.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="61" column="16" selection-start="2316" selection-end="2316" vertical-scroll-proportion="0.77504724">
+        <state line="60" column="13" selection-start="2280" selection-end="2280" vertical-scroll-proportion="0.74291116">
           <folding />
         </state>
       </provider>
