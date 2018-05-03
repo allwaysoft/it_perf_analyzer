@@ -292,7 +292,8 @@ Ext.extend(Toc.bi.reportsGrid, Ext.grid.GridPanel, {
   },
 
   onGrdRowDbClick: function () {
-    this.runDashboard(null);
+    var record = this.getSelectionModel().getSelected();
+    this.runDashboard(record);
   },
 
   onBathMove: function () {

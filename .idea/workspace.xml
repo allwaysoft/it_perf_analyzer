@@ -205,7 +205,7 @@
     <file path="/oracle_perf.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1517670640337" ignored="false" />
     <file path="/bi_main_panel.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1524766796116" ignored="false" />
     <file path="/bi.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1518006991228" ignored="false" />
-    <file path="/bi_grid.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1525381908883" ignored="false" />
+    <file path="/bi_grid.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1525382664305" ignored="false" />
     <file path="/bi_dialog.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1524214727250" ignored="false" />
     <file path="/bi_data_panel.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1524215794359" ignored="false" />
     <file path="/datasources_main_panel.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1525001805715" ignored="false" />
@@ -298,7 +298,7 @@
       <file leaf-file-name="bi_grid.php" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/bi/bi_grid.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="293" column="17" selection-start="9990" selection-end="10005" vertical-scroll-proportion="0.4651163">
+            <state line="295" column="30" selection-start="10108" selection-end="10108" vertical-scroll-proportion="0.53100777">
               <folding />
             </state>
           </provider>
@@ -1222,7 +1222,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/bi/bi_grid.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="293" column="17" selection-start="9990" selection-end="10005" vertical-scroll-proportion="0.4651163">
+        <state line="295" column="30" selection-start="10108" selection-end="10108" vertical-scroll-proportion="0.53100777">
           <folding />
         </state>
       </provider>
