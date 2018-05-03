@@ -44,7 +44,7 @@ Ext.extend(Toc.queries.mainPanel, Ext.Panel, {
               this.removeAll(true);
             }
 
-            var cmp = new Ext.Component({autoEl:{tag: 'iframe',style: 'height: 100%; width: 100%; border: none'},height: 600,name : 'queries_iframe',id: 'queries_iframe',width: 600});
+            var cmp = new Ext.Component({autoEl:{tag: 'iframe',style: 'height: 100%; width: 100%; border: none'},height: 600,id: 'queries_iframe',width: 600});
             this.add(cmp);
             this.doLayout(true, true);
             windows.doLayout(true, true);
@@ -56,8 +56,6 @@ Ext.extend(Toc.queries.mainPanel, Ext.Panel, {
             };
 
             windows.getEl().mask('<?php echo $osC_Language->get('loading'); ?>');
-this.iframe = cmp;
-console.debug(cmp);
         }
         else
         {
@@ -73,22 +71,14 @@ console.debug(cmp);
     });
    },
    onAdd : function(windows){
-    console.log('onAdd ...');
-    if(this.iframe)
-    {
-        console.debug(this.iframe);
-        this.iframe.el.dom.contentWindow.open('<?php echo METABASE_URL . '/question'; ?>' + '?username=' + this.username + '&password=' + '<?php echo METABASE_DEV_PASS; ?>','queries_iframe');
-    }
-    else
-    {
-        var that = this;
-        if(this.username)
+       var that = this;
+       if(this.username)
         {
             if (this.items) {
                 this.removeAll(true);
             }
 
-            var cmp = new Ext.Component({autoEl:{tag: 'iframe',style: 'height: 100%; width: 100%; border: none'},height: 600,name : 'queries_iframe',id: 'queries_iframe',width: 600});
+            var cmp = new Ext.Component({autoEl:{tag: 'iframe',style: 'height: 100%; width: 100%; border: none'},height: 600,id: 'queries_iframe',width: 600});
             this.add(cmp);
             this.doLayout(true, true);
             cmp.el.dom.src = '<?php echo METABASE_URL . '/question'; ?>' + '?username=' + this.username + '&password=' + '<?php echo METABASE_DEV_PASS; ?>';
@@ -108,43 +98,33 @@ console.debug(cmp);
 
             Ext.MessageBox.alert(TocLanguage.msgErrTitle,'<?php echo $osC_Language->get('exîred_session'); ?>');
         }
-    }
    },
     onRefresh : function(windows){
-        console.log('onRefresh ...');
-        if(this.iframe)
+        var that = this;
+        if(this.username)
         {
-            console.debug(this.iframe);
-            this.iframe.el.dom.contentWindow.open('<?php echo METABASE_URL . '/questions'; ?>' + '?username=' + this.username + '&password=' + '<?php echo METABASE_DEV_PASS; ?>','queries_iframe');
+            if (this.items) {
+                this.removeAll(true);
+            }
+
+            var cmp = new Ext.Component({autoEl:{tag: 'iframe',style: 'height: 100%; width: 100%; border: none'},height: 600,id: 'queries_iframe',width: 600});
+            this.add(cmp);
+            this.doLayout(true, true);
+            cmp.el.dom.src = '<?php echo METABASE_URL . '/questions'; ?>' + '?username=' + this.username + '&password=' + '<?php echo METABASE_DEV_PASS; ?>';
+
+            cmp.el.dom.onload = function() {
+                console.log('iframe onload ...')
+                that.getEl().unmask();
+            };
+
+            this.getEl().mask('<?php echo $osC_Language->get('loading'); ?>');
         }
         else
         {
-            var that = this;
-            if(this.username)
-            {
-                if (this.items) {
-                    this.removeAll(true);
-                }
-
-                var cmp = new Ext.Component({autoEl:{tag: 'iframe',style: 'height: 100%; width: 100%; border: none'},height: 600,id: 'queries_iframe',width: 600});
-                this.add(cmp);
-                this.doLayout(true, true);
-                cmp.el.dom.src = '<?php echo METABASE_URL . '/questions'; ?>' + '?username=' + this.username + '&password=' + '<?php echo METABASE_DEV_PASS; ?>';
-
-                cmp.el.dom.onload = function() {
-                console.log('iframe onload ...')
-                that.getEl().unmask();
-                };
-
-                this.getEl().mask('<?php echo $osC_Language->get('loading'); ?>');
+            if (that.items) {
+                that.removeAll(true);
             }
-            else
-            {
-                if (that.items) {
-                    that.removeAll(true);
-                }
-                Ext.MessageBox.alert(TocLanguage.msgErrTitle,'<?php echo $osC_Language->get('exîred_session'); ?>');
-            }
+            Ext.MessageBox.alert(TocLanguage.msgErrTitle,'<?php echo $osC_Language->get('exîred_session'); ?>');
         }
     }
 });

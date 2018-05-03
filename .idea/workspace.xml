@@ -307,7 +307,7 @@
       <file leaf-file-name="queries_main_panel.php" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/queries/queries_main_panel.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="117" column="195" selection-start="3851" selection-end="3851" vertical-scroll-proportion="0.67054266">
+            <state line="57" column="81" selection-start="1819" selection-end="1819" vertical-scroll-proportion="0.065891474">
               <folding />
             </state>
           </provider>
@@ -1177,7 +1177,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/queries/queries_main_panel.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="117" column="195" selection-start="3851" selection-end="3851" vertical-scroll-proportion="0.67054266">
+        <state line="57" column="81" selection-start="1819" selection-end="1819" vertical-scroll-proportion="0.065891474">
           <folding />
         </state>
       </provider>
