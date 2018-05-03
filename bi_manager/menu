@@ -1,0 +1,156 @@
+#!/bin/ksh
+
+nbparam=$#
+
+case $nbparam in
+      0) echo "Usage = sh menu <conf>"
+         exit 1;;
+      *);;
+   esac
+
+export config=$1
+
+which sqlplus >/dev/null 2>&1
+if [ "$?" -eq 0 ]; then
+  export SQLPLUS_FOUND=TRUE
+else
+  echo "sqlplus n'est pas dans votre PATH"
+  exit 1;
+fi
+
+## [ "$ORACLE_SID" = "" ] && { echo "ORACLE_SID is not specified"; echo "Exiting...."; exit 1; }
+
+export CONNECT_STRING="/ as sysdba"
+#export ORACLE_PATH=$PWD
+export ORACLE_PATH=/home/oracle/scripts/dataguard
+
+#echo "Present working directory is: $PWD"
+#[ "$CONF" = "" ] && export CONF=$PWD/dg.conf
+export CONF=$PWD/$config
+#[ ! -f "$CONF" ] && { echo "Configuration file: $CONF is missing."; echo "Exiting."; exit 1; }
+[ ! -f "$CONF" ] && { echo "Fichier de Configuration inexistant ..."; echo "Exiting."; exit 1; }
+. $CONF
+. $PWD/dg_remote_connect.ksh
+
+function next_menu
+{
+#echo "# ----------------------------------------------------------------------- #"
+echo ""
+echo "[ ...  Appuyez une touche pour continer ... ]"
+read next
+}
+
+function main_menu
+{
+clear
+echo " ------------------------------------------------------------------------- "
+echo "                                                                           "
+echo "        Menu de gestion de la haute disponilite au CCA                       "
+echo "                                                                           "
+echo "                                                             "
+echo "   Primary Host:  $PRIMARY_SERVER      Standby Host:  $STANDBY_SERVER "
+echo ""
+echo " ------------------------------------------------------------------------- "
+echo "  1.  Lister les fichiers de la BD                                         "
+echo " ------------------------------------------------------------------------- "
+echo "  2.  Sauvegarder la BD                                                    "
+echo " ------------------------------------------------------------------------- "
+echo "  3.  Rapports Sauvegardes                                                 "
+echo " ------------------------------------------------------------------------- "
+echo "  4.  Sauvegarder les journaux archives                                    "
+echo " ------------------------------------------------------------------------- "
+echo "  5.  Valider les Sauvegardes                                              "
+echo " ------------------------------------------------------------------------- "
+echo "  6.  Surveiller Espaces logiques                                          "
+echo " ------------------------------------------------------------------------- "
+echo "  7.  Nettoyer Espace recuperation rapide                                  "
+echo " ------------------------------------------------------------------------- "
+echo "  8.  Diagnostiquer la BD (Necessite un redemarrage de la BD)              "
+echo " ------------------------------------------------------------------------- "
+echo "  9.  Reparer la BD (Necessite un redemarrage de la BD)                    "
+echo " ------------------------------------------------------------------------- "
+echo "  10. Arreter la BD                    "
+echo " ------------------------------------------------------------------------- "
+echo "  11. Demarrer la BD                     "
+echo " ------------------------------------------------------------------------- "
+echo "  12. Arreter la BD par Force                    "
+echo " ------------------------------------------------------------------------- "
+echo "  13. Demarrer la BD par Force                    "
+echo " ------------------------------------------------------------------------- "
+echo "  14. Gestion Replication                                           "
+echo " ------------------------------------------------------------------------- "
+echo "   x.  Quitter                                                             "
+echo " ------------------------------------------------------------------------- "
+
+   echo "#   Enter Task Number: "
+   read x
+   ans=`echo $x | tr '[a-z]' '[A-Z]'`
+#
+   case "$ans"
+   in
+       1 ) ssh $PRIMARY_SERVER "sh $RMAN/print_schema.sh" 
+       next_menu;
+       ;;
+
+       2) ssh $PRIMARY_SERVER "sh $RMAN/backup_inc.sh"
+       next_menu;
+       ;;
+
+       3) ssh $PRIMARY_SERVER "sh $RMAN/print_backups_report.sh"
+       next_menu;
+       ;;
+
+       4) ssh $PRIMARY_SERVER "sh $RMAN/backup_archived_log.sh"
+       next_menu;
+       ;;
+
+       5) sh $PRIMARY_SERVER "sh $RMAN/check_backup.sh"
+       next_menu;
+       ;;
+
+       6) ssh $PRIMARY_SERVER "sh $ORACLE_PATH/watch_tbs.sh 2>/dev/null"
+       next_menu;
+       ;;
+
+       7) ssh $PRIMARY_SERVER "sh $RMAN/clean_fra.sh"
+       next_menu;
+       ;;
+
+       8) sh $PRIMARY_SERVER "sh $RMAN/diag_database.sh"
+       next_menu;
+       ;;
+
+       9) ssh $PRIMARY_SERVER "sh $RMAN/repair_database.sh"
+       next_menu;
+       ;;
+
+       10) ssh $PRIMARY_SERVER "sh $RMAN/shutdown.sh"
+       next_menu;
+       ;;
+
+       11) ssh $PRIMARY_SERVER "sh $RMAN/startup.sh"
+       next_menu;
+       ;;
+
+       12) ssh $PRIMARY_SERVER "sh $RMAN/startup_force.sh"
+       next_menu;
+       ;;
+
+       13) ssh $PRIMARY_SERVER "sh $RMAN/shutdown_force.sh"
+       next_menu;
+       ;;
+
+       14) ./standby_menu.sh $config
+       next_menu;
+       ;;
+
+       q|X|x ) exit; ;;
+
+       * ) main_menu; ;;
+   esac
+}
+
+while true
+ do
+  main_menu
+done

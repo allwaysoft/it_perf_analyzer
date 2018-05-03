@@ -37,6 +37,8 @@ Toc.bi.reportsGrid = function(config) {
     autoLoad: false
   });
 
+  config.listeners = {"rowdblclick": this.onGrdRowDbClick};
+
   config.rowActions = new Ext.ux.grid.RowActions({
     actions:[
       {iconCls: 'run', qtip: TocLanguage.run},
@@ -287,6 +289,10 @@ Ext.extend(Toc.bi.reportsGrid, Ext.grid.GridPanel, {
                 },
                 scope: this
             });
+  },
+
+  onGrdRowDbClick: function () {
+    this.runDashboard(null);
   },
 
   onBathMove: function () {

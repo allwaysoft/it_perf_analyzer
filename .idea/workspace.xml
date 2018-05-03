@@ -8,7 +8,7 @@
     <file path="/programmes_grid.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1387297006716" ignored="false" />
     <file path="/delta.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1387197488755" ignored="false" />
     <file path="/programmes_amplitude.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1387197648658" ignored="false" />
-    <file path="/a.dummy" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1524234482915" ignored="false" />
+    <file path="/a.dummy" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1525381730138" ignored="false" />
     <file path="/users.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1484570503998" ignored="false" />
     <file path="/all.css" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1519199970820" ignored="false" />
     <file path="/servers_dialog.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1405707124063" ignored="false" />
@@ -205,7 +205,7 @@
     <file path="/oracle_perf.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1517670640337" ignored="false" />
     <file path="/bi_main_panel.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1524766796116" ignored="false" />
     <file path="/bi.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1518006991228" ignored="false" />
-    <file path="/bi_grid.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1524755902174" ignored="false" />
+    <file path="/bi_grid.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1525381908883" ignored="false" />
     <file path="/bi_dialog.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1524214727250" ignored="false" />
     <file path="/bi_data_panel.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1524215794359" ignored="false" />
     <file path="/datasources_main_panel.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1525001805715" ignored="false" />
@@ -250,15 +250,6 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="categories.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/admin/includes/jsons/categories.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="374" column="46" selection-start="15928" selection-end="15928" vertical-scroll-proportion="-13.307693">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="content.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/admin/includes/jsons/content.php">
           <provider selected="true" editor-type-id="text-editor">
@@ -268,48 +259,46 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="administrators.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/admin/includes/jsons/administrators.php">
+      <file leaf-file-name="whos_online.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/admin/includes/jsons/whos_online.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="16" column="110" selection-start="599" selection-end="618" vertical-scroll-proportion="-7.1923075">
+            <state line="1" column="0" selection-start="6" selection-end="6" vertical-scroll-proportion="-0.65384614">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="content.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/admin/includes/classes/content.php">
+      <file leaf-file-name="backup.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/admin/includes/jsons/backup.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="920" column="78" selection-start="38574" selection-end="38574" vertical-scroll-proportion="-13.307693">
-              <folding>
-                <element signature="e#8#172#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="configure.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/includes/configure.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="1" column="22" selection-start="28" selection-end="28" vertical-scroll-proportion="-0.65384614">
+            <state line="64" column="31" selection-start="2141" selection-end="2141" vertical-scroll-proportion="-8.576923">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="test.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/includes/customers/test.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="9" column="45" selection-start="0" selection-end="2269" vertical-scroll-proportion="-5.8846154">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="bsca.php" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="bsca.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/includes/customers/bsca.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="60" column="32" selection-start="2299" selection-end="2299" vertical-scroll-proportion="0.74291116">
+            <state line="15" column="7" selection-start="551" selection-end="551" vertical-scroll-proportion="-6.769231">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="categories_grid.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/categories/categories_grid.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="314" column="4" selection-start="9319" selection-end="9506" vertical-scroll-proportion="-14.576923">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="bi_grid.php" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/bi/bi_grid.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="293" column="17" selection-start="9990" selection-end="10005" vertical-scroll-proportion="0.4651163">
               <folding />
             </state>
           </provider>
@@ -333,15 +322,6 @@
         </entry>
       </file>
       <file leaf-file-name="login.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/admin/includes/languages/fr_FR/login.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="1" column="0" selection-start="26" selection-end="136" vertical-scroll-proportion="-0.65384614">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="login.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/admin/includes/languages/en_US/login.php">
           <provider selected="true" editor-type-id="text-editor">
             <state line="1" column="86" selection-start="123" selection-end="123" vertical-scroll-proportion="-0.65384614">
@@ -360,12 +340,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/admin/includes/extmodules/administrators/administrators_dialog.php" />
-        <option value="$PROJECT_DIR$/admin/includes/classes/administrators.php" />
-        <option value="$PROJECT_DIR$/admin/includes/extmodules/roles/roles_dialog.php" />
-        <option value="$PROJECT_DIR$/admin/includes/jsons/roles.php" />
-        <option value="$PROJECT_DIR$/admin/includes/classes/roles.php" />
-        <option value="$PROJECT_DIR$/admin/includes/languages/en_US.php" />
         <option value="$PROJECT_DIR$/admin/includes/languages/fr_FR.php" />
         <option value="$PROJECT_DIR$/includes/classes/language.php" />
         <option value="$PROJECT_DIR$/admin/includes/extmodules/administrators/administrators_grid.php" />
@@ -376,6 +350,12 @@
         <option value="$PROJECT_DIR$/admin/includes/languages/en_US/login.php" />
         <option value="$PROJECT_DIR$/admin/templates/bsca/login/login.php" />
         <option value="$PROJECT_DIR$/includes/customers/bsca.php" />
+        <option value="$PROJECT_DIR$/admin/includes/jsons/whos_online.php" />
+        <option value="$PROJECT_DIR$/admin/includes/jsons/backup.php" />
+        <option value="$PROJECT_DIR$/admin/includes/classes/backup.php" />
+        <option value="$PROJECT_DIR$/admin/includes/extmodules/articles/articles_grid.php" />
+        <option value="$PROJECT_DIR$/admin/includes/extmodules/documents/documents_grid.php" />
+        <option value="$PROJECT_DIR$/admin/includes/extmodules/bi/bi_grid.php" />
       </list>
     </option>
   </component>
@@ -627,6 +607,128 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dev" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="it_perf_analyzer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="admin" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="includes" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="jsons" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dev" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="it_perf_analyzer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="admin" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="includes" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="extmodules" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dev" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="it_perf_analyzer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="admin" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="includes" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="extmodules" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="reports" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dev" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="it_perf_analyzer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="admin" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="includes" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="extmodules" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="categories" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dev" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="it_perf_analyzer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="admin" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="includes" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="extmodules" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bi" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
     </panes>
@@ -789,6 +891,7 @@
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32890365" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.42358804" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2219697" sideWeight="0.49833888" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Remote Host" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32954547" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -802,7 +905,6 @@
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.42460316" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="REST Client" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.5714286" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
@@ -1003,71 +1105,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/admin/includes/jsons/reports.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="321" column="43" selection-start="15657" selection-end="15657" vertical-scroll-proportion="-6.769231">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/admin/includes/classes/reports.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="1394" column="41" selection-start="53084" selection-end="53084" vertical-scroll-proportion="-4.8076925">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/includes/classes/category_tree.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="346" column="17" selection-start="14706" selection-end="14706" vertical-scroll-proportion="0.20930232">
-          <folding>
-            <marker date="1525039301172" expanded="false" signature="-1:-1" placeholder="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/administrators/administrators_grid.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="167" column="2" selection-start="3994" selection-end="3994" vertical-scroll-proportion="-19.038462">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/roles/roles_grid.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/admin/includes/jsons/roles.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="171" column="13" selection-start="6124" selection-end="6923" vertical-scroll-proportion="-6.9607844">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/admin/includes/jsons/categories.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="374" column="46" selection-start="15928" selection-end="15928" vertical-scroll-proportion="-13.307693">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/admin/includes/jsons/administrators.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="16" column="110" selection-start="599" selection-end="618" vertical-scroll-proportion="-7.1923075">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/admin/includes/jsons/content.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="516" column="34" selection-start="22695" selection-end="22695" vertical-scroll-proportion="-2.0384614">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/admin/includes/classes/content.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="920" column="78" selection-start="38574" selection-end="38574" vertical-scroll-proportion="-13.307693">
@@ -1120,9 +1157,72 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/admin/includes/jsons/content.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="516" column="34" selection-start="22695" selection-end="22695" vertical-scroll-proportion="-2.0384614">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/includes/jsons/whos_online.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="1" column="0" selection-start="6" selection-end="6" vertical-scroll-proportion="-0.65384614">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/includes/jsons/backup.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="64" column="31" selection-start="2141" selection-end="2141" vertical-scroll-proportion="-8.576923">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/includes/classes/backup.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="6" column="26" selection-start="156" selection-end="156" vertical-scroll-proportion="-3.9230769">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/includes/customers/bsca.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="60" column="32" selection-start="2299" selection-end="2299" vertical-scroll-proportion="0.74291116">
+        <state line="15" column="7" selection-start="551" selection-end="551" vertical-scroll-proportion="-6.769231">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/articles/articles_grid.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="5" selection-start="5" selection-end="5" vertical-scroll-proportion="23.76923">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/reports/reports_grid.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-3.8449612">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/documents/documents_grid.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="5" selection-start="5" selection-end="5" vertical-scroll-proportion="226.61539">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/categories/categories_grid.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="314" column="4" selection-start="9319" selection-end="9506" vertical-scroll-proportion="-14.576923">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/bi/bi_grid.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="293" column="17" selection-start="9990" selection-end="10005" vertical-scroll-proportion="0.4651163">
           <folding />
         </state>
       </provider>
