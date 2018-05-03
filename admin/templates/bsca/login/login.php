@@ -1,5 +1,5 @@
 <?php
-
+$osC_Language->loadIniFile('login.php');
 $trial = base64_decode(LAIRT);
 $date1 = new DateTime(base64_decode(SD));
 $date2 = new DateTime();
@@ -8,10 +8,8 @@ $interval = $date2->diff($date1);
 
 if($interval->days >= $trial)
 {
-    die("Votre periode d'essai est echue ... Veuillez contacter le cabinet HMN pour obtenir une licence");
+    die($osC_Language->get('trial_expired'));
 }
-
-$osC_Language->loadIniFile('login.php');
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" dir="<?php echo $osC_Language->getTextDirection(); ?>"

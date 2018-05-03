@@ -1,4 +1,5 @@
 heading_title = Connexion
+trial_expired=Votre periode d'essai est expirée ... Veuillez contacter le cabinet HMN pour obtenir une licence
 
 action_heading_login = Connexion aux outils d\'administration
 

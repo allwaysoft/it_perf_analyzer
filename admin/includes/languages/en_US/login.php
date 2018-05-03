@@ -1,5 +1,5 @@
 heading_title = Administration Login
-
+trial_expired=Your trial period has expired ... Please contact HMN to obtain a license
 action_heading_login = Log Into The Administration Tool
 
 introduction = Please identify yourself to log into the administration tool.
