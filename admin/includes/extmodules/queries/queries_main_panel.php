@@ -56,6 +56,8 @@ Ext.extend(Toc.queries.mainPanel, Ext.Panel, {
             };
 
             windows.getEl().mask('<?php echo $osC_Language->get('loading'); ?>');
+this.iframe = cmp;
+console.debug(cmp);
         }
         else
         {
@@ -71,6 +73,12 @@ Ext.extend(Toc.queries.mainPanel, Ext.Panel, {
     });
    },
    onAdd : function(windows){
+console.log('onAdd ...');
+if(this.iframe)
+{
+console.debug(this.iframe);
+}
+
        var that = this;
        if(this.username)
         {
@@ -100,6 +108,12 @@ Ext.extend(Toc.queries.mainPanel, Ext.Panel, {
         }
    },
     onRefresh : function(windows){
+console.log('onRefresh ...');
+if(this.iframe)
+{
+console.debug(this.iframe);
+}
+
         var that = this;
         if(this.username)
         {
