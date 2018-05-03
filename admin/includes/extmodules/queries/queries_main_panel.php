@@ -44,7 +44,7 @@ Ext.extend(Toc.queries.mainPanel, Ext.Panel, {
               this.removeAll(true);
             }
 
-            var cmp = new Ext.Component({autoEl:{tag: 'iframe',style: 'height: 100%; width: 100%; border: none'},height: 600,id: 'queries_iframe',width: 600});
+            var cmp = new Ext.Component({autoEl:{tag: 'iframe',style: 'height: 100%; width: 100%; border: none'},height: 600,name : 'queries_iframe',id: 'queries_iframe',width: 600});
             this.add(cmp);
             this.doLayout(true, true);
             windows.doLayout(true, true);
@@ -77,7 +77,7 @@ console.debug(cmp);
     if(this.iframe)
     {
         console.debug(this.iframe);
-        this.iframe.el.dom.contentWindow.open('<?php echo METABASE_URL . '/question'; ?>' + '?username=' + this.username + '&password=' + '<?php echo METABASE_DEV_PASS; ?>','AddQuestion');
+        this.iframe.el.dom.contentWindow.open('<?php echo METABASE_URL . '/question'; ?>' + '?username=' + this.username + '&password=' + '<?php echo METABASE_DEV_PASS; ?>','queries_iframe');
     }
     else
     {
@@ -88,7 +88,7 @@ console.debug(cmp);
                 this.removeAll(true);
             }
 
-            var cmp = new Ext.Component({autoEl:{tag: 'iframe',style: 'height: 100%; width: 100%; border: none'},height: 600,id: 'queries_iframe',width: 600});
+            var cmp = new Ext.Component({autoEl:{tag: 'iframe',style: 'height: 100%; width: 100%; border: none'},height: 600,name : 'queries_iframe',id: 'queries_iframe',width: 600});
             this.add(cmp);
             this.doLayout(true, true);
             cmp.el.dom.src = '<?php echo METABASE_URL . '/question'; ?>' + '?username=' + this.username + '&password=' + '<?php echo METABASE_DEV_PASS; ?>';
@@ -115,7 +115,7 @@ console.debug(cmp);
         if(this.iframe)
         {
             console.debug(this.iframe);
-            this.iframe.el.dom.contentWindow.open('<?php echo METABASE_URL . '/questions'; ?>' + '?username=' + this.username + '&password=' + '<?php echo METABASE_DEV_PASS; ?>');
+            this.iframe.el.dom.contentWindow.open('<?php echo METABASE_URL . '/questions'; ?>' + '?username=' + this.username + '&password=' + '<?php echo METABASE_DEV_PASS; ?>','queries_iframe';
         }
         else
         {
