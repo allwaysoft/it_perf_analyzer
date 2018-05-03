@@ -115,7 +115,7 @@ console.debug(cmp);
         if(this.iframe)
         {
             console.debug(this.iframe);
-            this.iframe.el.dom.contentWindow.open('<?php echo METABASE_URL . '/questions'; ?>' + '?username=' + this.username + '&password=' + '<?php echo METABASE_DEV_PASS; ?>','queries_iframe';
+            this.iframe.el.dom.contentWindow.open('<?php echo METABASE_URL . '/questions'; ?>' + '?username=' + this.username + '&password=' + '<?php echo METABASE_DEV_PASS; ?>','queries_iframe');
         }
         else
         {
