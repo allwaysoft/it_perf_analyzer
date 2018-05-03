@@ -306,19 +306,19 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="bsca.php" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="bsca.php" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/includes/customers/bsca.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="42" column="36" selection-start="1740" selection-end="1740" vertical-scroll-proportion="-3.3461537">
+            <state line="61" column="23" selection-start="2323" selection-end="2323" vertical-scroll-proportion="0.77504724">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="login.php" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="login.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/admin/templates/bsca/login/login.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="6" column="33" selection-start="207" selection-end="207" vertical-scroll-proportion="0.19767442">
+            <state line="6" column="33" selection-start="207" selection-end="207" vertical-scroll-proportion="-3.9230769">
               <folding>
                 <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -372,10 +372,10 @@
         <option value="$PROJECT_DIR$/admin/includes/jsons/administrators.php" />
         <option value="$PROJECT_DIR$/admin/includes/classes/content.php" />
         <option value="$PROJECT_DIR$/includes/configure.php" />
-        <option value="$PROJECT_DIR$/includes/customers/bsca.php" />
         <option value="$PROJECT_DIR$/admin/includes/languages/fr_FR/login.php" />
         <option value="$PROJECT_DIR$/admin/includes/languages/en_US/login.php" />
         <option value="$PROJECT_DIR$/admin/templates/bsca/login/login.php" />
+        <option value="$PROJECT_DIR$/includes/customers/bsca.php" />
       </list>
     </option>
   </component>
@@ -438,6 +438,38 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="it_perf_analyzer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dev" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="it_perf_analyzer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="includes" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dev" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="it_perf_analyzer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="includes" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="customers" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -1059,13 +1091,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/includes/customers/bsca.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="42" column="36" selection-start="1740" selection-end="1740" vertical-scroll-proportion="-3.3461537">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/admin/includes/languages/fr_FR/login.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="1" column="0" selection-start="26" selection-end="136" vertical-scroll-proportion="-0.65384614">
@@ -1082,7 +1107,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/admin/templates/bsca/login/login.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="33" selection-start="207" selection-end="207" vertical-scroll-proportion="0.19767442">
+        <state line="6" column="33" selection-start="207" selection-end="207" vertical-scroll-proportion="-3.9230769">
           <folding>
             <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -1092,6 +1117,13 @@
             <element signature="n#style#0;n#div#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#img#0;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/includes/customers/bsca.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="61" column="23" selection-start="2323" selection-end="2323" vertical-scroll-proportion="0.77504724">
+          <folding />
         </state>
       </provider>
     </entry>
