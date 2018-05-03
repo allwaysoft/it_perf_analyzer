@@ -73,14 +73,16 @@ console.debug(cmp);
     });
    },
    onAdd : function(windows){
-console.log('onAdd ...');
-if(this.iframe)
-{
-console.debug(this.iframe);
-}
-
-       var that = this;
-       if(this.username)
+    console.log('onAdd ...');
+    if(this.iframe)
+    {
+        console.debug(this.iframe);
+        this.iframe.el.dom.contentWindow.open('<?php echo METABASE_URL . '/question'; ?>' + '?username=' + this.username + '&password=' + '<?php echo METABASE_DEV_PASS; ?>','AddQuestion');
+    }
+    else
+    {
+        var that = this;
+        if(this.username)
         {
             if (this.items) {
                 this.removeAll(true);
@@ -106,39 +108,43 @@ console.debug(this.iframe);
 
             Ext.MessageBox.alert(TocLanguage.msgErrTitle,'<?php echo $osC_Language->get('exîred_session'); ?>');
         }
+    }
    },
     onRefresh : function(windows){
-console.log('onRefresh ...');
-if(this.iframe)
-{
-console.debug(this.iframe);
-}
-
-        var that = this;
-        if(this.username)
+        console.log('onRefresh ...');
+        if(this.iframe)
         {
-            if (this.items) {
-                this.removeAll(true);
-            }
-
-            var cmp = new Ext.Component({autoEl:{tag: 'iframe',style: 'height: 100%; width: 100%; border: none'},height: 600,id: 'queries_iframe',width: 600});
-            this.add(cmp);
-            this.doLayout(true, true);
-            cmp.el.dom.src = '<?php echo METABASE_URL . '/questions'; ?>' + '?username=' + this.username + '&password=' + '<?php echo METABASE_DEV_PASS; ?>';
-
-            cmp.el.dom.onload = function() {
-                console.log('iframe onload ...')
-                that.getEl().unmask();
-            };
-
-            this.getEl().mask('<?php echo $osC_Language->get('loading'); ?>');
+            console.debug(this.iframe);
+            this.iframe.el.dom.contentWindow.open('<?php echo METABASE_URL . '/questions'; ?>' + '?username=' + this.username + '&password=' + '<?php echo METABASE_DEV_PASS; ?>');
         }
         else
         {
-            if (that.items) {
-                that.removeAll(true);
+            var that = this;
+            if(this.username)
+            {
+                if (this.items) {
+                    this.removeAll(true);
+                }
+
+                var cmp = new Ext.Component({autoEl:{tag: 'iframe',style: 'height: 100%; width: 100%; border: none'},height: 600,id: 'queries_iframe',width: 600});
+                this.add(cmp);
+                this.doLayout(true, true);
+                cmp.el.dom.src = '<?php echo METABASE_URL . '/questions'; ?>' + '?username=' + this.username + '&password=' + '<?php echo METABASE_DEV_PASS; ?>';
+
+                cmp.el.dom.onload = function() {
+                console.log('iframe onload ...')
+                that.getEl().unmask();
+                };
+
+                this.getEl().mask('<?php echo $osC_Language->get('loading'); ?>');
             }
-            Ext.MessageBox.alert(TocLanguage.msgErrTitle,'<?php echo $osC_Language->get('exîred_session'); ?>');
+            else
+            {
+                if (that.items) {
+                    that.removeAll(true);
+                }
+                Ext.MessageBox.alert(TocLanguage.msgErrTitle,'<?php echo $osC_Language->get('exîred_session'); ?>');
+            }
         }
     }
 });

@@ -210,7 +210,7 @@
     <file path="/bi_data_panel.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1524215794359" ignored="false" />
     <file path="/datasources_main_panel.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1525001805715" ignored="false" />
     <file path="/datasources.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1518800910600" ignored="false" />
-    <file path="/queries_main_panel.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1525383220465" ignored="false" />
+    <file path="/queries_main_panel.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1525384255488" ignored="false" />
     <file path="/queries.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1518875968588" ignored="false" />
     <file path="/dashboards_editor.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1519051767955" ignored="false" />
     <file path="/dashboards_editor_main_panel.php" changelist="62eba71e-22c4-45c3-9a96-45f7a2a0a098" time="1525077380613" ignored="false" />
@@ -307,7 +307,7 @@
       <file leaf-file-name="queries_main_panel.php" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/queries/queries_main_panel.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="110" column="29" selection-start="3287" selection-end="3287" vertical-scroll-proportion="0.044573642">
+            <state line="106" column="13" selection-start="3321" selection-end="3321" vertical-scroll-proportion="0.032945737">
               <folding />
             </state>
           </provider>
@@ -1177,7 +1177,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/admin/includes/extmodules/queries/queries_main_panel.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="110" column="29" selection-start="3287" selection-end="3287" vertical-scroll-proportion="0.044573642">
+        <state line="106" column="13" selection-start="3321" selection-end="3321" vertical-scroll-proportion="0.032945737">
           <folding />
         </state>
       </provider>
