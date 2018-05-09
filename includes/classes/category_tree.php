@@ -45,34 +45,36 @@
             }
 
             if ($load_from_database === true) {
-                if ($osC_Cache->read('category_tree-' . $osC_Language->getCode(), 720)) {
+                $Qcategories = $osC_Database->query('select c.categories_id,c.categories_status, c.parent_id, c.categories_image, cd.categories_name, cd.categories_url, cd.categories_page_title, cd.categories_meta_keywords, cd.categories_meta_description from :table_categories c, :table_categories_description cd where c.categories_id = cd.categories_id and cd.language_id = :language_id order by c.parent_id, c.sort_order, cd.categories_name');
+                $Qcategories->bindTable(':table_categories', TABLE_CATEGORIES);
+                $Qcategories->bindTable(':table_categories_description', TABLE_CATEGORIES_DESCRIPTION);
+                $Qcategories->bindInt(':language_id', $osC_Language->getID());
+                $Qcategories->execute();
+
+                $this->data = array();
+
+                //$this->data[][] = array('name' => $osC_Language->get('home'), 'url' => osc_href_link(FILENAME_DEFAULT, 'index'), 'page_title' => $osC_Template->getMetaPageTitle() . ' - ' . STORE_NAME, 'meta_keywords' => '', 'meta_description' => '', 'image' => '', 'count' => 0);
+
+                while ($Qcategories->next()) {
+                    $this->data[$Qcategories->valueInt('parent_id')][$Qcategories->valueInt('categories_id')] = array('categories_id' => $Qcategories->valueInt('categories_id'), 'name' => $Qcategories->value('categories_name'), 'categories_status' => $Qcategories->value('categories_status'), 'url' => $Qcategories->value('categories_url'), 'page_title' => $Qcategories->value('categories_page_title'), 'meta_keywords' => $Qcategories->value('categories_meta_keywords'), 'meta_description' => $Qcategories->value('categories_meta_description'), 'image' => $Qcategories->value('categories_image'), 'count' => 0);
+                }
+
+                $Qcategories->freeResult();
+
+                if ($this->show_category_product_count === true) {
+                    $this->calculateCategoryProductCount();
+                }
+
+                $osC_Cache->writeBuffer($this->data);
+
+                /*if ($osC_Cache->read('category_tree-' . $osC_Language->getCode(), 720)) {
                     $this->data = $osC_Cache->getCache();
                     if ($this->show_category_product_count === true) {
                         $this->calculateCategoryProductCount();
                     }
                 } else {
-                    $Qcategories = $osC_Database->query('select c.categories_id,c.categories_status, c.parent_id, c.categories_image, cd.categories_name, cd.categories_url, cd.categories_page_title, cd.categories_meta_keywords, cd.categories_meta_description from :table_categories c, :table_categories_description cd where c.categories_id = cd.categories_id and cd.language_id = :language_id order by c.parent_id, c.sort_order, cd.categories_name');
-                    $Qcategories->bindTable(':table_categories', TABLE_CATEGORIES);
-                    $Qcategories->bindTable(':table_categories_description', TABLE_CATEGORIES_DESCRIPTION);
-                    $Qcategories->bindInt(':language_id', $osC_Language->getID());
-                    $Qcategories->execute();
 
-                    $this->data = array();
-
-                    //$this->data[][] = array('name' => $osC_Language->get('home'), 'url' => osc_href_link(FILENAME_DEFAULT, 'index'), 'page_title' => $osC_Template->getMetaPageTitle() . ' - ' . STORE_NAME, 'meta_keywords' => '', 'meta_description' => '', 'image' => '', 'count' => 0);
-
-                    while ($Qcategories->next()) {
-                        $this->data[$Qcategories->valueInt('parent_id')][$Qcategories->valueInt('categories_id')] = array('categories_id' => $Qcategories->valueInt('categories_id'), 'name' => $Qcategories->value('categories_name'), 'categories_status' => $Qcategories->value('categories_status'), 'url' => $Qcategories->value('categories_url'), 'page_title' => $Qcategories->value('categories_page_title'), 'meta_keywords' => $Qcategories->value('categories_meta_keywords'), 'meta_description' => $Qcategories->value('categories_meta_description'), 'image' => $Qcategories->value('categories_image'), 'count' => 0);
-                    }
-
-                    $Qcategories->freeResult();
-
-                    if ($this->show_category_product_count === true) {
-                        $this->calculateCategoryProductCount();
-                    }
-
-                    $osC_Cache->writeBuffer($this->data);
-                }
+                }*/
             }
         }
 

@@ -5,7 +5,7 @@
   $toC_Json = new toC_Json();
 
   if(!isset($_SESSION['admin'])) {
-    require('templates/default/login/login.php');
+    require('templates/' . CLIENT . '/login/login.php');
     exit;
   }
 ?>

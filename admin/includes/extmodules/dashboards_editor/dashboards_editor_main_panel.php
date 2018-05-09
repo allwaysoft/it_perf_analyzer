@@ -21,67 +21,72 @@ Toc.dashboards_editor.mainPanel = function(config) {
 
 Ext.extend(Toc.dashboards_editor.mainPanel, Ext.Panel, {
    start : function(windows){
-    var that = this;
-    this.getEl().mask('Chargement Session Metadata  ...');
+    windows.getEl().mask('Metadata ...');
     Ext.Ajax.request({
-    method : 'GET',
-    url: Toc.CONF.CONN_URL,
-    params: {
-        module : 'databases',
-        action: 'get_currentuser'
-    },
-    callback: function (options, success, response) {
-        this.getEl().unmask();
-        var result = Ext.decode(response.responseText);
+        method: 'GET',
+        url: '<?php echo METABASE_URL; ?>' + '/api/user/current',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type' : 'application/json'
+        },
+        callback: function (options, success, response) {
+            windows.getEl().unmask();
+            var result = Ext.decode(response.responseText);
 
-        if(result.success)
+            if(result.id > 0)
+            {
+                var cmp = new Ext.Component({autoEl:{tag: 'iframe',style: 'height: 100%; width: 100%; border: none'},height: 600,id: 'dashboard_editor_iframe',width: 600});
+
+                this.add(cmp);
+                this.doLayout(true, true);
+                windows.doLayout(true, true);
+                cmp.el.dom.src = '<?php echo METABASE_URL . '/dashboards'; ?>' + '?username=' + result.email + '&password=' + '<?php echo METABASE_DEV_PASS; ?>';
+
+                cmp.el.dom.onload = function() {
+                    console.log('iframe onload ...')
+                    windows.getEl().unmask();
+                };
+
+                windows.getEl().mask('<?php echo $osC_Language->get('loading'); ?>');
+            }
+            else
+            {
+               if(windows && windows.close)
+               {
+                 windows.close();
+               }
+
+               Ext.MessageBox.alert(TocLanguage.msgErrTitle, result.feedback);
+            }
+        },
+        scope: this
+    });
+   },
+   onAdd : function(windows){
+      if(this.username)
         {
-            that.username = result.username;
-            this.getEl().mask('Chargement liste des tableaux de bord ...');
             if (this.items) {
-              this.removeAll(true);
+                this.removeAll(true);
             }
 
-           //var DsPanel = new Ext.Component({autoEl:{tag: 'iframe',style: 'height: 100%; width: 100%; border: none',src: '<?php echo METABASE_URL . '/auth/login?redirect=/dashboards'; ?>' + '&username=' + that.username + '@gmail.com' + '&password=' + '<?php echo METABASE_DEV_PASS; ?>'},height: 600,width: 600});
-           var DsPanel = new Ext.Component({autoEl:{tag: 'iframe',style: 'height: 100%; width: 100%; border: none',src: '<?php echo METABASE_URL . '/dashboards'; ?>' + '?username=' + that.username + '@gmail.com' + '&password=' + '<?php echo METABASE_DEV_PASS; ?>'},height: 600,width: 600});
+            var cmp = new Ext.Component({autoEl:{tag: 'iframe',style: 'height: 100%; width: 100%; border: none'},height: 600,id: 'dashboard_editor_iframe',width: 600});
+            this.add(cmp);
+            this.doLayout(true, true);
+            cmp.el.dom.src = '<?php echo METABASE_URL . '/dashboards'; ?>' + '?username=' + this.username + '&password=' + '<?php echo METABASE_DEV_PASS; ?>';
 
-           this.add(DsPanel);
-           this.doLayout();
-this.getEl().unmask();
+            cmp.el.dom.onload = function() {
+                //console.log('iframe onload ...')
+                this.getEl().unmask();
+            };
+
+            this.getEl().mask('<?php echo $osC_Language->get('loading'); ?>');
         }
         else
         {
-            if(windows && windows.close)
-            {
-                windows.close();
+            if (that.items) {
+                that.removeAll(true);
             }
-
-            Ext.MessageBox.alert(TocLanguage.msgErrTitle, result.feedback);
+            Ext.MessageBox.alert(TocLanguage.msgErrTitle,'<?php echo $osC_Language->get('exîred_session'); ?>');
         }
-    },
-     scope: this
-    });
-   },
-onAdd : function(windows){
-if(this.username)
-{
-this.getEl().mask('Chargement du Gestionnaire de requetes ...');
-if (this.items) {
-this.removeAll(true);
-}
-
-var DsPanel = new Ext.Component({autoEl:{tag: 'iframe',style: 'height: 100%; width: 100%; border: none',src: '<?php echo METABASE_URL . '/dashboards'; ?>'},height: 600,width: 600});
-
-this.add(DsPanel);
-this.doLayout();
-this.getEl().unmask();
-}
-else
-{
-if (that.items) {
-that.removeAll(true);
-}
-Ext.MessageBox.alert(TocLanguage.msgErrTitle,"Session expirée ...");
-}
-}
+   }
 });

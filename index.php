@@ -1,15 +1,15 @@
-<?php
-/*
-  $Id: index.php $
-  Mefobe Cart Solutions
-  http://www.mefobemarket.com
+<!DOCTYPE html>
+<html>
 
-  Copyright (c) 2009 Wuxi Elootec Technology Co., Ltd;  Copyright (c) 2005 osCommerce
+   <head>
+      <title>BI SERVER</title>
+   </head>
+	
+   <body>                 
 
-  This program is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License v2 (1991)
-  as published by the Free Software Foundation.
-*/
-
-header( 'Location: http://10.100.120.32/dev/admin');
-?>
+<iframe src="http://localhost/bi_server/admin" style="position:fixed; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%; border:none; margin:0; padding:0; overflow:hidden; z-index:999999;">
+    Your browser doesn't support iframes
+</iframe>
+   </body>
+	
+</html>

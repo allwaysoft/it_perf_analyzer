@@ -18,27 +18,125 @@ class osC_Administrators_Admin
     {
         global $osC_Database;
 
-        $Qadmin = $osC_Database->query('select id, user_name, email_address from :table_administrators where id = :id');
-        $Qadmin->bindTable(':table_administrators', TABLE_ADMINISTRATORS);
-        $Qadmin->bindInt(':id', $id);
-        $Qadmin->execute();
+        if(AUTH == 'amplitude' && isset($db_user) && !empty($db_user) && isset($db_pass) && !empty($db_pass) && isset($db_host) && !empty($db_host) && isset($db_sid) && !empty($db_sid))
+        {
+            $db_user = empty($_REQUEST['db_user']) ? DB_USER : $_REQUEST['db_user'];
+            $db_pass = empty($_REQUEST['db_pass']) ? DB_PASS : $_REQUEST['db_pass'];
+            $db_host = empty($_REQUEST['db_host']) ? DB_HOST : $_REQUEST['db_host'];
+            $db_sid = empty($_REQUEST['db_sid']) ? DB_SID : $_REQUEST['db_sid'];
 
-        $modules = array('access_modules' => array());
+            $c = oci_pconnect($db_user,$db_pass,$db_host . "/" . $db_sid);
+            if (!$c) {
+                $e = oci_error();
+                //trigger_error('Could not connect to database: ' . $e['message'], E_USER_ERROR);
+                $admin = array(
+                    'administrators_id' => '-1',
+                    'roles_id' => '',
+                    'user_name' => 'error',
+                    'email_address' => 'error',
+                    'roles_name' => 'error',
+                    'roles_description' => $e['message'],
+                    'src' => 'extern'
+                );
+            }
 
-        $Qaccess = $osC_Database->query('select module from :table_administrators_access where administrators_id = :administrators_id');
-        $Qaccess->bindTable(':table_administrators_access', TABLE_ADMINISTRATORS_ACCESS);
-        $Qaccess->bindInt(':administrators_id', $id);
-        $Qaccess->execute();
+            $query = "SELECT TRIM (EVUTI.CUTI) CUTI,LTRIM (RTRIM (LIB)) LIB,(SELECT COUNT (*) FROM evuti) TOTAL,EMAIL,UNIX FROM EVUTI LEFT OUTER JOIN EVUTAUT ON (EVUTI.CUTI = EVUTAUT.CUTI) WHERE EVUTI.SUS = 'N' and trim(EVUTI.CUTI) = :CUTI";
+            $s = oci_parse($c, $query);
+            if (!$s) {
+                $e = oci_error($c);
+                //trigger_error('Could not parse statement: ' . $e['message'], E_USER_ERROR);
+                $admin = array(
+                    'administrators_id' => '-1',
+                    'roles_id' => '',
+                    'user_name' => 'error',
+                    'email_address' => 'error',
+                    'roles_name' => 'error',
+                    'roles_description' => $e['message'],
+                    'src' => 'extern'
+                );
+            }
+            else
+            {
+                oci_bind_by_name($s, ":CUTI", $id);
 
-        while ($Qaccess->next()) {
-            $modules['access_modules'][] = $Qaccess->value('module');
+                $r = oci_execute($s);
+                if (!$r) {
+                    $e = oci_error($s);
+                    //trigger_error('Could not execute statement: ' . $e['message'], E_USER_ERROR);
+                    $admin = array(
+                        'administrators_id' => '-1',
+                        'roles_id' => '',
+                        'user_name' => 'error',
+                        'email_address' => 'error',
+                        'roles_name' => 'error',
+                        'roles_description' => $e['message'],
+                        'src' => 'extern'
+                    );
+                }
+                else
+                {
+                    while (($row = oci_fetch_array($s, OCI_ASSOC))) {
+                        $admin = array(
+                            'administrators_id' => '-1',
+                            'roles_id' => $row['CUTI'],
+                            'user_name' => $row['UNIX'],
+                            'email_address' => $row['EMAIL'],
+                            'roles_name' => $row['LIB'] . " ( " . $row['CUTI'] . " )",
+                            'roles_description' => $row['LIB'] . " ( " . $row['CUTI'] . " )",
+                            'src' => 'extern'
+                        );
+                    }
+                }
+
+                oci_free_statement($r);
+            }
+
+            oci_close($c);
+
+            $modules = array('access_modules' => array());
+
+            $Qaccess = $osC_Database->query('select module from :table_administrators_access where administrators_id = :roles_id');
+            $Qaccess->bindTable(':table_administrators_access', TABLE_DELTA_ACCESS);
+            $Qaccess->bindValue(':roles_id', $id);
+            $Qaccess->execute();
+
+            while ($Qaccess->next()) {
+                $modules['access_modules'][] = $Qaccess->value('module');
+            }
+
+            if (is_array($admin)) {
+                $data = array_merge($admin, $modules);
+            } else {
+                $data = $modules;
+            }
+
+            unset($modules);
+            $Qaccess->freeResult();
         }
+        else
+        {
+            $Qadmin = $osC_Database->query('select id, user_name, email_address from :table_administrators where id = :id');
+            $Qadmin->bindTable(':table_administrators', TABLE_ADMINISTRATORS);
+            $Qadmin->bindInt(':id', $id);
+            $Qadmin->execute();
 
-        $data = array_merge($Qadmin->toArray(), $modules);
+            $modules = array('access_modules' => array());
 
-        unset($modules);
-        $Qaccess->freeResult();
-        $Qadmin->freeResult();
+            $Qaccess = $osC_Database->query('select module from :table_administrators_access where administrators_id = :administrators_id');
+            $Qaccess->bindTable(':table_administrators_access', TABLE_ADMINISTRATORS_ACCESS);
+            $Qaccess->bindInt(':administrators_id', $id);
+            $Qaccess->execute();
+
+            while ($Qaccess->next()) {
+                $modules['access_modules'][] = $Qaccess->value('module');
+            }
+
+            $data = array_merge($Qadmin->toArray(), $modules);
+
+            unset($modules);
+            $Qaccess->freeResult();
+            $Qadmin->freeResult();
+        }
 
         return $data;
     }
@@ -170,6 +268,35 @@ class osC_Administrators_Admin
             }
         } else {
             return -2;
+        }
+    }
+
+    function reset($user, $new)
+    {
+        global $osC_Database;
+
+        $error = false;
+
+        $Qadmin = $osC_Database->query('update :table_administrators set user_password = :user_password where user_name = :user_name');
+
+        $Qadmin->bindValue(':user_password', osc_encrypt_string(trim($new)));
+        $Qadmin->bindTable(':table_administrators', TABLE_ADMINISTRATORS);
+        $Qadmin->bindValue(':user_name', $user);
+        $Qadmin->execute();
+
+        if (!$osC_Database->isError()) {
+            $error = true;
+        }
+
+
+        if ($error === false) {
+            $osC_Database->commitTransaction();
+
+            return true;
+        } else {
+            $osC_Database->rollbackTransaction();
+
+            return false;
         }
     }
 

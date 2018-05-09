@@ -862,13 +862,41 @@
         public static function getPerms($content_id, $content_type, $roles_id = null)
         {
             global $osC_Database;
+            $roles = array();
+
+            $roles[] = array(
+                'roles_id' => '-1',
+                'user_name' => 'everyone',
+                'email_address' => ALL_EMAIL,
+                'roles_name' => 'Tout le monde',
+                'roles_description' => 'Tout le monde',
+                'icon' => osc_icon('folder_account.png')
+            );
+
+            $total = 1;
+            $tot = 0;
+
             $Qpermissions = $osC_Database->query('select p.* from :table_permissions p where content_id = :content_id and content_type = :content_type');
             $Qpermissions->bindTable(':table_permissions', TABLE_CONTENT_PERMISSIONS);
             $Qpermissions->bindInt(':content_id', $content_id);
             $Qpermissions->bindValue(':content_type', $content_type);
             $Qpermissions->execute();
 
+            if ($osC_Database->isError()) {
+                //var_dump($Qpermissions);
+                $total = $total + 1;
+                $roles[] = array(
+                    'roles_id' => 'error',
+                    'user_name' => 'error',
+                    'email_address' => '',
+                    'roles_name' => 'error',
+                    'roles_description' => $osC_Database->getError(),
+                    'icon' => osc_icon('xxx.error')
+                );
+            }
+
             $records = array();
+
             while ($Qpermissions->next()) {
                 $records[] = array(
                     'can_read' => $Qpermissions->value('can_read'),
@@ -879,8 +907,47 @@
             }
             $Qpermissions->freeResult();
 
+            $query = "select id, user_name, email_address from :table_administrators where user_name !='admin' ";
+
+            $search = empty($_REQUEST['search']) ? '' : $_REQUEST['search'];
+
+            if(!empty($search))
+            {
+                $query = $query . " and (user_name like '%" . $search . "%'or email_address like '%" . $search . "%')";
+            }
+
+            $query = $query . " order by user_name";
+            $Qadmin = $osC_Database->query($query);
+            $Qadmin->bindTable(':table_administrators', TABLE_ADMINISTRATORS);
+            $Qadmin->execute();
+
+            if ($osC_Database->isError()) {
+                $total = $total + 1;
+                var_dump($osC_Database);
+                $roles[] = array(
+                    'roles_id' => 'error',
+                    'user_name' => 'error',
+                    'email_address' => '',
+                    'roles_name' => 'error',
+                    'roles_description' => 'error',
+                    'icon' => osc_icon('xxx.error')
+                );
+            }
+
+            while ($Qadmin->next()) {
+                $total = $total + 1;
+                $roles[] = array(
+                    'roles_id' => $Qadmin->value('user_name'),
+                    'user_name' => $Qadmin->value('user_name'),
+                    'email_address' => $Qadmin->value('email_address'),
+                    'roles_name' => $Qadmin->value('user_name'),
+                    'roles_description' => 'Utilisateur local',
+                    'icon' => osc_icon('folder_account.png')
+                );
+            }
+            $Qadmin->freeResult();
+
             $recs = array();
-            $roles = array();
 
             $start = empty($_REQUEST['start']) ? 0 : $_REQUEST['start'];
             $limit = empty($_REQUEST['limit']) ? MAX_DISPLAY_SEARCH_RESULTS : $_REQUEST['limit'];
@@ -891,73 +958,98 @@
             $db_host = empty($_REQUEST['db_host']) ? DB_HOST : $_REQUEST['db_host'];
             $db_sid = empty($_REQUEST['db_sid']) ? DB_SID : $_REQUEST['db_sid'];
 
-            $c = oci_pconnect($db_user, $db_pass, $db_host . "/" . $db_sid);
-            if (!$c) {
-                $e = oci_error();
-                trigger_error('Could not connect to database: ' . $e['message'], E_USER_ERROR);
-            }
-
-            if(!empty($search))
+            if(AUTH == 'amplitude' && isset($db_user) && !empty($db_user) && isset($db_pass) && !empty($db_pass) && isset($db_host) && !empty($db_host) && isset($db_sid) && !empty($db_sid))
             {
-                $start = 0;
-                $limit = 10000;
+                $c = oci_pconnect($db_user, $db_pass, $db_host . "/" . $db_sid);
+                if (!$c) {
+                    $e = oci_error();
+                    //var_dump($e);
+                    $total = $total + 1;
+                    $roles[] = array(
+                        'roles_id' => 'error',
+                        'user_name' => 'error',
+                        'email_address' => '',
+                        'roles_name' => 'error',
+                        'roles_description' => $e['message'],
+                        'icon' => osc_icon('xxx.error')
+                    );
+                    //trigger_error('Could not connect to database: ' . $e['message'], E_USER_ERROR);
+                }
+                else
+                {
+                    if(!empty($search))
+                    {
+                        $start = 0;
+                        $limit = 10000;
 
-                $query="SELECT TRIM (EVUTI.PUTI) PUTI,TRIM (EVUTI.CUTI) CUTI,LTRIM(RTRIM (LIB)) LIB,0 TOTAL,EMAIL,UNIX FROM EVUTI LEFT OUTER JOIN EVUTAUT ON (EVUTI.CUTI = EVUTAUT.CUTI) WHERE EVUTI.SUS = 'N' AND (LOWER (evuti.cuti) LIKE :cuti OR LOWER (unix) LIKE :unix OR LOWER (lib) LIKE :lib) ORDER BY LTRIM (LIB)";
+                        $query="SELECT TRIM (EVUTI.PUTI) PUTI,TRIM (EVUTI.CUTI) CUTI,LTRIM(RTRIM (LIB)) LIB,0 TOTAL,EMAIL,UNIX FROM EVUTI LEFT OUTER JOIN EVUTAUT ON (EVUTI.CUTI = EVUTAUT.CUTI) WHERE EVUTI.SUS = 'N' AND (LOWER (evuti.cuti) LIKE :cuti OR LOWER (unix) LIKE :unix OR LOWER (lib) LIKE :lib) ORDER BY LTRIM (LIB)";
+                    }
+                    else
+                    {
+                        $query="SELECT * FROM (SELECT a.*, ROWNUM rnum FROM (SELECT TRIM (EVUTI.PUTI) PUTI,TRIM (EVUTI.CUTI) CUTI,LTRIM (RTRIM (LIB)) LIB,(SELECT COUNT (*) FROM evuti) TOTAL,EMAIL,UNIX FROM EVUTI LEFT OUTER JOIN EVUTAUT ON (EVUTI.CUTI = EVUTAUT.CUTI) WHERE EVUTI.SUS = 'N' ORDER BY LTRIM (LIB)) a WHERE ROWNUM <= :MAX_ROW_TO_FETCH) WHERE rnum >= :MIN_ROW_TO_FETCH";
+                        //$query="SELECT TRIM (EVUTI.CUTI) CUTI,LTRIM(RTRIM (LIB)) LIB,EMAIL,UNIX FROM EVUTI LEFT OUTER JOIN EVUTAUT ON (EVUTI.CUTI = EVUTAUT.CUTI) WHERE EVUTI.SUS = 'N' ORDER BY LTRIM (LIB)";
+                    }
+
+                    $fin = $start == 0 ? $start + $limit - 1 : $start + $limit;
+                    $s = oci_parse($c, $query);
+                    if (!$s) {
+                        $e = oci_error($c);
+                        //var_dump($e);
+                        //trigger_error('Could not parse statement: ' . $e['message'], E_USER_ERROR);
+                        $total = $total + 1;
+                        $roles[] = array(
+                            'roles_id' => 'error',
+                            'user_name' => 'error',
+                            'email_address' => '',
+                            'roles_name' => 'error',
+                            'roles_description' => $e['message'],
+                            'icon' => osc_icon('xxx.error')
+                        );
+                    }
+                    else
+                    {
+                        $search = '%' . strtolower($search) . '%';
+                        oci_bind_by_name($s, ":MAX_ROW_TO_FETCH", $fin);
+                        oci_bind_by_name($s, ":MIN_ROW_TO_FETCH", $start);
+                        oci_bind_by_name($s, ":cuti",$search);
+                        oci_bind_by_name($s, ":unix",$search);
+                        oci_bind_by_name($s, ":lib",$search);
+
+                        $r = oci_execute($s);
+                        if (!$r) {
+                            $e = oci_error($s);
+                            //var_dump($e);
+                            //trigger_error('Could not execute statement: ' . $e['message'], E_USER_ERROR);
+                            $total = $total + 1;
+                            $roles[] = array(
+                                'roles_id' => 'error',
+                                'user_name' => 'error',
+                                'email_address' => '',
+                                'roles_name' => 'error',
+                                'roles_description' => $e['message'],
+                                'icon' => osc_icon('xxx.error')
+                            );
+                        }
+                        else
+                        {
+                            while (($row = oci_fetch_array($s, OCI_ASSOC))) {
+                                $roles[] = array(
+                                    $tot = $row['TOTAL'],
+                                    'roles_id' => $row['UNIX'],
+                                    'user_name' => $row['UNIX'],
+                                    'email_address' => $row['EMAIL'],
+                                    'roles_name' => $row['LIB'] . " ( " . $row['CUTI'] . " )",
+                                    'roles_description' => 'Utilisateur AMPLITUDE',
+                                    'icon' => osc_icon('folder_account.png')
+                                );
+                            }
+                        }
+                        oci_free_statement($r);
+                    }
+                }
+
+                oci_close($c);
             }
-            else
-            {
-                $query="SELECT * FROM (SELECT a.*, ROWNUM rnum FROM (SELECT TRIM (EVUTI.PUTI) PUTI,TRIM (EVUTI.CUTI) CUTI,LTRIM (RTRIM (LIB)) LIB,(SELECT COUNT (*) FROM evuti) TOTAL,EMAIL,UNIX FROM EVUTI LEFT OUTER JOIN EVUTAUT ON (EVUTI.CUTI = EVUTAUT.CUTI) WHERE EVUTI.SUS = 'N' ORDER BY LTRIM (LIB)) a WHERE ROWNUM <= :MAX_ROW_TO_FETCH) WHERE rnum >= :MIN_ROW_TO_FETCH";
-                //$query="SELECT TRIM (EVUTI.CUTI) CUTI,LTRIM(RTRIM (LIB)) LIB,EMAIL,UNIX FROM EVUTI LEFT OUTER JOIN EVUTAUT ON (EVUTI.CUTI = EVUTAUT.CUTI) WHERE EVUTI.SUS = 'N' ORDER BY LTRIM (LIB)";
-            }
-
-            $fin = $start == 0 ? $start + $limit - 1 : $start + $limit;
-            $s = oci_parse($c, $query);
-            if (!$s) {
-                $e = oci_error($c);
-                trigger_error('Could not parse statement: ' . $e['message'], E_USER_ERROR);
-            }
-
-            $search = '%' . strtolower($search) . '%';
-            oci_bind_by_name($s, ":MAX_ROW_TO_FETCH", $fin);
-            oci_bind_by_name($s, ":MIN_ROW_TO_FETCH", $start);
-            oci_bind_by_name($s, ":cuti",$search);
-            oci_bind_by_name($s, ":unix",$search);
-            oci_bind_by_name($s, ":lib",$search);
-
-            $r = oci_execute($s);
-            if (!$r) {
-                $e = oci_error($s);
-                trigger_error('Could not execute statement: ' . $e['message'], E_USER_ERROR);
-            }
-
-            $total = 0;
-
-            if($start == 0)
-            {
-                $roles[] = array(
-                    'roles_id' => '-1',
-                    'user_name' => 'everyone',
-                    'email_address' => '',
-                    'roles_name' => 'Tout le monde',
-                    'roles_description' => 'Tout le monde',
-                    'icon' => osc_icon('folder_account.png')
-                );
-            }
-
-            while (($row = oci_fetch_array($s, OCI_ASSOC))) {
-                $roles[] = array(
-                    $total = $row['TOTAL'],
-                    'roles_id' => $row['UNIX'],
-                    'user_name' => $row['UNIX'],
-                    'email_address' => $row['EMAIL'],
-                    'roles_name' => $row['LIB'] . " ( " . $row['CUTI'] . " )",
-                    'roles_description' => 'Utilisateur AMPLITUDE',
-                    'icon' => osc_icon('folder_account.png')
-                );
-            }
-
-            oci_free_statement($r);
-            oci_close($c);
 
             if (count($records) > 0) {
                 $permissions = $records[0];
@@ -1017,18 +1109,46 @@
                 }
             }
 
-            $ret = array('recs' => $recs,'total' => $total);
+            $ret = array('recs' => $recs,'total' => $total + $tot);
             return $ret;
         }
 
         public static function getNotifications($content_id, $content_type, $roles_id = null)
         {
             global $osC_Database;
+
+            $recs = array();
+            $roles = array();
+
+            $roles[] = array(
+                'roles_id' => '-1',
+                'user_name' => 'everyone',
+                'email_address' => ALL_EMAIL,
+                'roles_name' => 'Tout le monde',
+                'roles_description' => 'Tout le monde',
+                'icon' => osc_icon('folder_account.png')
+            );
+
+            $total = 1;
+            $tot = 0;
+
             $Qnotifications = $osC_Database->query('select p.* from :table_notifications p where content_id = :content_id and content_type = :content_type');
             $Qnotifications->bindTable(':table_notifications', TABLE_CONTENT_NOTIFICATIONS);
             $Qnotifications->bindInt(':content_id', $content_id);
             $Qnotifications->bindValue(':content_type', $content_type);
             $Qnotifications->execute();
+
+            if ($osC_Database->isError()) {
+                $total = $total + 1;
+                $roles[] = array(
+                    'roles_id' => 'error',
+                    'user_name' => 'error',
+                    'email_address' => '',
+                    'roles_name' => 'error',
+                    'roles_description' => $osC_Database->getError(),
+                    'icon' => osc_icon('xxx.error')
+                );
+            }
 
             $records = array();
             while ($Qnotifications->next()) {
@@ -1041,8 +1161,45 @@
             }
             $Qnotifications->freeResult();
 
-            $recs = array();
-            $roles = array();
+            $query = "select id, user_name, email_address from :table_administrators where user_name !='admin' ";
+
+            $search = empty($_REQUEST['search']) ? '' : $_REQUEST['search'];
+
+            if(!empty($search))
+            {
+                $query = $query . " and (user_name like '%" . $search . "%'or email_address like '%" . $search . "%')";
+            }
+
+            $query = $query . " order by user_name";
+
+            $Qadmin = $osC_Database->query($query);
+            $Qadmin->bindTable(':table_administrators', TABLE_ADMINISTRATORS);
+            $Qadmin->execute();
+
+            if ($osC_Database->isError()) {
+                $total = $total + 1;
+                $roles[] = array(
+                    'roles_id' => 'error',
+                    'user_name' => 'error',
+                    'email_address' => '',
+                    'roles_name' => 'error',
+                    'roles_description' => 'error',
+                    'icon' => osc_icon('xxx.error')
+                );
+            }
+
+            while ($Qadmin->next()) {
+                $total = $total + 1;
+                $roles[] = array(
+                    'roles_id' => $Qadmin->value('user_name'),
+                    'user_name' => $Qadmin->value('user_name'),
+                    'email_address' => $Qadmin->value('email_address'),
+                    'roles_name' => $Qadmin->value('user_name'),
+                    'roles_description' => 'Utilisateur local',
+                    'icon' => osc_icon('folder_account.png')
+                );
+            }
+            $Qadmin->freeResult();
 
             $start = empty($_REQUEST['start']) ? 0 : $_REQUEST['start'];
             $limit = empty($_REQUEST['limit']) ? MAX_DISPLAY_SEARCH_RESULTS : $_REQUEST['limit'];
@@ -1053,71 +1210,94 @@
             $db_host = empty($_REQUEST['db_host']) ? DB_HOST : $_REQUEST['db_host'];
             $db_sid = empty($_REQUEST['db_sid']) ? DB_SID : $_REQUEST['db_sid'];
 
-            $c = oci_pconnect($db_user, $db_pass, $db_host . "/" . $db_sid);
-            if (!$c) {
-                $e = oci_error();
-                trigger_error('Could not connect to database: ' . $e['message'], E_USER_ERROR);
-            }
-
-            if(!empty($search))
+            if(AUTH == 'amplitude' && isset($db_user) && !empty($db_user) && isset($db_pass) && !empty($db_pass) && isset($db_host) && !empty($db_host) && isset($db_sid) && !empty($db_sid))
             {
-                $start = 0;
-                $limit = 10000;
-                $query="SELECT * FROM (SELECT a.*, ROWNUM rnum FROM (SELECT TRIM (EVUTI.CUTI) CUTI,LTRIM (RTRIM (LIB)) LIB,(SELECT COUNT (*) FROM evuti) TOTAL,nvl(EMAIL,'') email,UNIX FROM EVUTI LEFT OUTER JOIN EVUTAUT ON (EVUTI.CUTI = EVUTAUT.CUTI) WHERE (LOWER (evuti.cuti) LIKE :cuti OR LOWER (unix) LIKE :unix OR LOWER (lib) LIKE :lib) ORDER BY LTRIM (LIB)) a WHERE ROWNUM <= :MAX_ROW_TO_FETCH) WHERE rnum >= :MIN_ROW_TO_FETCH";
+                $c = oci_pconnect($db_user, $db_pass, $db_host . "/" . $db_sid);
+                if (!$c) {
+                    $e = oci_error();
+                    //trigger_error('Could not connect to database: ' . $e['message'], E_USER_ERROR);
+                    $total = $total + 1;
+                    $roles[] = array(
+                        'roles_id' => 'error',
+                        'user_name' => 'error',
+                        'email_address' => '',
+                        'roles_name' => 'error',
+                        'roles_description' => $e['message'],
+                        'icon' => osc_icon('xxx.error')
+                    );
+                }
+                else
+                {
+                    if(!empty($search))
+                    {
+                        $start = 0;
+                        $limit = 10000;
+                        $query="SELECT * FROM (SELECT a.*, ROWNUM rnum FROM (SELECT TRIM (EVUTI.CUTI) CUTI,LTRIM (RTRIM (LIB)) LIB,(SELECT COUNT (*) FROM evuti) TOTAL,nvl(EMAIL,'') email,UNIX FROM EVUTI LEFT OUTER JOIN EVUTAUT ON (EVUTI.CUTI = EVUTAUT.CUTI) WHERE (LOWER (evuti.cuti) LIKE :cuti OR LOWER (unix) LIKE :unix OR LOWER (lib) LIKE :lib) ORDER BY LTRIM (LIB)) a WHERE ROWNUM <= :MAX_ROW_TO_FETCH) WHERE rnum >= :MIN_ROW_TO_FETCH";
+                    }
+                    else
+                    {
+                        $query="SELECT * FROM (SELECT a.*, ROWNUM rnum FROM (SELECT TRIM (EVUTI.CUTI) CUTI,LTRIM (RTRIM (LIB)) LIB,(SELECT COUNT (*) FROM evuti) TOTAL,nvl(EMAIL,'') email,UNIX FROM EVUTI LEFT OUTER JOIN EVUTAUT ON (EVUTI.CUTI = EVUTAUT.CUTI) ORDER BY LTRIM (LIB)) a WHERE ROWNUM <= :MAX_ROW_TO_FETCH) WHERE rnum >= :MIN_ROW_TO_FETCH";
+                    }
+
+                    $fin = $start == 0 ? $start + $limit - 1 : $start + $limit;
+                    $s = oci_parse($c, $query);
+                    if (!$s) {
+                        $e = oci_error($c);
+                        //trigger_error('Could not parse statement: ' . $e['message'], E_USER_ERROR);
+                        $total = $total + 1;
+                        $roles[] = array(
+                            'roles_id' => 'error',
+                            'user_name' => 'error',
+                            'email_address' => '',
+                            'roles_name' => 'error',
+                            'roles_description' => $e['message'],
+                            'icon' => osc_icon('xxx.error')
+                        );
+                    }
+                    else
+                    {
+                        $search = '%' . strtolower($search) . '%';
+                        oci_bind_by_name($s, ":MAX_ROW_TO_FETCH", $fin);
+                        oci_bind_by_name($s, ":MIN_ROW_TO_FETCH", $start);
+                        oci_bind_by_name($s, ":cuti",$search);
+                        oci_bind_by_name($s, ":unix",$search);
+                        oci_bind_by_name($s, ":lib",$search);
+
+                        $r = oci_execute($s);
+                        if (!$r) {
+                            $e = oci_error($s);
+                            //trigger_error('Could not execute statement: ' . $e['message'], E_USER_ERROR);
+                            $total = $total + 1;
+                            $roles[] = array(
+                                'roles_id' => 'error',
+                                'user_name' => 'error',
+                                'email_address' => '',
+                                'roles_name' => 'error',
+                                'roles_description' => $e['message'],
+                                'icon' => osc_icon('xxx.error')
+                            );
+                        }
+                        else
+                        {
+                            while (($row = oci_fetch_array($s, OCI_ASSOC))) {
+                                $roles[] = array(
+                                    $total = $row['TOTAL'],
+                                    'roles_id' => $row['CUTI'],
+                                    'user_name' => $row['UNIX'],
+                                    'email_address' => $row['EMAIL'],
+                                    'roles_name' => $row['LIB'] . " ( " . $row['CUTI'] . " )",
+                                    'roles_description' => 'Utilisateur AMPLITUDE',
+                                    'icon' => osc_icon('folder_account.png')
+                                );
+                            }
+                        }
+
+                        oci_free_statement($r);
+                    }
+                }
+
+                oci_close($c);
             }
-            else
-            {
-                $query="SELECT * FROM (SELECT a.*, ROWNUM rnum FROM (SELECT TRIM (EVUTI.CUTI) CUTI,LTRIM (RTRIM (LIB)) LIB,(SELECT COUNT (*) FROM evuti) TOTAL,nvl(EMAIL,'') email,UNIX FROM EVUTI LEFT OUTER JOIN EVUTAUT ON (EVUTI.CUTI = EVUTAUT.CUTI) ORDER BY LTRIM (LIB)) a WHERE ROWNUM <= :MAX_ROW_TO_FETCH) WHERE rnum >= :MIN_ROW_TO_FETCH";
-            }
-
-            $fin = $start == 0 ? $start + $limit - 1 : $start + $limit;
-            $s = oci_parse($c, $query);
-            if (!$s) {
-                $e = oci_error($c);
-                trigger_error('Could not parse statement: ' . $e['message'], E_USER_ERROR);
-            }
-
-            $search = '%' . strtolower($search) . '%';
-            oci_bind_by_name($s, ":MAX_ROW_TO_FETCH", $fin);
-            oci_bind_by_name($s, ":MIN_ROW_TO_FETCH", $start);
-            oci_bind_by_name($s, ":cuti",$search);
-            oci_bind_by_name($s, ":unix",$search);
-            oci_bind_by_name($s, ":lib",$search);
-
-            $r = oci_execute($s);
-            if (!$r) {
-                $e = oci_error($s);
-                trigger_error('Could not execute statement: ' . $e['message'], E_USER_ERROR);
-            }
-
-            $total = 0;
-
-            if($start == 0)
-            {
-                $roles[] = array(
-                    'roles_id' => '-1',
-                    'user_name' => 'everyone',
-                    'email_address' => ALL_EMAIL,
-                    'roles_name' => 'Tout le monde',
-                    'roles_description' => 'Tout le monde',
-                    'icon' => osc_icon('folder_account.png')
-                );
-            }
-
-            while (($row = oci_fetch_array($s, OCI_ASSOC))) {
-                $roles[] = array(
-                    $total = $row['TOTAL'],
-                    'roles_id' => $row['CUTI'],
-                    'user_name' => $row['UNIX'],
-                    'email_address' => $row['EMAIL'],
-                    'roles_name' => $row['LIB'] . " ( " . $row['CUTI'] . " )",
-                    'roles_description' => 'Utilisateur AMPLITUDE',
-                    'icon' => osc_icon('folder_account.png')
-                );
-            }
-
-            oci_free_statement($r);
-            oci_close($c);
 
             if (count($records) > 0) {
                 $permissions = $records[0];
@@ -1217,6 +1397,10 @@
             $Qpermissions->bindInt(':content_id', $content_id);
             $Qpermissions->bindValue(':content_type', $content_type);
             $Qpermissions->execute();
+
+            if ($osC_Database->isError()) {
+                $error = true;
+            }
 
             $records = array();
             while ($Qpermissions->next()) {

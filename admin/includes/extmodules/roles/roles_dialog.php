@@ -49,10 +49,10 @@ Ext.extend(Toc.roles.RolesDialog, Ext.Window, {
     this.frmAdministrator.form.baseParams['administrators_id'] = administratorsId;
 
     Toc.roles.RolesDialog.superclass.show.call(this);
-    this.loadRole(this.pnlAdmin);
+    this.loadRole(this.pnlAdmin,administratorsId);
   },
 
-  loadRole : function(panel){
+  loadRole : function(panel,administratorsId){
      if (this.rolesId && this.rolesId != -1) {
       if(panel)
       {
@@ -62,18 +62,19 @@ Ext.extend(Toc.roles.RolesDialog, Ext.Window, {
       this.frmAdministrator.load({
         url: Toc.CONF.CONN_URL,
         params:{
-          module: 'roles',
-          action: 'load_user',
-          src:this.data.src
+          module: 'administrators',
+          action: 'load_administrator',
+          aID : administratorsId
         },
         success: function(form, action) {
           if(panel)
           {
              panel.getEl().unmask();
+             this.access_globaladmin = action.result.data.access_globaladmin;
+             this.access_modules = action.result.data.access_modules;
+             this.tabRoles.activate(this.pnlAccessTree);
+             this.tabRoles.remove(this.pnlAdmin);
           }
-
-          this.access_globaladmin = action.result.data.access_globaladmin;
-          this.access_modules = action.result.data.access_modules;
 
           //this.tabRoles.add(new Toc.content.PermissionsPanel({owner : this.owner,content_id : this.rolesId,content_type : 'roles',module : 'categories',action :  'list_role_permissions',id_field : 'categories_id',autoExpandColumn : 'categories_name'}));
         },
@@ -203,7 +204,6 @@ Ext.extend(Toc.roles.RolesDialog, Ext.Window, {
         },
         listeners: {
           load: function() {
-            console.log();
             this.pnlAccessTree.setValue(this.access_modules);
             this.treeLoaded = true;
 
@@ -235,7 +235,7 @@ Ext.extend(Toc.roles.RolesDialog, Ext.Window, {
         },
         scope: this
       },
-      tbar: [this.chkGlobal]
+      tbar: []
     });      
 
     return this.pnlAccessTree;

@@ -199,7 +199,8 @@ Ext.extend(Toc.administrators.AdministratorsDialog, Ext.Window, {
         checkchange: this.onCheckChange,
         scope: this
       },
-      tbar: [this.chkGlobal]
+      //tbar: [this.chkGlobal]
+      tbar: []
     });  
     
     return this.pnlAccessTree;

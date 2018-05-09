@@ -93,78 +93,148 @@ class toC_Json_Roles
 
     function listUsers()
     {
-        global $toC_Json;
+        global $toC_Json,$osC_Database;
 
-        $roles[] = array();
+        $roles = array();
 
-        $start = empty($_REQUEST['start']) ? 0 : $_REQUEST['start'];
-        $limit = empty($_REQUEST['limit']) ? MAX_DISPLAY_SEARCH_RESULTS : $_REQUEST['limit'];
-        $search = empty($_REQUEST['search']) ? '' : $_REQUEST['search'];
+        $roles[] = array(
+            'roles_id' => '-1',
+            'user_name' => 'everyone',
+            'email_address' => ALL_EMAIL,
+            'roles_name' => 'Tout le monde',
+            'roles_description' => 'Tout le monde',
+            'icon' => osc_icon('folder_account.png')
+        );
 
-        $db_user = empty($_REQUEST['db_user']) ? DB_USER : $_REQUEST['db_user'];
-        $db_pass = empty($_REQUEST['db_pass']) ? DB_PASS : $_REQUEST['db_pass'];
-        $db_host = empty($_REQUEST['db_host']) ? DB_HOST : $_REQUEST['db_host'];
-        $db_sid = empty($_REQUEST['db_sid']) ? DB_SID : $_REQUEST['db_sid'];
+        $total = 1;
+        $tot = 0;
 
-        $c = oci_pconnect($db_user, $db_pass, $db_host . "/" . $db_sid);
-        if (!$c) {
-            $e = oci_error();
-            trigger_error('Could not connect to database: ' . $e['message'], E_USER_ERROR);
+        $Qadmin = $osC_Database->query('select id, user_name, email_address from :table_administrators where id != 1 order by user_name');
+        $Qadmin->bindTable(':table_administrators', TABLE_ADMINISTRATORS);
+        $Qadmin->execute();
+
+        if ($osC_Database->isError()) {
+            $total = $total + 1;
+            var_dump($osC_Database);
+            $roles[] = array(
+                'administrators_id' => 0,
+                'roles_id' => 'error',
+                'user_name' => 'error',
+                'email_address' => '',
+                'roles_name' => 'error',
+                'roles_description' => 'error',
+                'icon' => osc_icon('xxx.error')
+            );
         }
 
-        if(!empty($search))
+        while ($Qadmin->next()) {
+            $total = $total + 1;
+            $roles[] = array(
+                'administrators_id' => $Qadmin->value('id'),
+                'roles_id' => $Qadmin->value('user_name'),
+                'user_name' => $Qadmin->value('user_name'),
+                'email_address' => $Qadmin->value('email_address'),
+                'roles_name' => $Qadmin->value('user_name'),
+                'roles_description' => 'Utilisateur local',
+                'icon' => osc_icon('folder_account.png')
+            );
+        }
+        $Qadmin->freeResult();
+
+
+        if(AUTH == 'amplitude' && isset($db_user) && !empty($db_user) && isset($db_pass) && !empty($db_pass) && isset($db_host) && !empty($db_host) && isset($db_sid) && !empty($db_sid))
         {
-            $start = 0;
-            $limit = 10000;
+            $start = empty($_REQUEST['start']) ? 0 : $_REQUEST['start'];
+            $limit = empty($_REQUEST['limit']) ? MAX_DISPLAY_SEARCH_RESULTS : $_REQUEST['limit'];
+            $search = empty($_REQUEST['search']) ? '' : $_REQUEST['search'];
 
-            $query="SELECT TRIM (EVUTI.CUTI) CUTI,LTRIM(RTRIM (LIB)) LIB,0 TOTAL,EMAIL,UNIX FROM EVUTI LEFT OUTER JOIN EVUTAUT ON (EVUTI.CUTI = EVUTAUT.CUTI) WHERE EVUTI.SUS = 'N' AND (LOWER (evuti.cuti) LIKE :cuti OR LOWER (unix) LIKE :unix OR LOWER (lib) LIKE :lib) ORDER BY LTRIM (LIB)";
-        }
-        else
-        {
-            $query="SELECT * FROM (SELECT a.*, ROWNUM rnum FROM (SELECT TRIM (EVUTI.CUTI) CUTI,LTRIM (RTRIM (LIB)) LIB,(SELECT COUNT (*) FROM evuti) TOTAL,EMAIL,UNIX FROM EVUTI LEFT OUTER JOIN EVUTAUT ON (EVUTI.CUTI = EVUTAUT.CUTI) WHERE EVUTI.SUS = 'N' ORDER BY LTRIM (LIB)) a WHERE ROWNUM <= :MAX_ROW_TO_FETCH) WHERE rnum >= :MIN_ROW_TO_FETCH";
-        }
+            $db_user = empty($_REQUEST['db_user']) ? DB_USER : $_REQUEST['db_user'];
+            $db_pass = empty($_REQUEST['db_pass']) ? DB_PASS : $_REQUEST['db_pass'];
+            $db_host = empty($_REQUEST['db_host']) ? DB_HOST : $_REQUEST['db_host'];
+            $db_sid = empty($_REQUEST['db_sid']) ? DB_SID : $_REQUEST['db_sid'];
 
-        $fin = $start == 0 ? $start + $limit - 1 : $start + $limit;
-        $s = oci_parse($c, $query);
-        if (!$s) {
-            $e = oci_error($c);
-            trigger_error('Could not parse statement: ' . $e['message'], E_USER_ERROR);
-        }
+            $c = oci_pconnect($db_user, $db_pass, $db_host . "/" . $db_sid);
+            if (!$c) {
+                $e = oci_error();
+                trigger_error('Could not connect to database: ' . $e['message'], E_USER_ERROR);
+            }
 
-        $search = '%' . strtolower($search) . '%';
-        oci_bind_by_name($s, ":MAX_ROW_TO_FETCH", $fin);
-        oci_bind_by_name($s, ":MIN_ROW_TO_FETCH", $start);
-        oci_bind_by_name($s, ":cuti",$search);
-        oci_bind_by_name($s, ":unix",$search);
-        oci_bind_by_name($s, ":lib",$search);
-
-        $r = oci_execute($s);
-        if (!$r) {
-            $e = oci_error($s);
-            trigger_error('Could not execute statement: ' . $e['message'], E_USER_ERROR);
-        }
-
-        $total = 0;
-
-        while (($row = oci_fetch_array($s, OCI_ASSOC))) {
-            if(isset($row['CUTI']) && !empty($row['CUTI']))
+            if(!empty($search))
             {
+                $start = 0;
+                $limit = 10000;
+
+                $query="SELECT TRIM (EVUTI.CUTI) CUTI,LTRIM(RTRIM (LIB)) LIB,0 TOTAL,EMAIL,UNIX FROM EVUTI LEFT OUTER JOIN EVUTAUT ON (EVUTI.CUTI = EVUTAUT.CUTI) WHERE EVUTI.SUS = 'N' AND (LOWER (evuti.cuti) LIKE :cuti OR LOWER (unix) LIKE :unix OR LOWER (lib) LIKE :lib) ORDER BY LTRIM (LIB)";
+            }
+            else
+            {
+                $query="SELECT * FROM (SELECT a.*, ROWNUM rnum FROM (SELECT TRIM (EVUTI.CUTI) CUTI,LTRIM (RTRIM (LIB)) LIB,(SELECT COUNT (*) FROM evuti) TOTAL,EMAIL,UNIX FROM EVUTI LEFT OUTER JOIN EVUTAUT ON (EVUTI.CUTI = EVUTAUT.CUTI) WHERE EVUTI.SUS = 'N' ORDER BY LTRIM (LIB)) a WHERE ROWNUM <= :MAX_ROW_TO_FETCH) WHERE rnum >= :MIN_ROW_TO_FETCH";
+            }
+
+            $fin = $start == 0 ? $start + $limit - 1 : $start + $limit;
+            $s = oci_parse($c, $query);
+            if (!$s) {
+                $e = oci_error($c);
+                $total = $total + 1;
                 $roles[] = array(
-                    $total = $row['TOTAL'],
-                    'roles_id' => $row['CUTI'],
-                    'user_name' => $row['UNIX'],
-                    'email_address' => $row['EMAIL'],
-                    'roles_name' => $row['LIB'] . " ( " . $row['CUTI'] . " )",
-                    'roles_description' => 'Utilisateur AMPLITUDE',
-                    'icon' => osc_icon('folder_account.png')
+                    'administrators_id' => 0,
+                    'roles_id' => 'error',
+                    'user_name' => 'error',
+                    'email_address' => '',
+                    'roles_name' => 'error',
+                    'roles_description' => $e['message'],
+                    'icon' => osc_icon('xxx.error')
                 );
             }
+            else
+            {
+                $search = '%' . strtolower($search) . '%';
+                oci_bind_by_name($s, ":MAX_ROW_TO_FETCH", $fin);
+                oci_bind_by_name($s, ":MIN_ROW_TO_FETCH", $start);
+                oci_bind_by_name($s, ":cuti",$search);
+                oci_bind_by_name($s, ":unix",$search);
+                oci_bind_by_name($s, ":lib",$search);
+
+                $r = oci_execute($s);
+                if (!$r) {
+                    $e = oci_error($s);
+                    $total = $total + 1;
+                    $roles[] = array(
+                        'administrators_id' => 0,
+                        'roles_id' => 'error',
+                        'user_name' => 'error',
+                        'email_address' => '',
+                        'roles_name' => 'error',
+                        'roles_description' => $e['message'],
+                        'icon' => osc_icon('xxx.error')
+                    );
+                }
+                else
+                {
+                    while (($row = oci_fetch_array($s, OCI_ASSOC))) {
+                        if(isset($row['CUTI']) && !empty($row['CUTI']))
+                        {
+                            $roles[] = array(
+                                $tot = $row['TOTAL'],
+                                'administrators_id' => $row['CUTI'],
+                                'roles_id' => $row['CUTI'],
+                                'user_name' => $row['UNIX'],
+                                'email_address' => $row['EMAIL'],
+                                'roles_name' => $row['LIB'] . " ( " . $row['CUTI'] . " )",
+                                'roles_description' => 'Utilisateur AMPLITUDE',
+                                'icon' => osc_icon('folder_account.png')
+                            );
+                        }
+                    }
+                }
+
+                oci_free_statement($r);
+            }
+
+            oci_close($c);
         }
 
-        oci_free_statement($r);
-        oci_close($c);
-
-        $response = array(EXT_JSON_READER_TOTAL => $total,
+        $response = array(EXT_JSON_READER_TOTAL => $total + $tot,
             EXT_JSON_READER_ROOT => $roles);
 
         echo $toC_Json->encode($response);
@@ -266,7 +336,7 @@ class toC_Json_Roles
             'password' => '12345',
             'roles_name' => $_REQUEST['roles_name'],
             'roles_description' => $_REQUEST['roles_description'],
-            'email_address' => $username . '@mefobemarket.com');
+            'email_address' => $username . '@gmail.com');
 
         $mod = $_REQUEST['modules'] . ',documents';
         $modules = null;
@@ -278,7 +348,7 @@ class toC_Json_Roles
             $modules = array('*');
         }
 
-        if ($src == 'local') {
+        if (AUTH == 'local') {
             switch (osC_Roles_Admin::save((isset($_REQUEST['roles_id']) && is_numeric($_REQUEST['administrators_id'])
                 ? $_REQUEST['administrators_id']
                 : null), $data, $modules, (isset($_REQUEST['roles_id'])

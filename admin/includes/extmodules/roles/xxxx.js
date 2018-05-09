@@ -1,1 +1,0 @@
-this.pnlNotifications = new Toc.content.NotificationsPanel({content_id : this.categoriesId,content_type : 'pages',owner : this.owner});

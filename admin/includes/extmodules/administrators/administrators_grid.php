@@ -7,7 +7,7 @@ Toc.administrators.AdministratorsGrid = function(config) {
   config = config || {};
   
   config.border = false;
-  config.viewConfig = {emptyText: TocLanguage.gridNoRecords};
+  config.viewConfig = {emptyText: TocLanguage.gridNoRecords,forceFit : true};
   
   config.ds = new Ext.data.Store({
     url: Toc.CONF.CONN_URL,
@@ -43,16 +43,30 @@ Toc.administrators.AdministratorsGrid = function(config) {
     { 
       id: 'user_name',
       header: '<?php echo $osC_Language->get('table_heading_administrators'); ?>',
-      dataIndex: 'user_name'
+      dataIndex: 'user_name',
+      width: 40
     },
     { 
       header: '<?php echo $osC_Language->get('table_heading_email'); ?>',
       dataIndex: 'email_address',
-      width: 250
+      width: 60
     },
     config.rowActions
   ]);
   config.autoExpandColumn = 'user_name';
+
+  config.txtSearch = new Ext.form.TextField({
+    width: 100,
+    hideLabel: true,
+    listeners:{
+    scope:this,
+    specialkey: function(f,e){
+    if(e.getKey()==e.ENTER){
+    this.onSearch();
+        }
+      }
+    }
+  });
   
   config.tbar = [
     {
@@ -74,7 +88,9 @@ Toc.administrators.AdministratorsGrid = function(config) {
       iconCls: 'refresh',
       handler: this.onRefresh,
       scope: this
-    }
+    },
+    '->',
+    config.txtSearch
   ];
 
   var thisObj = this;
@@ -136,6 +152,15 @@ Ext.extend(Toc.administrators.AdministratorsGrid, Ext.grid.GridPanel, {
     }, this);
     
     dlg.show(record.get("id"));
+  },
+
+  onSearch: function() {
+        var filter = this.txtSearch.getValue() || null;
+        var store = this.getStore();
+
+        store.baseParams['search'] = filter;
+        store.reload();
+        store.baseParams['search'] = '';
   },
   
   onDelete: function(record) {
