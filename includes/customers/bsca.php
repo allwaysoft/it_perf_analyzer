@@ -34,6 +34,7 @@ define('DB_TABLE_PREFIX', 'delta_');
 define('USE_PCONNECT', 'false');
 define('STORE_SESSIONS', 'mysql');
 define('AUTH', 'local');
+define('MAX_DISPLAY_SEARCH_RESULTS', '20');
 
 //define('DB_USER', 'gm_fomi');
 //define('DB_PASS', 'Kouepe3073');
