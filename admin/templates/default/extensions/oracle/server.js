@@ -3572,8 +3572,8 @@ Ext.extend(Toc.ServerDashboardPanel, Ext.Panel, {
         params.width = '25%';
 
         var mem = {
-            width: '25%',
-            label: 'Swap (%)',
+            width: '20%',
+            label: 'Memory',
             body_height: '75px',
             freq: params.freq,
             //hideHeaders:true,
@@ -3592,11 +3592,11 @@ Ext.extend(Toc.ServerDashboardPanel, Ext.Panel, {
             sid: params.sid
         };
 
-        this.mem_usage = new Toc.MemCharts(mem);
+        this.mem_usage = new Toc.MemoryCharts(mem);
         this.add(this.mem_usage);
 
         var cpu = {
-            width: '25%',
+            width: '20%',
             label: 'CPU',
             body_height: '75px',
             freq: params.freq,
@@ -3620,7 +3620,7 @@ Ext.extend(Toc.ServerDashboardPanel, Ext.Panel, {
         this.add(this.cpu_usage);
 
         var disk = {
-            width: '25%',
+            width: '20%',
             label: 'Disks (%)',
             body_height: '75px',
             freq: params.freq,
@@ -3644,7 +3644,7 @@ Ext.extend(Toc.ServerDashboardPanel, Ext.Panel, {
         this.add(this.disk_usage);
 
         var net = {
-            width: '25%',
+            width: '20%',
             label: 'Net (MB/s)',
             body_height: '75px',
             freq: params.freq,
@@ -3666,6 +3666,24 @@ Ext.extend(Toc.ServerDashboardPanel, Ext.Panel, {
 
         this.net_usage = new Toc.NetCharts(net);
         this.add(this.net_usage);
+
+        var fs = {
+            width: '20%',
+            label: 'FS',
+            body_height: '75px',
+            freq: params.freq,
+            //hideHeaders:true,
+            server_user: params.server_user,
+            server_pass: params.server_pass,
+            server_port: params.server_port,
+            servers_id: params.servers_id,
+            port: params.port,
+            typ: params.typ,
+            host: params.host
+        };
+
+        this.fs_usage = new Toc.TopFsPanel(fs);
+        this.add(this.fs_usage);
     },
 
     start: function () {
@@ -3673,6 +3691,7 @@ Ext.extend(Toc.ServerDashboardPanel, Ext.Panel, {
         this.cpu_usage.start();
         this.disk_usage.start();
         this.net_usage.start();
+        this.fs_usage.start();
     },
 
     stop: function () {
@@ -3680,6 +3699,7 @@ Ext.extend(Toc.ServerDashboardPanel, Ext.Panel, {
         this.cpu_usage.stop();
         this.disk_usage.stop();
         this.net_usage.stop();
+        this.fs_usage.stop();
     }
 });
 
@@ -4390,6 +4410,241 @@ Ext.extend(Toc.MemCharts, Ext.Panel, {
             }, scope.freq || 5000);
             scope.count++;
             scope.interval = interval;
+        }
+    },
+
+    onRefresh: function () {
+        this.getStore().reload();
+    },
+    start: function () {
+        this.started = true;
+        this.count = 0;
+        this.reqs = 0;
+        this.try = 0;
+        this.refreshData(this);
+    },
+    stop: function () {
+        this.started = false;
+        this.count = 10;
+        this.reqs = 10;
+        this.refreshData(this);
+
+        if(this.interval)
+        {
+            clearInterval(this.interval);
+        }
+
+        this.interval = null;
+    }
+});
+
+Toc.MemoryCharts = function (config) {
+    this.params = config;
+    var that = this;
+    config = config || {};
+    config.region = 'center';
+    config.count = 0;
+    config.reqs = 0;
+    config.try = 0;
+    config.width = this.params.width || '25%';
+    config.title = config.label;
+
+    var thisObj = this;
+
+    config.listeners = {
+        render: function (comp) {
+
+            var configChart = function () {
+                thisObj.data = [];
+
+                var chart;
+                chart = new AmCharts.AmSerialChart();
+                chart.width = '100%';
+                chart.marginBottom = 1;
+                chart.marginLeft = 1;
+                chart.marginRight = 1;
+                chart.marginTop = 1;
+                //chart.autoResize = true;
+
+                var type = "line";
+                chart.dataProvider = thisObj.data;
+                chart.marginTop = 5;
+                chart.categoryField = "category";
+
+                // AXES
+                // Category
+                var categoryAxis = chart.categoryAxis;
+                categoryAxis.gridAlpha = 0.07;
+                categoryAxis.axisColor = "#DADADA";
+                categoryAxis.labelsEnabled = false;
+                categoryAxis.startOnAxis = true;
+
+                // Value
+                var valueAxis = new AmCharts.ValueAxis();
+                valueAxis.stackType = "regular"; // this line makes the chart "stacked"
+                valueAxis.gridAlpha = 0.07;
+                //valueAxis.maximum = 100;
+                //valueAxis.title = "%";
+                valueAxis.titleColor = "green";
+                valueAxis.labelsEnabled = false;
+                chart.addValueAxis(valueAxis);
+
+                // GRAPHS
+                var graph = new AmCharts.AmGraph();
+                graph.type = type; // it's simple line graph
+                graph.title = "Utilise";
+                graph.valueField = "used";
+                graph.lineColor = "red";
+                graph.lineAlpha = 0;
+                graph.fillAlphas = 0.6; // setting fillAlphas to > 0 value makes it area graph
+                //graph.balloonText = "<span style='font-size:14px; color:#000000;'><b>[[value]]</b></span>";
+                chart.addGraph(graph);
+
+                graph = new AmCharts.AmGraph();
+                graph.type = type; // it's simple line graph
+                graph.title = "Libre";
+                graph.valueField = "free";
+                graph.lineColor = "green";
+                graph.lineAlpha = 0;
+                graph.fillAlphas = 0.6; // setting fillAlphas to > 0 value makes it area graph
+                //graph.balloonText = "<span style='font-size:14px; color:#000000;'><b>[[value]]</b></span>";
+                chart.addGraph(graph);
+
+                // WRITE
+                chart.write(thisObj.body.id);
+
+                thisObj.chart = chart;
+            };
+            if (AmCharts.isReady) {
+                configChart();
+            } else {
+                AmCharts.ready(configChart);
+            }
+
+        },
+        resize: function (Component, adjWidth, adjHeight, rawWidth, rawHeight) {
+
+            Component.body.dom.style.height = config.body_height;
+        },
+        scope: this
+    };
+
+    config.tools = [
+        {
+            id: 'refresh',
+            qtip: 'Refresh',
+            handler: function (event, toolEl, panel) {
+                thisObj.stop();
+                thisObj.start();
+            }
+        }
+    ];
+
+    Toc.MemoryCharts.superclass.constructor.call(this, config);
+};
+
+Ext.extend(Toc.MemoryCharts, Ext.Panel, {
+
+    refreshData: function (scope) {
+        scope.setTitle(scope.title + '.');
+        scope.try++;
+        if (scope && scope.started) {
+            if(scope.chart)
+            {
+                var chart = scope.chart;
+
+                var valueAxis = chart.valueAxes[0];
+
+                if(scope.reqs == 0)
+                {
+                    scope.reqs++;
+                    scope.transactionId = Ext.Ajax.request({
+                        url: Toc.CONF.LINUX_URL,
+                        params: {
+                            module: 'servers',
+                            action: 'memory_usage',
+                            server_user: this.server_user,
+                            server_pass: this.server_pass,
+                            db_host: this.db_host
+                        },
+                        callback: function (options, success, response) {
+                            scope.reqs--;
+                            scope.try = 0;
+                            scope.setTitle(scope.label);
+
+                            if(success)
+                            {
+                                var json = Ext.decode(response.responseText);
+
+                                //console.debug(json);
+                                var data = json ? json.records : [];
+
+                                this.data.push(data);
+
+                                if (this.data.length > 200) {
+                                    this.data.shift();
+                                }
+
+                                chart.dataProvider = this.data;
+                                if (chart.chartData.length > 200) {
+                                    chart.chartData.shift();
+                                }
+
+                                if (valueAxis) {
+                                    valueAxis.titleColor = "green";
+                                    valueAxis.labelsEnabled = false;
+                                    valueAxis.title = "";
+                                    if (!json) {
+                                        valueAxis.titleColor = "red";
+                                        valueAxis.title = "No Data";
+                                    }
+                                    else {
+                                        valueAxis.titleColor = "green";
+                                        valueAxis.labelsEnabled = false;
+                                        valueAxis.title = "";
+
+                                        if (json.comment) {
+                                            valueAxis.titleColor = "red";
+                                            valueAxis.title = json.comment;
+                                            valueAxis.labelsEnabled = true;
+                                        }
+                                    }
+
+                                    chart.validateNow();
+                                }
+                            }
+                            else
+                            {
+                                if (valueAxis) {
+                                    valueAxis.labelsEnabled = false;
+                                    valueAxis.titleColor = "red";
+                                    valueAxis.title = "Time out";
+
+                                    chart.validateNow();
+                                }
+                            }
+                        },
+                        scope: this
+                    });
+                }
+
+                chart.validateData();
+            }
+
+            if(scope.try > 10)
+            {
+                this.stop();
+                this.start();
+            }
+
+            if(scope.count == 0)
+            {
+                var interval = setInterval(function(){
+                    scope.refreshData(scope)
+                }, scope.freq || 5000);
+                scope.count++;
+                scope.interval = interval;
+            }
         }
     },
 

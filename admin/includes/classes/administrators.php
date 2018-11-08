@@ -18,7 +18,7 @@ class osC_Administrators_Admin
     {
         global $osC_Database;
 
-        if(AUTH == 'amplitude' && isset($db_user) && !empty($db_user) && isset($db_pass) && !empty($db_pass) && isset($db_host) && !empty($db_host) && isset($db_sid) && !empty($db_sid))
+        if(AUTH == 'amplitude')
         {
             $db_user = empty($_REQUEST['db_user']) ? DB_USER : $_REQUEST['db_user'];
             $db_pass = empty($_REQUEST['db_pass']) ? DB_PASS : $_REQUEST['db_pass'];

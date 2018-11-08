@@ -90,8 +90,8 @@
       
       $settings['autorun'] = '["dashboard-win"]';
       $settings['contextmenu'] = '[]';
-      $settings['quickstart'] = '["deltausers-win","roles-win","who_online-win","categories-win","lettrage-win","administrators-win","administrators_log-win","articles-win","documents-win","production-win","email-win","infocentre-win","ctx-win","signatures-win","sms-win","bi-win","dashboards_editor-win","queries-win","datasources-win"]';
-      $settings['shortcut'] = '["deltausers-win","roles-win","who_online-win","categories-win","lettrage-win","administrators-win","administrators_log-win","articles-win","documents-win","production-win","email-win","infocentre-win","ctx-win","signatures-win","sms-win","bi-win","dashboards_editor-win","queries-win","datasources-win"]';
+      $settings['quickstart'] = '["deltausers-win","roles-win","who_online-win","categories-win","lettrage-win","administrators-win","administrators_log-win","articles-win","documents-win","production-win","email-win","infocentre-win","ctx-win","signatures-win","sms-win","bi-win","dashboards_editor-win","queries-win","datasources-win","database_explorer-win"]';
+      $settings['shortcut'] = '["deltausers-win","roles-win","who_online-win","categories-win","lettrage-win","administrators-win","administrators_log-win","articles-win","documents-win","production-win","email-win","infocentre-win","ctx-win","signatures-win","sms-win","bi-win","dashboards_editor-win","queries-win","datasources-win","database_explorer-win"]';
       $settings['wizard_complete'] = false;
       
       $settings['dashboards'] = 'overview:0,new_orders:1,new_customers:2,new_reviews:0,orders_statistics:1,last_visits:2';

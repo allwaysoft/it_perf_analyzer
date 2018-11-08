@@ -9,6 +9,7 @@ if (!class_exists('content')) {
 }
 //    require('includes/classes/roles.php');
 require('includes/classes/image.php');
+include('includes/modules/Net/SSH2.php');
 require('includes/classes/email_account.php');
 require('includes/classes/email_accounts.php');
 
@@ -71,6 +72,97 @@ class toC_Json_Users
         $Qadmin->freeResult();
 
         $response = array(EXT_JSON_READER_TOTAL => $Qadmin->getBatchSize(),
+            EXT_JSON_READER_ROOT => $records);
+
+        echo $toC_Json->encode($response);
+    }
+
+    function listDeltausers()
+    {
+        global $toC_Json;
+
+        $start = empty($_REQUEST['start']) ? 0 : $_REQUEST['start'];
+        $limit = empty($_REQUEST['limit']) ? MAX_DISPLAY_SEARCH_RESULTS : $_REQUEST['limit'];
+        $total = empty($_REQUEST['count']) ? 0 : $_REQUEST['count'];
+        $search = empty($_REQUEST['search']) ? '' : $_REQUEST['search'];
+
+        $roles_id = empty($_REQUEST['categories_id']) ? 0 : $_REQUEST['categories_id'];
+
+        $db_user = empty($_REQUEST['db_user']) ? DB_USER : $_REQUEST['db_user'];
+        $db_pass = empty($_REQUEST['db_pass']) ? DB_PASS : $_REQUEST['db_pass'];
+        $db_host = empty($_REQUEST['db_host']) ? DB_HOST : $_REQUEST['db_host'];
+        $db_sid = empty($_REQUEST['db_sid']) ? DB_SID : $_REQUEST['db_sid'];
+
+        $c = oci_pconnect($db_user, $db_pass, $db_host . "/" . $db_sid);
+        if (!$c) {
+            $e = oci_error();
+            $records [] = array('cuti' => '',
+                'unix' => '',
+                'lib' => $e['message'],
+                'status' => '0');
+        }
+        else
+        {
+            if (!empty($search)) {
+                $start = 0;
+                $limit = 10000;
+                $query = "select * from ( select a.*, ROWNUM rnum from (SELECT TRIM (EVUTI.CUTI) CUTI,LTRIM (RTRIM (LIB)) LIB,SUS,ECRAN,UNIX FROM EVUTI LEFT OUTER JOIN EVUTAUT ON (EVUTI.CUTI = EVUTAUT.CUTI) where (lower(evuti.cuti) like :cuti or lower(unix) like :unix or lower(lib) like :lib) ORDER BY LTRIM (LIB)) a where ROWNUM <= :MAX_ROW_TO_FETCH ) where rnum  >= :MIN_ROW_TO_FETCH";
+            } else {
+                if ($roles_id == "-1") {
+                    $query = "select * from ( select a.*, ROWNUM rnum from (SELECT TRIM (EVUTI.CUTI) CUTI,LTRIM (RTRIM (LIB)) LIB,SUS,ECRAN,UNIX FROM EVUTI LEFT OUTER JOIN EVUTAUT ON (EVUTI.CUTI = EVUTAUT.CUTI) ORDER BY LTRIM (LIB)) a where ROWNUM <= :MAX_ROW_TO_FETCH ) where rnum  >= :MIN_ROW_TO_FETCH";
+                } else {
+                    $query = "select * from ( select a.*, ROWNUM rnum from (SELECT TRIM (EVUTI.CUTI) CUTI,LTRIM (RTRIM (LIB)) LIB,SUS,ECRAN,UNIX FROM EVUTI LEFT OUTER JOIN EVUTAUT ON (EVUTI.CUTI = EVUTAUT.CUTI) where puti = :puti ORDER BY LTRIM (LIB)) a where ROWNUM <= :MAX_ROW_TO_FETCH ) where rnum  >= :MIN_ROW_TO_FETCH";
+                }
+            }
+
+            $fin = $start + $limit;
+            $s = oci_parse($c, $query);
+            if (!$s) {
+                $e = oci_error($c);
+                $records [] = array('cuti' => '',
+                    'unix' => '',
+                    'lib' => $e['message'],
+                    'status' => '0');
+            }
+            else
+            {
+                $search = '%' . strtolower($search) . '%';
+                oci_bind_by_name($s, ":MAX_ROW_TO_FETCH", $fin);
+                oci_bind_by_name($s, ":MIN_ROW_TO_FETCH", $start);
+                oci_bind_by_name($s, ":cuti", $search);
+                oci_bind_by_name($s, ":unix", $search);
+                oci_bind_by_name($s, ":lib", $search);
+
+                if ($roles_id != '0' && $roles_id != '-1') {
+                    oci_bind_by_name($s, ":puti", $roles_id);
+                }
+
+                $r = oci_execute($s);
+                if (!$r) {
+                    $e = oci_error($s);
+
+                    $records [] = array('cuti' => '',
+                        'unix' => '',
+                        'lib' => $e['message'],
+                        'status' => '0');
+                }
+                else
+                {
+                    $records = array();
+
+                    while (($row = oci_fetch_array($s, OCI_ASSOC))) {
+                        $status = trim($row['ECRAN']);
+                        $records [] = array('cuti' => $row['CUTI'], 'unix' => $row['UNIX'], 'lib' => $row['LIB'], 'status' => !empty($status) ? '1' : '0');
+                    }
+                }
+            }
+
+            oci_free_statement($s);
+        }
+
+        oci_close($c);
+
+        $response = array(EXT_JSON_READER_TOTAL => $total,
             EXT_JSON_READER_ROOT => $records);
 
         echo $toC_Json->encode($response);

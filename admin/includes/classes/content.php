@@ -1,13 +1,5 @@
 <?php
 
- /**
- * Created by JetBrains PhpStorm.
- * User: Administrator
- * Date: 10/2/11
- * Time: 11:25 AM
- * To change this template use File | Settings | File Templates.
- */
-
     if (!class_exists(osC_Roles_Admin)) {
         include('includes/classes/roles.php');
     }
@@ -521,15 +513,36 @@
             $osC_Database->startTransaction();
 
             if (is_numeric($id)) {
-                $Qad = $osC_Database->query('update :table_content_description set content_name = :content_name, content_url = :content_url, content_description = :content_description, page_title = :page_title, meta_keywords = :meta_keywords, meta_descriptions = :meta_descriptions where content_id = :content_id and content_type = :content_type and language_id = :language_id');
+                $query = "update :table_content_description set content_name = :content_name, content_url = :content_url, content_description = :content_description, page_title = :page_title, meta_keywords = :meta_keywords, meta_descriptions = :meta_descriptions where content_id = :content_id and content_type = :content_type and language_id = :language_id";
             } else {
-                $Qad = $osC_Database->query('insert into :table_content_description (content_id, content_type, content_description, language_id, content_name, meta_descriptions, meta_keywords, content_url,page_title) values (:content_id, :content_type, :content_description, :language_id, :content_name, :meta_descriptions, :meta_keywords, :content_url,:page_title)');
+                $query = "insert into :table_content_description (content_id, content_type, content_description, language_id, content_name, meta_descriptions, meta_keywords, content_url,page_title) values (:content_id, :content_type, :content_description, :language_id, :content_name, :meta_descriptions, :meta_keywords, :content_url,:page_title)";
             }
+
+            $Qad = $osC_Database->query($query);
 
             $Qad->bindTable(':table_content_description', TABLE_CONTENT_DESCRIPTION);
             $Qad->bindInt(':content_id', $content_id);
             $Qad->bindValue(':content_type', $content_type);
             $Qad->bindInt(':language_id',2);
+            $Qad->bindValue(':content_name', $data['content_name']);
+            $Qad->bindValue(':content_url', $data['content_url']);
+            $Qad->bindValue(':content_description', $data['content_description']);
+            $Qad->bindValue(':page_title', $data['page_title']);
+            $Qad->bindValue(':meta_keywords', $data['meta_keywords']);
+            $Qad->bindValue(':meta_descriptions', $data['meta_descriptions']);
+            $Qad->setLogging($_SESSION['module'], $content_id);
+            $Qad->execute();
+
+            if ($osC_Database->isError()) {
+                $osC_Database->rollbackTransaction();
+                return false;
+            }
+
+            $Qad = $osC_Database->query($query);
+            $Qad->bindTable(':table_content_description', TABLE_CONTENT_DESCRIPTION);
+            $Qad->bindInt(':content_id', $content_id);
+            $Qad->bindValue(':content_type', $content_type);
+            $Qad->bindInt(':language_id',1);
             $Qad->bindValue(':content_name', $data['content_name']);
             $Qad->bindValue(':content_url', $data['content_url']);
             $Qad->bindValue(':content_description', $data['content_description']);

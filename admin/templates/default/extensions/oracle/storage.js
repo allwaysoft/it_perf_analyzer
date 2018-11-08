@@ -2489,6 +2489,7 @@ Toc.tablesGrid = function (config) {
         actions: [
             {iconCls: 'icon-move-record', qtip: TocLanguage.tipMove},
             {iconCls: 'icon-gather-record', qtip: 'Collecter les Stats'},
+            {iconCls: 'icon-shrink-record', qtip: 'Shrink'},
             {iconCls: 'icon-delete-record', qtip: TocLanguage.tipDelete}
         ],
         widthIntercept: Ext.isSafari ? 4 : 2
@@ -2816,6 +2817,52 @@ Ext.extend(Toc.tablesGrid, Ext.grid.GridPanel, {
         });
     },
 
+    onShrink: function (record) {
+        var action = 'shrink_segment';
+
+        Ext.Ajax.request({
+            url: Toc.CONF.CONN_URL,
+            params: {
+                module: 'databases',
+                action: action,
+                db_user: this.db_user,
+                db_pass: this.db_pass,
+                db_port: this.db_port,
+                db_host: this.host,
+                db_sid: this.sid,
+                owner: record.get('owner'),
+                tbs: this.tbs,
+                segment_type: 'TABLE',
+                segment_name: record.get('segment_name'),
+                partition_name: record.get('partition_name')
+            },
+            callback: function (options, success, response) {
+                this.getEl().unmask();
+                var result = Ext.decode(response.responseText);
+
+                if (result.success == true) {
+                    var params = {
+                        db_user: this.db_user,
+                        db_pass: this.db_pass,
+                        db_port: this.db_port,
+                        db_host: this.host,
+                        db_sid: this.sid,
+                        job_name: result.job_name,
+                        panel: this,
+                        description: 'Shrink du segment ' + record.get('segment_name')
+                    };
+
+                    this.proc_name = result.proc_name;
+                    Toc.watchJob(params);
+                }
+                else {
+                    Ext.MessageBox.alert(TocLanguage.msgErrTitle, result.feedback);
+                }
+            },
+            scope: this
+        });
+    },
+
     onDelete: function (record) {
         var msg = 'Voulez vous vraiment supprimer cette Table ?';
 
@@ -2929,6 +2976,10 @@ Ext.extend(Toc.tablesGrid, Ext.grid.GridPanel, {
             case 'icon-gather-record':
                 this.onGather(record);
                 break;
+
+            case 'icon-shrink-record':
+                this.onShrink(record);
+                break;
         }
     },
 
@@ -2971,10 +3022,7 @@ Ext.extend(Toc.tablesGrid, Ext.grid.GridPanel, {
     },
 
     onRowClick: function (grid, index, obj) {
-        console.log(index);
-        console.debug(obj);
         var item = grid.getStore().getAt(index);
-        console.debug(item);
         this.fireEvent('selectchange', item);
     },
 

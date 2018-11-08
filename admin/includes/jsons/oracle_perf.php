@@ -138,7 +138,7 @@ class toC_Json_Oracle_Perf
         if (empty($ssh->server_identifier)) {
             $response = array('success' => false, 'msg' => 'Impossible de se connecter au serveur pour generer cet etat, veuillez contacter votre administrateur systeme', 'subscriptions_id' => null, 'status' => null);
         } else {
-            if (!$ssh->login("guyfomi", "12345")) {
+            if (!$ssh->login(CURL_USER,CURL_PASS)) {
                 $response = array('success' => false, 'msg' => 'Impossible de se connecter au serveur pour generer cet etat, Compte ou mot de passe invalide', 'subscriptions_id' => null, 'status' => null);
             } else {
                 $ssh->disableQuietMode();
@@ -160,7 +160,7 @@ class toC_Json_Oracle_Perf
                 $detail = array('task_id' => $randomString, 'status' => 'run', 'comments' => 'Job cree avec succes');
                 toC_Reports_Admin::addJobDetail($detail);
 
-                $response = array('success' => true, 'msg' => 'Tache creee avec succes', 'task_id' => $randomString, 'status' => 'run');
+                $response = array('success' => true, 'msg' => 'Tache creee avec succes : ' . $cmd, 'task_id' => $randomString, 'status' => 'run');
             }
         }
 
@@ -393,7 +393,7 @@ AND sql_text IS NOT NULL";
         if (empty($ssh->server_identifier)) {
             $response = array('success' => false, 'msg' => 'Impossible de se connecter au serveur pour generer cet etat, veuillez contacter votre administrateur systeme', 'subscriptions_id' => null, 'status' => null);
         } else {
-            if (!$ssh->login("guyfomi", "12345")) {
+            if (!$ssh->login(CURL_USER,CURL_PASS)) {
                 $response = array('success' => false, 'msg' => 'Impossible de se connecter au serveur pour generer cet etat, Compte ou mot de passe invalide', 'subscriptions_id' => null, 'status' => null);
             } else {
                 $ssh->disableQuietMode();
@@ -1273,7 +1273,7 @@ ORDER BY misses_ratio DESC";
         if (empty($ssh->server_identifier)) {
             $response = array('success' => false, 'msg' => 'Impossible de se connecter au serveur pour generer cet etat, veuillez contacter votre administrateur systeme', 'subscriptions_id' => null, 'status' => null);
         } else {
-            if (!$ssh->login("guyfomi", "12345")) {
+            if (!$ssh->login(CURL_USER,CURL_PASS)) {
                 $response = array('success' => false, 'msg' => 'Impossible de se connecter au serveur pour generer cet etat, Compte ou mot de passe invalide', 'subscriptions_id' => null, 'status' => null);
             } else {
                 $ssh->disableQuietMode();

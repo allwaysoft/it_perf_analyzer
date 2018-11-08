@@ -1,6 +1,6 @@
 <?php
-define('CLIENT', 'bsca');
+define('CLIENT', 'prodesk');
 //HMN
-define('COPYRIGHT', 'HMN Consulting');
-define('PLATFORM_NAME', 'Script Business Intelligence (HMN Consulting)');
+define('COPYRIGHT', 'Mefobe Consulting');
+define('PLATFORM_NAME', 'Mefobe BI');
 ?>

@@ -1705,7 +1705,7 @@ Toc.downloadJobReport = function (request, scope) {
     });
 };
 
-Toc.exploreDatabase = function (node, panel) {
+Toc.exploreDatabase = function (node, panel,profil) {
     panel.removeAll();
 
     if (node.id == 0) {
@@ -1784,288 +1784,298 @@ Toc.exploreDatabase = function (node, panel) {
                 }
             });
 
-            panel.add(tab);
-
-            tab.add(pnlAsh);
-
-            var tab_perf = new Ext.TabPanel({
-                activeTab: 0,
-                hideParent: false,
-                title: 'Perf',
-                region: 'center',
-                defaults: {
-                    hideMode: 'offsets'
-                },
-                deferredRender: true,
-                listeners: {
-                    activate: function (pnl) {
-                        //console.log('tab_perf activate');
-                        pnl.removeAll();
-
-                        var pnlSessions = new Toc.SessionsGrid({inAshPanel: false,label: node.attributes.label, databases_id: node.attributes.databases_id, sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
-                        var pnlSql = new Toc.SqlGrid({label: node.attributes.label, databases_id: node.attributes.databases_id, sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
-                        var pnlVerrous = new Toc.LockTreeGrid({label: node.attributes.label, databases_id: node.attributes.databases_id, sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
-                        var pnlLockedObj = new Toc.LockedObjGrid({label: node.attributes.label, databases_id: node.attributes.databases_id, sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
-
-                        //var pnlMemory = new Toc.MemoryDashboardPanel({sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner, server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, typ: node.attributes.typ});
-
-                        var pnlUserIO = new Toc.DatabaseHistogramPanel({lineColor: '#004AE7', class: 'User I/O', label: 'User I/O', sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner, server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, typ: node.attributes.typ});
-                        var pnlSystemIO = new Toc.DatabaseHistogramPanel({lineColor: '#0094E7', class: 'System I/O', label: 'System I/O', sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner, server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, typ: node.attributes.typ});
-                        var pnlConcurrency = new Toc.DatabaseHistogramPanel({lineColor: '#8B1A00', class: 'Concurrency', label: 'Concurrency', sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner, server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, typ: node.attributes.typ});
-                        var pnlAdministrative = new Toc.DatabaseHistogramPanel({lineColor: '#717354', class: 'Administrative', label: 'Administrative', sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner, server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, typ: node.attributes.typ});
-                        var pnlApplication = new Toc.DatabaseHistogramPanel({lineColor: '#C02800', class: 'Application', label: 'Application', sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner, server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, typ: node.attributes.typ});
-                        var pnlCluster = new Toc.DatabaseHistogramPanel({lineColor: '#C9C2AF', class: 'Cluster', label: 'Cluster', sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner, server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, typ: node.attributes.typ});
-                        var pnlCommit = new Toc.DatabaseHistogramPanel({lineColor: '#E46800', class: 'Commit', label: 'Commit', sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner, server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, typ: node.attributes.typ});
-                        var pnlConfiguration = new Toc.DatabaseHistogramPanel({lineColor: '#5C440B', class: 'Configuration', label: 'Configuration', sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner, server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, typ: node.attributes.typ});
-                        var pnlNetwork = new Toc.DatabaseHistogramPanel({lineColor: '#9F9371', class: 'Network', label: 'Network', sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner, server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, typ: node.attributes.typ});
-                        var pnlOther = new Toc.DatabaseHistogramPanel({lineColor: '#F06EAA', class: 'Other', label: 'Other', sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner, server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, typ: node.attributes.typ});
-
-                        pnl.add(pnlSessions);
-                        pnl.add(pnlSql);
-                        pnl.doLayout(true, true);
-                        pnl.add(pnlVerrous);
-                        pnl.doLayout(true, true);
-                        pnl.add(pnlLockedObj);
-                        pnl.doLayout(true, true);
-                        pnl.add(pnlUserIO);
-                        pnl.doLayout(true, true);
-                        pnl.add(pnlSystemIO);
-                        pnl.doLayout(true, true);
-                        pnl.add(pnlCommit);
-                        pnl.doLayout(true, true);
-                        pnl.add(pnlConcurrency);
-                        pnl.doLayout(true, true);
-                        pnl.add(pnlAdministrative);
-                        pnl.doLayout(true, true);
-                        pnl.add(pnlApplication);
-                        pnl.doLayout(true, true);
-                        pnl.add(pnlCluster);
-                        pnl.doLayout(true, true);
-                        pnl.add(pnlConfiguration);
-                        pnl.doLayout(true, true);
-                        pnl.add(pnlNetwork);
-                        pnl.doLayout(true, true);
-                        pnl.add(pnlOther);
-                        pnl.doLayout(true, true);
-
-                        pnl.activate(pnlSessions);
-                    },
-                    deactivate: function (pnl) {
-                        //console.log('tab_perf deactivate');
-                        //pnl.removeAll();
-                    }
-                },
-                items: []
-            });
-
-            tab.add(tab_perf);
-            //tab.doLayout(true,true);
-
-            var tabMemory = new Ext.TabPanel({
-                activeTab: 0,
-                hideParent: false,
-                title: 'Memory',
-                region: 'center',
-                defaults: {
-                    hideMode: 'offsets'
-                },
-                deferredRender: true,
-                listeners: {
-                    activate: function (pnl) {
-                        //console.log('Memory activate');
-                        pnl.removeAll();
-                        var pnlMemoryResize = new Toc.MemoryResizePanel({sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
-                        var pnlLibrayCache = new Toc.LibrayCachePanel({sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
-                        var pnlLatch = new Toc.LatchPanel({sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
-//                        var pnlSgaUsage = new Toc.SgaUsageGrid({sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
-                        var pnlPga = new Toc.PgaStatGrid({sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
-                        var pnlMemoryAllocation = new Toc.MemoryAllocationPanel({label : 'Allocation',node : node,sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
-                        var pnlSgaAllocation = new Toc.SgaAllocationPanel({label : 'SGA Allocation',node : node,sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
-                        var pnlSharedPool = new Toc.SharedPoolPanel({label : 'Shared Pool',node : node,sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
-
-                        pnl.add(pnlMemoryResize);
-                        pnl.add(pnlMemoryAllocation);
-                        pnl.add(pnlSgaAllocation);
-                        pnl.add(pnlPga);
-                        pnl.add(pnlLatch);
-                        pnl.add(pnlLibrayCache);
-                        pnl.add(pnlSharedPool);
-                        pnl.doLayout(true, true);
-                        pnl.activate(pnlMemoryResize);
-                    },
-                    deactivate: function (pnl) {
-                        //console.log('Memory deactivate');
-                        pnl.removeAll();
-                    }
-                },
-                items: []
-            });
-
-            tab.add(tabMemory);
-
-            var tab_cbo = new Ext.TabPanel({
-                activeTab: 0,
-                hideParent: false,
-                title: 'CBO',
-                region: 'center',
-                defaults: {
-                    hideMode: 'offsets'
-                },
-                deferredRender: true,
-                listeners: {
-                    activate: function (pnl) {
-                        pnl.removeAll();
-                        var pnlTableStats = new Toc.SegmentStatsChart({segment_type : 'table',label : 'Tables Stats',title : 'Tables Stats',node : node,sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
-                        var pnlIndexStats = new Toc.SegmentStatsChart({segment_type : 'index',label : 'Indexes Stats',title : 'Indexes Stats',node : node,sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
-
-                        pnl.add(pnlTableStats);
-                        pnl.add(pnlIndexStats);
-
-                        pnl.doLayout(true, true);
-                        pnl.activate(pnlTableStats);
-                    },
-                    deactivate: function (pnl) {
-                        pnl.removeAll();
-                    }
-                },
-                items: []
-            });
-
-            tab.add(tab_cbo);
-
-            var pnlPx = new Toc.PxPanel({label : 'PX',node : node,sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
-
-            tab.add(pnlPx);
-
             var pnlUsers = new Toc.usersGrid({label: node.attributes.label, databases_id: node.attributes.databasesId, sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
 
-            tab.add(pnlUsers);
-            //tab.doLayout(true,true);
+            if(profil && profil == 'security')
+            {
+                panel.add(tab);
 
-            var tab_storage = new Ext.TabPanel({
-                activeTab: 0,
-                hideParent: false,
-                title: 'Storage',
-                region: 'center',
-                defaults: {
-                    hideMode: 'offsets'
-                },
-                deferredRender: true,
-                listeners: {
-                    activate: function (pnl) {
-                        console.log('tab_storage activate');
-                        pnl.removeAll();
-                        var pnlTbs = new Toc.tbsGrid({sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
-                        var pnlDatafiles = new Toc.datafilesGrid({sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: node.attributes.owner, server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, typ: node.attributes.typ});
-                        var pnlFS = new Toc.fsGrid({host: node.attributes.host, server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, owner: this.owner, typ: node.attributes.typ});
+                tab.add(pnlUsers);
+                tab.activate(pnlUsers);
+            }
+            else
+            {
+                panel.add(tab);
 
-                        pnl.add(pnlTbs);
-                        pnl.add(pnlDatafiles);
-                        pnl.add(pnlFS);
+                tab.add(pnlAsh);
 
-                        pnl.doLayout(true, true);
-                        pnl.activate(pnlTbs);
+                var tab_perf = new Ext.TabPanel({
+                    activeTab: 0,
+                    hideParent: false,
+                    title: 'Perf',
+                    region: 'center',
+                    defaults: {
+                        hideMode: 'offsets'
                     },
-                    deactivate: function (pnl) {
-                        console.log('tab_storage deactivate');
-                        pnl.removeAll();
-                    }
-                },
-                items: []
-            });
+                    deferredRender: true,
+                    listeners: {
+                        activate: function (pnl) {
+                            //console.log('tab_perf activate');
+                            pnl.removeAll();
 
-            tab.add(tab_storage);
-            //tab.doLayout(true,true);
+                            var pnlSessions = new Toc.SessionsGrid({inAshPanel: false,label: node.attributes.label, databases_id: node.attributes.databases_id, sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
+                            var pnlSql = new Toc.SqlGrid({label: node.attributes.label, databases_id: node.attributes.databases_id, sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
+                            var pnlVerrous = new Toc.LockTreeGrid({label: node.attributes.label, databases_id: node.attributes.databases_id, sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
+                            var pnlLockedObj = new Toc.LockedObjGrid({label: node.attributes.label, databases_id: node.attributes.databases_id, sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
 
-            var tab_schema = new Ext.TabPanel({
-                activeTab: 0,
-                hideParent: false,
-                title: 'Schema',
-                region: 'center',
-                defaults: {
-                    hideMode: 'offsets'
-                },
-                deferredRender: true,
-                listeners: {
-                    activate: function (pnl) {
-                        console.log('tab_schema activate');
-                        pnl.removeAll();
-                        var pnlTables = new Toc.tablesGrid({sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
-                        var pnlIndexes = new Toc.indexesGrid({sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
+                            //var pnlMemory = new Toc.MemoryDashboardPanel({sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner, server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, typ: node.attributes.typ});
 
-                        pnl.add(pnlTables);
-                        pnl.add(pnlIndexes);
+                            var pnlUserIO = new Toc.DatabaseHistogramPanel({lineColor: '#004AE7', class: 'User I/O', label: 'User I/O', sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner, server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, typ: node.attributes.typ});
+                            var pnlSystemIO = new Toc.DatabaseHistogramPanel({lineColor: '#0094E7', class: 'System I/O', label: 'System I/O', sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner, server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, typ: node.attributes.typ});
+                            var pnlConcurrency = new Toc.DatabaseHistogramPanel({lineColor: '#8B1A00', class: 'Concurrency', label: 'Concurrency', sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner, server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, typ: node.attributes.typ});
+                            var pnlAdministrative = new Toc.DatabaseHistogramPanel({lineColor: '#717354', class: 'Administrative', label: 'Administrative', sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner, server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, typ: node.attributes.typ});
+                            var pnlApplication = new Toc.DatabaseHistogramPanel({lineColor: '#C02800', class: 'Application', label: 'Application', sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner, server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, typ: node.attributes.typ});
+                            var pnlCluster = new Toc.DatabaseHistogramPanel({lineColor: '#C9C2AF', class: 'Cluster', label: 'Cluster', sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner, server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, typ: node.attributes.typ});
+                            var pnlCommit = new Toc.DatabaseHistogramPanel({lineColor: '#E46800', class: 'Commit', label: 'Commit', sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner, server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, typ: node.attributes.typ});
+                            var pnlConfiguration = new Toc.DatabaseHistogramPanel({lineColor: '#5C440B', class: 'Configuration', label: 'Configuration', sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner, server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, typ: node.attributes.typ});
+                            var pnlNetwork = new Toc.DatabaseHistogramPanel({lineColor: '#9F9371', class: 'Network', label: 'Network', sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner, server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, typ: node.attributes.typ});
+                            var pnlOther = new Toc.DatabaseHistogramPanel({lineColor: '#F06EAA', class: 'Other', label: 'Other', sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner, server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, typ: node.attributes.typ});
 
-                        pnl.doLayout(true, true);
-                        pnl.activate(pnlTables);
+                            pnl.add(pnlSessions);
+                            pnl.add(pnlSql);
+                            pnl.doLayout(true, true);
+                            pnl.add(pnlVerrous);
+                            pnl.doLayout(true, true);
+                            pnl.add(pnlLockedObj);
+                            pnl.doLayout(true, true);
+                            pnl.add(pnlUserIO);
+                            pnl.doLayout(true, true);
+                            pnl.add(pnlSystemIO);
+                            pnl.doLayout(true, true);
+                            pnl.add(pnlCommit);
+                            pnl.doLayout(true, true);
+                            pnl.add(pnlConcurrency);
+                            pnl.doLayout(true, true);
+                            pnl.add(pnlAdministrative);
+                            pnl.doLayout(true, true);
+                            pnl.add(pnlApplication);
+                            pnl.doLayout(true, true);
+                            pnl.add(pnlCluster);
+                            pnl.doLayout(true, true);
+                            pnl.add(pnlConfiguration);
+                            pnl.doLayout(true, true);
+                            pnl.add(pnlNetwork);
+                            pnl.doLayout(true, true);
+                            pnl.add(pnlOther);
+                            pnl.doLayout(true, true);
+
+                            pnl.activate(pnlSessions);
+                        },
+                        deactivate: function (pnl) {
+                            //console.log('tab_perf deactivate');
+                            //pnl.removeAll();
+                        }
                     },
-                    deactivate: function (pnl) {
-                        console.log('tab_schema deactivate');
-                        pnl.removeAll();
-                    }
-                },
-                items: []
-            });
+                    items: []
+                });
 
-            tab.add(tab_schema);
-            //tab.doLayout(true,true);
+                tab.add(tab_perf);
+                //tab.doLayout(true,true);
 
-            //this.pnlDocuments = new Toc.content.DocumentsPanel({content_id: this.databasesId, content_type: 'databases', owner: this.owner});
-            //this.pnlLinks = new Toc.content.LinksPanel({content_id: this.databasesId, content_type: 'databases', owner: this.owner});
-            //this.pnlComments = new Toc.content.CommentsPanel({content_id: this.databasesId, content_type: 'databases', owner: this.owner});
-
-            var tab_rman = new Ext.TabPanel({
-                activeTab: 0,
-                hideParent: false,
-                title: 'Rman',
-                region: 'center',
-                defaults: {
-                    hideMode: 'offsets'
-                },
-                deferredRender: true,
-                listeners: {
-                    activate: function (pnl) {
-                        console.log('tab_rman activate');
-                        pnl.removeAll();
-                        var pnlRmanConfig = new Toc.RmanConfigGrid({sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner, server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, typ: node.attributes.typ});
-                        var pnlRmanBackup = new Toc.RmanBackupGrid({sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner, server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, typ: node.attributes.typ});
-
-                        pnl.add(pnlRmanConfig);
-                        pnl.add(pnlRmanBackup);
-
-                        pnl.doLayout(true, true);
-                        pnl.activate(pnlRmanConfig);
+                var tabMemory = new Ext.TabPanel({
+                    activeTab: 0,
+                    hideParent: false,
+                    title: 'Memory',
+                    region: 'center',
+                    defaults: {
+                        hideMode: 'offsets'
                     },
-                    deactivate: function (pnl) {
-                        console.log('tab_rman deactivate');
-                        pnl.removeAll();
-                    }
-                },
-                items: []
-            });
+                    deferredRender: true,
+                    listeners: {
+                        activate: function (pnl) {
+                            //console.log('Memory activate');
+                            pnl.removeAll();
+                            var pnlMemoryResize = new Toc.MemoryResizePanel({sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
+                            var pnlLibrayCache = new Toc.LibrayCachePanel({sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
+                            var pnlLatch = new Toc.LatchPanel({sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
+//                        var pnlSgaUsage = new Toc.SgaUsageGrid({sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
+                            var pnlPga = new Toc.PgaStatGrid({sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
+                            var pnlMemoryAllocation = new Toc.MemoryAllocationPanel({label : 'Allocation',node : node,sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
+                            var pnlSgaAllocation = new Toc.SgaAllocationPanel({label : 'SGA Allocation',node : node,sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
+                            var pnlSharedPool = new Toc.SharedPoolPanel({label : 'Shared Pool',node : node,sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
 
-            tab.add(tab_rman);
-            //tab.doLayout(true,true);
+                            pnl.add(pnlMemoryResize);
+                            pnl.add(pnlMemoryAllocation);
+                            pnl.add(pnlSgaAllocation);
+                            pnl.add(pnlPga);
+                            pnl.add(pnlLatch);
+                            pnl.add(pnlLibrayCache);
+                            pnl.add(pnlSharedPool);
+                            pnl.doLayout(true, true);
+                            pnl.activate(pnlMemoryResize);
+                        },
+                        deactivate: function (pnl) {
+                            //console.log('Memory deactivate');
+                            pnl.removeAll();
+                        }
+                    },
+                    items: []
+                });
 
-            var pnlLogs = new Toc.logPanel({host: node.attributes.host, server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, content_id: node.attributes.databases_id, content_type: 'databases', owner: this.owner});
-            tab.add(pnlLogs);
-            //tab.doLayout(true,true);
+                tab.add(tabMemory);
 
-            var pnlNotifications = new Toc.notificationsGrid({databases_id: node.attributes.databasesId, owner: this.owner});
-            tab.add(pnlNotifications);
-            //tab.doLayout(true,true);
+                var tab_cbo = new Ext.TabPanel({
+                    activeTab: 0,
+                    hideParent: false,
+                    title: 'CBO',
+                    region: 'center',
+                    defaults: {
+                        hideMode: 'offsets'
+                    },
+                    deferredRender: true,
+                    listeners: {
+                        activate: function (pnl) {
+                            pnl.removeAll();
+                            var pnlTableStats = new Toc.SegmentStatsChart({segment_type : 'table',label : 'Tables Stats',title : 'Tables Stats',node : node,sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
+                            var pnlIndexStats = new Toc.SegmentStatsChart({segment_type : 'index',label : 'Indexes Stats',title : 'Indexes Stats',node : node,sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
 
-            var pnlParameters = new Toc.ParameterGrid({scope : 'instance',sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner, server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, typ: node.attributes.typ});
-            tab.add(pnlParameters);
-            //tab.doLayout(true,true);
+                            pnl.add(pnlTableStats);
+                            pnl.add(pnlIndexStats);
 
-            var pnlAlertLog = new Toc.AlertLogPanel({host: node.attributes.host, server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, owner: this.owner, typ: node.attributes.typ, sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
-            tab.add(pnlAlertLog);
+                            pnl.doLayout(true, true);
+                            pnl.activate(pnlTableStats);
+                        },
+                        deactivate: function (pnl) {
+                            pnl.removeAll();
+                        }
+                    },
+                    items: []
+                });
 
-            tab.doLayout(true, true);
-            panel.doLayout(true, true);
+                tab.add(tab_cbo);
 
-            tab.activate(pnlAsh);
+                var pnlPx = new Toc.PxPanel({label : 'PX',node : node,sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
+
+                tab.add(pnlPx);
+
+                tab.add(pnlUsers);
+                //tab.doLayout(true,true);
+
+                var tab_storage = new Ext.TabPanel({
+                    activeTab: 0,
+                    hideParent: false,
+                    title: 'Storage',
+                    region: 'center',
+                    defaults: {
+                        hideMode: 'offsets'
+                    },
+                    deferredRender: true,
+                    listeners: {
+                        activate: function (pnl) {
+                            console.log('tab_storage activate');
+                            pnl.removeAll();
+                            var pnlTbs = new Toc.tbsGrid({sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
+                            var pnlDatafiles = new Toc.datafilesGrid({sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: node.attributes.owner, server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, typ: node.attributes.typ});
+                            var pnlFS = new Toc.fsGrid({host: node.attributes.host, server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, owner: this.owner, typ: node.attributes.typ});
+
+                            pnl.add(pnlTbs);
+                            pnl.add(pnlDatafiles);
+                            pnl.add(pnlFS);
+
+                            pnl.doLayout(true, true);
+                            pnl.activate(pnlTbs);
+                        },
+                        deactivate: function (pnl) {
+                            console.log('tab_storage deactivate');
+                            pnl.removeAll();
+                        }
+                    },
+                    items: []
+                });
+
+                tab.add(tab_storage);
+                //tab.doLayout(true,true);
+
+                var tab_schema = new Ext.TabPanel({
+                    activeTab: 0,
+                    hideParent: false,
+                    title: 'Schema',
+                    region: 'center',
+                    defaults: {
+                        hideMode: 'offsets'
+                    },
+                    deferredRender: true,
+                    listeners: {
+                        activate: function (pnl) {
+                            console.log('tab_schema activate');
+                            pnl.removeAll();
+                            var pnlTables = new Toc.tablesGrid({sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
+                            var pnlIndexes = new Toc.indexesGrid({sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
+
+                            pnl.add(pnlTables);
+                            pnl.add(pnlIndexes);
+
+                            pnl.doLayout(true, true);
+                            pnl.activate(pnlTables);
+                        },
+                        deactivate: function (pnl) {
+                            console.log('tab_schema deactivate');
+                            pnl.removeAll();
+                        }
+                    },
+                    items: []
+                });
+
+                tab.add(tab_schema);
+                //tab.doLayout(true,true);
+
+                //this.pnlDocuments = new Toc.content.DocumentsPanel({content_id: this.databasesId, content_type: 'databases', owner: this.owner});
+                //this.pnlLinks = new Toc.content.LinksPanel({content_id: this.databasesId, content_type: 'databases', owner: this.owner});
+                //this.pnlComments = new Toc.content.CommentsPanel({content_id: this.databasesId, content_type: 'databases', owner: this.owner});
+
+                var tab_rman = new Ext.TabPanel({
+                    activeTab: 0,
+                    hideParent: false,
+                    title: 'Rman',
+                    region: 'center',
+                    defaults: {
+                        hideMode: 'offsets'
+                    },
+                    deferredRender: true,
+                    listeners: {
+                        activate: function (pnl) {
+                            console.log('tab_rman activate');
+                            pnl.removeAll();
+                            var pnlRmanConfig = new Toc.RmanConfigGrid({sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner, server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, typ: node.attributes.typ});
+                            var pnlRmanBackup = new Toc.RmanBackupGrid({sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner, server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, typ: node.attributes.typ});
+
+                            pnl.add(pnlRmanConfig);
+                            pnl.add(pnlRmanBackup);
+
+                            pnl.doLayout(true, true);
+                            pnl.activate(pnlRmanConfig);
+                        },
+                        deactivate: function (pnl) {
+                            console.log('tab_rman deactivate');
+                            pnl.removeAll();
+                        }
+                    },
+                    items: []
+                });
+
+                tab.add(tab_rman);
+                //tab.doLayout(true,true);
+
+                var pnlLogs = new Toc.logPanel({host: node.attributes.host, server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, content_id: node.attributes.databases_id, content_type: 'databases', owner: this.owner});
+                tab.add(pnlLogs);
+                //tab.doLayout(true,true);
+
+                var pnlNotifications = new Toc.notificationsGrid({databases_id: node.attributes.databasesId, owner: this.owner});
+                tab.add(pnlNotifications);
+                //tab.doLayout(true,true);
+
+                var pnlParameters = new Toc.ParameterGrid({scope : 'instance',sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner, server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, typ: node.attributes.typ});
+                tab.add(pnlParameters);
+                //tab.doLayout(true,true);
+
+                var pnlAlertLog = new Toc.AlertLogPanel({host: node.attributes.host, server_port: node.attributes.server_port, server_pass: node.attributes.server_pass, server_user: node.attributes.server_user, servers_id: node.attributes.servers_id, owner: this.owner, typ: node.attributes.typ, sid: node.attributes.sid, host: node.attributes.host, db_port: node.attributes.db_port, db_pass: node.attributes.db_pass, db_user: node.attributes.db_user, owner: this.owner});
+                tab.add(pnlAlertLog);
+
+                tab.doLayout(true, true);
+                panel.doLayout(true, true);
+
+                tab.activate(pnlAsh);
+            }
         }
         else {
             Ext.Msg.alert(TocLanguage.msgErrTitle, "Aucune Database selectionnee !!!");

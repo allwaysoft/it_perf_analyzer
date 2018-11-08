@@ -398,8 +398,8 @@ class toC_Json_Servers
     {
         global $toC_Json;
 
-        $db_user = 'deltasig';
-        $db_pass = 'deltasig';
+        $db_user = 'system';
+        $db_pass = 'oracle';
         $db_host = 'signature.intra.bicec';
         $db_sid = 'SIGBICEC';
         $chemin = $_REQUEST['chemin'];
@@ -480,8 +480,8 @@ class toC_Json_Servers
             $start = empty($_REQUEST['start']) ? 0 : $_REQUEST['start'];
             $total = empty($_REQUEST['total']) ? 0 : $_REQUEST['total'];
 
-            $db_user = 'deltasig';
-            $db_pass = 'deltasig';
+            $db_user = 'system';
+            $db_pass = 'oracle';
             $db_host = 'signature.intra.bicec';
             $db_sid = 'SIGBICEC';
 
@@ -856,8 +856,8 @@ class toC_Json_Servers
             $limit = 1;
             $total = empty($_REQUEST['total']) ? 0 : $_REQUEST['total'];
 
-            $db_user = 'deltasig';
-            $db_pass = 'deltasig';
+            $db_user = 'system';
+            $db_pass = 'oracle';
             $db_host = 'signature.intra.bicec';
             $db_sid = 'SIGBICEC';
 

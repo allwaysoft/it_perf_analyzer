@@ -187,7 +187,7 @@ if (isset($_REQUEST['action'])) {
 
     switch(strtolower($action))
     {
-        case 'mem_usage':
+        case 'mem_usage';
             $db_host = $_REQUEST['db_host'];
             $os_user = $_REQUEST['server_user'];
             $os_pass = $_REQUEST['server_pass'];
@@ -239,25 +239,44 @@ if (isset($_REQUEST['action'])) {
 
             break;
 
-        case 'create_metabase_user';
-            $email = $_REQUEST['email'];
-            $first_name = $_REQUEST['first_name'];
-            $session_id = $_REQUEST['session_id'];
+        case 'memory_usage';
+            $db_host = $_REQUEST['db_host'];
+            $os_user = $_REQUEST['server_user'];
+            $os_pass = $_REQUEST['server_pass'];
 
-            $ssh = new Net_SSH2('localhost',22,5);
+            $usage = array();
+
+
+            $ssh = new Net_SSH2($db_host,22,5);
             if (empty($ssh->server_identifier)) {
-                $comment = 'Impossible de se connecter au serveur localhost';
+                $comment = 'Impossible de se connecter au serveur ' . $db_host;
+
             }
             else
             {
-                if (!$ssh->login('guyfomi', '12345')) {
-                    $comment = 'Impossible de se connecter au serveur ';
+                if (!$ssh->login($os_user, $os_pass)) {
+                    $comment = 'Impossible de se connecter au serveur ' . $db_host;
+
                 } else {
                     $ssh->disableQuietMode();
                     $ssh->setTimeout(5);
 
-                    $cmd = "curl 'http://localhost:3000/api/user' -H 'X-Metabase-Session: '" . $session_id . "' -H 'Origin: http://localhost' -H 'Accept-Encoding: gzip, deflate' -H 'Accept-Language: en,de;q=0.8' -H 'User-Agent: Mozilla/5.0 (Windows NT 6.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.112 Safari/537.36' -H 'Content-Type: application/json' -H 'Accept: application/json' -H 'Referer: http://localhost' --data-binary '{\"email\":" . $email . ",\"first_name\":" . $first_name . ",\"last_name\":...,\"password\":" . METABASE_DEV_PASS . "}' --compressed";
-                    $total = $ssh->exec($cmd);
+                    $start_date = date("Y-m-d H:i:s");
+
+                    $cmd = "cat /proc/meminfo | grep ^MemTotal | awk '{print $2}'";
+                    //$cmd = "cat /proc/meminfo | grep ^SwapTotal | awk '{print $2}'";
+                    $total = intval($ssh->exec($cmd));
+
+                    $cmd = "cat /proc/meminfo | grep ^MemAvailable | awk '{print $2}'";
+                    //$cmd = "cat /proc/meminfo | grep ^SwapFree | awk '{print $2}'";
+                    $free = intval($ssh->exec($cmd));
+                    $used = $total - $free;
+
+                    $usage = array(
+                        'free' => $free,
+                        'used' => $used,
+                        'category' => $start_date
+                    );
 
                     $comment = '';
                 }
@@ -266,7 +285,7 @@ if (isset($_REQUEST['action'])) {
             $ssh->disconnect();
 
             $response = array(EXT_JSON_READER_TOTAL => count($usage),
-                EXT_JSON_READER_ROOT => $usage, 'comment' => $comment, 'pct' => $pct);
+                EXT_JSON_READER_ROOT => $usage, 'comment' => $comment);
 
             break;
 
@@ -568,7 +587,7 @@ if (isset($_REQUEST['action'])) {
                 case "aix":
                     return false;
                 case "lin":
-                    $ssh = new Net_SSH2($host, $port,5);
+                    $ssh = new Net_SSH2($host, $port,15);
 
                     if (empty($ssh->server_identifier)) {
                         $records [] = array('fs' => '',

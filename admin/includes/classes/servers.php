@@ -524,19 +524,20 @@ class toC_Servers_Admin
 
         //content_to_categories
         if ($error === false) {
-            $error = !content::saveContentToCategories($id, $servers_id, 'servers', $data);
+            //$error = !content::saveContentToCategories($id, $servers_id, 'servers', $data);
         }
 
         //images
         if ($error === false) {
-            $error = !content::saveImages($servers_id, 'servers');
+            //$error = !content::saveImages($servers_id, 'servers');
         }
 
         $Qdelete_groups = $osC_Database->query('delete from delta_server_to_groups where servers_id = :servers_id');
-        $Qdelete_groups->bindInt(':servers_id', $id);
+        $Qdelete_groups->bindInt(':servers_id', $servers_id);
         $Qdelete_groups->execute();
 
         if ($osC_Database->isError()) {
+            $_SESSION['LAST_ERROR'] = $osC_Database->error;
             $error = true;
         }
 
@@ -545,11 +546,12 @@ class toC_Servers_Admin
             if (is_array($data['group_id'])) {
                 foreach ($data['group_id'] as $group_id) {
                     $Qgroups = $osC_Database->query('insert into delta_server_to_groups (group_id, servers_id) values (:group_id, :servers_id)');
-                    $Qgroups->bindInt(':servers_id', $id);
+                    $Qgroups->bindInt(':servers_id', $servers_id);
                     $Qgroups->bindInt(':group_id', $group_id);
                     $Qgroups->execute();
 
                     if ($osC_Database->isError()) {
+                        $_SESSION['LAST_ERROR'] = $osC_Database->error;
                         $error = true;
                     }
                 }
@@ -563,8 +565,6 @@ class toC_Servers_Admin
         }
 
         $osC_Database->rollbackTransaction();
-
-        $_SESSION['LAST_ERROR'] = $osC_Database->error;
 
         return false;
     }

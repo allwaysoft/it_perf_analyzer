@@ -5,7 +5,7 @@ require('includes/classes/servers.php');
 require('includes/classes/email_account.php');
 require('includes/classes/email_accounts.php');
 require('includes/classes/reports.php');
-require('includes/classes/sms.php');
+//require('includes/classes/sms.php');
 
 class toC_Json_Databases
 {
@@ -47,7 +47,7 @@ class toC_Json_Databases
             if (empty($ssh->server_identifier)) {
                 $response = array('success' => false, 'msg' => 'Impossible de se connecter au serveur pour generer cet etat, veuillez contacter votre administrateur systeme', 'subscriptions_id' => null, 'status' => null);
             } else {
-                if (!$ssh->login("guyfomi", "12345")) {
+                if (!$ssh->login(CURL_USER,CURL_PASS)) {
                     $response = array('success' => false, 'msg' => 'Impossible de se connecter au serveur pour generer cet etat, Compte ou mot de passe invalide', 'subscriptions_id' => null, 'status' => null);
                 } else {
                     $ssh->disableQuietMode();
@@ -1837,6 +1837,80 @@ WHERE delta_ogg_config.id = delta_ogg_capture_state.config_id and config_id= " .
         echo $toC_Json->encode($response);
     }
 
+    function shrinkSegment()
+    {
+        global $toC_Json;
+
+        $db_user = $_REQUEST['db_user'];
+        $db_pass = $_REQUEST['db_pass'];
+        $db_host = $_REQUEST['db_host'];
+        $db_sid = $_REQUEST['db_sid'];
+        $schema = $_REQUEST['owner'];
+        $table = $_REQUEST['segment_name'];
+
+        $c = oci_pconnect($db_user, $db_pass, $db_host . "/" . $db_sid);
+        if (!$c) {
+            $e = oci_error();
+            $response = array('success' => false, 'feedback' => 'Could not connect to database : ' . htmlentities($e['message']));
+        } else {
+
+            $characters = '0123456789';
+            $charactersLength = strlen($characters);
+            $randomString = '';
+            for ($i = 0; $i < 5; $i++) {
+                $randomString .= $characters[rand(0, $charactersLength - 1)];
+            }
+
+            $proc_name = 'proc_gather_stats_' . $randomString;
+            $job_name = 'job_gather_stats_' . $randomString;
+            $method = 'FOR ALL COLUMNS';
+
+            $args = "''" . $schema . "'',''" . $table . "'',METHOD_OPT => ''" . $method . "''";
+
+            $action = "DBMS_STATS.GATHER_TABLE_STATS(" . $args . ");";
+
+            $query = "begin execute immediate 'CREATE OR REPLACE PROCEDURE " . $proc_name . " AUTHID CURRENT_USER AS BEGIN " . $action . "END;';END;";
+
+            //var_dump($query);
+            $s = oci_parse($c, $query);
+            if (!$s) {
+                $e = oci_error($c);
+                $response = array('success' => false, 'feedback' => 'Impossible de parser la requete ' . $query . ' ... raison : ' . htmlentities($e['message']));
+            } else {
+                $r = oci_execute($s, OCI_COMMIT_ON_SUCCESS);
+                if (!$r) {
+                    $e = oci_error($s);
+                    $response = array('success' => false, 'feedback' => 'Impossible d executer la requete ' . $query . ' ... raison : ' . htmlentities($e['message']));
+                } else {
+                    $response = array('success' => true, 'feedback' => "Procedure cree avec succes ...", 'proc_name' => $proc_name);
+                    $query = "BEGIN DBMS_SCHEDULER.create_job (job_name => '" . $job_name . "',job_type => 'PLSQL_BLOCK',job_action => 'BEGIN " . $proc_name . " ;execute immediate ''DROP PROCEDURE " . $proc_name . "'';END;',start_date => SYSTIMESTAMP,enabled => TRUE,auto_drop => TRUE);END;";
+
+                    $s = oci_parse($c, $query);
+                    if (!$s) {
+                        $e = oci_error($c);
+                        var_dump($query);
+                        $response = array('success' => false, 'feedback' => 'Impossible de creer ce job : ' . htmlentities($e['message']));
+                    } else {
+                        $r = oci_execute($s, OCI_COMMIT_ON_SUCCESS);
+                        if (!$r) {
+                            $e = oci_error($s);
+                            var_dump($query);
+                            $response = array('success' => false, 'feedback' => "Impossible d'executer ce job : " . htmlentities($e['message']));
+                        } else {
+                            $response = array('success' => true, 'feedback' => "Job cree avec succes ...", 'job_name' => $job_name, 'proc_name' => $proc_name);
+                        }
+                    }
+                }
+            }
+
+            oci_free_statement($s);
+        }
+
+        oci_close($c);
+
+        echo $toC_Json->encode($response);
+    }
+
     function gatherIndexstats()
     {
         global $toC_Json;
@@ -2714,7 +2788,7 @@ WHERE delta_ogg_config.id = delta_ogg_capture_state.config_id and config_id= " .
         if (empty($ssh->server_identifier)) {
             $response = array('success' => false, 'msg' => 'Impossible de se connecter au serveur pour generer cet etat, veuillez contacter votre administrateur systeme', 'subscriptions_id' => null, 'status' => null);
         } else {
-            if (!$ssh->login("guyfomi", "12345")) {
+            if (!$ssh->login(CURL_USER,CURL_PASS)) {
                 $response = array('success' => false, 'msg' => 'Impossible de se connecter au serveur pour generer cet etat, Compte ou mot de passe invalide', 'subscriptions_id' => null, 'status' => null);
             } else {
                 $ssh->disableQuietMode();
@@ -2752,7 +2826,7 @@ WHERE delta_ogg_config.id = delta_ogg_capture_state.config_id and config_id= " .
         if (empty($ssh->server_identifier)) {
             $response = array('success' => false, 'msg' => 'Impossible de se connecter au serveur pour generer cet etat, veuillez contacter votre administrateur systeme', 'subscriptions_id' => null, 'status' => null);
         } else {
-            if (!$ssh->login("guyfomi", "12345")) {
+            if (!$ssh->login(CURL_USER, CURL_PASS)) {
                 $response = array('success' => false, 'msg' => 'Impossible de se connecter au serveur pour generer cet etat, Compte ou mot de passe invalide', 'subscriptions_id' => null, 'status' => null);
             } else {
                 $ssh->disableQuietMode();
@@ -4275,7 +4349,7 @@ WHERE delta_ogg_config.id = delta_ogg_capture_state.config_id and config_id= " .
         if (empty($ssh->server_identifier)) {
             $response = array('success' => false, 'msg' => 'Impossible de se connecter au serveur pour generer cet etat, veuillez contacter votre administrateur systeme', 'subscriptions_id' => null, 'status' => null);
         } else {
-            if (!$ssh->login("guyfomi", "12345")) {
+            if (!$ssh->login(CURL_USER,CURL_PASS)) {
                 $response = array('success' => false, 'msg' => 'Impossible de se connecter au serveur pour generer cet etat, Compte ou mot de passe invalide', 'subscriptions_id' => null, 'status' => null);
             } else {
                 $ssh->disableQuietMode();

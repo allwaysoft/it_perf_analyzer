@@ -551,6 +551,7 @@ FROM
 
             if ($osC_Database->isError()) {
                 $error = true;
+                $_SESSION['LAST_ERROR'] = $osC_Database->getError();
             } else {
                 if (is_numeric($id)) {
                     $databases_id = $id;
@@ -571,12 +572,12 @@ FROM
 
             //content_to_categories
             if ($error === false) {
-                $error = !content::saveContentToCategories($id, $databases_id, 'databases', $data);
+                //$error = !content::saveContentToCategories($id, $databases_id, 'databases', $data);
             }
 
             //images
             if ($error === false) {
-                $error = !content::saveImages($databases_id, 'databases');
+               // $error = !content::saveImages($databases_id, 'databases');
             }
 
             $Qdelete_groups = $osC_Database->query('delete from delta_database_to_groups where databases_id = :databases_id');
@@ -585,6 +586,7 @@ FROM
 
             if ($osC_Database->isError()) {
                 $error = true;
+                $_SESSION['LAST_ERROR'] = $osC_Database->getError();
             }
 
             if ($error === false) {
@@ -598,6 +600,8 @@ FROM
 
                         if ($osC_Database->isError()) {
                             $error = true;
+                            var_dump($Qgroups);
+                            $_SESSION['LAST_ERROR'] = $osC_Database->getError();
                         }
                     }
                 }
@@ -611,7 +615,7 @@ FROM
 
             $osC_Database->rollbackTransaction();
 
-            $_SESSION['LAST_ERROR'] = $osC_Database->error;
+            $_SESSION['LAST_ERROR'] = $osC_Database->getError();
 
             return false;
         }

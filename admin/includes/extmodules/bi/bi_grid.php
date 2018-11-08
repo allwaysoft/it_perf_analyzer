@@ -162,7 +162,6 @@ Ext.extend(Toc.bi.reportsGrid, Ext.grid.GridPanel, {
   },
 
   setPermissions: function(permissions) {
-//console.debug(permissions);
     this.topToolbar.items.items[0].disable();
     this.topToolbar.items.items[4].disable();
     this.topToolbar.items.items[6].disable();
@@ -171,10 +170,13 @@ Ext.extend(Toc.bi.reportsGrid, Ext.grid.GridPanel, {
         if(permissions.can_write === 1 || permissions.can_modify !== 0 || permissions.can_publish === 1)
         {
             this.topToolbar.items.items[0].enable();
+            this.topToolbar.items.items[4].enable();
         }
-        if(permissions.can_modify == '')
+        else
         {
             //this.topToolbar.items.items[0].enable();
+            this.topToolbar.items.items[4].disable();
+            this.topToolbar.items.items[6].disable();
         }
     }
 
@@ -211,8 +213,6 @@ Ext.extend(Toc.bi.reportsGrid, Ext.grid.GridPanel, {
                        if (this.items) {
                         this.removeAll(true);
                        }
-
-                       //var DsPanel = new Ext.Component({autoEl:{tag: 'iframe',style: 'height: 100%; width: 100%; border: none',src: '<?php echo REDASH_URL . '/login?next=' . REDASH_URL . '/data_sources&email='; ?>' + result.username + '&password=12345'},height: 600,width: 600});
 
                        var cmp = new Ext.Component({autoEl:{tag: 'iframe',style: 'height: 100%; width: 100%; border: none',src: record.get("reports_uri") + '?fullscreen&username=' + result.username + '@gmail.com&password=' + '<?php echo METABASE_DEV_PASS; ?>'},height: 600,id: 'dashboard_iframe' + record.get("dashboards_id"),width: 600});
                        var pnl = new Ext.Panel();
@@ -275,7 +275,7 @@ Ext.extend(Toc.bi.reportsGrid, Ext.grid.GridPanel, {
                         cmp.el.dom.src = record.get("reports_uri") + '?id=' + result.id + '&username=' + result.email + '&password=' + '<?php echo METABASE_DEV_PASS; ?>';
 
                         cmp.el.dom.onload = function() {
-                            console.log('iframe onload ...')
+                            //console.log('iframe onload ...')
                             pnl.getEl().unmask();
                         };
 
@@ -308,7 +308,7 @@ Ext.extend(Toc.bi.reportsGrid, Ext.grid.GridPanel, {
         this.mainPanel.getCategoriesTree().refresh();
       }, this);
 
-      dialog.show(batch,null,'reports');
+      dialog.show(batch,null,'dashboards');
     } else {
       Ext.MessageBox.alert(TocLanguage.msgInfoTitle, TocLanguage.msgMustSelectOne);
       }

@@ -4,10 +4,6 @@ Toc.datasources.mainPanel = function(config) {
     config = config || {};
     config.border = false;
 
-    //config.DsPanel = new Ext.Component({autoEl:{tag: 'iframe',style: 'height: 100%; width: 100%; border: none',src: '<?php echo REDASH_URL . '/data_sources'; ?>'},height: 600,id: 'redash_iframe',width: 600});
-
-    //config.items = [config.DsPanel];
-
     Toc.datasources.mainPanel.superclass.constructor.call(this, config);
 };
 

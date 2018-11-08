@@ -1,6 +1,7 @@
 <?php
 ?>
 Toc.database_explorer.mainPanel = function(config) {
+
   config = config || {};
   
   config.layout = 'border';
@@ -19,9 +20,17 @@ Toc.database_explorer.mainPanel = function(config) {
 Ext.extend(Toc.database_explorer.mainPanel, Ext.Panel, {
 
   onTreeNodeSelectChange: function(node) {
+
       this.explorerPanel.removeAll();
 
-      Toc.exploreDatabase(node,this.explorerPanel);
+      if(this.user && this.user != 'admin')
+      {
+        Toc.exploreDatabase(node,this.explorerPanel,'security');
+      }
+      else
+      {
+        Toc.exploreDatabase(node,this.explorerPanel);
+      }
   },
   
   getDatabaseTree: function() {

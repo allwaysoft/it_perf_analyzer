@@ -1,15 +1,5 @@
 <?php
-/*
-  $Id: categories.php $
-  Mefobe Cart Solutions
-  http://www.mefobemarket.com
 
-  Copyright (c) 2009 Wuxi Elootec Technology Co., Ltd;  Copyright (c) 2007 osCommerce
-
-  This program is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License v2 (1991)
-  as published by the Free Software Foundation.
-*/
     if (!class_exists('osC_Roles_Admin')) {
         include('includes/classes/roles.php');
     }
@@ -201,6 +191,11 @@ class osC_Categories_Admin
             osC_Cache::clear('categories');
             osC_Cache::clear('category_tree');
             osC_Cache::clear('also_purchased');
+
+            if (!is_numeric($id))
+            {
+                content::setPermission($category_id,'pages', 'can_read','-1', 1);
+            }
 
             return $category_id;
         }

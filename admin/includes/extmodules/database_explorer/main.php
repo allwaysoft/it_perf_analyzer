@@ -12,7 +12,7 @@ Ext.override(TocDesktop.DatabaseExplorerWindow, {
     var win = desktop.getWindow('database_explorer-win');
      
     if(!win){
-      var pnl = new Toc.database_explorer.mainPanel({owner: this});
+      var pnl = new Toc.database_explorer.mainPanel({owner: this,user : '<?php echo $_SESSION[admin][username]; ?>'});
       
       win = desktop.createWindow({
         id: 'database_explorer-win',
